@@ -1132,8 +1132,8 @@ export function ZoneRatesView() {
 
       {/* ── Bulk Add Dialog ── */}
       <Dialog open={bulkAddOpen} onOpenChange={(open) => { if (!open) setBulkAddOpen(false) }}>
-        <DialogContent className="md:max-w-4xl">
-          <DialogHeader>
+        <DialogContent className="md:max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+          <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <ListPlus className="h-5 w-5 text-amber-500" />
               Bulk Add Rates
@@ -1143,7 +1143,7 @@ export function ZoneRatesView() {
             </DialogDescription>
           </DialogHeader>
 
-          <DialogBody className="space-y-4">
+          <DialogBody className="space-y-4 flex-1 min-h-0">
             {/* City selector for bulk add */}
             <div className="space-y-2">
               <Label>
@@ -1275,7 +1275,7 @@ export function ZoneRatesView() {
             </Button>
           </DialogBody>
 
-          <DialogFooter>
+          <DialogFooter className="shrink-0 border-t pt-3">
             <Button variant="outline" onClick={() => setBulkAddOpen(false)}>
               Cancel
             </Button>
@@ -1296,8 +1296,8 @@ export function ZoneRatesView() {
 
       {/* ── Bulk Edit Dialog ── */}
       <Dialog open={bulkEditOpen} onOpenChange={(open) => { if (!open) setBulkEditOpen(false) }}>
-        <DialogContent className="md:max-w-5xl">
-          <DialogHeader>
+        <DialogContent className="md:max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
+          <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <FileEdit className="h-5 w-5 text-amber-500" />
               Bulk Edit Rates
@@ -1307,7 +1307,7 @@ export function ZoneRatesView() {
             </DialogDescription>
           </DialogHeader>
 
-          <DialogBody className="space-y-3">
+          <DialogBody className="space-y-3 flex-1 min-h-0">
             {bulkEditRows.map((row) => {
               const original = items.find(i => i.id === row.id)
               return (
@@ -1385,7 +1385,7 @@ export function ZoneRatesView() {
             })}
           </DialogBody>
 
-          <DialogFooter>
+          <DialogFooter className="shrink-0 border-t pt-3">
             <Button variant="outline" onClick={() => setBulkEditOpen(false)}>
               Cancel
             </Button>

@@ -120,3 +120,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Cursor pointer on all interactive/clickable elements */
+@layer base {
+  a,
+  button,
+  [type='button'],
+  [type='submit'],
+  [type='reset'],
+  [role='button'],
+  [role='tab'],
+  [role='link'],
+  [role='menuitem'],
+  [role='option'],
+  [role='switch'],
+  [role='checkbox'],
+  [role='radio'],
+  [role='treeitem'],
+  [role='slider'],
+  select,
+  summary,
+  label:has(input[type='checkbox']),
+  label:has(input[type='radio']),
+  [onclick],
+  .cursor-pointer {
+    cursor: pointer;
+  }
+}

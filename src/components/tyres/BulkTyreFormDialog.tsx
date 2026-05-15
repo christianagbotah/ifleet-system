@@ -328,7 +328,7 @@ export function BulkTyreFormDialog({ open, onOpenChange, onCreated }: BulkTyreFo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl flex flex-col overflow-hidden">
+      <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
         <DialogHeader className="shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <CircleDot className="h-5 w-5 text-amber-500" />
@@ -359,7 +359,7 @@ export function BulkTyreFormDialog({ open, onOpenChange, onCreated }: BulkTyreFo
         )}
 
         {/* Scrollable body */}
-        <form id="bulk-tyre-form" ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto flex-1 min-h-0 px-6 md:px-0">
+        <form id="bulk-tyre-form" ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto flex-1 min-h-0 pr-2">
           {/* Truck selection */}
           <div className="space-y-1.5">
             <Label className="text-sm font-medium">Truck <span className="text-destructive">*</span></Label>
@@ -533,7 +533,7 @@ export function BulkTyreFormDialog({ open, onOpenChange, onCreated }: BulkTyreFo
               </div>
 
               {/* Scrollable rows */}
-              <div className="max-h-[340px] overflow-y-auto">
+              <div className="max-h-[45vh] overflow-y-auto">
                 {rows.map((row, index) => (
                   <div
                     key={row.id}
