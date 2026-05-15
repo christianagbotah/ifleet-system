@@ -1,32 +1,1567 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                                                  String                @id @default(cuid())
+  email                                               String                @unique
+  name                                                String
+  phone                                               String?
+  password                                            String?
+  avatar                                              String?
+  roleId                                              String
+  position                                            String?
+  department                                          String?
+  employeeNumber                                      String?               @unique
+  isActive                                            Boolean               @default(true)
+  lastLogin                                           DateTime?
+  createdAt                                           DateTime              @default(now())
+  updatedAt                                           DateTime              @updatedAt
+  AuditLog                                            AuditLog[]
+  BorderCrossing                                      BorderCrossing[]
+  DepotQueue                                          DepotQueue[]
+  driver                                              Driver?
+  driverIncentive_DriverIncentive_approvedByToUser    DriverIncentive[]     @relation("DriverIncentive_approvedByToUser")
+  driverIncentive_DriverIncentive_createdByToUser     DriverIncentive[]     @relation("DriverIncentive_createdByToUser")
+  expenseApproval_ExpenseApproval_approvedByIdToUser  ExpenseApproval[]     @relation("ExpenseApproval_approvedByIdToUser")
+  expenseApproval_ExpenseApproval_requestedByIdToUser ExpenseApproval[]     @relation("ExpenseApproval_requestedByIdToUser")
+  InsuranceClaim                                      InsuranceClaim[]
+  LoadBoard                                           LoadBoard[]
+  Notification                                        Notification[]
+  PasswordResetToken                                  PasswordResetToken[]
+  RoadConditionReport                                 RoadConditionReport[]
+  TripComment                                         TripComment[]
+  role                                                Role                  @relation(fields: [roleId], references: [id])
+  WarehouseItem                                       WarehouseItem[]
+
+  @@index([isActive])
+  @@index([roleId])
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+model AuditLog {
+  id        String   @id
+  userId    String
+  action    String
+  entity    String
+  entityId  String?
+  details   String?  @db.Text
+  ipAddress String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([entity, entityId])
+  @@index([userId])
+}
+
+model BorderCrossing {
+  id             String    @id
+  tripId         String
+  truckId        String
+  driverId       String
+  borderName     String
+  country        String
+  direction      String
+  status         String    @default("queued")
+  queuedAt       DateTime  @default(now())
+  processingAt   DateTime?
+  clearedAt      DateTime?
+  estimatedWait  Int?
+  actualWait     Int?
+  clearanceFee   Float?
+  documentStatus String?
+  notes          String?
+  createdBy      String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  user           User      @relation(fields: [createdBy], references: [id])
+  driver         Driver    @relation(fields: [driverId], references: [id])
+  trip           Trip      @relation(fields: [tripId], references: [id])
+  truck          Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([borderName])
+  @@index([country])
+  @@index([createdBy], map: "BorderCrossing_createdBy_fkey")
+  @@index([direction])
+  @@index([driverId])
+  @@index([queuedAt])
+  @@index([status])
+  @@index([tripId])
+  @@index([truckId])
+}
+
+model CashAdvance {
+  id                 String    @id
+  driverId           String
+  tripId             String?
+  amount             Float
+  purpose            String
+  paymentMethod      String    @default("cash")
+  mobileMoneyRef     String?
+  mobileMoneyNetwork String?
+  status             String    @default("pending")
+  approvedBy         String?
+  approvedAt         DateTime?
+  rejectionReason    String?
+  disbursedBy        String?
+  disbursedAt        DateTime?
+  totalDeducted      Float     @default(0)
+  remainingBalance   Float     @default(0)
+  requestDate        DateTime  @default(now())
+  notes              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime
+  driver             Driver    @relation(fields: [driverId], references: [id])
+  trip               Trip?     @relation(fields: [tripId], references: [id])
+
+  @@index([driverId, status])
+  @@index([requestDate])
+  @@index([status])
+  @@index([tripId])
+}
+
+model Client {
+  id                      String                    @id
+  companyName             String
+  contactPerson           String
+  email                   String?
+  phone                   String
+  address                 String?
+  city                    String?
+  region                  String?
+  notes                   String?
+  isActive                Boolean                   @default(true)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime
+  ClientZone              ClientZone[]
+  Invoice                 Invoice[]
+  LoadBoard               LoadBoard[]
+  Trip                    Trip[]
+  TripDeliveryDestination TripDeliveryDestination[]
+
+  @@index([companyName])
+}
+
+model ClientZone {
+  id                String          @id
+  clientId          String
+  destinationZoneId String
+  branchName        String?
+  address           String?
+  contactPerson     String?
+  phone             String?
+  isPrimary         Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  client            Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  destinationZone   DestinationZone @relation(fields: [destinationZoneId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, destinationZoneId])
+  @@index([clientId])
+  @@index([destinationZoneId])
+}
+
+model Currency {
+  id        String   @id
+  code      String   @unique
+  name      String
+  symbol    String
+  isActive  Boolean  @default(true)
+  isDefault Boolean  @default(false)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model DeliveryStop {
+  id               String    @id
+  tripId           String
+  stopOrder        Int
+  destination      String
+  address          String?
+  lat              Float?
+  lng              Float?
+  customerName     String?
+  customerPhone    String?
+  expectedQty      Float
+  actualQty        Float?
+  unit             String    @default("bags")
+  status           String    @default("pending")
+  arrivalTime      DateTime?
+  offloadStarted   DateTime?
+  offloadCompleted DateTime?
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime
+  trip             Trip      @relation(fields: [tripId], references: [id])
+
+  @@index([tripId, stopOrder])
+}
+
+model DepotQueue {
+  id            String    @id
+  truckId       String
+  driverId      String?
+  tripId        String?
+  depotName     String
+  queueType     String
+  status        String    @default("waiting")
+  position      Int?
+  estimatedWait Int?
+  actualWait    Int?
+  joinedAt      DateTime  @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+  notes         String?
+  createdBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime
+  user          User      @relation(fields: [createdBy], references: [id])
+  driver        Driver?   @relation(fields: [driverId], references: [id])
+  trip          Trip?     @relation(fields: [tripId], references: [id])
+  truck         Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([createdBy], map: "DepotQueue_createdBy_fkey")
+  @@index([depotName])
+  @@index([driverId], map: "DepotQueue_driverId_fkey")
+  @@index([joinedAt])
+  @@index([queueType])
+  @@index([status])
+  @@index([tripId], map: "DepotQueue_tripId_fkey")
+  @@index([truckId])
+}
+
+model DestinationCity {
+  id              String            @id
+  name            String            @unique
+  region          String?
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  DestinationZone DestinationZone[]
+  Trip            Trip[]
+
+  @@index([isActive])
+}
+
+model DestinationZone {
+  id                      String                    @id
+  name                    String
+  destinationCityId       String
+  isActive                Boolean                   @default(true)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime
+  ClientZone              ClientZone[]
+  destinationCity         DestinationCity           @relation(fields: [destinationCityId], references: [id])
+  PerformanceBenchmark    PerformanceBenchmark[]
+  Trip                    Trip[]
+  TripDeliveryDestination TripDeliveryDestination[]
+  ZoneRate                ZoneRate[]
+
+  @@unique([name, destinationCityId])
+  @@index([destinationCityId])
+  @@index([isActive])
+}
+
+model Document {
+  id          String   @id
+  title       String
+  description String?
+  category    String
+  entityType  String?
+  entityId    String?
+  fileName    String
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+
+  @@index([category])
+  @@index([entityType, entityId])
+  @@index([uploadedBy])
+}
+
+model Driver {
+  id                  String              @id
+  userId              String?             @unique
+  firstName           String
+  lastName            String
+  phone               String              @unique
+  email               String?             @unique
+  dateOfBirth         DateTime?
+  address             String?
+  photo               String?
+  employeeId          String              @unique
+  ghanaCardNumber     String?             @unique
+  ghanaCardExpiry     DateTime?
+  licenseNumber       String              @unique
+  licenseExpiry       DateTime
+  licenseClass        String
+  licenseImage        String?
+  ghanaCardFrontImage String?
+  ghanaCardBackImage  String?
+  emergencyName       String?
+  emergencyPhone      String?
+  verificationStatus  String              @default("pending")
+  verifiedBy          String?
+  verifiedAt          DateTime?
+  verificationNotes   String?
+  notifySMS           Boolean             @default(true)
+  notifyEmail         Boolean             @default(true)
+  notifyPush          Boolean             @default(true)
+  rating              Float               @default(5)
+  status              String              @default("active")
+  totalTrips          Int                 @default(0)
+  totalMileage        Float               @default(0)
+  hireDate            DateTime            @default(now())
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime
+  BorderCrossing      BorderCrossing[]
+  CashAdvance         CashAdvance[]
+  DepotQueue          DepotQueue[]
+  user                User?               @relation(fields: [userId], references: [id])
+  DriverIncentive     DriverIncentive[]
+  DriverSettlement    DriverSettlement[]
+  DriverWallet        DriverWallet?
+  LoadBoard           LoadBoard[]
+  Payroll             Payroll[]
+  TollRecord          TollRecord[]
+  Trip                Trip[]
+  Truck               Truck[]
+  VehicleInspection   VehicleInspection[]
+}
+
+model DriverIncentive {
+  id                                    String    @id
+  driverId                              String
+  type                                  String
+  title                                 String
+  description                           String?
+  amount                                Float
+  period                                String
+  periodStart                           DateTime?
+  periodEnd                             DateTime?
+  status                                String    @default("pending")
+  approvedBy                            String?
+  approvedAt                            DateTime?
+  paidAt                                DateTime?
+  metrics                               String?
+  createdBy                             String
+  createdAt                             DateTime  @default(now())
+  updatedAt                             DateTime
+  user_DriverIncentive_approvedByToUser User?     @relation("DriverIncentive_approvedByToUser", fields: [approvedBy], references: [id])
+  user_DriverIncentive_createdByToUser  User      @relation("DriverIncentive_createdByToUser", fields: [createdBy], references: [id])
+  driver                                Driver    @relation(fields: [driverId], references: [id])
+
+  @@index([amount])
+  @@index([approvedBy], map: "DriverIncentive_approvedBy_fkey")
+  @@index([createdBy], map: "DriverIncentive_createdBy_fkey")
+  @@index([driverId])
+  @@index([period])
+  @@index([status])
+  @@index([type])
+}
+
+model DriverSettlement {
+  id                String           @id
+  driverId          String
+  period            String
+  periodStart       DateTime
+  periodEnd         DateTime
+  grossEarnings     Float
+  fuelDeductions    Float
+  expenseDeductions Float
+  bonusAmount       Float
+  netPay            Float
+  status            String           @default("pending")
+  approvedBy        String?
+  approvedAt        DateTime?
+  paidAt            DateTime?
+  notes             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime
+  driver            Driver           @relation(fields: [driverId], references: [id])
+  SettlementLine    SettlementLine[]
+
+  @@index([driverId, period])
+  @@index([periodEnd])
+  @@index([periodStart])
+  @@index([status])
+}
+
+model DriverWallet {
+  id                       String    @id
+  driverId                 String    @unique
+  availableBalance         Float     @default(0)
+  totalAdvances            Float     @default(0)
+  totalDeducted            Float     @default(0)
+  totalSettled             Float     @default(0)
+  monthlyAdvanceLimit      Float?
+  monthlyAdvancesThisMonth Float     @default(0)
+  lastAdvanceDate          DateTime?
+  mobileMoneyNumber        String?
+  mobileMoneyNetwork       String?
+  preferredPaymentMethod   String    @default("cash")
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime
+  driver                   Driver    @relation(fields: [driverId], references: [id])
+}
+
+model DvlaRegistration {
+  id                 String    @id
+  truckId            String
+  registrationNumber String    @unique
+  certificateNumber  String    @unique
+  vehicleClass       String
+  bodyType           String?
+  axleConfiguration  String?
+  grossVehicleWeight Float?
+  unladenWeight      Float?
+  seatingCapacity    Int?
+  engineCapacity     String?
+  yearOfManufacture  Int?
+  countryOfOrigin    String?
+  registeredOwner    String
+  ownerAddress       String?
+  ownerContact       String?
+  dvlaOffice         String?
+  registrationDate   DateTime
+  expiryDate         DateTime
+  lastRenewalDate    DateTime?
+  nextRenewalDue     DateTime?
+  registrationFee    Float?
+  renewalFee         Float?
+  status             String    @default("active")
+  documentUrl        String?
+  transferHistory    String?   @db.Text
+  notes              String?
+  reminderSent       Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime
+  truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
+
+  @@index([expiryDate])
+  @@index([registeredOwner])
+  @@index([truckId, status])
+  @@index([vehicleClass])
+}
+
+model Expense {
+  id              String           @id
+  truckId         String
+  category        String
+  description     String
+  amount          Float
+  date            DateTime
+  paymentMethod   String           @default("cash")
+  reference       String?
+  approvedBy      String?
+  status          String           @default("approved")
+  receiptUrl      String?
+  tripId          String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime
+  trip            Trip?            @relation(fields: [tripId], references: [id])
+  truck           Truck            @relation(fields: [truckId], references: [id])
+  ExpenseApproval ExpenseApproval?
+
+  @@index([category])
+  @@index([date])
+  @@index([status])
+  @@index([tripId])
+  @@index([truckId, date])
+}
+
+model ExpenseApproval {
+  id                                       String    @id
+  expenseId                                String    @unique
+  status                                   String    @default("pending")
+  requestedById                            String
+  approvedById                             String?
+  approvalLevel                            Int       @default(1)
+  amount                                   Float
+  approvedAmount                           Float?
+  notes                                    String?
+  rejectionReason                          String?
+  reviewedAt                               DateTime?
+  createdAt                                DateTime  @default(now())
+  updatedAt                                DateTime
+  user_ExpenseApproval_approvedByIdToUser  User?     @relation("ExpenseApproval_approvedByIdToUser", fields: [approvedById], references: [id])
+  expense                                  Expense   @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user_ExpenseApproval_requestedByIdToUser User      @relation("ExpenseApproval_requestedByIdToUser", fields: [requestedById], references: [id])
+
+  @@index([approvedById])
+  @@index([createdAt])
+  @@index([expenseId])
+  @@index([requestedById])
+  @@index([status])
+}
+
+model FuelBudget {
+  id           String   @id
+  truckId      String?
+  month        Int
+  year         Int
+  budgetLimit  Float
+  litersLimit  Float?
+  actualSpend  Float    @default(0)
+  actualLiters Float    @default(0)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  createdBy    String?
+  truck        Truck?   @relation(fields: [truckId], references: [id])
+
+  @@unique([truckId, month, year])
+  @@index([month])
+  @@index([truckId])
+  @@index([year])
+}
+
+model FuelLog {
+  id              String   @id
+  tripId          String
+  truckId         String
+  date            DateTime @default(now())
+  odometer        Float?
+  fuelLevelBefore Float?
+  fuelLevelAfter  Float?
+  litersFilled    Float
+  costPerLiter    Float?
+  totalCost       Float
+  stationName     String?
+  fuelType        String   @default("Diesel")
+  receiptNumber   String?
+  endMileage      Float?
+  endMileageImage String?
+  distanceCovered Float?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  trip            Trip     @relation(fields: [tripId], references: [id])
+  truck           Truck    @relation(fields: [truckId], references: [id])
+
+  @@index([date])
+  @@index([fuelType])
+  @@index([tripId])
+  @@index([truckId])
+}
+
+model FuelPrice {
+  id            String      @id
+  stationId     String
+  fuelType      String
+  pricePerLiter Float
+  effectiveDate DateTime    @default(now())
+  source        String      @default("manual")
+  verified      Boolean     @default(false)
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime
+  fuelStation   FuelStation @relation(fields: [stationId], references: [id])
+
+  @@unique([stationId, fuelType, effectiveDate])
+  @@index([effectiveDate])
+  @@index([fuelType])
+}
+
+model FuelStation {
+  id                    String      @id
+  name                  String
+  brand                 String
+  stationCode           String?     @unique
+  address               String?
+  city                  String?
+  region                String?
+  latitude              Float?
+  longitude             Float?
+  route                 String?
+  phone                 String?
+  email                 String?
+  operatingHours        String?
+  hasCardPayment        Boolean     @default(false)
+  hasLoyaltyProgram     Boolean     @default(false)
+  hasHGV                Boolean     @default(true)
+  hasAdBlue             Boolean     @default(false)
+  hasWorkshop           Boolean     @default(false)
+  corporateRatePerLiter Float?
+  rating                Float?
+  totalRatings          Int         @default(0)
+  isActive              Boolean     @default(true)
+  notes                 String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime
+  FuelPrice             FuelPrice[]
+
+  @@index([brand])
+  @@index([city])
+  @@index([route])
+}
+
+model GeofenceZone {
+  id            String          @id
+  name          String
+  latitude      Float
+  longitude     Float
+  radius        Int             @default(500)
+  type          String          @default("depot")
+  address       String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  TrackingAlert TrackingAlert[]
+
+  @@index([type])
+}
+
+model Insurance {
+  id                  String           @id
+  truckId             String
+  provider            String
+  policyNumber        String           @unique
+  type                String
+  coverAmount         Float?
+  premium             Float
+  startDate           DateTime
+  endDate             DateTime
+  status              String           @default("active")
+  renewalReminderSent Boolean          @default(false)
+  documentUrl         String?
+  notes               String?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime
+  truck               Truck            @relation(fields: [truckId], references: [id])
+  InsuranceClaim      InsuranceClaim[]
+
+  @@index([endDate])
+  @@index([truckId, status])
+}
+
+model InsuranceClaim {
+  id                String    @id
+  insuranceId       String
+  truckId           String
+  claimNumber       String    @unique
+  claimType         String
+  incidentDate      DateTime
+  incidentLocation  String
+  description       String
+  status            String    @default("draft")
+  claimAmount       Float
+  approvedAmount    Float?
+  deductible        Float?
+  assignedAdjuster  String?
+  policeReport      String?
+  thirdPartyDetails String?
+  damagePhotos      String?
+  repairEstimate    Float?
+  submittedAt       DateTime?
+  reviewedAt        DateTime?
+  approvedAt        DateTime?
+  paidAt            DateTime?
+  closedAt          DateTime?
+  notes             String?
+  assessorNotes     String?
+  createdBy         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime
+  user              User      @relation(fields: [createdBy], references: [id])
+  insurance         Insurance @relation(fields: [insuranceId], references: [id])
+  truck             Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([claimAmount])
+  @@index([claimType])
+  @@index([createdBy], map: "InsuranceClaim_createdBy_fkey")
+  @@index([incidentDate])
+  @@index([insuranceId])
+  @@index([status])
+  @@index([truckId])
+}
+
+model Invoice {
+  id            String        @id
+  invoiceNumber String        @unique
+  clientId      String
+  tripId        String?       @unique
+  issueDate     DateTime      @default(now())
+  dueDate       DateTime
+  status        String        @default("draft")
+  subtotal      Float
+  taxAmount     Float         @default(0)
+  taxRate       Float         @default(0)
+  totalAmount   Float
+  paidAmount    Float         @default(0)
+  notes         String?
+  terms         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime
+  client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  trip          Trip?         @relation(fields: [tripId], references: [id])
+  InvoiceItem   InvoiceItem[]
+
+  @@index([clientId])
+  @@index([dueDate])
+  @@index([issueDate])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id          String  @id
+  invoiceId   String
+  description String
+  quantity    Float
+  unitPrice   Float
+  total       Float
+  order       Int     @default(0)
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}
+
+model Item {
+  id          String     @id
+  name        String     @unique
+  description String?
+  unit        String     @default("bags")
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  supplierId  String?
+  supplier    Supplier?  @relation(fields: [supplierId], references: [id])
+  Trip        Trip[]
+  TripItem    TripItem[]
+
+  @@index([isActive])
+  @@index([supplierId])
+}
+
+model LoadBoard {
+  id               String    @id
+  clientId         String?
+  title            String
+  pickupLocation   String
+  dropoffLocation  String
+  pickupRegion     String
+  dropoffRegion    String
+  commodityType    String
+  weight           Float?
+  truckType        String?
+  truckCount       Int       @default(1)
+  offeredRate      Float?
+  budgetMin        Float?
+  budgetMax        Float?
+  pickupDate       DateTime?
+  deliveryDate     DateTime?
+  status           String    @default("open")
+  requirements     String?
+  contactName      String?
+  contactPhone     String?
+  assignedTruckId  String?
+  assignedDriverId String?
+  createdBy        String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime
+  driver           Driver?   @relation(fields: [assignedDriverId], references: [id])
+  truck            Truck?    @relation(fields: [assignedTruckId], references: [id])
+  client           Client?   @relation(fields: [clientId], references: [id])
+  user             User      @relation(fields: [createdBy], references: [id])
+
+  @@index([assignedDriverId], map: "LoadBoard_assignedDriverId_fkey")
+  @@index([assignedTruckId], map: "LoadBoard_assignedTruckId_fkey")
+  @@index([clientId])
+  @@index([commodityType])
+  @@index([createdAt])
+  @@index([createdBy], map: "LoadBoard_createdBy_fkey")
+  @@index([dropoffRegion])
+  @@index([pickupDate])
+  @@index([pickupRegion])
+  @@index([status])
+  @@index([truckType])
+}
+
+model LoadingCity {
+  id           String         @id
+  name         String         @unique
+  region       String?
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  LoadingPoint LoadingPoint[]
+  Trip         Trip[]
+
+  @@index([isActive])
+}
+
+model LoadingPoint {
+  id            String      @id
+  name          String
+  loadingCityId String
+  address       String?
+  contactPerson String?
+  contactPhone  String?
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime
+  supplierId    String?
+  loadingCity   LoadingCity @relation(fields: [loadingCityId], references: [id])
+  supplier      Supplier?   @relation(fields: [supplierId], references: [id])
+  Trip          Trip[]
+  TripItem      TripItem[]
+
+  @@unique([name, loadingCityId])
+  @@index([isActive])
+  @@index([loadingCityId])
+  @@index([supplierId])
+}
+
+model MaintenanceRecord {
+  id             String    @id
+  truckId        String
+  type           String
+  title          String
+  description    String?
+  odometer       Float?
+  cost           Float?
+  performedBy    String?
+  performedAt    DateTime  @default(now())
+  nextDueDate    DateTime?
+  nextDueMileage Float?
+  status         String    @default("completed")
+  partsUsed      String?   @db.Text
+  invoiceUrl     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  truck          Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([nextDueDate])
+  @@index([truckId, status])
+}
+
+model Notification {
+  id          String    @id
+  userId      String
+  type        String
+  title       String
+  message     String
+  channel     String    @default("in_app")
+  isRead      Boolean   @default(false)
+  readAt      DateTime?
+  link        String?
+  metadata    String?   @db.Text
+  smsSent     Boolean   @default(false)
+  smsSentAt   DateTime?
+  smsError    String?
+  emailSent   Boolean   @default(false)
+  emailSentAt DateTime?
+  emailError  String?
+  pushSent    Boolean   @default(false)
+  pushSentAt  DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([isRead])
+  @@index([type])
+  @@index([userId, isRead])
+}
+
+model PasswordResetToken {
+  id        String    @id
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@index([token])
+  @@index([userId])
+}
+
+model Payroll {
+  id          String    @id
+  driverId    String
+  month       Int
+  year        Int
+  baseSalary  Float
+  tripBonus   Float     @default(0)
+  overtimePay Float     @default(0)
+  deductions  Float     @default(0)
+  netPay      Float
+  status      String    @default("pending")
+  paidAt      DateTime?
+  approvedBy  String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  driver      Driver    @relation(fields: [driverId], references: [id])
+
+  @@unique([driverId, month, year])
+}
+
+model PerformanceBenchmark {
+  id                 String          @id
+  destinationZoneId  String
+  expectedMinMileage Float
+  expectedMaxMileage Float
+  warningMinMileage  Float?
+  warningMaxMileage  Float?
+  expectedMinFuel    Float?
+  expectedMaxFuel    Float?
+  warningMinFuel     Float?
+  warningMaxFuel     Float?
+  isActive           Boolean         @default(true)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime
+  destinationZone    DestinationZone @relation(fields: [destinationZoneId], references: [id])
+
+  @@index([destinationZoneId])
+  @@index([isActive])
+}
+
+model Pricing {
+  id            String   @id
+  itemName      String
+  destination   String
+  transportRate Float    @default(0)
+  effectiveDate DateTime @default(now())
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+
+  @@unique([itemName, destination])
+}
+
+model ReportHistory {
+  id          String   @id
+  type        String
+  title       String
+  format      String
+  parameters  String?  @db.Text
+  generatedBy String
+  fileSize    Int?
+  status      String   @default("completed")
+  error       String?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([generatedBy])
+  @@index([type])
+}
+
+model RoadConditionReport {
+  id          String    @id
+  reporterId  String
+  roadName    String
+  region      String
+  condition   String
+  hazardType  String
+  description String?
+  severity    String
+  latitude    Float?
+  longitude   Float?
+  reportedAt  DateTime  @default(now())
+  resolvedAt  DateTime?
+  status      String    @default("active")
+  imageUrl    String?
+  tripId      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  user        User      @relation(fields: [reporterId], references: [id])
+  trip        Trip?     @relation(fields: [tripId], references: [id])
+
+  @@index([condition])
+  @@index([hazardType])
+  @@index([region])
+  @@index([reportedAt])
+  @@index([reporterId])
+  @@index([severity])
+  @@index([status])
+  @@index([tripId], map: "RoadConditionReport_tripId_fkey")
+}
+
+model RoadworthyInspection {
+  id                 String    @id
+  truckId            String
+  certificateNumber  String    @unique
+  inspectionType     String
+  inspectionDate     DateTime
+  inspectionStation  String?
+  inspectorName      String?
+  inspectorId        String?
+  inspectorSignature String?
+  result             String
+  vehicleFitness     String    @default("fit")
+  brakesCheck        String    @default("pass")
+  lightsCheck        String    @default("pass")
+  tyresCheck         String    @default("pass")
+  emissionsCheck     String    @default("pass")
+  steeringCheck      String    @default("pass")
+  suspensionCheck    String    @default("pass")
+  bodyCheck          String    @default("pass")
+  electricalCheck    String    @default("pass")
+  odometerReading    Float?
+  defectsFound       String?   @db.Text
+  advisories         String?   @db.Text
+  recommendations    String?   @db.Text
+  certificateIssued  Boolean   @default(false)
+  certificateExpiry  DateTime?
+  certificateUrl     String?
+  inspectionFee      Float?
+  nextInspectionDue  DateTime?
+  status             String    @default("completed")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime
+  truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
+
+  @@index([certificateExpiry])
+  @@index([inspectionDate])
+  @@index([result])
+  @@index([truckId, status])
+  @@index([vehicleFitness])
+}
+
+model Role {
+  id          String   @id
+  name        String   @unique
+  description String?
+  permissions String   @db.Text
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  User        User[]
+}
+
+model SettlementLine {
+  id               String           @id
+  settlementId     String
+  tripId           String?
+  description      String
+  type             String
+  amount           Float
+  driverSettlement DriverSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+  trip             Trip?            @relation(fields: [tripId], references: [id])
+
+  @@index([settlementId])
+  @@index([tripId], map: "SettlementLine_tripId_fkey")
+}
+
+model Supplier {
+  id            String         @id
+  name          String         @unique
+  contactPerson String?
+  contactPhone  String?
+  email         String?
+  address       String?
+  notes         String?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime
+  Item          Item[]
+  LoadingPoint  LoadingPoint[]
+  TripItem      TripItem[]
+
+  @@index([isActive])
+}
+
+model SystemSettings {
+  id                      String   @id
+  companyName             String   @default("iFleetPro Ltd.")
+  companyEmail            String   @default("info@fleetpro.com.gh")
+  companyPhone            String   @default("+233 30 277 8899")
+  companyAddress          String   @default("37 Ring Road Central")
+  companyCity             String   @default("Accra")
+  companyCountry          String   @default("Ghana")
+  companyWebsite          String   @default("www.fleetpro.com.gh")
+  registrationNumber      String   @default("")
+  notifyTripStarted       Boolean  @default(true)
+  notifyTripCompleted     Boolean  @default(true)
+  notifyMaintenanceDue    Boolean  @default(true)
+  notifyInsuranceExpiring Boolean  @default(true)
+  notifySpeedingAlert     Boolean  @default(true)
+  notifyGeofenceAlert     Boolean  @default(true)
+  notifyDriverOffline     Boolean  @default(true)
+  notifyDailyReport       Boolean  @default(false)
+  smsProvider             String   @default("hubtel")
+  smsEnabled              Boolean  @default(false)
+  hubtelClientId          String   @default("")
+  hubtelApiSecret         String   @default("")
+  arkeselApiKey           String   @default("")
+  arkeselSenderId         String   @default("")
+  paystackEnabled         Boolean  @default(false)
+  paystackSecretKey       String   @default("")
+  paystackPublicKey       String   @default("")
+  paystackMode            String   @default("test")
+  mobileMoneyProvider     String   @default("mtn")
+  paystackWebhookSecret   String   @default("")
+  emailEnabled            Boolean  @default(false)
+  smtpHost                String   @default("")
+  smtpPort                Int      @default(587)
+  smtpUser                String   @default("")
+  smtpPass                String   @default("")
+  smtpFrom                String   @default("")
+  smtpSecure              Boolean  @default(true)
+  defaultUpdateInterval   Int      @default(30)
+  speedThreshold          Int      @default(80)
+  enableGeofence          Boolean  @default(true)
+  idleTimeout             Int      @default(15)
+  currency                String   @default("GHS")
+  distanceUnit            String   @default("km")
+  fuelUnit                String   @default("litres")
+  dateFormat              String   @default("DD/MM/YYYY")
+  timezone                String   @default("Africa/Accra")
+  language                String   @default("English")
+  driverIdPrefix          String   @default("FP-DRV-")
+  driverIdCounter         Int      @default(1)
+  driverIdPadding         Int      @default(3)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime
+}
+
+model TollRecord {
+  id              String    @id
+  truckId         String
+  driverId        String?
+  tripId          String?
+  tollPoint       String
+  tollType        String    @default("toll")
+  location        String?
+  route           String?
+  latitude        Float?
+  longitude       Float?
+  amount          Float
+  paymentMethod   String    @default("cash")
+  referenceNumber String?
+  tollDate        DateTime
+  direction       String?
+  status          String    @default("verified")
+  disputeReason   String?
+  resolvedBy      String?
+  resolvedAt      DateTime?
+  vehicleWeight   Float?
+  overloaded      Boolean   @default(false)
+  overloadFine    Float?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+  driver          Driver?   @relation(fields: [driverId], references: [id])
+  trip            Trip?     @relation(fields: [tripId], references: [id])
+  truck           Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([driverId])
+  @@index([route])
+  @@index([tollDate])
+  @@index([tollType])
+  @@index([tripId])
+  @@index([truckId, tollDate])
+}
+
+model TrackingAlert {
+  id             String        @id
+  truckId        String
+  tripId         String?
+  geofenceZoneId String?
+  type           String
+  title          String
+  message        String
+  latitude       Float?
+  longitude      Float?
+  isRead         Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  geofenceZone   GeofenceZone? @relation(fields: [geofenceZoneId], references: [id])
+  trip           Trip?         @relation(fields: [tripId], references: [id])
+  truck          Truck         @relation(fields: [truckId], references: [id])
+
+  @@index([geofenceZoneId], map: "TrackingAlert_geofenceZoneId_fkey")
+  @@index([isRead])
+  @@index([tripId], map: "TrackingAlert_tripId_fkey")
+  @@index([truckId, createdAt])
+  @@index([type])
+}
+
+model TrackingConfig {
+  id             String   @id
+  truckId        String   @unique
+  enablePhoneGps Boolean  @default(true)
+  enableHardware Boolean  @default(false)
+  updateInterval Int      @default(5)
+  geofenceRadius Int      @default(500)
+  isActive       Boolean  @default(true)
+  updatedAt      DateTime
+  createdAt      DateTime @default(now())
+  truck          Truck    @relation(fields: [truckId], references: [id])
+}
+
+model Trip {
+  id                      String                    @id
+  tripNumber              String                    @unique
+  truckId                 String
+  driverId                String
+  waybillNumber           String?
+  orderNumber             String?
+  loadingLocation         String
+  loadingAddress          String?
+  loadingLat              Float?
+  loadingLng              Float?
+  destination             String
+  destinationAddress      String?
+  destLat                 Float?
+  destLng                 Float?
+  itemId                  String?
+  itemName                String
+  quantity                Float
+  unit                    String                    @default("bags")
+  unitPrice               Float?
+  totalRevenue            Float?
+  departureTime           DateTime
+  arrivalTime             DateTime?
+  estimatedDuration       Float?
+  actualDuration          Float?
+  startMileage            Float?
+  endMileage              Float?
+  totalMileage            Float?
+  fuelLevelBefore         Float?
+  fuelLevelAfter          Float?
+  fuelUsed                Float?
+  fuelCost                Float?
+  startMileageImage       String?
+  deliveryType            String                    @default("SINGLE")
+  loadingCityId           String?
+  loadingPointId          String?
+  destinationCityId       String?
+  destinationZoneId       String?
+  status                  String                    @default("scheduled")
+  waitingReason           String?
+  waitingSince            DateTime?
+  loadingStartedAt        DateTime?
+  loadingCompletedAt      DateTime?
+  totalOffloaded          Float                     @default(0)
+  offloadingStartedAt     DateTime?
+  offloadingCompletedAt   DateTime?
+  customerName            String?
+  customerPhone           String?
+  customerRef             String?
+  clientId                String?
+  notes                   String?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime
+  BorderCrossing          BorderCrossing[]
+  CashAdvance             CashAdvance[]
+  DeliveryStop            DeliveryStop[]
+  DepotQueue              DepotQueue[]
+  Expense                 Expense[]
+  FuelLog                 FuelLog[]
+  Invoice                 Invoice?
+  RoadConditionReport     RoadConditionReport[]
+  SettlementLine          SettlementLine[]
+  TollRecord              TollRecord[]
+  TrackingAlert           TrackingAlert[]
+  client                  Client?                   @relation(fields: [clientId], references: [id])
+  destinationCity         DestinationCity?          @relation(fields: [destinationCityId], references: [id])
+  destinationZone         DestinationZone?          @relation(fields: [destinationZoneId], references: [id])
+  driver                  Driver                    @relation(fields: [driverId], references: [id])
+  item                    Item?                     @relation(fields: [itemId], references: [id])
+  loadingCity             LoadingCity?              @relation(fields: [loadingCityId], references: [id])
+  loadingPoint            LoadingPoint?             @relation(fields: [loadingPointId], references: [id])
+  truck                   Truck                     @relation(fields: [truckId], references: [id])
+  TripComment             TripComment[]
+  TripDeliveryDestination TripDeliveryDestination[]
+  TripEvent               TripEvent[]
+  TripItem                TripItem[]
+  TruckLocation           TruckLocation[]
+  VehicleInspection       VehicleInspection[]
+  WeightVerification      WeightVerification[]
+
+  @@index([clientId])
+  @@index([deliveryType])
+  @@index([departureTime])
+  @@index([destinationCityId])
+  @@index([destinationZoneId])
+  @@index([driverId])
+  @@index([itemId])
+  @@index([loadingCityId])
+  @@index([loadingPointId])
+  @@index([status, departureTime])
+  @@index([status])
+  @@index([truckId])
+}
+
+model TripComment {
+  id        String   @id
+  tripId    String
+  userId    String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  trip      Trip     @relation(fields: [tripId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([tripId, createdAt])
+  @@index([userId])
+}
+
+model TripDeliveryDestination {
+  id                String           @id
+  tripId            String
+  destinationZoneId String?
+  clientId          String?
+  customerName      String
+  customerPhone     String?
+  stopOrder         Int
+  status            String           @default("pending")
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime
+  actualQty         Float?
+  address           String?
+  notes             String?
+  zoneRate          Float?
+  client            Client?          @relation(fields: [clientId], references: [id])
+  destinationZone   DestinationZone? @relation(fields: [destinationZoneId], references: [id])
+  trip              Trip             @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  TripItem          TripItem[]
+
+  @@index([clientId])
+  @@index([destinationZoneId])
+  @@index([status])
+  @@index([tripId])
+  @@index([tripId, stopOrder])
+}
+
+model TripEvent {
+  id         String   @id
+  tripId     String
+  fromStatus String?
+  toStatus   String
+  userId     String?
+  notes      String?
+  location   String?
+  metadata   String?  @db.Text
+  createdAt  DateTime @default(now())
+  trip       Trip     @relation(fields: [tripId], references: [id])
+
+  @@index([tripId, createdAt])
+}
+
+model TripItem {
+  id                      String                   @id
+  tripId                  String
+  supplierId              String?
+  loadingPointId          String?
+  itemId                  String?
+  itemName                String
+  unit                    String                   @default("bags")
+  quantity                Float
+  rate                    Float?
+  total                   Float?
+  sortOrder               Int                      @default(0)
+  deliveryDestinationId   String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime
+  tripDeliveryDestination TripDeliveryDestination? @relation(fields: [deliveryDestinationId], references: [id])
+  item                    Item?                    @relation(fields: [itemId], references: [id])
+  loadingPoint            LoadingPoint?            @relation(fields: [loadingPointId], references: [id])
+  supplier                Supplier?                @relation(fields: [supplierId], references: [id])
+  trip                    Trip                     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@index([deliveryDestinationId])
+  @@index([itemId])
+  @@index([loadingPointId], map: "TripItem_loadingPointId_fkey")
+  @@index([supplierId])
+  @@index([tripId])
+}
+
+model Truck {
+  id                   String                 @id
+  plateNumber          String                 @unique
+  make                 String
+  model                String
+  year                 Int
+  vinNumber            String?                @unique
+  engineNumber         String?
+  chassisNumber        String?
+  color                String?
+  fuelType             String                 @default("Diesel")
+  tankCapacity         Float?
+  status               String                 @default("active")
+  currentMileage       Float                  @default(0)
+  driverId             String?
+  notes                String?
+  insuranceStatus      String                 @default("none")
+  nextServiceDate      DateTime?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  BorderCrossing       BorderCrossing[]
+  DepotQueue           DepotQueue[]
+  DvlaRegistration     DvlaRegistration[]
+  Expense              Expense[]
+  FuelBudget           FuelBudget[]
+  FuelLog              FuelLog[]
+  Insurance            Insurance[]
+  InsuranceClaim       InsuranceClaim[]
+  LoadBoard            LoadBoard[]
+  MaintenanceRecord    MaintenanceRecord[]
+  RoadworthyInspection RoadworthyInspection[]
+  TollRecord           TollRecord[]
+  TrackingAlert        TrackingAlert[]
+  TrackingConfig       TrackingConfig?
+  Trip                 Trip[]
+  driver               Driver?                @relation(fields: [driverId], references: [id])
+  TruckLocation        TruckLocation[]
+  Tyre                 Tyre[]
+  VehicleInspection    VehicleInspection[]
+
+  @@index([driverId], map: "Truck_driverId_fkey")
+}
+
+model TruckLocation {
+  id        String   @id
+  truckId   String
+  tripId    String?
+  latitude  Float
+  longitude Float
+  speed     Float?
+  heading   Float?
+  accuracy  Float?
+  source    String   @default("phone")
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now())
+  trip      Trip?    @relation(fields: [tripId], references: [id])
+  truck     Truck    @relation(fields: [truckId], references: [id])
+
+  @@index([tripId])
+  @@index([truckId, timestamp])
+}
+
+model Tyre {
+  id             String    @id
+  truckId        String
+  serialNumber   String    @unique
+  brand          String
+  purchaseDate   DateTime
+  purchasePrice  Float
+  condition      String    @default("new")
+  lastInspection DateTime?
+  retiredDate    DateTime?
+  retiredReason  String?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  truck          Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([truckId])
+}
+
+model VehicleInspection {
+  id                  String    @id
+  truckId             String
+  driverId            String?
+  tripId              String?
+  type                String
+  inspectionDate      DateTime  @default(now())
+  odometerReading     Float?
+  result              String    @default("pass")
+  overallNotes        String?
+  checkItems          String
+  totalChecks         Int       @default(0)
+  passCount           Int       @default(0)
+  warningCount        Int       @default(0)
+  failCount           Int       @default(0)
+  defectsFound        Boolean   @default(false)
+  defectDetails       String?   @db.Text
+  photos              String?   @db.Text
+  inspectedBy         String?
+  inspectorName       String?
+  signature           String?
+  location            String?
+  latitude            Float?
+  longitude           Float?
+  requiresFollowUp    Boolean   @default(false)
+  followUpNotes       String?
+  followUpCompletedAt DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime
+  driver              Driver?   @relation(fields: [driverId], references: [id])
+  trip                Trip?     @relation(fields: [tripId], references: [id])
+  truck               Truck     @relation(fields: [truckId], references: [id])
+
+  @@index([driverId])
+  @@index([result])
+  @@index([tripId])
+  @@index([truckId, inspectionDate])
+  @@index([type])
+}
+
+model WarehouseItem {
+  id            String    @id
+  name          String
+  category      String
+  sku           String    @unique
+  quantity      Int       @default(0)
+  minStock      Int       @default(5)
+  unitPrice     Float
+  unit          String    @default("pcs")
+  warehouse     String    @default("Main Depot")
+  location      String?
+  supplier      String?
+  lastRestocked DateTime?
+  expiryDate    DateTime?
+  status        String    @default("in_stock")
+  notes         String?
+  createdBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime
+  user          User      @relation(fields: [createdBy], references: [id])
+
+  @@index([category])
+  @@index([createdBy], map: "WarehouseItem_createdBy_fkey")
+  @@index([quantity])
+  @@index([sku])
+  @@index([status])
+  @@index([warehouse])
+}
+
+model WeightVerification {
+  id              String   @id
+  tripId          String
+  checkpointType  String
+  verifiedWeight  Float
+  declaredWeight  Float?
+  variance        Float?
+  variancePercent Float?
+  status          String   @default("verified")
+  verifiedBy      String?
+  verifiedByName  String?
+  notes           String?
+  location        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  trip            Trip     @relation(fields: [tripId], references: [id])
+
+  @@index([checkpointType])
+  @@index([createdAt])
+  @@index([status])
+  @@index([tripId])
+}
+
+model ZoneRate {
+  id                      String          @id
+  destinationZoneId       String
+  rateAmount              Float
+  minMileage              Float?
+  maxMileage              Float?
+  expectedFuelConsumption Float?
+  effectiveDate           DateTime        @default(now())
+  isActive                Boolean         @default(true)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime
+  destinationZone         DestinationZone @relation(fields: [destinationZoneId], references: [id])
+
+  @@index([destinationZoneId])
+  @@index([isActive])
 }
