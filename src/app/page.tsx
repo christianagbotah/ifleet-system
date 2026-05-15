@@ -1,5 +1,5 @@
 'use client'
-import { APP_COPYRIGHT } from '@/lib/constants'
+import { APP_COPYRIGHT, APP_NAME, navigationGroups } from '@/lib/constants'
 
 import dynamic from 'next/dynamic'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
@@ -502,6 +502,17 @@ export default function Home() {
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
+
+  // Dynamic browser tab title based on current page
+  useEffect(() => {
+    const allItems = navigationGroups.flatMap(g => g.items)
+    const specialTitles: Record<string, string> = {
+      profile: 'Profile',
+      login: 'Login',
+    }
+    const label = specialTitles[currentPage] ?? allItems.find(i => i.id === currentPage)?.label ?? 'Dashboard'
+    document.title = `${label} — ${APP_NAME}`
+  }, [currentPage])
 
   // Navigate via custom events (supports string page ID or { page, entityId, entityType } object)
   useEffect(() => {
