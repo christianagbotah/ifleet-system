@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import jwt from 'jsonwebtoken'
 
 // ============ Types ============
 
@@ -8,6 +9,18 @@ export interface AuthContext {
   roleName: string
   permissions: string[]
   driverId: string | null
+}
+
+export interface JwtPayload {
+  userId: string
+  email: string
+  name: string
+  roleName: string
+  permissions: string[]
+  driverId: string | null
+  isActive: boolean
+  iat?: number
+  exp?: number
 }
 
 // ============ Role Definitions ============
@@ -20,40 +33,80 @@ export const ROLES = {
 
 export type RoleName = (typeof ROLES)[keyof typeof ROLES]
 
+const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fleetpro-fallback-secret'
+
+// ============ JWT Decoder Cache ============
+// Avoid re-parsing the same JWT on every requireAuth call within one request.
+// The decoded payload is stored on the request object so downstream calls reuse it.
+const JWT_CONTEXT_KEY = Symbol('jwt-auth-context')
+
+/**
+ * Decode the JWT from the Authorization header and return the user context.
+ * Caches the result on the request object for the lifetime of the request.
+ */
+function decodeJwtFromRequest(request: NextRequest): AuthContext | null {
+  // Check cache first
+  const cached = (request as Record<symbol, unknown>)[JWT_CONTEXT_KEY]
+  if (cached) return cached as AuthContext
+
+  // 1. Try Authorization: Bearer <token>
+  const authHeader = request.headers.get('authorization')
+  let token: string | null = null
+  if (authHeader?.startsWith('Bearer ')) {
+    token = authHeader.slice(7)
+  }
+
+  // 2. Fallback: check x-auth-user-id / x-auth-user-role headers (legacy support)
+  if (!token) {
+    const userId = request.headers.get('x-auth-user-id')
+    const roleName = request.headers.get('x-auth-user-role')
+    if (userId && roleName) {
+      const permissionsHeader = request.headers.get('x-auth-user-permissions')
+      let permissions: string[] = []
+      if (permissionsHeader) {
+        try { permissions = JSON.parse(permissionsHeader) } catch { permissions = [] }
+      }
+      const ctx: AuthContext = {
+        userId,
+        email: request.headers.get('x-auth-user-email') || '',
+        roleName,
+        permissions,
+        driverId: request.headers.get('x-auth-driver-id') || null,
+      }
+      ;(request as Record<symbol, unknown>)[JWT_CONTEXT_KEY] = ctx
+      return ctx
+    }
+    return null
+  }
+
+  // 3. Decode JWT
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload
+    if (!payload || !payload.userId || !payload.roleName) {
+      return null
+    }
+    const ctx: AuthContext = {
+      userId: payload.userId,
+      email: payload.email || '',
+      roleName: payload.roleName,
+      permissions: Array.isArray(payload.permissions) ? payload.permissions : [],
+      driverId: payload.driverId || null,
+    }
+    ;(request as Record<symbol, unknown>)[JWT_CONTEXT_KEY] = ctx
+    return ctx
+  } catch {
+    return null
+  }
+}
+
 // ============ Auth Helper Functions ============
 
 /**
  * Extract and validate the JWT-authenticated user context from request headers.
- * Called inside API route handlers AFTER the middleware has already validated the JWT.
- * Returns null if headers are missing (shouldn't happen if middleware is working).
+ * Supports both Authorization: Bearer <JWT> and legacy x-auth-* headers.
  */
 export function getAuthContext(request: NextRequest): AuthContext | null {
-  const userId = request.headers.get('x-auth-user-id')
-  const roleName = request.headers.get('x-auth-user-role')
-  const email = request.headers.get('x-auth-user-email')
-  const permissionsHeader = request.headers.get('x-auth-user-permissions')
-  const driverId = request.headers.get('x-auth-driver-id')
-
-  if (!userId || !roleName) {
-    return null
-  }
-
-  let permissions: string[] = []
-  if (permissionsHeader) {
-    try {
-      permissions = JSON.parse(permissionsHeader)
-    } catch {
-      permissions = []
-    }
-  }
-
-  return {
-    userId,
-    email: email || '',
-    roleName,
-    permissions,
-    driverId: driverId || null,
-  }
+  return decodeJwtFromRequest(request)
 }
 
 /**
