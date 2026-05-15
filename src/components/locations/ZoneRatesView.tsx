@@ -1132,7 +1132,7 @@ export function ZoneRatesView() {
 
       {/* ── Bulk Add Dialog ── */}
       <Dialog open={bulkAddOpen} onOpenChange={(open) => { if (!open) setBulkAddOpen(false) }}>
-        <DialogContent className="md:max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+        <DialogContent className="md:max-w-4xl">
           <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <ListPlus className="h-5 w-5 text-amber-500" />
@@ -1296,7 +1296,7 @@ export function ZoneRatesView() {
 
       {/* ── Bulk Edit Dialog ── */}
       <Dialog open={bulkEditOpen} onOpenChange={(open) => { if (!open) setBulkEditOpen(false) }}>
-        <DialogContent className="md:max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
+        <DialogContent className="md:max-w-5xl">
           <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <FileEdit className="h-5 w-5 text-amber-500" />

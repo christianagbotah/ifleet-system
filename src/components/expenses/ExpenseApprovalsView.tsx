@@ -191,7 +191,7 @@ function ApprovalDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {cfg.icon}
@@ -334,7 +334,7 @@ function ApprovalDetailSheet({
   if (loading) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent side="right" className="w-full sm:max-w-lg">
           <div className="p-6 space-y-4">
             <Skeleton className="h-8 w-48" />
             <Skeleton className="h-32 w-full" />
@@ -349,7 +349,7 @@ function ApprovalDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+      <SheetContent side="right" className="w-full sm:max-w-lg">
         <div className="space-y-6 p-6">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">

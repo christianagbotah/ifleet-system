@@ -328,7 +328,7 @@ export function BulkTyreFormDialog({ open, onOpenChange, onCreated }: BulkTyreFo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="md:max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+      <DialogContent className="md:max-w-4xl">
         <DialogHeader className="shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <CircleDot className="h-5 w-5 text-amber-500" />

@@ -331,7 +331,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl max-h-[90vh] flex flex-col overflow-hidden">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Edit User' : prefillDepartment ? 'Add Staff Member' : 'Add New User'}</DialogTitle>
           <DialogDescription>
@@ -343,7 +343,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
           </DialogDescription>
         </DialogHeader>
 
-        <DialogBody className="flex-1 min-h-0 overflow-y-auto">
+        <DialogBody className="flex-1 min-h-0">
         <form id="user-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Name & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

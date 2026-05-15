@@ -409,7 +409,7 @@ function SettlementDetailSheet({
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
+        <SheetContent side="right" className="w-full sm:max-w-2xl">
           {loading ? (
             <div className="p-6 space-y-4">
               <Skeleton className="h-6 w-48" />

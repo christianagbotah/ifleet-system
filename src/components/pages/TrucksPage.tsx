@@ -685,7 +685,7 @@ export default function TrucksPage() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => { setFormOpen(open); if (!open) { setSelectedTruck(null); form.reset() } }}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col overflow-hidden p-4 sm:p-6">
+        <DialogContent className="sm:max-w-2xl p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>{selectedTruck ? 'Edit Truck' : 'Add New Truck'}</DialogTitle>
             <DialogDescription>

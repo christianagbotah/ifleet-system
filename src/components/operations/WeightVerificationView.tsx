@@ -499,7 +499,7 @@ export function WeightVerificationView() {
 
       {/* Create Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>New Weight Verification</DialogTitle>
             <DialogDescription>Record a weight check at a checkpoint</DialogDescription>
@@ -510,7 +510,7 @@ export function WeightVerificationView() {
 
       {/* Update Dialog */}
       <Dialog open={showUpdateDialog} onOpenChange={(open) => { if (!open) { setShowUpdateDialog(false); setSelected(null) } }}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Update Weight Verification</DialogTitle>
             <DialogDescription>Modify verification details, status, and notes</DialogDescription>

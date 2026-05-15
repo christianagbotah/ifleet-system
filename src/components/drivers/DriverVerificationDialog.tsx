@@ -127,7 +127,7 @@ export function DriverVerificationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[95vh] !flex !flex-col overflow-hidden p-0">
+      <DialogContent className="max-w-2xl max-h-[95vh] p-0">
         <div className="flex-shrink-0 px-6 pt-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">

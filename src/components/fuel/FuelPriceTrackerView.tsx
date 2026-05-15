@@ -171,7 +171,7 @@ export function FuelPriceTrackerView() {
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Add Station</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-lg">
               <AddStationForm onSubmit={handleCreateStation} loading={submitting} />
             </DialogContent>
           </Dialog>
@@ -322,7 +322,7 @@ export function FuelPriceTrackerView() {
                                 <ExternalLink className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+                            <DialogContent className="max-w-lg">
                               <StationDetailPanel station={station} onDelete={() => handleDeleteStation(station.id)} onRefresh={() => { loadStations(); loadAnalytics() }} />
                             </DialogContent>
                           </Dialog>

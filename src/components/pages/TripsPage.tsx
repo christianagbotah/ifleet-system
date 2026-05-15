@@ -1065,7 +1065,7 @@ export default function TripsPage() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => { setFormOpen(open); if (!open) { setSelectedTrip(null); form.reset(); setImagePreviews([]) } }}>
-        <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col overflow-hidden p-4 sm:p-6">
+        <DialogContent className="sm:max-w-3xl p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {selectedTrip ? 'Edit Trip' : 'Create New Trip'}
@@ -1374,7 +1374,7 @@ export default function TripsPage() {
 
       {/* View Dialog */}
       <Dialog open={viewOpen} onOpenChange={(open) => { setViewOpen(open); if (!open) setLightboxIndex(-1) }}>
-        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between pr-8">
               <span>Trip Details — {selectedTrip?.tripNumber}</span>

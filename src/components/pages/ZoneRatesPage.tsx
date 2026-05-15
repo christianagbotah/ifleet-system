@@ -392,7 +392,7 @@ export default function ZoneRatesPage() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => { setFormOpen(open); if (!open) { setSelectedRate(null); form.reset() } }}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{selectedRate ? 'Edit Zone Rate' : 'Add New Zone Rate'}</DialogTitle>
             <DialogDescription>

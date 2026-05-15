@@ -433,7 +433,7 @@ export function BorderCrossingsView() {
 
       {/* Create Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>New Border Crossing</DialogTitle>
             <DialogDescription>Create a new border crossing entry for a trip</DialogDescription>
@@ -444,7 +444,7 @@ export function BorderCrossingsView() {
 
       {/* Update Dialog */}
       <Dialog open={showUpdateDialog} onOpenChange={(open) => { if (!open) { setShowUpdateDialog(false); setSelectedCrossing(null) } }}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Update Border Crossing</DialogTitle>
             <DialogDescription>Change status, set wait time, clearance fee and notes</DialogDescription>

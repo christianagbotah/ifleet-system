@@ -808,7 +808,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="md:max-w-5xl max-h-[92vh] flex flex-col overflow-hidden">
+      <DialogContent className="md:max-w-5xl max-h-[92vh]">
         <DialogHeader>
           <DialogTitle>{trip ? 'Edit Trip' : 'Create New Trip'}</DialogTitle>
           <DialogDescription>{trip ? 'Update trip details below.' : 'Fill in trip details to create a new cargo trip.'}</DialogDescription>

@@ -588,7 +588,7 @@ export function TollTrackerView() {
 
       {/* Create Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Record Toll Fee</DialogTitle>
             <DialogDescription>Add a new toll, weighbridge fee, checkpoint cost, or parking charge.</DialogDescription>

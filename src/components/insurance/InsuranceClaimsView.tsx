@@ -370,7 +370,7 @@ export function InsuranceClaimsView() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>File New Insurance Claim</DialogTitle>
           </DialogHeader>
@@ -502,7 +502,7 @@ export function InsuranceClaimsView() {
 
       {/* Detail Sheet */}
       <Sheet open={detailOpen} onOpenChange={setDetailOpen}>
-        <SheetContent className="sm:max-w-lg overflow-y-auto">
+        <SheetContent className="sm:max-w-lg">
           {detailClaim && (
             <>
               <SheetHeader>

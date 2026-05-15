@@ -446,7 +446,7 @@ export function VehicleInspectionsView() {
 
       {/* Inspection Detail Sheet */}
       <Sheet open={!!detailInspection} onOpenChange={(open) => { if (!open) setDetailInspection(null) }}>
-        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-lg">
           {detailLoading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
@@ -556,7 +556,7 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ClipboardCheck className="h-5 w-5 text-orange-500" />

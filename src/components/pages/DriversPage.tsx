@@ -716,7 +716,7 @@ export default function DriversPage() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => { setFormOpen(open); if (!open) { setSelectedDriver(null); form.reset() } }}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col overflow-hidden p-4 sm:p-6">
+        <DialogContent className="sm:max-w-2xl p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {selectedDriver ? 'Edit Driver' : 'Add New Driver'}

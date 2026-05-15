@@ -396,7 +396,7 @@ export default function WarehousesPage() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => { setFormOpen(open); if (!open) { setSelectedWarehouse(null); form.reset() } }}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{selectedWarehouse ? 'Edit Warehouse' : 'Add New Warehouse'}</DialogTitle>
             <DialogDescription>

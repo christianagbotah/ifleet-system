@@ -340,7 +340,7 @@ export function RoadConditionsView() {
 
       {/* Report Dialog */}
       <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{editingReport ? 'Edit' : 'Report'} Road Condition</DialogTitle>
             <DialogDescription>Share road condition information with the fleet</DialogDescription>
