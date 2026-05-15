@@ -37,7 +37,7 @@ export function ResponsiveDialogContent({
   showCloseButton?: boolean
 }) {
   return (
-    <DialogContent className={cn('max-h-[85vh] overflow-y-auto sm:max-h-[80vh]', className)} showCloseButton={showCloseButton} {...props}>
+    <DialogContent className={cn('max-h-[85vh] flex flex-col overflow-hidden sm:max-h-[80vh]', className)} showCloseButton={showCloseButton} {...props}>
       {children}
     </DialogContent>
   )

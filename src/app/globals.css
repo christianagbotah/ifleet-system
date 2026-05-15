@@ -147,3 +147,15 @@
     cursor: pointer;
   }
 }
+
+/* Sticky DialogFooter — keeps Save/Cancel buttons visible when dialog overflows */
+@layer base {
+  [data-slot="dialog-content"]:has(>[data-slot="dialog-footer"]):not(.overflow-hidden) > [data-slot="dialog-footer"] {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    background: var(--background);
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+  }
+}

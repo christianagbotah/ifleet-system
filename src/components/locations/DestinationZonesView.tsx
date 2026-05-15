@@ -869,7 +869,7 @@ export function DestinationZonesView() {
 
       {/* ── Bulk Add Dialog ── */}
       <Dialog open={bulkAddOpen} onOpenChange={(open) => { if (!open) setBulkAddOpen(false) }}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ListPlus className="h-5 w-5 text-amber-500" />
@@ -880,7 +880,7 @@ export function DestinationZonesView() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
+          <div className="space-y-3 flex-1 min-h-0 overflow-y-auto">
             {/* Column headers */}
             <div className="grid grid-cols-[1fr_1fr_80px_40px] gap-2 px-1">
               <span className="text-xs font-medium text-muted-foreground">Zone Name *</span>
@@ -938,7 +938,7 @@ export function DestinationZonesView() {
             </Button>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="shrink-0 border-t pt-3">
             <Button variant="outline" onClick={() => setBulkAddOpen(false)}>
               Cancel
             </Button>
@@ -959,7 +959,7 @@ export function DestinationZonesView() {
 
       {/* ── Bulk Edit Dialog ── */}
       <Dialog open={bulkEditOpen} onOpenChange={(open) => { if (!open) setBulkEditOpen(false) }}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileEdit className="h-5 w-5 text-amber-500" />
@@ -970,7 +970,7 @@ export function DestinationZonesView() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
+          <div className="space-y-3 flex-1 min-h-0 overflow-y-auto">
             <div className="grid grid-cols-[1fr_1fr_80px] gap-2 px-1">
               <span className="text-xs font-medium text-muted-foreground">Zone Name *</span>
               <span className="text-xs font-medium text-muted-foreground">City *</span>
@@ -1011,7 +1011,7 @@ export function DestinationZonesView() {
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="shrink-0 border-t pt-3">
             <Button variant="outline" onClick={() => setBulkEditOpen(false)}>
               Cancel
             </Button>

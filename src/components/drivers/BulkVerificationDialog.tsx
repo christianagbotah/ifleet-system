@@ -90,7 +90,7 @@ export function BulkVerificationDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogBody className="flex-1 overflow-hidden space-y-4 py-2">
+        <DialogBody className="flex-1 min-h-0 overflow-hidden space-y-4 py-2">
           {/* Selected drivers list */}
           <div className="space-y-2">
             <p className="text-sm font-medium">Selected Drivers ({driverIds.length})</p>

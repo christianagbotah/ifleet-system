@@ -808,13 +808,13 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto">
+      <DialogContent className="md:max-w-5xl max-h-[92vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle>{trip ? 'Edit Trip' : 'Create New Trip'}</DialogTitle>
           <DialogDescription>{trip ? 'Update trip details below.' : 'Fill in trip details to create a new cargo trip.'}</DialogDescription>
         </DialogHeader>
 
-        <DialogBody>
+        <DialogBody className="flex-1 min-h-0">
         <Form {...form}>
           <form id="trip-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* 0. Order / Waybill Number (always first) */}
@@ -1532,7 +1532,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
           </form>
         </Form>
         </DialogBody>
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 sm:gap-0 shrink-0 border-t pt-3">
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={submitting}>
             Cancel
           </Button>

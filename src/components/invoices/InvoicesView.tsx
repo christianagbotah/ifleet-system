@@ -262,7 +262,7 @@ function CreateInvoiceDialog({
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) resetForm(); onOpenChange(v) }}>
-      <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[95vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Receipt className="h-5 w-5 text-amber-500" />
@@ -271,7 +271,7 @@ function CreateInvoiceDialog({
           <DialogDescription>Add a new invoice for a client with line items and payment terms.</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 pt-2">
+        <div className="space-y-4 pt-2 flex-1 min-h-0 overflow-y-auto">
           {/* Client */}
           <div>
             <Label className="text-sm font-medium">Client *</Label>
@@ -409,7 +409,7 @@ function CreateInvoiceDialog({
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="shrink-0 border-t pt-3">
           <Button variant="outline" onClick={() => { resetForm(); onOpenChange(false) }}>
             Cancel
           </Button>
@@ -452,7 +452,7 @@ function InvoiceDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-w-xl max-h-[95vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="flex items-center gap-2">
@@ -466,7 +466,7 @@ function InvoiceDetailDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1 min-h-0 overflow-y-auto">
           {/* Client Info */}
           <div className="bg-muted/50 rounded-md p-3">
             <p className="text-xs text-muted-foreground mb-1">Bill To</p>
@@ -567,7 +567,7 @@ function InvoiceDetailDialog({
           )}
         </div>
 
-        <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-2">
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-2 shrink-0 border-t pt-3">
           <div className="flex gap-2">
             <Button
               variant="outline"
