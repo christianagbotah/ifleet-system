@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth } from '@/lib/auth-server'
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { searchParams } = new URL(request.url)
     const from = searchParams.get('from') || ''
     const to = searchParams.get('to') || ''
@@ -23,15 +27,18 @@ export async function GET(request: NextRequest) {
     const trips = await db.trip.findMany({
       where: Object.keys(where).length > 0 ? where : undefined,
       include: {
-        driver: { select: { driverName: true } },
+        driver: { select: { firstName: true, lastName: true } },
         truck: { select: { plateNumber: true } },
       },
       orderBy: { createdAt: 'desc' },
     })
 
+    const getDriverName = (driver: { firstName: string; lastName: string } | null) =>
+      driver ? `${driver.firstName} ${driver.lastName}` : 'Unknown'
+
     const exportData = trips.map((trip) => ({
       tripNumber: trip.tripNumber,
-      driverName: trip.driver.driverName,
+      driverName: getDriverName(trip.driver),
       truckPlate: trip.truck.plateNumber,
       status: trip.status,
       origin: trip.originAddress || trip.fromWarehouseId,

@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id } = await params
 
     const warehouse = await db.warehouse.findUnique({
@@ -39,6 +43,11 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
     const body = await request.json()
 
@@ -73,10 +82,15 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
 
     const existing = await db.warehouse.findUnique({ where: { id } })

@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id } = await params
 
     const incentive = await db.driverIncentive.findUnique({
       where: { id },
       include: {
-        driver: { select: { id: true, driverName: true, phone: true } },
-        trip: { select: { id: true, tripNumber: true } },
+        driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
       },
     })
 
@@ -35,6 +38,11 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
     const body = await request.json()
 
@@ -57,10 +65,10 @@ export async function PUT(
     const now = new Date()
     let updateData: Record<string, unknown> = {
       ...(body.amount !== undefined && { amount: parseFloat(body.amount) }),
-      ...(body.incentiveType !== undefined && { incentiveType: body.incentiveType }),
+      ...(body.type !== undefined && { type: body.type }),
+      ...(body.title !== undefined && { title: body.title }),
       ...(body.description !== undefined && { description: body.description }),
       ...(body.period !== undefined && { period: body.period }),
-      ...(body.notes !== undefined && { notes: body.notes }),
       ...(body.approvedBy !== undefined && { approvedBy: body.approvedBy }),
     }
 
@@ -98,10 +106,15 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
 
     const existing = await db.driverIncentive.findUnique({ where: { id } })

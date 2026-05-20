@@ -1,9 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { format } from 'date-fns'
+import { requireAuth } from '@/lib/auth-server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     // Run all independent queries in parallel
     const [
       allTrips,
@@ -16,7 +20,7 @@ export async function GET() {
     ] = await Promise.all([
       db.trip.findMany({
         include: {
-          driver: { select: { id: true, driverName: true } },
+          driver: { select: { id: true, firstName: true, lastName: true } },
           truck: { select: { id: true, plateNumber: true, truckName: true } },
         },
       }),
@@ -68,6 +72,9 @@ export async function GET() {
     const totalRevenue = allTrips.reduce((sum, t) => sum + t.totalAmount, 0)
     const netIncome = totalRevenue - totalCashAdvances - totalIncentives
 
+    const getDriverName = (driver: { firstName: string; lastName: string } | null) =>
+      driver ? `${driver.firstName} ${driver.lastName}` : 'Unknown'
+
     // ── Financial Summary ──
     const financialSummary = {
       totalRevenue: Math.round(totalRevenue * 100) / 100,
@@ -96,7 +103,7 @@ export async function GET() {
       if (!driverMap.has(driverId)) {
         driverMap.set(driverId, {
           driverId,
-          driverName: trip.driver?.driverName || 'Unknown',
+          driverName: getDriverName(trip.driver),
           totalTrips: 0,
           completedTrips: 0,
           totalDistance: 0,

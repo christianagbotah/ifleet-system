@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const warehouses = await db.warehouse.findMany({
       orderBy: { createdAt: 'desc' },
     })
@@ -19,6 +23,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const body = await request.json()
     const { name, code, address, city, region, contactPerson, contactPhone, isActive, notes } = body
 

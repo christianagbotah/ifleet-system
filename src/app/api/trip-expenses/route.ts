@@ -5,6 +5,9 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 // GET /api/trip-expenses?tripId=xxx — List expenses for a trip
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { searchParams } = new URL(request.url)
     const tripId = searchParams.get('tripId')
     const truckId = searchParams.get('truckId')

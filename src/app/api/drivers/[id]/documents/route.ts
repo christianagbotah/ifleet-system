@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 // GET /api/drivers/[id]/documents — list all documents for a driver
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id } = await params
 
     // Verify driver exists
@@ -15,23 +19,21 @@ export async function GET(
       return NextResponse.json({ error: 'Driver not found' }, { status: 404 })
     }
 
-    const documents = await db.driverDocument.findMany({
-      where: { driverId: id },
+    const documents = await db.document.findMany({
+      where: { entityType: 'driver', entityId: id },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
-        documentType: true,
-        documentName: true,
+        title: true,
+        description: true,
+        category: true,
         fileName: true,
+        filePath: true,
         fileSize: true,
         mimeType: true,
-        status: true,
-        expiryDate: true,
-        issuedDate: true,
-        notes: true,
+        uploadedBy: true,
         createdAt: true,
         updatedAt: true,
-        // fileData excluded from list for performance
       },
     })
 
@@ -51,6 +53,11 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
 
     // Verify driver exists
@@ -64,24 +71,21 @@ export async function POST(
       documentType,
       documentName,
       fileName,
+      filePath,
       fileSize,
       mimeType,
-      fileData,
-      status,
-      expiryDate,
-      issuedDate,
-      notes,
+      description,
     } = body
 
     // Validate required fields
-    if (!documentType || !documentName || !fileName || !mimeType || !fileData) {
+    if (!documentType || !documentName || !fileName || !mimeType) {
       return NextResponse.json(
-        { error: 'Missing required fields: documentType, documentName, fileName, mimeType, fileData' },
+        { error: 'Missing required fields: documentType, documentName, fileName, mimeType' },
         { status: 400 }
       )
     }
 
-    // Max file size: 5MB (base64 is ~1.37x the original size, so ~7MB base64 string)
+    // Max file size: 5MB
     const MAX_SIZE = 5 * 1024 * 1024
     if (fileSize && fileSize > MAX_SIZE) {
       return NextResponse.json(
@@ -99,19 +103,18 @@ export async function POST(
       )
     }
 
-    const document = await db.driverDocument.create({
+    const document = await db.document.create({
       data: {
-        driverId: id,
-        documentType,
-        documentName,
+        title: documentName,
+        description: description || null,
+        category: documentType,
+        entityType: 'driver',
+        entityId: id,
         fileName,
+        filePath: filePath || `/uploads/drivers/${id}/${fileName}`,
         fileSize: fileSize || 0,
         mimeType,
-        fileData,
-        status: status || 'active',
-        expiryDate: expiryDate ? new Date(expiryDate) : null,
-        issuedDate: issuedDate ? new Date(issuedDate) : null,
-        notes: notes || null,
+        uploadedBy: auth.userId,
       },
     })
 

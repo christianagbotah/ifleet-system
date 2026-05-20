@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { rateLimit, RATE_LIMITS, getClientIp } from '@/lib/rate-limit'
+import { requireAuth } from '@/lib/auth-server'
 
 const ENDPOINT_KEY = 'notifications/bulk-delete'
 
@@ -13,13 +14,16 @@ const ENDPOINT_KEY = 'notifications/bulk-delete'
  *   - { deleteReadOnly: true }       — Delete only read notifications for the authenticated user
  *
  * Security:
- *   - For deleteAll and deleteReadOnly modes, ALWAYS uses the authenticated user's ID
- *     from headers. Body-supplied userId is ignored to prevent IDOR.
+ *   - For deleteAll and deleteReadOnly modes, ALWAYS uses the authenticated user's ID.
  *   - For ids mode, drivers can only delete their own notifications; admins can delete any.
  *   - Rate limited: 30 requests per minute per IP.
  */
 export async function POST(request: NextRequest) {
   try {
+    // Auth guard
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     // Rate limiting by client IP (notification config: 30/min)
     const clientIp = getClientIp(request)
     const rateResult = rateLimit(`${clientIp}:${ENDPOINT_KEY}`, RATE_LIMITS.notification)
@@ -39,10 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { ids, deleteAll, deleteReadOnly, userId: bodyUserId } = body
-
-    const headerUserId = request.headers.get('x-auth-user-id')
-    const userRole = request.headers.get('x-auth-user-role')
+    const { ids, deleteAll, deleteReadOnly } = body
 
     // Mode 1: Delete specific IDs (scoped to user)
     if (ids && Array.isArray(ids) && ids.length > 0) {
@@ -50,34 +51,24 @@ export async function POST(request: NextRequest) {
         id: { in: ids },
       }
       // Drivers can only delete their own notifications
-      if (userRole === 'Driver' && headerUserId) {
-        where.userId = headerUserId
+      if (auth.roleName === 'Driver') {
+        where.userId = auth.userId
       }
 
       const result = await db.notification.deleteMany({ where })
       return NextResponse.json({ deleted: result.count })
     }
 
-    // Mode 2: Delete all notifications — ALWAYS use authenticated user's ID (never body-supplied)
+    // Mode 2: Delete all notifications for the authenticated user
     if (deleteAll) {
-      const targetUserId = headerUserId
-      if (!targetUserId) {
-        return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-      }
-
       const result = await db.notification.deleteMany({
-        where: { userId: targetUserId },
+        where: { userId: auth.userId },
       })
       return NextResponse.json({ deleted: result.count })
     }
 
-    // Mode 3: Delete only read notifications — ALWAYS use authenticated user's ID (never body-supplied)
-    const targetUserId = headerUserId
-    if (!targetUserId) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-    }
-
-    const where: Record<string, unknown> = { userId: targetUserId }
+    // Mode 3: Delete only read notifications for the authenticated user
+    const where: Record<string, unknown> = { userId: auth.userId }
     if (deleteReadOnly) {
       where.isRead = true
     }

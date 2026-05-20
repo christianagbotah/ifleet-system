@@ -74,12 +74,14 @@ export function RevenueChart() {
   })
 
   // Build chart data from dashboard + fetch completed trip amounts
-  const { data: allTrips } = useQuery<Array<{ status: string; totalAmount: number }>>({
+  const { data: allTrips } = useQuery<Array<{ status: string; totalRevenue: number }>>({
     queryKey: ['trips-revenue-chart'],
     queryFn: async () => {
       const res = await fetch('/api/trips')
       if (!res.ok) return []
-      return res.json()
+      const json = await res.json()
+      // Support both paginated { data: [...] } and plain array responses
+      return Array.isArray(json) ? json : (json.data || [])
     },
     staleTime: 30_000,
   })
@@ -89,7 +91,7 @@ export function RevenueChart() {
     const grouped: Record<string, { amount: number; count: number }> = {}
     for (const trip of allTrips) {
       if (!grouped[trip.status]) grouped[trip.status] = { amount: 0, count: 0 }
-      grouped[trip.status].amount += trip.totalAmount
+      grouped[trip.status].amount += trip.totalRevenue
       grouped[trip.status].count += 1
     }
     return Object.entries(grouped).map(([status, val]) => ({

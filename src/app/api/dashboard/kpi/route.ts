@@ -1,9 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { startOfMonth, endOfMonth } from 'date-fns'
+import { requireAuth } from '@/lib/auth-server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const now = new Date()
     const monthStart = startOfMonth(now)
     const monthEnd = endOfMonth(now)

@@ -1,24 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 // DELETE /api/drivers/[id]/documents/[docId] — delete a document
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string; docId: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id, docId } = await params
 
     // Verify document exists and belongs to this driver
-    const document = await db.driverDocument.findFirst({
-      where: { id: docId, driverId: id },
+    const document = await db.document.findFirst({
+      where: { id: docId, entityType: 'driver', entityId: id },
     })
 
     if (!document) {
       return NextResponse.json({ error: 'Document not found' }, { status: 404 })
     }
 
-    await db.driverDocument.delete({
+    await db.document.delete({
       where: { id: docId },
     })
 
@@ -32,16 +38,19 @@ export async function DELETE(
   }
 }
 
-// GET /api/drivers/[id]/documents/[docId] — get a single document with file data
+// GET /api/drivers/[id]/documents/[docId] — get a single document
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string; docId: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id, docId } = await params
 
-    const document = await db.driverDocument.findFirst({
-      where: { id: docId, driverId: id },
+    const document = await db.document.findFirst({
+      where: { id: docId, entityType: 'driver', entityId: id },
     })
 
     if (!document) {

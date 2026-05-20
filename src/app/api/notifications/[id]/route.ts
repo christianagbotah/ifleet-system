@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth } from '@/lib/auth-server'
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id } = await params
-    const userId = request.headers.get('x-auth-user-id')
-    const userRole = request.headers.get('x-auth-user-role')
 
     const notification = await db.notification.findUnique({ where: { id } })
     if (!notification) {
@@ -16,7 +18,7 @@ export async function PUT(
     }
 
     // Drivers can only mark their own notifications as read
-    if (userRole === 'Driver' && userId && notification.userId !== userId) {
+    if (auth.roleName === 'Driver' && notification.userId !== auth.userId) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 })
     }
 
@@ -40,9 +42,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id } = await params
-    const userId = request.headers.get('x-auth-user-id')
-    const userRole = request.headers.get('x-auth-user-role')
 
     const notification = await db.notification.findUnique({ where: { id } })
     if (!notification) {
@@ -50,7 +53,7 @@ export async function DELETE(
     }
 
     // Drivers can only delete their own notifications
-    if (userRole === 'Driver' && userId && notification.userId !== userId) {
+    if (auth.roleName === 'Driver' && notification.userId !== auth.userId) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 })
     }
 

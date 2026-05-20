@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireRole } from '@/lib/auth-server'
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    // Require admin role
+    const auth = requireRole(request, 'Admin')
+    if (auth instanceof NextResponse) return auth
+
     // Seed Warehouses
     const warehouses = await Promise.all([
       db.warehouse.create({
@@ -119,11 +124,14 @@ export async function POST() {
     const drivers = await Promise.all([
       db.driver.create({
         data: {
-          driverName: 'Emmanuel Owusu',
+          firstName: 'Emmanuel',
+          lastName: 'Owusu',
           phone: '+233-24-123-4567',
-          licenseNo: 'DVR-GH-2021-00123',
+          licenseNumber: 'DVR-GH-2021-00123',
           licenseExpiry: new Date('2026-03-15'),
-          emergencyContact: 'Grace Owusu',
+          licenseClass: 'C',
+          employeeId: 'FP-DRV-001',
+          emergencyName: 'Grace Owusu',
           emergencyPhone: '+233-20-123-4567',
           address: '12 Dansoman, Accra',
           status: 'active',
@@ -132,11 +140,14 @@ export async function POST() {
       }),
       db.driver.create({
         data: {
-          driverName: 'Joseph Amponsah',
+          firstName: 'Joseph',
+          lastName: 'Amponsah',
           phone: '+233-27-234-5678',
-          licenseNo: 'DVR-GH-2020-00456',
+          licenseNumber: 'DVR-GH-2020-00456',
           licenseExpiry: new Date('2025-09-20'),
-          emergencyContact: 'Mary Amponsah',
+          licenseClass: 'C',
+          employeeId: 'FP-DRV-002',
+          emergencyName: 'Mary Amponsah',
           emergencyPhone: '+233-24-234-5678',
           address: '45 Suame, Kumasi',
           status: 'active',
@@ -145,11 +156,14 @@ export async function POST() {
       }),
       db.driver.create({
         data: {
-          driverName: 'Samuel Tetteh',
+          firstName: 'Samuel',
+          lastName: 'Tetteh',
           phone: '+233-20-345-6789',
-          licenseNo: 'DVR-GH-2022-00789',
+          licenseNumber: 'DVR-GH-2022-00789',
           licenseExpiry: new Date('2027-01-10'),
-          emergencyContact: 'Adelaide Tetteh',
+          licenseClass: 'C',
+          employeeId: 'FP-DRV-003',
+          emergencyName: 'Adelaide Tetteh',
           emergencyPhone: '+233-27-345-6789',
           address: '8 Tema Community 12',
           status: 'active',
@@ -158,11 +172,14 @@ export async function POST() {
       }),
       db.driver.create({
         data: {
-          driverName: 'Daniel Adjei',
+          firstName: 'Daniel',
+          lastName: 'Adjei',
           phone: '+233-28-456-7890',
-          licenseNo: 'DVR-GH-2019-00112',
+          licenseNumber: 'DVR-GH-2019-00112',
           licenseExpiry: new Date('2025-06-30'),
-          emergencyContact: 'Beatrice Adjei',
+          licenseClass: 'C',
+          employeeId: 'FP-DRV-004',
+          emergencyName: 'Beatrice Adjei',
           emergencyPhone: '+233-20-456-7890',
           address: '34 Takoradi Anaji',
           status: 'active',
@@ -646,52 +663,57 @@ export async function POST() {
       db.driverIncentive.create({
         data: {
           driverId: drivers[0].id,
-          tripId: completedTrips[0]?.id,
-          incentiveType: 'performance',
+          type: 'performance',
+          title: 'On-time delivery bonus - Accra to Tema',
           amount: 100,
           description: 'On-time delivery bonus - Accra to Tema',
           period: '2025-06',
           status: 'paid',
-          approvedBy: 'admin',
+          approvedBy: auth.userId,
           approvedAt: new Date('2025-06-05T08:00:00'),
           paidAt: new Date('2025-06-10T08:00:00'),
+          createdBy: auth.userId,
         },
       }),
       db.driverIncentive.create({
         data: {
           driverId: drivers[1].id,
-          tripId: completedTrips[1]?.id,
-          incentiveType: 'safety',
+          type: 'safety',
+          title: 'Zero incident record - Accra to Kumasi',
           amount: 150,
           description: 'Zero incident record - Accra to Kumasi',
           period: '2025-06',
           status: 'approved',
-          approvedBy: 'admin',
+          approvedBy: auth.userId,
           approvedAt: new Date('2025-06-06T08:00:00'),
+          createdBy: auth.userId,
         },
       }),
       db.driverIncentive.create({
         data: {
           driverId: drivers[3].id,
-          tripId: completedTrips[3]?.id,
-          incentiveType: 'performance',
+          type: 'performance',
+          title: 'Extra trip completion bonus',
           amount: 200,
           description: 'Extra trip completion bonus',
           period: '2025-06',
           status: 'paid',
-          approvedBy: 'admin',
+          approvedBy: auth.userId,
           approvedAt: new Date('2025-06-10T08:00:00'),
           paidAt: new Date('2025-06-12T08:00:00'),
+          createdBy: auth.userId,
         },
       }),
       db.driverIncentive.create({
         data: {
           driverId: drivers[2].id,
-          incentiveType: 'overtime',
+          type: 'overtime',
+          title: 'Overtime payment for long haul',
           amount: 120,
           description: 'Overtime payment for long haul',
           period: '2025-06',
           status: 'pending',
+          createdBy: auth.userId,
         },
       }),
     ])

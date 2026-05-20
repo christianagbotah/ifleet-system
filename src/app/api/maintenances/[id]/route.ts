@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 // PUT /api/maintenances/[id] — update a maintenance record
 export async function PUT(
@@ -7,10 +8,15 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
     const body = await request.json()
 
-    const existing = await db.maintenance.findUnique({ where: { id } })
+    const existing = await db.maintenanceRecord.findUnique({ where: { id } })
     if (!existing) {
       return NextResponse.json(
         { error: 'Maintenance record not found' },
@@ -30,27 +36,24 @@ export async function PUT(
       notes,
     } = body
 
-    const maintenance = await db.maintenance.update({
+    const maintenance = await db.maintenanceRecord.update({
       where: { id },
       data: {
-        ...(maintenanceType && { maintenanceType }),
+        ...(maintenanceType && { type: maintenanceType }),
         ...(description && { description }),
-        ...(scheduledDate && { scheduledDate: new Date(scheduledDate) }),
-        ...(completedDate !== undefined && {
-          completedDate: completedDate ? new Date(completedDate) : null,
-        }),
+        ...(scheduledDate && { performedAt: new Date(scheduledDate) }),
         ...(status && { status }),
         ...(cost !== undefined && {
           cost: cost != null ? Number(cost) : null,
         }),
         ...(mileageAtService !== undefined && {
-          mileageAtService: mileageAtService != null ? Number(mileageAtService) : null,
+          odometer: mileageAtService != null ? Number(mileageAtService) : null,
         }),
         ...(performedBy !== undefined && {
           performedBy: performedBy || null,
         }),
         ...(notes !== undefined && {
-          notes: notes || null,
+          partsUsed: notes || null,
         }),
       },
     })
@@ -71,9 +74,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
 
-    const existing = await db.maintenance.findUnique({ where: { id } })
+    const existing = await db.maintenanceRecord.findUnique({ where: { id } })
     if (!existing) {
       return NextResponse.json(
         { error: 'Maintenance record not found' },
@@ -81,7 +89,7 @@ export async function DELETE(
       )
     }
 
-    await db.maintenance.delete({ where: { id } })
+    await db.maintenanceRecord.delete({ where: { id } })
 
     return NextResponse.json({ success: true })
   } catch (error) {

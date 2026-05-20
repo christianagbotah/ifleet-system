@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireRole } from '@/lib/auth-server'
 
 /**
  * POST /api/notifications/cleanup
@@ -7,19 +8,16 @@ import { db } from '@/lib/db'
  * Deletes notifications older than the specified number of days.
  * Defaults to 90 days.
  *
- * Headers:
- *   x-cron-secret: must match CRON_SECRET env var (for security)
+ * Auth: Requires Admin role.
  *
  * Body:
  *   olderThanDays: number (default 90)
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    // Security: verify cron secret from environment variable
-    const cronSecret = request.headers.get('x-cron-secret')
-    if (cronSecret !== process.env.CRON_SECRET) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    // Auth: require admin role
+    const auth = requireRole(request, 'Admin')
+    if (auth instanceof NextResponse) return auth
 
     const body = await request.json().catch(() => ({}))
     const olderThanDays = body.olderThanDays || 90

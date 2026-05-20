@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { searchParams } = new URL(request.url)
     const driverId = searchParams.get('driverId') || ''
     const status = searchParams.get('status') || ''
@@ -13,8 +17,7 @@ export async function GET(request: NextRequest) {
         ...(status && { status }),
       },
       include: {
-        driver: { select: { id: true, driverName: true, phone: true } },
-        trip: { select: { id: true, tripNumber: true } },
+        driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
       },
       orderBy: { createdAt: 'desc' },
     })
@@ -31,8 +34,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const body = await request.json()
-    const { driverId, amount, incentiveType, description, tripId, period, notes } = body
+    const { driverId, amount, incentiveType, description, period, notes } = body
 
     if (!driverId || amount == null || !incentiveType || !description) {
       return NextResponse.json(
@@ -63,24 +71,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Driver not found' }, { status: 400 })
     }
 
-    // If tripId provided, validate trip exists
-    if (tripId) {
-      const trip = await db.trip.findUnique({ where: { id: tripId } })
-      if (!trip) {
-        return NextResponse.json({ error: 'Trip not found' }, { status: 400 })
-      }
-    }
-
     const incentive = await db.driverIncentive.create({
       data: {
         driverId,
         amount: parsedAmount,
-        incentiveType,
+        type: incentiveType,
+        title: description,
         description,
-        tripId: tripId || null,
         period: period || '',
         status: 'pending',
-        notes: notes || '',
+        createdBy: auth.userId,
       },
     })
 

@@ -55,7 +55,7 @@ export function DriverLeaderboard() {
       // Aggregate by driver
       const driverMap: Record<string, { driverName: string; completedTrips: number; totalRevenue: number }> = {}
       for (const trip of trips) {
-        const driverName = trip.driver?.driverName
+        const driverName = trip.driver ? `${trip.driver.firstName} ${trip.driver.lastName}` : null
         if (!driverName) continue
         if (!driverMap[trip.driverId]) {
           driverMap[trip.driverId] = { driverName, completedTrips: 0, totalRevenue: 0 }
@@ -63,7 +63,7 @@ export function DriverLeaderboard() {
         if (trip.status === 'completed') {
           driverMap[trip.driverId].completedTrips += 1
         }
-        driverMap[trip.driverId].totalRevenue += trip.totalAmount || 0
+        driverMap[trip.driverId].totalRevenue += trip.totalRevenue || 0
       }
 
       // Sort by totalRevenue descending and take top 5

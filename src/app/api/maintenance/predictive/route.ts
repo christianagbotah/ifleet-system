@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth } from '@/lib/auth-server'
 
 // Default maintenance intervals for component-specific predictions
 const MAINTENANCE_INTERVALS = {
@@ -62,6 +63,9 @@ function getRiskLevel(predictedDate: Date): 'critical' | 'warning' | 'info' {
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     // Fetch all trucks with their maintenance records and total trip mileage
     const trucks = await db.truck.findMany({
       where: { status: { in: ['active', 'maintenance'] } },

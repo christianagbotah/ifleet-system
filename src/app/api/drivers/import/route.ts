@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const body = await request.json()
     const { rows } = body as { rows: Record<string, string>[] }
 
@@ -22,16 +28,25 @@ export async function POST(request: NextRequest) {
 
     const errors: Array<{ row: number; message: string }> = []
     const validDrivers: Array<{
-      driverName: string
+      firstName: string
+      lastName: string
       phone: string
-      licenseNo: string
+      employeeId: string
+      licenseNumber: string
       licenseExpiry: Date
-      emergencyContact: string | null
+      licenseClass: string
+      emergencyName: string | null
       emergencyPhone: string | null
       address: string
       status: string
       notes: string
     }> = []
+
+    // Get current counter for generating employee IDs
+    const settings = await db.systemSettings.findFirst()
+    let counter = settings?.driverIdCounter || 1
+    const prefix = settings?.driverIdPrefix || 'FP-DRV-'
+    const padding = settings?.driverIdPadding || 3
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i]
@@ -45,17 +60,31 @@ export async function POST(request: NextRequest) {
         errors.push({ row: i + 1, message: 'phone is required' })
         continue
       }
-      if (!row.licenseNo || row.licenseNo.trim() === '') {
-        errors.push({ row: i + 1, message: 'licenseNo is required' })
+      if (!row.licenseNo && !row.licenseNumber) {
+        errors.push({ row: i + 1, message: 'licenseNo (licenseNumber) is required' })
         continue
       }
 
+      // Split driverName into firstName + lastName
+      const nameParts = row.driverName.trim().split(/\s+/)
+      const firstName = nameParts[0] || 'Unknown'
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : ''
+
+      // Generate employee ID if not provided
+      const employeeId = row.employeeId?.trim() || `${prefix}${String(counter++).padStart(padding, '0')}`
+
+      const licenseNumber = (row.licenseNo || row.licenseNumber || '').trim()
+      const licenseClass = row.licenseClass?.trim() || 'C'
+
       validDrivers.push({
-        driverName: row.driverName.trim(),
+        firstName,
+        lastName,
         phone: row.phone.trim(),
-        licenseNo: row.licenseNo.trim(),
-        licenseExpiry: row.licenseExpiry ? new Date(row.licenseExpiry) : new Date(),
-        emergencyContact: row.emergencyContact?.trim() || null,
+        employeeId,
+        licenseNumber,
+        licenseExpiry: row.licenseExpiry ? new Date(row.licenseExpiry) : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        licenseClass,
+        emergencyName: (row.emergencyContact || row.emergencyName)?.trim() || null,
         emergencyPhone: row.emergencyPhone?.trim() || null,
         address: row.address?.trim() || '',
         status: row.status?.trim() === 'inactive' || row.status?.trim() === 'suspended' ? row.status.trim() : 'active',
@@ -65,25 +94,26 @@ export async function POST(request: NextRequest) {
 
     let created = 0
 
-    // Use createMany for batch insert (skipDuplicates for unique constraint violations)
+    // Create drivers one by one (skip duplicates)
     if (validDrivers.length > 0) {
-      try {
-        const result = await db.driver.createMany({
-          data: validDrivers,
-          skipDuplicates: true,
-        })
-        created = result.count
-      } catch (error) {
-        // If createMany fails (e.g., unique constraint), fall back to individual creates
-        for (const driver of validDrivers) {
-          try {
-            await db.driver.create({ data: driver })
-            created++
-          } catch {
-            // Skip duplicates silently — unique on phone and licenseNo
-          }
+      for (const driver of validDrivers) {
+        try {
+          await db.driver.create({ data: driver })
+          created++
+        } catch {
+          // Skip duplicates silently — unique on phone, licenseNumber, employeeId
         }
       }
+    }
+
+    // Update counter in settings if we generated IDs
+    if (validDrivers.length > 0) {
+      await db.systemSettings.update({
+        where: { id: settings?.id || 'default' },
+        data: { driverIdCounter: counter },
+      }).catch(() => {
+        // Settings may not exist yet, ignore
+      })
     }
 
     return NextResponse.json({

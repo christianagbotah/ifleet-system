@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ZAI from 'z-ai-web-dev-sdk'
+import { requireAuth } from '@/lib/auth-server'
 
 // POST /api/scan-receipt
 // Accepts a base64-encoded image of a receipt/fuel slip,
@@ -27,6 +28,9 @@ interface ReceiptData {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const body = await request.json()
     const { image } = body
 

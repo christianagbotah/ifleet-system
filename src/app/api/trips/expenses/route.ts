@@ -6,6 +6,9 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 // POST /api/trips/expenses - Create a trip expense
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { searchParams } = new URL(request.url)
     const tripId = searchParams.get('tripId')
 

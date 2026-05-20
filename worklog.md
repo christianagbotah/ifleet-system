@@ -75,3 +75,68 @@ Stage Summary:
 - Frontend form has proper fields: plateNumber, make, model, year, VIN/engine/chassis numbers, color, fuel type, tank capacity, mileage, insurance status, service date, notes
 - CSV import also aligned with correct schema
 - Git history cleaned of .git-credentials secret
+
+---
+Task ID: 4
+Agent: api-fixer
+Task: Fix all broken API routes
+
+Work Log:
+- Fix 1: /api/trucks/[id]/maintenances/route.ts — Replaced db.maintenance with db.maintenanceRecord, mapped field names (maintenanceType→type, scheduledDate→performedAt, mileageAtService→odometer, notes→partsUsed), added requireAuth + requireWriteAccess guards to GET/POST
+- Fix 2: /api/maintenances/[id]/route.ts — Replaced db.maintenance with db.maintenanceRecord, mapped field names, added requireAuth + requireWriteAccess guards to PUT/DELETE
+- Fix 3: /api/drivers/import/route.ts — Added requireAuth + requireWriteAccess guard, split driverName into firstName/lastName, mapped licenseNo→licenseNumber, emergencyContact→emergencyName, added auto-generated employeeId using SystemSettings counter, added licenseClass default 'C', removed invalid createMany call
+- Fix 4: /api/drivers/[id]/documents/route.ts — Replaced db.driverDocument with db.document, adapted to Document schema (title, description, category, entityType, entityId, fileName, filePath, fileSize, mimeType, uploadedBy), set entityType:'driver' and entityId:driverId on create, added auth guards
+- Fix 4b: /api/drivers/[id]/documents/[docId]/route.ts — Same db.driverDocument→db.document fix, uses entityType/entityId query instead of driverId, added auth guards
+- Fix 5: /api/notifications/[id]/route.ts — Replaced manual x-auth-user-id header checks with requireAuth, using auth.userId and auth.roleName for authorization logic
+- Fix 6: /api/notifications/bulk-read/route.ts — Replaced manual header checks with requireAuth, using auth.userId and auth.roleName for driver scoping
+- Fix 7: /api/notifications/bulk-delete/route.ts — Added requireAuth at top, replaced manual headerUserId with auth.userId, kept existing rate limiting
+- Fix 8: /api/trips/[id]/images/route.ts — Added requireAuth + requireWriteAccess guards to POST and DELETE handlers
+- Fix 9: /api/warehouses/route.ts — Added requireAuth to GET, requireAuth + requireWriteAccess to POST
+- Fix 9b: /api/warehouses/[id]/route.ts — Added requireAuth to GET, requireAuth + requireWriteAccess to PUT and DELETE
+- Fix 10: /api/incentives/route.ts — Added requireAuth to GET, requireAuth + requireWriteAccess to POST, mapped incentiveType→type, description→title+description, notes removed, added createdBy:auth.userId
+- Fix 10b: /api/incentives/[id]/route.ts — Added requireAuth to GET, requireAuth + requireWriteAccess to PUT and DELETE, fixed driver include to use firstName/lastName
+- Fix 11: /api/dashboard/kpi/route.ts — Added requireAuth guard, changed GET signature to accept NextRequest
+- Fix 12: /api/activity-feed/route.ts — Added requireAuth guard, changed GET signature to accept NextRequest, fixed driverName to firstName/lastName
+- Fix 13: /api/export/financial/route.ts — Added requireAuth guard, fixed driverName to firstName/lastName
+- Fix 14: /api/scan-receipt/route.ts — Added requireAuth guard
+- Fix 15: /api/seed/route.ts — Added requireRole(request, 'Admin') guard, fixed driver seed data to use firstName/lastName/licenseNumber/licenseClass/employeeId instead of old field names, fixed incentive seed to use type/title/createdBy instead of old field names
+- Fix 16: /api/maintenance/predictive/route.ts — Added requireAuth guard
+- Fix 17: /api/notifications/stream/route.ts — Replaced custom verifyRequest with requireAuth, using auth.userId for SSE stream
+- Fix 18: /api/notifications/cleanup/route.ts — Replaced CRON_SECRET check with requireRole(request, 'Admin'), changed Request type to NextRequest
+- Fix 19: /api/reports/route.ts — Added requireAuth guard, changed GET signature to accept NextRequest, fixed driverName to firstName/lastName
+- Fix 20: /api/reports/daily-summary/route.ts — Replaced CRON_SECRET check with requireRole(request, 'Admin')
+- Fix 21: /api/documents/route.ts — Already had auth guard (no change needed, uses getAuthContext)
+- Fix 22: /api/scheduler/warmup/route.ts — Added secret check via ?secret=warmup query param or x-warmup-secret header (uses WARMUP_SECRET env var, defaults to 'warmup')
+- Fix 23: /api/trips/expenses/route.ts — Added requireAuth guard to GET handler (POST already had auth)
+- Fix 24: /api/trip-expenses/route.ts — Added requireAuth guard to GET handler (POST already had auth)
+- Fix 25: /api/trip-expenses/[id]/route.ts — Added requireAuth guard to GET handler (PUT/DELETE already had auth)
+- Verified: `next build` passes clean with all routes compiled successfully
+
+Stage Summary:
+- All API routes now use correct Prisma model names (maintenanceRecord instead of maintenance, document instead of driverDocument)
+- All field names in maintenance and driver import routes match the Prisma schema (MaintenanceRecord and Driver models)
+- All mutating endpoints (POST/PUT/DELETE) have auth guards via requireAuth + requireWriteAccess
+- All read endpoints that expose sensitive data have requireAuth guards
+- Admin-only endpoints (seed, cleanup, daily-summary) use requireRole with 'Admin'
+- Scheduler warmup uses secret-based auth instead of being open
+- Driver document routes use the generic Document model with entityType/entityId pattern
+
+---
+Task ID: 4
+Agent: frontend-fixer
+Task: Fix all frontend view field name mismatches
+
+Work Log:
+- Audited all 8 primary component views (DriversView, DriverFormDialog, TripsView, TripFormDialog, ZoneRatesView, DashboardView, DriverIncentivesView, ProfitabilityView) — all already use correct field names matching Prisma schema
+- Fixed DriverLeaderboard.tsx: `trip.driver?.driverName` → computed `${trip.driver.firstName} ${trip.driver.lastName}`; `trip.totalAmount` → `trip.totalRevenue`
+- Fixed RevenueChart.tsx: `trip.totalAmount` → `trip.totalRevenue`; added paginated response handling (supports both `{ data: [...] }` and plain array from trips API)
+- Verified 9 additional active components (CashAdvancesView, DriverPerformanceView, ReportsView, SafetyScoringView, TruckFinancialsView, LiveTrackingView, DriverLocationSender, FuelAnomalyDashboard, DriverPerformanceCards) — all use `driverName` from API responses that correctly compute it from `firstName`/`lastName`
+- Searched ALL .tsx files in components/ for wrong field patterns (driverName, truckName, departureDate, arrivalDate, originAddress, destinationAddress, totalAmount, licenseNo, emergencyContact, fromWarehouseId, toWarehouseId, incentiveType, baseRate, cargoDescription, cargoWeight) — only remaining matches are in legacy `components/pages/` folder
+- Confirmed legacy pages/ files are NOT used in active routing (page.tsx uses component views directly; PageRouter.tsx is dead code)
+- Confirmed `DashboardTrip` interface in lib/api.ts already has correct field names (departureTime, loadingLocation, destination, totalRevenue, firstName, lastName)
+
+Stage Summary:
+- All active frontend views use correct field names matching Prisma schema
+- DriverLeaderboard.tsx and RevenueChart.tsx were the only active components with wrong Trip model field access (now fixed)
+- API endpoints that compute `driverName` (safety-scores, anomaly-dashboard, truck-pl, tracking/location, etc.) correctly build it from `firstName`/`lastName` — frontend consuming these computed fields is correct
+- Legacy pages/ folder contains wrong field names but is dead code (not imported in active routing)

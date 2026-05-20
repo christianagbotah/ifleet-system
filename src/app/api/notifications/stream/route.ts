@@ -19,6 +19,7 @@ import { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 import { registerPushListener, type PushEvent } from '@/lib/services/push'
 import { APP_NAME } from '@/lib/constants'
+import { requireAuth } from '@/lib/auth-server'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -67,13 +68,8 @@ async function verifyRequest(request: NextRequest): Promise<{ userId: string } |
 
 export async function GET(request: NextRequest) {
   // ── Authentication ──
-  const authed = await verifyRequest(request)
-  if (!authed) {
-    return new Response(JSON.stringify({ error: 'Authentication required' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
+  const auth = requireAuth(request)
+  if (auth instanceof Response) return auth
 
   const { searchParams } = new URL(request.url)
   const requestedUserId = searchParams.get('userId')
@@ -86,14 +82,14 @@ export async function GET(request: NextRequest) {
   }
 
   // The requested userId must match the authenticated user's ID
-  if (requestedUserId !== authed.userId) {
+  if (requestedUserId !== auth.userId) {
     return new Response(JSON.stringify({ error: 'Unauthorized: userId mismatch' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' },
     })
   }
 
-  const userId = authed.userId
+  const userId = auth.userId
   console.log(`[SSE] New authenticated connection from user ${userId}`)
 
   // Create a readable stream for SSE

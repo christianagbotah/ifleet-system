@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { fetchTripSummaryData, fetchFuelReportData, fetchExpenseReportData, fetchDailySummaryData } from '@/lib/reports/report-data'
 import { buildCsv, generateReportFilename } from '@/lib/reports/csv-generator'
+import { requireRole } from '@/lib/auth-server'
 
 export async function POST(request: NextRequest) {
-  // Auth via CRON_SECRET for automated access
-  const cronSecret = request.headers.get('x-cron-secret')
-  if (!cronSecret || cronSecret !== process.env.CRON_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized. Valid CRON_SECRET header required.' }, { status: 401 })
-  }
+  // Auth: require admin role
+  const auth = requireRole(request, 'Admin')
+  if (auth instanceof NextResponse) return auth
 
   try {
     const body = await request.json().catch(() => ({}))

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 // GET /api/trucks/[id]/maintenances — list all maintenances for a truck
 export async function GET(
@@ -7,11 +8,14 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { id } = await params
 
-    const maintenances = await db.maintenance.findMany({
+    const maintenances = await db.maintenanceRecord.findMany({
       where: { truckId: id },
-      orderBy: { scheduledDate: 'desc' },
+      orderBy: { createdAt: 'desc' },
     })
 
     return NextResponse.json(maintenances)
@@ -30,6 +34,11 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const { id } = await params
     const body = await request.json()
 
@@ -43,9 +52,9 @@ export async function POST(
       notes,
     } = body
 
-    if (!maintenanceType || !description || !scheduledDate) {
+    if (!maintenanceType || !description) {
       return NextResponse.json(
-        { error: 'maintenanceType, description, and scheduledDate are required' },
+        { error: 'maintenanceType and description are required' },
         { status: 400 }
       )
     }
@@ -59,16 +68,18 @@ export async function POST(
       )
     }
 
-    const maintenance = await db.maintenance.create({
+    const maintenance = await db.maintenanceRecord.create({
       data: {
         truckId: id,
-        maintenanceType,
+        type: maintenanceType,
+        title: maintenanceType,
         description,
-        scheduledDate: new Date(scheduledDate),
+        performedAt: scheduledDate ? new Date(scheduledDate) : new Date(),
         cost: cost != null ? Number(cost) : null,
-        mileageAtService: mileageAtService != null ? Number(mileageAtService) : null,
+        odometer: mileageAtService != null ? Number(mileageAtService) : null,
         performedBy: performedBy || null,
-        notes: notes || null,
+        partsUsed: notes || null,
+        status: 'completed',
       },
     })
 
