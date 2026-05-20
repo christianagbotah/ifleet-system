@@ -214,7 +214,7 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
       </motion.div>
 
       {/* Stats Cards */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 items-stretch">
         {loading ? (
           <>
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -289,11 +289,9 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
         )}
       </motion.div>
 
-      {/* Charts + Activity Feed Row */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Left Column: Charts */}
-        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-          {/* Revenue vs Expenses */}
+      {/* Charts Row */}
+      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Revenue vs Expenses */}
           {isFinancialUser && (
           <Card>
             <CardHeader>
@@ -380,17 +378,17 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
               )}
             </CardContent>
           </Card>
-        </div>
 
-        {/* Right Column: Activity Feed */}
-        <div className="lg:col-span-1 min-h-0">
-          <ActivityFeed onNavigate={onNavigate} />
-        </div>
+      </motion.div>
 
-        {/* Fleet Health Widget */}
-        <div className="lg:col-span-1 min-h-0">
-          <FleetHealthWidget onNavigate={onNavigate} />
-        </div>
+      {/* Activity Feed Row */}
+      <motion.div variants={itemVariants}>
+        <ActivityFeed onNavigate={onNavigate} />
+      </motion.div>
+
+      {/* Fleet Health Row */}
+      <motion.div variants={itemVariants}>
+        <FleetHealthWidget onNavigate={onNavigate} />
       </motion.div>
 
       {/* Bottom Row */}

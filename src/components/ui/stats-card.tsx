@@ -32,8 +32,8 @@ export function StatsCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <Card className={cn("gap-0 py-0", className)}>
-        <CardContent className="p-4 sm:p-6">
+      <Card className={cn("gap-0 py-0 h-full", className)}>
+        <CardContent className="p-4 sm:p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-muted-foreground">
               {title}
