@@ -5,6 +5,9 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 // GET /api/clients — List clients with search, filters, pagination, stats
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get('search') || ''
     const isActive = searchParams.get('isActive')

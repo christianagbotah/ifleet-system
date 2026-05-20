@@ -713,9 +713,18 @@ export function CashAdvancesView() {
   const [activeTab, setActiveTab] = React.useState('all')
   const [searchQuery, setSearchQuery] = React.useState('')
   const [filterDriverId, setFilterDriverId] = React.useState('')
+  const [filterPaymentMethod, setFilterPaymentMethod] = React.useState('')
   const [dateFrom, setDateFrom] = React.useState('')
   const [dateTo, setDateTo] = React.useState('')
   const [showFilters, setShowFilters] = React.useState(false)
+  const [filterDrivers, setFilterDrivers] = React.useState<Driver[]>([])
+
+  // Load driver list for filter dropdown
+  React.useEffect(() => {
+    fetchDrivers({ status: 'active', limit: 200 })
+      .then(res => setFilterDrivers(res.data || []))
+      .catch(() => {})
+  }, [])
 
   // Actions
   const [actionLoading, setActionLoading] = React.useState<string | null>(null)
@@ -907,7 +916,7 @@ export function CashAdvancesView() {
           <p className="text-muted-foreground">Manage driver cash advances and wallet settlements</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => { setDateFrom(''); setDateTo(''); setFilterDriverId(''); setSearchQuery(''); setActiveTab('all'); setPage(1) }}>
+          <Button variant="outline" size="sm" onClick={() => { setDateFrom(''); setDateTo(''); setFilterDriverId(''); setFilterPaymentMethod(''); setSearchQuery(''); setActiveTab('all'); setPage(1) }}>
             <RefreshCw className="mr-1.5 h-3.5 w-3.5" /> Reset
           </Button>
           {isAdmin && (
@@ -1000,15 +1009,32 @@ export function CashAdvancesView() {
               <Input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1) }} />
             </div>
             <div className="flex-1">
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">Driver</label>
+              <Select value={filterDriverId || 'all'} onValueChange={v => { setFilterDriverId(v === 'all' ? '' : v); setPage(1) }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Drivers" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Drivers</SelectItem>
+                  {filterDrivers.map(d => (
+                    <SelectItem key={d.id} value={d.id}>
+                      {d.firstName} {d.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex-1">
               <label className="text-xs font-medium text-muted-foreground mb-1 block">Payment Method</label>
-              <Select value={filterDriverId} onValueChange={v => { setFilterDriverId(v === 'all' ? '' : v); setPage(1) }}>
+              <Select value={filterPaymentMethod || 'all'} onValueChange={v => { setFilterPaymentMethod(v === 'all' ? '' : v); setPage(1) }}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Methods" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Methods</SelectItem>
-                  <SelectItem value="cash">Cash</SelectItem>
-                  <SelectItem value="mobile_money">Mobile Money</SelectItem>
+                  {PAYMENT_METHODS.map(pm => (
+                    <SelectItem key={pm.value} value={pm.value}>{pm.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

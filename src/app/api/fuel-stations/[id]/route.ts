@@ -42,9 +42,29 @@ export async function PUT(
 
   try {
     const body = await request.json()
+    const {
+      name, brand, stationCode, address, city, region,
+      latitude, longitude, route, phone, email, operatingHours,
+      hasCardPayment, hasLoyaltyProgram, hasHGV, hasAdBlue, hasWorkshop,
+      corporateRatePerLiter, rating, notes,
+    } = body
+
+    const updateData = {
+      name, brand, stationCode, address, city, region,
+      latitude, longitude, route, phone, email, operatingHours,
+      hasCardPayment: hasCardPayment ?? false,
+      hasLoyaltyProgram: hasLoyaltyProgram ?? false,
+      hasHGV: hasHGV ?? true,
+      hasAdBlue: hasAdBlue ?? false,
+      hasWorkshop: hasWorkshop ?? false,
+      corporateRatePerLiter,
+      rating,
+      notes,
+    }
+
     const station = await db.fuelStation.update({
       where: { id },
-      data: body,
+      data: updateData,
       include: { fuelPrices: true },
     })
 

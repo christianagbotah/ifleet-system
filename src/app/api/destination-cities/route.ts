@@ -33,7 +33,12 @@ export async function GET(request: NextRequest) {
       db.destinationCity.count({ where }),
     ])
 
-    return NextResponse.json({ data: records, total, page, limit })
+    const mapped = records.map(({ _count, ...rest }) => ({
+      ...rest,
+      zonesCount: _count.destinationZones,
+    }))
+
+    return NextResponse.json({ data: mapped, total, page, limit })
   } catch (error) {
     console.error('Destination cities list error:', error)
     return NextResponse.json({ error: 'Failed to fetch destination cities' }, { status: 500 })

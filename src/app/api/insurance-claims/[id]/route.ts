@@ -53,7 +53,7 @@ export async function PUT(
     under_review: ['approved', 'rejected'],
     approved: ['paid'],
     rejected: ['draft'], // allow re-submission
-    paid: [],
+    paid: ['closed'],
   }
 
   const statusAction = body.status || body.action
@@ -78,6 +78,7 @@ export async function PUT(
     }
     if (statusAction === 'rejected') updateData.reviewedAt = new Date()
     if (statusAction === 'paid') updateData.paidAt = new Date()
+    if (statusAction === 'closed') updateData.closedAt = new Date()
     if (statusAction === 'draft') {
       // Re-draft clears review timestamps
       updateData.submittedAt = null

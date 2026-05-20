@@ -4,6 +4,9 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     const { searchParams } = new URL(request.url)
     const truckId = searchParams.get('truckId')
     const result = searchParams.get('result')

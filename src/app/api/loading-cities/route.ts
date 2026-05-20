@@ -33,7 +33,12 @@ export async function GET(request: NextRequest) {
       db.loadingCity.count({ where }),
     ])
 
-    return NextResponse.json({ data: records, total, page, limit })
+    const mapped = records.map(({ _count, ...rest }) => ({
+      ...rest,
+      loadingPointsCount: _count.loadingPoints,
+    }))
+
+    return NextResponse.json({ data: mapped, total, page, limit })
   } catch (error) {
     console.error('Loading cities list error:', error)
     return NextResponse.json({ error: 'Failed to fetch loading cities' }, { status: 500 })

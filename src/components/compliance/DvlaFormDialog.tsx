@@ -214,7 +214,7 @@ export function DvlaFormDialog({ open, onOpenChange, registration, onSuccess }: 
 
       // Optional fields
       if (bodyType) body.bodyType = bodyType
-      if (axleConfig.trim()) body.axleConfig = axleConfig.trim()
+      if (axleConfig.trim()) body.axleConfiguration = axleConfig.trim()
       if (engineCapacity.trim()) body.engineCapacity = engineCapacity.trim()
       if (grossVehicleWeight) body.grossVehicleWeight = parseFloat(grossVehicleWeight)
       if (unladenWeight) body.unladenWeight = parseFloat(unladenWeight)
