@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { createAuditLog, getClientIp } from '@/lib/audit'
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    const writeGuard = requireWriteAccess(auth)
+    if (writeGuard instanceof NextResponse) return writeGuard
+
     const body = await request.json()
     const { rows } = body as { rows: Record<string, string>[] }
 
@@ -21,76 +28,87 @@ export async function POST(request: NextRequest) {
     }
 
     const errors: Array<{ row: number; message: string }> = []
-    const validTrucks: Array<{
-      plateNumber: string
-      truckName: string
-      truckType: string
-      capacity: string
-      year: number | null
-      fuelType: string
-      status: string
-      mileage: number
-      insuranceExpiry: Date | null
-      notes: string
-    }> = []
-
-    const validTruckTypes = ['flatbed', 'tanker', 'container', 'refrigerated', 'other']
-    const validFuelTypes = ['diesel', 'petrol', 'gas']
-    const validStatuses = ['active', 'maintenance', 'out_of_service']
+    const validFuelTypes = ['Diesel', 'Petrol', 'Gas', 'Electric', 'Hybrid']
+    const validStatuses = ['active', 'inactive', 'maintenance', 'out_of_service']
+    const validInsuranceStatuses = ['none', 'active', 'expired']
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i]
 
       // Validate required fields
-      if (!row.truckName || row.truckName.trim() === '') {
-        errors.push({ row: i + 1, message: 'truckName is required' })
-        continue
-      }
       if (!row.plateNumber || row.plateNumber.trim() === '') {
         errors.push({ row: i + 1, message: 'plateNumber is required' })
         continue
       }
+      if (!row.make || row.make.trim() === '') {
+        errors.push({ row: i + 1, message: 'make is required (e.g. Mercedes-Benz)' })
+        continue
+      }
+      if (!row.model || row.model.trim() === '') {
+        errors.push({ row: i + 1, message: 'model is required (e.g. Actros)' })
+        continue
+      }
 
-      const truckType = row.truckType?.trim().toLowerCase()
-      const fuelType = row.fuelType?.trim().toLowerCase()
-      const status = row.status?.trim().toLowerCase().replace(' ', '_')
+      const year = row.year ? parseInt(row.year, 10) : null
+      if (!year || year < 1990 || year > 2035) {
+        errors.push({ row: i + 1, message: 'year is required and must be between 1990-2035' })
+        continue
+      }
 
-      validTrucks.push({
-        plateNumber: row.plateNumber.trim(),
-        truckName: row.truckName.trim(),
-        truckType: validTruckTypes.includes(truckType) ? truckType : 'flatbed',
-        capacity: row.capacity?.trim() || '',
-        year: row.year ? parseInt(row.year, 10) || null : null,
-        fuelType: validFuelTypes.includes(fuelType) ? fuelType : 'diesel',
-        status: validStatuses.includes(status) ? status : 'active',
-        mileage: row.mileage ? parseInt(row.mileage, 10) || 0 : 0,
-        insuranceExpiry: row.insuranceExpiry ? new Date(row.insuranceExpiry) : null,
-        notes: row.notes?.trim() || '',
-      })
-    }
+      const fuelType = row.fuelType?.trim()
+      const normalizedFuel = validFuelTypes.find(
+        (f) => f.toLowerCase() === fuelType?.toLowerCase()
+      ) || 'Diesel'
 
-    let created = 0
+      const status = row.status?.trim().toLowerCase().replace(/ /g, '_')
+      const normalizedStatus = validStatuses.includes(status || '') ? status! : 'active'
 
-    // Use createMany for batch insert
-    if (validTrucks.length > 0) {
+      const insuranceStatus = row.insuranceStatus?.trim().toLowerCase()
+      const normalizedInsurance = validInsuranceStatuses.includes(insuranceStatus || '')
+        ? insuranceStatus!
+        : 'none'
+
       try {
-        const result = await db.truck.createMany({
-          data: validTrucks,
-          skipDuplicates: true,
+        const truck = await db.truck.create({
+          data: {
+            plateNumber: row.plateNumber.trim(),
+            make: row.make.trim(),
+            model: row.model.trim(),
+            year,
+            vinNumber: row.vinNumber?.trim() || undefined,
+            engineNumber: row.engineNumber?.trim() || undefined,
+            chassisNumber: row.chassisNumber?.trim() || undefined,
+            color: row.color?.trim() || undefined,
+            fuelType: normalizedFuel,
+            tankCapacity: row.tankCapacity ? parseFloat(row.tankCapacity) || undefined : undefined,
+            status: normalizedStatus,
+            currentMileage: row.currentMileage ? parseFloat(row.currentMileage) || 0 : 0,
+            insuranceStatus: normalizedInsurance,
+            nextServiceDate: row.nextServiceDate ? new Date(row.nextServiceDate) : undefined,
+            notes: row.notes?.trim() || undefined,
+          },
         })
-        created = result.count
-      } catch (error) {
-        // If createMany fails, fall back to individual creates
-        for (const truck of validTrucks) {
-          try {
-            await db.truck.create({ data: truck })
-            created++
-          } catch {
-            // Skip duplicates silently — unique on plateNumber
-          }
+
+        createAuditLog({
+          userId: auth.userId,
+          action: 'create',
+          entity: 'Truck',
+          entityId: truck.id,
+          details: { plateNumber: truck.plateNumber, make: truck.make, model: truck.model, imported: true },
+          ipAddress: getClientIp(request),
+        }).catch(() => {})
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err)
+        // Skip duplicate plate numbers
+        if (msg.includes('Unique constraint')) {
+          errors.push({ row: i + 1, message: `Plate number "${row.plateNumber.trim()}" already exists — skipped` })
+        } else {
+          errors.push({ row: i + 1, message: msg })
         }
       }
     }
+
+    const created = rows.length - errors.length
 
     return NextResponse.json({
       created,

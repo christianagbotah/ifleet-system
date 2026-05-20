@@ -108,11 +108,17 @@ export function validateDriverRow(row: Record<string, string>): { valid: boolean
 export function validateTruckRow(row: Record<string, string>): { valid: boolean; errors: string[] } {
   const errors: string[] = []
 
-  if (!row.truckName || row.truckName.trim() === '') {
-    errors.push('truckName is required')
-  }
   if (!row.plateNumber || row.plateNumber.trim() === '') {
     errors.push('plateNumber is required')
+  }
+  if (!row.make || row.make.trim() === '') {
+    errors.push('make is required')
+  }
+  if (!row.model || row.model.trim() === '') {
+    errors.push('model is required')
+  }
+  if (!row.year || row.year.trim() === '') {
+    errors.push('year is required')
   }
 
   return { valid: errors.length === 0, errors }
@@ -136,14 +142,19 @@ export const DRIVER_FIELDS = [
 
 /** Field definitions for truck CSV import */
 export const TRUCK_FIELDS = [
-  { key: 'truckName', label: 'Truck Name', required: true },
   { key: 'plateNumber', label: 'Plate Number', required: true },
-  { key: 'truckType', label: 'Truck Type', required: false },
-  { key: 'capacity', label: 'Capacity', required: false },
-  { key: 'year', label: 'Year', required: false },
+  { key: 'make', label: 'Make', required: true },
+  { key: 'model', label: 'Model', required: true },
+  { key: 'year', label: 'Year', required: true },
   { key: 'fuelType', label: 'Fuel Type', required: false },
   { key: 'status', label: 'Status', required: false },
-  { key: 'mileage', label: 'Mileage', required: false },
-  { key: 'insuranceExpiry', label: 'Insurance Expiry', required: false },
+  { key: 'currentMileage', label: 'Current Mileage', required: false },
+  { key: 'tankCapacity', label: 'Tank Capacity (L)', required: false },
+  { key: 'vinNumber', label: 'VIN Number', required: false },
+  { key: 'engineNumber', label: 'Engine Number', required: false },
+  { key: 'chassisNumber', label: 'Chassis Number', required: false },
+  { key: 'color', label: 'Color', required: false },
+  { key: 'insuranceStatus', label: 'Insurance Status', required: false },
+  { key: 'nextServiceDate', label: 'Next Service Date', required: false },
   { key: 'notes', label: 'Notes', required: false },
 ] as const
