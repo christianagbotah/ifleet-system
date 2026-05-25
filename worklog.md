@@ -168,3 +168,25 @@ Stage Summary:
 - Bulk Edit dialog: Shows region badge alongside city name for context
 - Top filter bar: Added Region filter that cascades to City → Zone filters
 - All CRUD operations have proper toast notifications
+
+---
+Task ID: 2
+Agent: main
+Task: Professional toast notifications and full-page loading overlay
+
+Work Log:
+- Updated Sonner Toaster: position top-right, richColors, closeButton enabled
+- Added custom color schemes per type: success=emerald/green, error=red, warning=amber, info=blue
+- Added Lucide icons for each toast type: CheckCircle2, XCircle, AlertTriangle, Info
+- Styled with rounded-xl, backdrop-blur, theme-aware borders for light/dark mode
+- Improved PageLoadingOverlay: full-screen backdrop with blur, spinner with glow ring, progress bar, "Please wait" text
+- Added PageLoadingOverlay to root layout (was missing - overlay was never rendered)
+- Added loading-slide keyframe animation in globals.css
+- apiFetch already handles loading overlay trigger for POST/PUT/PATCH/DELETE
+- Pushed 2 commits after removing old credential-containing commits
+
+Stage Summary:
+- Toast notifications now appear at top-right with proper color coding
+- Full-page freeze with backdrop + loader during all CRUD operations
+- 400ms debounce prevents flicker on fast requests
+- Loading overlay dismisses automatically when request completes
