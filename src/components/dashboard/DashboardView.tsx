@@ -218,11 +218,13 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
         {loading ? (
           <>
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <Card key={i}>
-                <CardContent className="p-4 sm:p-6">
+              <Card key={i} className="h-full flex flex-col">
+                <CardContent className="p-4 sm:p-6 flex flex-col flex-1">
                   <Skeleton className="h-4 w-24 mb-3" />
-                  <Skeleton className="h-8 w-20 mb-2" />
-                  <Skeleton className="h-3 w-28" />
+                  <div className="mt-auto flex flex-col gap-2">
+                    <Skeleton className="h-8 w-20" />
+                    <Skeleton className="h-3 w-28" />
+                  </div>
                 </CardContent>
               </Card>
             ))}

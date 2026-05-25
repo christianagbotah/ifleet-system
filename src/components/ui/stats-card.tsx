@@ -31,9 +31,10 @@ export function StatsCard({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
+      className="h-full"
     >
-      <Card className={cn("gap-0 py-0 h-full", className)}>
-        <CardContent className="p-4 sm:p-6 flex flex-col h-full">
+      <Card className={cn("gap-0 py-0 h-full flex flex-col", className)}>
+        <CardContent className="p-4 sm:p-6 flex flex-col flex-1">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-muted-foreground">
               {title}
@@ -43,11 +44,11 @@ export function StatsCard({
             </div>
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 mt-auto">
             <span className="text-2xl font-bold tracking-tight">{value}</span>
 
             {change !== undefined && (
-              <div className="flex items-center gap-1.5 text-xs">
+              <div className="flex items-center gap-1.5 text-xs min-h-[20px]">
                 <span
                   className={cn(
                     "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-medium",
