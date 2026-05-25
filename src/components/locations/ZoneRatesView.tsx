@@ -125,8 +125,10 @@ export function ZoneRatesView() {
   const [deleting, setDeleting] = React.useState(false)
 
   // Form fields
+  const [formRegion, setFormRegion] = React.useState('')
   const [formCityId, setFormCityId] = React.useState('')
   const [formZoneId, setFormZoneId] = React.useState('')
+  const [formLoadingZones, setFormLoadingZones] = React.useState(false)
   const [formRate, setFormRate] = React.useState('')
   const [formMinMileage, setFormMinMileage] = React.useState('')
   const [formMaxMileage, setFormMaxMileage] = React.useState('')
@@ -246,9 +248,22 @@ export function ZoneRatesView() {
 
   const activeRates = items.filter((i) => i.isActive)
 
+  // Derive unique regions from cities, plus filtered cities by selected region
+  const regions = React.useMemo(() => {
+    const set = new Set<string>()
+    cities.forEach((c) => { if (c.region) set.add(c.region) })
+    return Array.from(set).sort()
+  }, [cities])
+
+  const filteredCities = React.useMemo(() => {
+    if (!formRegion) return cities
+    return cities.filter((c) => c.region === formRegion)
+  }, [cities, formRegion])
+
   // ─── Form handling ───
 
   function resetForm() {
+    setFormRegion('')
     setFormCityId('')
     setFormZoneId('')
     setFormRate('')
@@ -256,12 +271,15 @@ export function ZoneRatesView() {
     setFormMaxMileage('')
     setFormExpectedFuel('')
     setFormIsActive(true)
+    setFormZones([])
   }
 
   async function loadFormZones(cityId: string) {
     setFormZoneId('')
+    setFormLoadingZones(true)
     if (!cityId) {
       setFormZones([])
+      setFormLoadingZones(false)
       return
     }
     try {
@@ -271,6 +289,8 @@ export function ZoneRatesView() {
       setFormZones(res.data || [])
     } catch {
       setFormZones([])
+    } finally {
+      setFormLoadingZones(false)
     }
   }
 
@@ -280,7 +300,7 @@ export function ZoneRatesView() {
     setFormOpen(true)
   }
 
-  async function openEditDialog(item: ZoneRate) {
+  function openEditDialog(item: ZoneRate) {
     setEditingItem(item)
     setFormRate(String(item.rateAmount))
     setFormMinMileage(item.minMileage ? String(item.minMileage) : '')
@@ -289,23 +309,18 @@ export function ZoneRatesView() {
     setFormIsActive(item.isActive)
 
     const cityId = item.destinationZone?.destinationCityId || ''
+    const regionName = item.destinationZone?.destinationCity?.region || ''
+    setFormRegion(regionName)
     setFormCityId(cityId)
+    setFormZoneId(item.destinationZoneId)
 
-    // Ensure cities list is populated for the Select to match the value
-    if (cities.length === 0) {
-      await loadCities()
-    }
-
-    // Load zones for the city, then set zone
-    if (cityId) {
-      await loadFormZones(cityId)
-      setFormZoneId(item.destinationZoneId)
-    } else {
-      setFormZones([])
-      setFormZoneId(item.destinationZoneId)
-    }
-
+    // Open dialog immediately — load zones in background
     setFormOpen(true)
+
+    // Load zones in the background (fire-and-forget)
+    if (cityId) {
+      loadFormZones(cityId)
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -974,7 +989,35 @@ export function ZoneRatesView() {
 
           <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
             <DialogBody className="space-y-4">
-              {/* Destination City — show as read-only when editing */}
+              {/* Region — only for create */}
+              {!isEditing && regions.length > 0 && (
+                <div className="space-y-2">
+                  <Label>Region</Label>
+                  <Select
+                    value={formRegion}
+                    onValueChange={(v) => {
+                      setFormRegion(v)
+                      setFormCityId('')
+                      setFormZoneId('')
+                      setFormZones([])
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filter by region (optional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">All Regions</SelectItem>
+                      {regions.map((r) => (
+                        <SelectItem key={r} value={r}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Destination City */}
               <div className="space-y-2">
                 <Label>
                   Destination City <span className="text-destructive">*</span>
@@ -998,11 +1041,16 @@ export function ZoneRatesView() {
                       <SelectValue placeholder={loadingCities ? 'Loading cities...' : 'Select destination city'} />
                     </SelectTrigger>
                     <SelectContent>
-                      {cities.map((city) => (
+                      {filteredCities.map((city) => (
                         <SelectItem key={city.id} value={city.id}>
-                          {city.name} ({city.region})
+                          {city.name}{city.region ? ` (${city.region})` : ''}
                         </SelectItem>
                       ))}
+                      {filteredCities.length === 0 && (
+                        <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                          {formRegion ? 'No cities in this region' : 'No cities available'}
+                        </div>
+                      )}
                     </SelectContent>
                   </Select>
                 )}
@@ -1024,11 +1072,13 @@ export function ZoneRatesView() {
                     <Select
                       value={formZoneId}
                       onValueChange={setFormZoneId}
-                      disabled={!formCityId}
+                      disabled={!formCityId || formLoadingZones}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={
+                          formLoadingZones ? 'Loading zones...' :
                           !formCityId ? 'Select a city first' :
+                          formZones.length === 0 ? 'No zones found for this city' :
                           'Select destination zone'
                         } />
                       </SelectTrigger>
@@ -1038,6 +1088,11 @@ export function ZoneRatesView() {
                             {zone.name}
                           </SelectItem>
                         ))}
+                        {formZones.length === 0 && !formLoadingZones && formCityId && (
+                          <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                            No zones found for this city
+                          </div>
+                        )}
                       </SelectContent>
                     </Select>
                   )}
