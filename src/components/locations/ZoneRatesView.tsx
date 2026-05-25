@@ -645,9 +645,9 @@ export function ZoneRatesView() {
       </motion.div>
 
       {/* Filters Row */}
-      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3">
+      <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
         {/* Region filter */}
-        <div className="w-full sm:w-48">
+        <div className="flex-1 min-w-[160px]">
           <Select
             value={filterRegion}
             onValueChange={(v) => {
@@ -672,7 +672,7 @@ export function ZoneRatesView() {
           </Select>
         </div>
         {/* City filter */}
-        <div className="w-full sm:w-56">
+        <div className="flex-1 min-w-[160px]">
           <Select
             value={cityFilter}
             onValueChange={(v) => { setCityFilter(v); setZoneFilter('all'); bulk.clearSelection() }}
@@ -692,7 +692,7 @@ export function ZoneRatesView() {
           </Select>
         </div>
         {/* Zone filter */}
-        <div className="w-full sm:w-56">
+        <div className="flex-1 min-w-[160px]">
           <Select
             value={zoneFilter}
             onValueChange={(v) => setZoneFilter(v)}
