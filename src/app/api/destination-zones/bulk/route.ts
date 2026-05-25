@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
               name,
               destinationCityId,
               isActive: item.isActive !== false,
+              updatedAt: new Date(),
             },
           })
           success++

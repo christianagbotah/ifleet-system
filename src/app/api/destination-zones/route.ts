@@ -85,6 +85,8 @@ export async function POST(request: NextRequest) {
       data: {
         name: name.trim(),
         destinationCityId,
+        isActive: body.isActive !== undefined ? Boolean(body.isActive) : true,
+        updatedAt: new Date(),
       },
       include: {
         destinationCity: { select: { id: true, name: true, region: true } },
