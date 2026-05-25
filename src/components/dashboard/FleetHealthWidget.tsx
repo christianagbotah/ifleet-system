@@ -261,8 +261,8 @@ export function FleetHealthWidget({ onNavigate }: FleetHealthWidgetProps) {
         : 'Stable'
 
   return (
-    <motion.div variants={containerVariants} animate="show">
-      <Card className="h-full">
+    <motion.div variants={containerVariants} animate="show" className="h-full">
+      <Card className="h-full flex flex-col">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">Fleet Health</CardTitle>

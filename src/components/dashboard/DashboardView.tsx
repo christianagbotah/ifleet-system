@@ -383,13 +383,9 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
 
       </motion.div>
 
-      {/* Activity Feed Row */}
-      <motion.div variants={itemVariants}>
+      {/* Activity Feed + Fleet Health Row */}
+      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <ActivityFeed onNavigate={onNavigate} />
-      </motion.div>
-
-      {/* Fleet Health Row */}
-      <motion.div variants={itemVariants}>
         <FleetHealthWidget onNavigate={onNavigate} />
       </motion.div>
 
