@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(record, { status: 201 })
   } catch (error) {
     console.error('Destination zone create error:', error)
-    return NextResponse.json({ error: 'Failed to create destination zone' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Failed to create destination zone'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
