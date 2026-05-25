@@ -1212,7 +1212,7 @@ export async function testPaystackChannel(): Promise<{ success: boolean; message
 export interface UserItem {
   id: string
   name: string
-  email: string
+  email: string | null
   phone: string | null
   avatar: string | null
   roleId: string

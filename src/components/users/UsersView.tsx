@@ -4,7 +4,6 @@ import * as React from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import {
-  UserPlus,
   Search,
   Shield,
   Pencil,
@@ -15,12 +14,12 @@ import {
   Phone,
   Mail,
   Clock,
-  Link2,
   UserCog,
   Briefcase,
   Building2,
   Hash,
-  UserRoundPlus,
+  Monitor,
+  UserRound,
 } from 'lucide-react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -172,13 +171,10 @@ export function UsersView() {
   const [departmentFilter, setDepartmentFilter] = React.useState<string>('all')
 
   // Dialogs
-  const [userDialogOpen, setUserDialogOpen] = React.useState(false)
+  const [staffDialogOpen, setStaffDialogOpen] = React.useState(false)
   const [editingUser, setEditingUser] = React.useState<UserItem | null>(null)
   const [roleDialogOpen, setRoleDialogOpen] = React.useState(false)
   const [editingRole, setEditingRole] = React.useState<RoleItem | null>(null)
-
-  // Add Staff shortcut state
-  const [staffDialogOpen, setStaffDialogOpen] = React.useState(false)
 
   // Toggle loading states
   const [togglingUser, setTogglingUser] = React.useState<string | null>(null)
@@ -230,11 +226,6 @@ export function UsersView() {
 
   // ---- Handlers ----
 
-  function handleOpenAddUser() {
-    setEditingUser(null)
-    setUserDialogOpen(true)
-  }
-
   function handleOpenAddStaff() {
     setEditingUser(null)
     setStaffDialogOpen(true)
@@ -242,7 +233,7 @@ export function UsersView() {
 
   function handleOpenEditUser(user: UserItem) {
     setEditingUser(user)
-    setUserDialogOpen(true)
+    setStaffDialogOpen(true)
   }
 
   function handleUserSaved() {
@@ -369,22 +360,13 @@ export function UsersView() {
                 : 'Get started by adding the first user to your fleet management system.'}
             </p>
             {!searchQuery && roleFilter === 'all' && statusFilter === 'all' && departmentFilter === 'all' && (
-              <div className="flex gap-2 mt-4">
-                <Button
-                  onClick={handleOpenAddUser}
-                  className="bg-amber-500 hover:bg-amber-600 text-white"
-                >
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Add User
-                </Button>
-                <Button
-                  onClick={handleOpenAddStaff}
-                  variant="outline"
-                >
-                  <UserRoundPlus className="mr-2 h-4 w-4" />
-                  Add Staff
-                </Button>
-              </div>
+              <Button
+                onClick={handleOpenAddStaff}
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                <UserRound className="mr-2 h-4 w-4" />
+                Add Staff
+              </Button>
             )}
           </CardContent>
         </Card>
@@ -402,6 +384,7 @@ export function UsersView() {
                 <TableHead>Role</TableHead>
                 <TableHead>Department</TableHead>
                 <TableHead>Position</TableHead>
+                <TableHead>Login</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Last Login</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -419,7 +402,7 @@ export function UsersView() {
                         <div className="font-medium text-sm truncate">{user.name}</div>
                         <div className="text-xs text-muted-foreground truncate flex items-center gap-1">
                           <Mail className="h-3 w-3 shrink-0" />
-                          {user.email}
+                          {user.email || <span className="text-muted-foreground/50">No email</span>}
                         </div>
                       </div>
                     </div>
@@ -450,6 +433,25 @@ export function UsersView() {
                     {user.position || <span className="text-muted-foreground/50">—</span>}
                   </TableCell>
                   <TableCell>
+                    {user.email ? (
+                      <Badge
+                        variant="outline"
+                        className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                      >
+                        <Monitor className="h-3 w-3 mr-1" />
+                        Can Login
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                      >
+                        <UserRound className="h-3 w-3 mr-1" />
+                        Staff Only
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <Badge
                       variant="outline"
                       className={
@@ -462,7 +464,7 @@ export function UsersView() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {formatRelativeDate(user.lastLogin)}
+                    {user.email ? formatRelativeDate(user.lastLogin) : '—'}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
@@ -510,7 +512,7 @@ export function UsersView() {
                   </div>
                   <div className="min-w-0">
                     <div className="font-medium text-sm truncate">{user.name}</div>
-                    <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                    <div className="text-xs text-muted-foreground truncate">{user.email || 'No email'}</div>
                   </div>
                 </div>
                 <Badge
@@ -546,6 +548,18 @@ export function UsersView() {
                     <span>—</span>
                   )}
                 </div>
+                <div className="flex items-center gap-1.5">
+                  <Monitor className="h-3.5 w-3.5" />
+                  {user.email ? (
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                      Can Login
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                      Staff Only
+                    </Badge>
+                  )}
+                </div>
                 {user.position && (
                   <div className="flex items-center gap-1.5">
                     <Briefcase className="h-3.5 w-3.5" />
@@ -564,7 +578,7 @@ export function UsersView() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5" />
-                  {formatRelativeDate(user.lastLogin)}
+                  {user.email ? formatRelativeDate(user.lastLogin) : '—'}
                 </div>
               </div>
 
@@ -790,26 +804,16 @@ export function UsersView() {
                   User Management
                 </h1>
                 <p className="text-muted-foreground mt-0.5">
-                  Create and manage user accounts, staff, and role assignments
+                  Add staff members and optionally grant them system login access
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleOpenAddStaff}
-                  variant="outline"
-                  className="shrink-0"
-                >
-                  <UserRoundPlus className="mr-2 h-4 w-4" />
-                  Add Staff
-                </Button>
-                <Button
-                  onClick={handleOpenAddUser}
-                  className="bg-amber-500 hover:bg-amber-600 text-white shrink-0"
-                >
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Add User
-                </Button>
-              </div>
+              <Button
+                onClick={handleOpenAddStaff}
+                className="bg-amber-500 hover:bg-amber-600 text-white shrink-0"
+              >
+                <UserRound className="mr-2 h-4 w-4" />
+                Add Staff
+              </Button>
             </div>
           </motion.div>
 
@@ -918,19 +922,11 @@ export function UsersView() {
 
       {/* Dialogs */}
       <UserFormDialog
-        open={userDialogOpen}
-        onOpenChange={setUserDialogOpen}
+        open={staffDialogOpen}
+        onOpenChange={setStaffDialogOpen}
         user={editingUser}
         roles={roles}
         onSaved={handleUserSaved}
-      />
-      <UserFormDialog
-        open={staffDialogOpen}
-        onOpenChange={setStaffDialogOpen}
-        user={null}
-        roles={roles}
-        onSaved={handleUserSaved}
-        prefillDepartment="Operations"
       />
       <RoleFormDialog
         open={roleDialogOpen}

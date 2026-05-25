@@ -94,9 +94,10 @@ export async function PUT(
       position,
       department,
       employeeNumber,
+      hasSystemAccess,
     } = body
 
-    // Check email uniqueness if changing
+    // Check email uniqueness if changing and email is provided
     if (email && email !== user.email) {
       const existing = await db.user.findUnique({ where: { email } })
       if (existing) {
@@ -104,6 +105,25 @@ export async function PUT(
           { error: 'A user with this email already exists' },
           { status: 400 }
         )
+      }
+    }
+
+    // Handle hasSystemAccess toggle
+    // If hasSystemAccess is explicitly set to false, clear email and password
+    // If set to true, email and password must be provided
+    if (hasSystemAccess !== undefined) {
+      if (hasSystemAccess && !user.email) {
+        // Granting system access — email and password required
+        if (!email || !password) {
+          return NextResponse.json(
+            { error: 'Email and password are required to grant system access' },
+            { status: 400 }
+          )
+        }
+      } else if (!hasSystemAccess && user.email) {
+        // Revoking system access — clear email and password
+        updateData.email = null
+        updateData.password = null
       }
     }
 

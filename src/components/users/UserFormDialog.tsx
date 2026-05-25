@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Loader2, Briefcase, Hash } from 'lucide-react'
+import { Loader2, Briefcase, Hash, Monitor, UserRound } from 'lucide-react'
 import {
   Dialog,
   DialogBody,
@@ -28,7 +28,7 @@ import { toast } from 'sonner'
 interface UserItem {
   id: string
   name: string
-  email: string
+  email?: string | null
   phone?: string | null
   roleId: string
   role?: { id: string; name: string } | null
@@ -62,10 +62,6 @@ interface UserFormDialogProps {
   user?: UserItem | null
   roles: RoleItem[]
   onSaved: () => void
-  /** Pre-fill department for "Add Staff" shortcut */
-  prefillDepartment?: string
-  /** Pre-fill roleId for "Add Staff" shortcut */
-  prefillRoleId?: string
 }
 
 // ---- Constants ----
@@ -84,9 +80,10 @@ const departmentOptions: SearchableOption[] = [
   ...DEPARTMENTS.map((d) => ({ value: d, label: d })),
 ]
 
-// ---- Schema ----
+// ---- Schemas ----
 
-const createUserSchema = z.object({
+// For system users (hasSystemAccess = true)
+const systemUserSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
   phone: z.string().optional().or(z.literal('')),
@@ -97,46 +94,70 @@ const createUserSchema = z.object({
   position: z.string().optional().or(z.literal('')),
   department: z.string().optional().or(z.literal('')),
   employeeNumber: z.string().optional().or(z.literal('')),
+  hasSystemAccess: z.literal(true),
 })
 
-const editUserSchema = z.object({
+// For staff-only (hasSystemAccess = false)
+const staffOnlySchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  email: z.string().optional().or(z.literal('')),
   phone: z.string().optional().or(z.literal('')),
+  password: z.string().optional().or(z.literal('')),
   roleId: z.string().min(1, 'Role is required'),
   driverId: z.string().optional(),
   isActive: z.boolean(),
   position: z.string().optional().or(z.literal('')),
   department: z.string().optional().or(z.literal('')),
   employeeNumber: z.string().optional().or(z.literal('')),
+  hasSystemAccess: z.literal(false),
 })
 
-type CreateUserFormValues = z.infer<typeof createUserSchema>
-type EditUserFormValues = z.infer<typeof editUserSchema>
+// Edit schema (email/password optional when editing — can be changed via toggle)
+const editUserSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().optional().or(z.literal('')),
+  phone: z.string().optional().or(z.literal('')),
+  password: z.string().optional().or(z.literal('')),
+  roleId: z.string().min(1, 'Role is required'),
+  driverId: z.string().optional(),
+  isActive: z.boolean(),
+  position: z.string().optional().or(z.literal('')),
+  department: z.string().optional().or(z.literal('')),
+  employeeNumber: z.string().optional().or(z.literal('')),
+  hasSystemAccess: z.boolean(),
+})
+
+type FormValues = z.infer<typeof systemUserSchema> & z.infer<typeof staffOnlySchema> & z.infer<typeof editUserSchema>
 
 // ---- Component ----
 
-export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefillDepartment, prefillRoleId }: UserFormDialogProps) {
+export function UserFormDialog({ open, onOpenChange, user, roles, onSaved }: UserFormDialogProps) {
   const isEditing = !!user
+  // A user is considered a "system user" if they have an email
+  const isExistingSystemUser = !!user?.email
   const [submitting, setSubmitting] = React.useState(false)
   const [drivers, setDrivers] = React.useState<DriverOption[]>([])
   const [driversLoading, setDriversLoading] = React.useState(false)
 
-  const form = useForm<CreateUserFormValues & EditUserFormValues>({
-    resolver: zodResolver(isEditing ? editUserSchema : createUserSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(editUserSchema),
     defaultValues: {
       name: '',
       email: '',
       phone: '',
       password: '',
-      roleId: prefillRoleId || '',
+      roleId: '',
       driverId: '',
       isActive: true,
       position: '',
-      department: prefillDepartment || '',
+      department: '',
       employeeNumber: '',
+      hasSystemAccess: false,
     },
   })
+
+  // Watch hasSystemAccess for conditional rendering
+  const hasSystemAccess = form.watch('hasSystemAccess')
 
   // Reset form when dialog opens or user changes
   React.useEffect(() => {
@@ -144,7 +165,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
       if (user) {
         form.reset({
           name: user.name,
-          email: user.email,
+          email: user.email || '',
           phone: user.phone || '',
           password: '',
           roleId: user.roleId,
@@ -153,6 +174,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
           position: user.position || '',
           department: user.department || '',
           employeeNumber: user.employeeNumber || '',
+          hasSystemAccess: !!user.email,
         })
       } else {
         form.reset({
@@ -160,16 +182,29 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
           email: '',
           phone: '',
           password: '',
-          roleId: prefillRoleId || '',
+          roleId: '',
           driverId: '',
           isActive: true,
           position: '',
-          department: prefillDepartment || '',
+          department: '',
           employeeNumber: '',
+          hasSystemAccess: false,
         })
       }
     }
-  }, [user, form, open, prefillRoleId, prefillDepartment])
+  }, [user, form, open])
+
+  // Dynamically switch resolver based on hasSystemAccess
+  React.useEffect(() => {
+    if (!open) return
+    if (isEditing) {
+      form.changeResolver(zodResolver(editUserSchema))
+    } else if (hasSystemAccess) {
+      form.changeResolver(zodResolver(systemUserSchema))
+    } else {
+      form.changeResolver(zodResolver(staffOnlySchema))
+    }
+  }, [hasSystemAccess, isEditing, form, open])
 
   // Fetch drivers when dialog opens
   React.useEffect(() => {
@@ -225,10 +260,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
 
   // Quick role templates for staff
   const staffRoleTemplates = React.useMemo(() => {
-    const staffRoles = roles.filter(
-      (r) => !r.isSystem || r.name === 'Driver'
-    )
-    return staffRoles.filter((r) =>
+    return roles.filter((r) =>
       ['Dispatcher', 'Mechanic', 'Accountant', 'Warehouse Manager', 'HR', 'Operations Manager'].includes(r.name)
     )
   }, [roles])
@@ -262,16 +294,16 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
       form.setValue('position', pos)
     }
     toast.success(`Applied ${role.name} template`, {
-      description: `Role, department, and position pre-filled.`,
+      description: 'Role, department, and position pre-filled.',
     })
   }
 
-  async function onSubmit(data: CreateUserFormValues & EditUserFormValues) {
+  async function onSubmit(data: FormValues) {
     setSubmitting(true)
     try {
       const body: Record<string, unknown> = {
         name: data.name,
-        email: data.email,
+        email: data.hasSystemAccess ? data.email : null,
         phone: data.phone || null,
         roleId: data.roleId,
         isActive: data.isActive,
@@ -279,10 +311,28 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
         position: data.position || null,
         department: data.department || null,
         employeeNumber: data.employeeNumber || null,
+        hasSystemAccess: data.hasSystemAccess,
       }
 
-      if (!isEditing) {
+      if (!isEditing && data.hasSystemAccess) {
         body.password = data.password
+      }
+
+      // When editing and granting system access (was staff-only, now system user)
+      if (isEditing && data.hasSystemAccess && !isExistingSystemUser) {
+        if (!data.email || !data.password) {
+          toast.error('Email and password are required to grant system access')
+          setSubmitting(false)
+          return
+        }
+        body.email = data.email
+        body.password = data.password
+      }
+
+      // When editing and revoking system access
+      if (isEditing && !data.hasSystemAccess && isExistingSystemUser) {
+        body.email = null
+        body.password = null
       }
 
       if (isEditing && user) {
@@ -293,9 +343,9 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
         })
         if (!res.ok) {
           const err = await res.json().catch(() => ({}))
-          throw new Error(err.error || 'Failed to update user')
+          throw new Error(err.error || 'Failed to update staff')
         }
-        toast.success('User updated successfully', {
+        toast.success('Staff updated successfully', {
           description: `${data.name} has been updated.`,
         })
       } else {
@@ -306,11 +356,16 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
         })
         if (!res.ok) {
           const err = await res.json().catch(() => ({}))
-          throw new Error(err.error || 'Failed to create user')
+          throw new Error(err.error || 'Failed to create staff')
         }
-        toast.success('User created successfully', {
-          description: `${data.name} has been added.`,
-        })
+        toast.success(
+          data.hasSystemAccess ? 'User created successfully' : 'Staff added successfully',
+          {
+            description: data.hasSystemAccess
+              ? `${data.name} has been added with system access.`
+              : `${data.name} has been added as staff.`,
+          }
+        )
       }
 
       onOpenChange(false)
@@ -324,7 +379,6 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
 
   const selectedRoleId = form.watch('roleId')
   const selectedRole = roles.find((r) => r.id === selectedRoleId)
-  const selectedDepartment = form.watch('department')
 
   // Determine if current role is a driver role
   const isDriverRole = selectedRole?.name === 'Driver'
@@ -333,19 +387,17 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit User' : prefillDepartment ? 'Add Staff Member' : 'Add New User'}</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Staff Member' : 'Add Staff Member'}</DialogTitle>
           <DialogDescription>
             {isEditing
-              ? 'Update user information, role, and staff details below.'
-              : prefillDepartment
-                ? 'Fill in the details to create a new staff account.'
-                : 'Fill in the details to create a new user account.'}
+              ? 'Update staff information and system access settings.'
+              : 'Fill in the details to add a new staff member to the system.'}
           </DialogDescription>
         </DialogHeader>
 
         <DialogBody className="flex-1 min-h-0">
         <form id="user-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Name & Email */}
+          {/* Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">
@@ -361,24 +413,6 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">
-                Email <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="user@company.com"
-                {...form.register('email')}
-              />
-              {form.formState.errors.email && (
-                <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Phone & Role */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
                 id="phone"
@@ -386,41 +420,99 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
                 {...form.register('phone')}
               />
             </div>
-            <div className="space-y-2">
-              <Label>
-                Role <span className="text-destructive">*</span>
+          </div>
+
+          {/* Role */}
+          <div className="space-y-2">
+            <Label>
+              Role <span className="text-destructive">*</span>
+            </Label>
+            <SearchableSelect
+              options={roleOptions}
+              value={form.watch('roleId')}
+              onValueChange={(val) => form.setValue('roleId', val, { shouldValidate: true })}
+              placeholder="Select a role"
+              searchPlaceholder="Search roles..."
+              emptyMessage="No roles found"
+              disabled={submitting}
+            />
+            {form.formState.errors.roleId && (
+              <p className="text-xs text-destructive">{form.formState.errors.roleId.message}</p>
+            )}
+          </div>
+
+          {/* System Access Toggle */}
+          <Separator />
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label className="flex items-center gap-2">
+                <Monitor className="h-4 w-4 text-muted-foreground" />
+                System Access
               </Label>
-              <SearchableSelect
-                options={roleOptions}
-                value={form.watch('roleId')}
-                onValueChange={(val) => form.setValue('roleId', val, { shouldValidate: true })}
-                placeholder="Select a role"
-                searchPlaceholder="Search roles..."
-                emptyMessage="No roles found"
+              <p className="text-xs text-muted-foreground">
+                {hasSystemAccess
+                  ? 'This staff member can log in with email and password.'
+                  : 'Staff-only record — no login credentials needed.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={
+                  hasSystemAccess
+                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[11px]'
+                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 text-[11px]'
+                }
+              >
+                {hasSystemAccess ? 'Can Login' : 'No Login'}
+              </Badge>
+              <Switch
+                checked={hasSystemAccess}
+                onCheckedChange={(checked) => form.setValue('hasSystemAccess', checked)}
                 disabled={submitting}
               />
-              {form.formState.errors.roleId && (
-                <p className="text-xs text-destructive">{form.formState.errors.roleId.message}</p>
-              )}
             </div>
           </div>
 
-          {/* Password — only for new users */}
-          {!isEditing && (
-            <div className="space-y-2">
-              <Label htmlFor="password">
-                Password <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Minimum 4 characters"
-                {...form.register('password')}
-              />
-              {form.formState.errors.password && (
-                <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
+          {/* Login Credentials — only shown when System Access is ON */}
+          {hasSystemAccess && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="email">
+                  Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="user@company.com"
+                  {...form.register('email')}
+                />
+                {form.formState.errors.email && (
+                  <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+                )}
+              </div>
+
+              {!isEditing || (isEditing && !isExistingSystemUser) ? (
+                <div className="space-y-2">
+                  <Label htmlFor="password">
+                    Password <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder={isEditing ? 'Set a new password' : 'Minimum 4 characters'}
+                    {...form.register('password')}
+                  />
+                  {form.formState.errors.password && (
+                    <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground bg-muted/50 rounded-md p-2">
+                  💡 To change the password for this user, use the account settings or reset feature.
+                </p>
               )}
-            </div>
+            </>
           )}
 
           <Separator />
@@ -475,8 +567,8 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
             </div>
           </div>
 
-          {/* Quick Role Templates — only for new users, when no department is pre-filled */}
-          {!isEditing && !prefillDepartment && staffRoleTemplates.length > 0 && (
+          {/* Quick Role Templates — only for new staff, when system access is OFF */}
+          {!isEditing && !hasSystemAccess && staffRoleTemplates.length > 0 && (
             <>
               <Separator />
               <div className="space-y-3">
@@ -512,7 +604,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
               <div className="space-y-0.5">
                 <Label>Status</Label>
                 <p className="text-xs text-muted-foreground">
-                  {form.watch('isActive') ? 'User can sign in and access the system' : 'User is suspended and cannot sign in'}
+                  {form.watch('isActive') ? 'Staff member is active' : 'Staff member is inactive'}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -542,7 +634,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
             <div className="space-y-2">
               <Label>Link Driver</Label>
               <p className="text-xs text-muted-foreground">
-                Optionally link this user to a driver profile for driver-specific access.
+                Optionally link this staff member to a driver profile for driver-specific access.
               </p>
               {driversLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
@@ -576,7 +668,7 @@ export function UserFormDialog({ open, onOpenChange, user, roles, onSaved, prefi
             disabled={submitting}
           >
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {submitting ? 'Saving...' : isEditing ? 'Update User' : 'Create User'}
+            {submitting ? 'Saving...' : isEditing ? 'Update Staff' : 'Add Staff'}
           </Button>
         </DialogFooter>
       </DialogContent>

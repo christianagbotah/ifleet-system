@@ -107,11 +107,25 @@ export async function POST(request: NextRequest) {
     if (auth instanceof NextResponse) return auth
     const body = await request.json()
 
-    const { name, email, phone, password, roleId, isActive, position, department, employeeNumber } = body
+    const { name, email, phone, password, roleId, isActive, position, department, employeeNumber, hasSystemAccess } = body
 
-    if (!name || !email || !password || !roleId) {
+    // If hasSystemAccess is not explicitly set, infer from email presence
+    const systemAccess = hasSystemAccess !== undefined ? hasSystemAccess : !!email
+
+    // System users must have email + password
+    if (systemAccess) {
+      if (!email || !password) {
+        return NextResponse.json(
+          { error: 'Email and password are required for staff with system access' },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Non-system users only need name + roleId
+    if (!name || !roleId) {
       return NextResponse.json(
-        { error: 'name, email, password, and roleId are required' },
+        { error: 'Name and role are required' },
         { status: 400 }
       )
     }
@@ -126,20 +140,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (password.length < 4) {
-      return NextResponse.json(
-        { error: 'Password must be at least 4 characters' },
-        { status: 400 }
-      )
-    }
+    // Check email uniqueness only when email is provided
+    if (email) {
+      if (password && password.length < 4) {
+        return NextResponse.json(
+          { error: 'Password must be at least 4 characters' },
+          { status: 400 }
+        )
+      }
 
-    // Check email uniqueness
-    const existingEmail = await db.user.findUnique({ where: { email } })
-    if (existingEmail) {
-      return NextResponse.json(
-        { error: 'A user with this email already exists' },
-        { status: 400 }
-      )
+      const existingEmail = await db.user.findUnique({ where: { email } })
+      if (existingEmail) {
+        return NextResponse.json(
+          { error: 'A user with this email already exists' },
+          { status: 400 }
+        )
+      }
     }
 
     // Check roleId exists
@@ -154,9 +170,9 @@ export async function POST(request: NextRequest) {
     const user = await db.user.create({
       data: {
         name,
-        email,
+        email: email || null,
         phone: phone || null,
-        password: await hashPassword(password),
+        password: email && password ? await hashPassword(password) : null,
         roleId,
         position: position || null,
         department: department || null,
@@ -200,7 +216,7 @@ export async function POST(request: NextRequest) {
       action: 'create',
       entity: 'User',
       entityId: user.id,
-      details: { email, roleName: role.name },
+      details: { email: email || null, roleName: role.name, hasSystemAccess: systemAccess },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
