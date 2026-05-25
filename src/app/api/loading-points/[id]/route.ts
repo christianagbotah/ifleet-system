@@ -17,7 +17,7 @@ export async function GET(
       where: { id },
       include: {
         loadingCity: { select: { id: true, name: true, region: true } },
-        _count: { select: { trips: true } },
+        _count: { select: { Trip: true } },
       },
     })
 

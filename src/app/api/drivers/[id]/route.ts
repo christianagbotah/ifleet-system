@@ -23,14 +23,14 @@ export async function GET(
     const driver = await db.driver.findUnique({
       where: { id },
       include: {
-        trucks: {
+        Truck: {
           where: { status: 'active' },
           select: { id: true, plateNumber: true, make: true, model: true },
         },
         ...(isDriver
           ? {
               // Drivers only see limited trip info (no financials)
-              trips: {
+              Trip: {
                 orderBy: { departureTime: 'desc' },
                 take: 20,
                 select: {

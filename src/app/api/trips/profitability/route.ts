@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         driver: { select: { id: true, firstName: true, lastName: true } },
         client: { select: { id: true, companyName: true } },
-        fuelLogs: { select: { totalCost: true } },
-        expenses: { select: { amount: true, category: true } },
+        FuelLog: { select: { totalCost: true } },
+        Expense: { select: { amount: true, category: true } },
       },
       orderBy: { departureTime: 'desc' },
       skip: (page - 1) * limit,
@@ -98,8 +98,8 @@ export async function GET(request: NextRequest) {
     // ─── Calculate per-trip profitability ───
     const tripProfitability = trips.map(trip => {
       const revenue = trip.totalRevenue ?? 0
-      const fuelCost = trip.fuelLogs.reduce((sum, fl) => sum + fl.totalCost, 0)
-      const otherExpenses = trip.expenses
+      const fuelCost = trip.FuelLog.reduce((sum, fl) => sum + fl.totalCost, 0)
+      const otherExpenses = trip.Expense
         .filter(e => e.category !== 'fuel')
         .reduce((sum, e) => sum + e.amount, 0)
       const totalCost = fuelCost + otherExpenses
@@ -163,8 +163,8 @@ export async function GET(request: NextRequest) {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         driver: { select: { id: true, firstName: true, lastName: true } },
         client: { select: { id: true, companyName: true } },
-        fuelLogs: { select: { totalCost: true } },
-        expenses: { select: { amount: true, category: true } },
+        FuelLog: { select: { totalCost: true } },
+        Expense: { select: { amount: true, category: true } },
       },
     })
 
@@ -174,8 +174,8 @@ export async function GET(request: NextRequest) {
     }>()
     for (const trip of allTrips) {
       const rev = trip.totalRevenue ?? 0
-      const fuel = trip.fuelLogs.reduce((s, fl) => s + fl.totalCost, 0)
-      const other = trip.expenses.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
+      const fuel = trip.FuelLog.reduce((s, fl) => s + fl.totalCost, 0)
+      const other = trip.Expense.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
       const cost = fuel + other
       const key = `${trip.loadingLocation} → ${trip.destination}`
       const existing = routeAggMap.get(key) || { route: key, trips: 0, revenue: 0, cost: 0, profit: 0 }
@@ -199,8 +199,8 @@ export async function GET(request: NextRequest) {
     }>()
     for (const trip of allTrips) {
       const rev = trip.totalRevenue ?? 0
-      const fuel = trip.fuelLogs.reduce((s, fl) => s + fl.totalCost, 0)
-      const other = trip.expenses.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
+      const fuel = trip.FuelLog.reduce((s, fl) => s + fl.totalCost, 0)
+      const other = trip.Expense.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
       const cost = fuel + other
       const key = trip.truckId
       const existing = truckAggMap.get(key) || {
@@ -227,8 +227,8 @@ export async function GET(request: NextRequest) {
     for (const trip of allTrips) {
       const clientName = trip.client?.companyName ?? trip.customerName ?? 'Unassigned'
       const rev = trip.totalRevenue ?? 0
-      const fuel = trip.fuelLogs.reduce((s, fl) => s + fl.totalCost, 0)
-      const other = trip.expenses.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
+      const fuel = trip.FuelLog.reduce((s, fl) => s + fl.totalCost, 0)
+      const other = trip.Expense.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
       const cost = fuel + other
       const key = clientName
       const existing = clientAggMap.get(key) || { clientName: key, trips: 0, revenue: 0, cost: 0, profit: 0 }
@@ -252,8 +252,8 @@ export async function GET(request: NextRequest) {
       const d = new Date(trip.departureTime)
       const monthKey = d.toLocaleString('en-US', { month: 'short', year: 'numeric' })
       const rev = trip.totalRevenue ?? 0
-      const fuel = trip.fuelLogs.reduce((s, fl) => s + fl.totalCost, 0)
-      const other = trip.expenses.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
+      const fuel = trip.FuelLog.reduce((s, fl) => s + fl.totalCost, 0)
+      const other = trip.Expense.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
       const cost = fuel + other
       const existing = monthlyTrendMap.get(monthKey) || { month: monthKey, revenue: 0, cost: 0, profit: 0 }
       existing.revenue += rev

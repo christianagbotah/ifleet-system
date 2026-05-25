@@ -228,13 +228,13 @@ export async function fetchFleetOverviewData(): Promise<ReportData> {
   const trucks = await db.truck.findMany({
     include: {
       driver: { select: { firstName: true, lastName: true, phone: true, employeeId: true } },
-      insurance: {
+      Insurance: {
         where: { status: 'active' },
         select: { provider: true, policyNumber: true, endDate: true, type: true },
         take: 1,
         orderBy: { endDate: 'asc' },
       },
-      maintenance: {
+      MaintenanceRecord: {
         where: { status: 'pending' },
         select: { type: true, title: true, nextDueDate: true },
         take: 1,
@@ -242,8 +242,8 @@ export async function fetchFleetOverviewData(): Promise<ReportData> {
       },
       _count: {
         select: {
-          trips: { where: { status: { not: 'completed' } } },
-          maintenance: true,
+          Trip: { where: { status: { not: 'completed' } } },
+          MaintenanceRecord: true,
         },
       },
     },
@@ -268,10 +268,10 @@ export async function fetchFleetOverviewData(): Promise<ReportData> {
     t.fuelType,
     csvNumber(t.tankCapacity, 0),
     t.insuranceStatus,
-    t.insurance.length > 0 ? csvDate(t.insurance[0].endDate) : 'None',
-    t._count.trips,
-    t._count.maintenance,
-    t.maintenance.length > 0 ? `${t.maintenance[0].type}: ${t.maintenance[0].title}` : 'None',
+    t.Insurance.length > 0 ? csvDate(t.Insurance[0].endDate) : 'None',
+    t._count.Trip,
+    t._count.MaintenanceRecord,
+    t.MaintenanceRecord.length > 0 ? `${t.MaintenanceRecord[0].type}: ${t.MaintenanceRecord[0].title}` : 'None',
     csvDate(t.nextServiceDate),
   ])
 
@@ -442,8 +442,8 @@ export async function fetchDriverPerformanceData(params: ReportParams): Promise<
   const drivers = await db.driver.findMany({
     where,
     include: {
-      trucks: { select: { plateNumber: true, make: true, model: true } },
-      trips: {
+      Truck: { select: { plateNumber: true, make: true, model: true } },
+      Trip: {
         select: {
           id: true, status: true, totalRevenue: true, totalMileage: true,
           actualDuration: true, fuelUsed: true, fuelCost: true,

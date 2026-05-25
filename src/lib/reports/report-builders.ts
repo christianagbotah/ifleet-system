@@ -303,9 +303,9 @@ export async function buildFleetOverviewReport(): Promise<ExcelReport> {
   const trucks = await db.truck.findMany({
     include: {
       driver: { select: { firstName: true, lastName: true } },
-      maintenance: { where: { status: { in: ['pending', 'in_progress'] } }, orderBy: { createdAt: 'desc' }, take: 1 },
-      insurance: { where: { status: 'active' }, orderBy: { endDate: 'asc' }, take: 1 },
-      _count: { select: { trips: true, fuelLogs: true, expenses: true, maintenance: true } },
+      MaintenanceRecord: { where: { status: { in: ['pending', 'in_progress'] } }, orderBy: { createdAt: 'desc' }, take: 1 },
+      Insurance: { where: { status: 'active' }, orderBy: { endDate: 'asc' }, take: 1 },
+      _count: { select: { Trip: true, FuelLog: true, Expense: true, MaintenanceRecord: true } },
     },
     orderBy: { plateNumber: 'asc' },
   })
@@ -343,8 +343,8 @@ export async function buildFleetOverviewReport(): Promise<ExcelReport> {
       plateNumber: truck.plateNumber, makeModel: `${truck.make} ${truck.model}`, year: truck.year,
       driver: truck.driver ? `${truck.driver.firstName} ${truck.driver.lastName}` : 'Unassigned',
       status: truck.status.replace(/\b\w/g, (c) => c.toUpperCase()),
-      mileage: truck.currentMileage, totalTrips: truck._count.trips,
-      insuranceExpiry: truck.insurance[0]?.endDate ?? null,
+      mileage: truck.currentMileage, totalTrips: truck._count.Trip,
+      insuranceExpiry: truck.Insurance[0]?.endDate ?? null,
       nextService: truck.nextServiceDate ?? null, fuelType: truck.fuelType,
       tankCapacity: truck.tankCapacity ?? 0,
     }, columns)
@@ -363,11 +363,11 @@ export async function buildDriverPerformanceReport(params: ReportParams): Promis
   const drivers = await db.driver.findMany({
     where: driverWhere,
     include: {
-      trucks: { select: { plateNumber: true } },
-      _count: { select: { trips: true } },
-      trips: {
+      Truck: { select: { plateNumber: true } },
+      _count: { select: { Trip: true } },
+      Trip: {
         where: buildWhereClause(params),
-        select: { status: true, totalRevenue: true, totalMileage: true, departureTime: true, arrivalTime: true, expenses: { select: { amount: true } } },
+        select: { status: true, totalRevenue: true, totalMileage: true, departureTime: true, arrivalTime: true, Expense: { select: { amount: true } } },
       },
     },
     orderBy: { lastName: 'asc' },

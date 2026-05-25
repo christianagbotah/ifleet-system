@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
           driver: {
             select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true },
           },
-          _count: { select: { lines: true } },
+          _count: { select: { SettlementLine: true } },
         },
         orderBy: { periodStart: 'desc' },
         skip: (page - 1) * limit,
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         bonusAmount: bonusAmount || 0,
         netPay: netPay || (grossEarnings || 0) - (fuelDeductions || 0) - (expenseDeductions || 0) + (bonusAmount || 0),
         notes: notes || null,
-        lines: lines ? {
+        SettlementLine: lines ? {
           create: lines.map((line: { tripId?: string; description: string; type: string; amount: number }) => ({
             tripId: line.tripId || null,
             description: line.description,
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         driver: {
           select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true },
         },
-        lines: { include: { trip: { select: { tripNumber: true, loadingLocation: true, destination: true } } } },
+        SettlementLine: { include: { trip: { select: { tripNumber: true, loadingLocation: true, destination: true } } } },
       },
     })
 

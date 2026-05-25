@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         skip: (page - 1) * limit,
         take: limit,
         include: {
-          _count: { select: { destinationZones: true } },
+          _count: { select: { DestinationZone: true } },
         },
       }),
       db.destinationCity.count({ where }),
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     const mapped = records.map(({ _count, ...rest }) => ({
       ...rest,
-      zonesCount: _count.destinationZones,
+      zonesCount: _count.DestinationZone,
     }))
 
     return NextResponse.json({ data: mapped, total, page, limit })

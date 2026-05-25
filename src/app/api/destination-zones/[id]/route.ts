@@ -17,13 +17,13 @@ export async function GET(
       where: { id },
       include: {
         destinationCity: { select: { id: true, name: true, region: true } },
-        zoneRates: {
+        ZoneRate: {
           orderBy: { effectiveDate: 'desc' },
         },
-        performanceBenchmarks: {
+        PerformanceBenchmark: {
           orderBy: { createdAt: 'desc' },
         },
-        _count: { select: { trips: true } },
+        _count: { select: { Trip: true } },
       },
     })
 

@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const roles = await db.role.findMany({
       include: {
         _count: {
-          select: { users: true },
+          select: { User: true },
         },
       },
       orderBy: [
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       isSystem: role.isSystem,
       createdAt: role.createdAt,
       updatedAt: role.updatedAt,
-      userCount: role._count.users,
+      userCount: role._count.User,
     }))
 
     return NextResponse.json({ data: rolesWithParsedPermissions })

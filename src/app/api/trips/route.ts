@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
         include: {
           truck: { select: { id: true, plateNumber: true, make: true, model: true } },
           driver: { select: { id: true, firstName: true, lastName: true } },
-          tripItems: {
+          TripItem: {
             include: {
               supplier: { select: { id: true, name: true } },
               loadingPoint: { select: { id: true, name: true } },
@@ -76,11 +76,11 @@ export async function GET(request: NextRequest) {
             },
             orderBy: { sortOrder: 'asc' },
           },
-          deliveryDestinations: {
+          TripDeliveryDestination: {
             include: {
               client: { select: { id: true, companyName: true, phone: true } },
               destinationZone: { select: { id: true, name: true, destinationCity: { select: { id: true, name: true } } } },
-              tripItems: {
+              TripItem: {
                 include: {
                   item: { select: { id: true, name: true, unit: true } },
                 },

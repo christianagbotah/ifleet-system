@@ -176,7 +176,7 @@ export async function GET(request: NextRequest) {
         ghanaCardExpiry: true,
         verificationStatus: true,
         status: true,
-        trucks: {
+        Truck: {
           select: {
             id: true,
             plateNumber: true,

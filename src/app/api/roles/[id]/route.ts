@@ -17,7 +17,7 @@ export async function GET(
       where: { id },
       include: {
         _count: {
-          select: { users: true },
+          select: { User: true },
         },
       },
     })
@@ -34,7 +34,7 @@ export async function GET(
       isSystem: role.isSystem,
       createdAt: role.createdAt,
       updatedAt: role.updatedAt,
-      userCount: role._count.users,
+      userCount: role._count.User,
     }
 
     return NextResponse.json(roleWithParsedPermissions)
@@ -139,7 +139,7 @@ export async function DELETE(
       where: { id },
       include: {
         _count: {
-          select: { users: true },
+          select: { User: true },
         },
       },
     })
@@ -157,9 +157,9 @@ export async function DELETE(
     }
 
     // Check if any users are assigned to this role
-    if (role._count.users > 0) {
+    if (role._count.User > 0) {
       return NextResponse.json(
-        { error: `Cannot delete role: ${role._count.users} user(s) are assigned to this role. Reassign them first.` },
+        { error: `Cannot delete role: ${role._count.User} user(s) are assigned to this role. Reassign them first.` },
         { status: 400 }
       )
     }

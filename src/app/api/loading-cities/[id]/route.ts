@@ -20,11 +20,11 @@ export async function GET(
     const record = await db.loadingCity.findFirst({
       where: whereClause,
       include: {
-        loadingPoints: {
+        LoadingPoint: {
           orderBy: { name: 'asc' },
           where: isActive === 'true' ? { isActive: true } : undefined,
         },
-        _count: { select: { trips: true } },
+        _count: { select: { Trip: true } },
       },
     })
 

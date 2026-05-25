@@ -19,8 +19,8 @@ export async function GET(
       include: {
         truck: { select: { id: true, plateNumber: true, make: true, model: true, tankCapacity: true } },
         driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
-        fuelLogs: { orderBy: { date: 'asc' } },
-        tripItems: {
+        FuelLog: { orderBy: { date: 'asc' } },
+        TripItem: {
           include: {
             supplier: { select: { id: true, name: true } },
             loadingPoint: { select: { id: true, name: true } },
@@ -28,11 +28,11 @@ export async function GET(
           },
           orderBy: { sortOrder: 'asc' },
         },
-        deliveryDestinations: {
+        TripDeliveryDestination: {
           include: {
             client: { select: { id: true, companyName: true, phone: true } },
             destinationZone: { select: { id: true, name: true, destinationCity: { select: { id: true, name: true } } } },
-            tripItems: {
+            TripItem: {
               include: {
                 item: { select: { id: true, name: true, unit: true } },
               },
@@ -63,7 +63,7 @@ export async function GET(
       delete (safe as Record<string, unknown>).customerRef
       delete (safe as Record<string, unknown>).customerName
       // Remove fuel logs (contain cost data)
-      ;(safe as Record<string, unknown>).fuelLogs = []
+      ;(safe as Record<string, unknown>).FuelLog = []
       // Remove driver phone from included driver
       if (safe.driver) {
         (safe as Record<string, unknown>).driver = {
@@ -211,8 +211,8 @@ export async function PUT(
       include: {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         driver: { select: { id: true, firstName: true, lastName: true } },
-        fuelLogs: { orderBy: { date: 'asc' } },
-        tripItems: {
+        FuelLog: { orderBy: { date: 'asc' } },
+        TripItem: {
           include: {
             supplier: { select: { id: true, name: true } },
             loadingPoint: { select: { id: true, name: true } },
@@ -220,11 +220,11 @@ export async function PUT(
           },
           orderBy: { sortOrder: 'asc' },
         },
-        deliveryDestinations: {
+        TripDeliveryDestination: {
           include: {
             client: { select: { id: true, companyName: true, phone: true } },
             destinationZone: { select: { id: true, name: true, destinationCity: { select: { id: true, name: true } } } },
-            tripItems: {
+            TripItem: {
               include: {
                 item: { select: { id: true, name: true, unit: true } },
               },

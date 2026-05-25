@@ -17,12 +17,12 @@ export async function GET(request: NextRequest) {
     const suppliers = await db.supplier.findMany({
       where,
       include: {
-        loadingPoints: {
+        LoadingPoint: {
           where: { isActive: true },
           select: { id: true, name: true, loadingCityId: true },
           orderBy: { name: 'asc' },
         },
-        items: {
+        Item: {
           where: { isActive: true },
           select: { id: true, name: true, unit: true },
           orderBy: { name: 'asc' },

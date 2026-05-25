@@ -16,13 +16,13 @@ export async function GET(
     const record = await db.destinationCity.findUnique({
       where: { id },
       include: {
-        destinationZones: {
+        DestinationZone: {
           orderBy: { name: 'asc' },
           include: {
-            _count: { select: { trips: true, zoneRates: true, performanceBenchmarks: true } },
+            _count: { select: { Trip: true, ZoneRate: true, PerformanceBenchmark: true } },
           },
         },
-        _count: { select: { trips: true } },
+        _count: { select: { Trip: true } },
       },
     })
 

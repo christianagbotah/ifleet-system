@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     const trucks = await db.truck.findMany({
       where: { status: { in: ['active', 'maintenance'] } },
       include: {
-        maintenance: {
+        MaintenanceRecord: {
           where: { status: 'completed' },
           orderBy: { performedAt: 'desc' },
           select: {
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
             nextDueMileage: true,
           },
         },
-        trips: {
+        Trip: {
           where: { status: 'completed' },
           select: {
             totalMileage: true,

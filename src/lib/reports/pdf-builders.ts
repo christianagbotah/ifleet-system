@@ -268,8 +268,8 @@ export async function buildFleetOverviewPdf(): Promise<jsPDF> {
   const trucks = await db.truck.findMany({
     include: {
       driver: { select: { firstName: true, lastName: true } },
-      insurance: { where: { status: 'active' }, orderBy: { endDate: 'asc' }, take: 1 },
-      _count: { select: { trips: true, maintenance: true } },
+      Insurance: { where: { status: 'active' }, orderBy: { endDate: 'asc' }, take: 1 },
+      _count: { select: { Trip: true, MaintenanceRecord: true } },
     },
     orderBy: { plateNumber: 'asc' },
   })
@@ -298,8 +298,8 @@ export async function buildFleetOverviewPdf(): Promise<jsPDF> {
     t.driver ? `${t.driver.firstName} ${t.driver.lastName}` : 'Unassigned',
     t.status.replace(/\b\w/g, (c: string) => c.toUpperCase()),
     formatNumber(t.currentMileage),
-    String(t._count.trips),
-    fmtDate(t.insurance[0]?.endDate) || 'None',
+    String(t._count.Trip),
+    fmtDate(t.Insurance[0]?.endDate) || 'None',
     fmtDate(t.nextServiceDate) || '-',
     t.fuelType,
   ])
@@ -321,14 +321,14 @@ export async function buildDriverPerformancePdf(params: ReportParams): Promise<j
   const drivers = await db.driver.findMany({
     where: driverWhere,
     include: {
-      trucks: { select: { plateNumber: true } },
-      trips: {
+      Truck: { select: { plateNumber: true } },
+      Trip: {
         where: buildTripWhereClause(params),
         select: {
           status: true,
           totalRevenue: true,
           totalMileage: true,
-          expenses: { select: { amount: true } },
+          Expense: { select: { amount: true } },
         },
       },
     },

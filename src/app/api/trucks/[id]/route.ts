@@ -14,11 +14,11 @@ export async function GET(
       where: { id },
       include: {
         driver: { select: { id: true, firstName: true, lastName: true, phone: true, status: true } },
-        tyres: { orderBy: { createdAt: 'desc' } },
-        insurance: { orderBy: { createdAt: 'desc' } },
-        maintenance: { orderBy: { createdAt: 'desc' }, take: 20 },
-        expenses: { orderBy: { date: 'desc' }, take: 20 },
-        trips: { orderBy: { departureTime: 'desc' }, take: 10 },
+        Tyre: { orderBy: { createdAt: 'desc' } },
+        Insurance: { orderBy: { createdAt: 'desc' } },
+        MaintenanceRecord: { orderBy: { createdAt: 'desc' }, take: 20 },
+        Expense: { orderBy: { date: 'desc' }, take: 20 },
+        Trip: { orderBy: { departureTime: 'desc' }, take: 10 },
       },
     })
 

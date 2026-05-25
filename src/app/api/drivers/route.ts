@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       db.driver.findMany({
         where,
         include: {
-          trucks: {
+          Truck: {
             where: { status: 'active' },
             select: { id: true, plateNumber: true, make: true, model: true },
             take: 1,

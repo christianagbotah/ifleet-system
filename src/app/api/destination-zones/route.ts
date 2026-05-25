@@ -30,12 +30,12 @@ export async function GET(request: NextRequest) {
         take: limit,
         include: {
           destinationCity: { select: { id: true, name: true, region: true } },
-          zoneRates: {
+          ZoneRate: {
             where: { isActive: true },
             orderBy: { effectiveDate: 'desc' },
             take: 1,
           },
-          performanceBenchmarks: {
+          PerformanceBenchmark: {
             where: { isActive: true },
             orderBy: { createdAt: 'desc' },
             take: 1,

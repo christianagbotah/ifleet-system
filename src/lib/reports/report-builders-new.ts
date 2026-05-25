@@ -1242,10 +1242,10 @@ export async function buildCostAnalyticsReport(params: ReportParams): Promise<Ex
   const trucks = await db.truck.findMany({
     where: params.truckId ? { id: params.truckId } : undefined,
     include: {
-      fuelLogs: { where: Object.keys(dateFilter).length > 0 ? { date: dateFilter } : undefined },
-      expenses: { where: Object.keys(dateFilter).length > 0 ? { date: dateFilter } : undefined },
-      maintenance: { where: Object.keys(dateFilter).length > 0 ? { performedAt: dateFilter } : undefined },
-      trips: {
+      FuelLog: { where: Object.keys(dateFilter).length > 0 ? { date: dateFilter } : undefined },
+      Expense: { where: Object.keys(dateFilter).length > 0 ? { date: dateFilter } : undefined },
+      MaintenanceRecord: { where: Object.keys(dateFilter).length > 0 ? { performedAt: dateFilter } : undefined },
+      Trip: {
         where: tripWhere,
         select: { totalMileage: true, quantity: true, unit: true },
       },
@@ -1262,14 +1262,14 @@ export async function buildCostAnalyticsReport(params: ReportParams): Promise<Ex
   let grandTonnage = 0
 
   for (const truck of trucks) {
-    const fuelCost = truck.fuelLogs.reduce((s, f) => s + f.totalCost, 0)
-    const maintCost = truck.maintenance.reduce((s, m) => s + (m.cost ?? 0), 0)
-    const otherCost = truck.expenses
+    const fuelCost = truck.FuelLog.reduce((s, f) => s + f.totalCost, 0)
+    const maintCost = truck.MaintenanceRecord.reduce((s, m) => s + (m.cost ?? 0), 0)
+    const otherCost = truck.Expense
       .filter((e) => e.category !== 'fuel' && e.category !== 'maintenance')
       .reduce((s, e) => s + e.amount, 0)
     const totalCost = fuelCost + maintCost + otherCost
-    const distance = truck.trips.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
-    const tonnage = truck.trips
+    const distance = truck.Trip.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
+    const tonnage = truck.Trip
       .filter((t) => t.unit === 'tonnes')
       .reduce((s, t) => s + t.quantity, 0)
     const costPerKm = distance > 0 ? totalCost / distance : 0
@@ -1353,8 +1353,8 @@ export async function buildTripProfitabilityReport(params: ReportParams): Promis
       driver: { select: { firstName: true, lastName: true } },
       truck: { select: { plateNumber: true, make: true } },
       client: { select: { companyName: true } },
-      fuelLogs: { select: { totalCost: true } },
-      expenses: { select: { amount: true, category: true } },
+      FuelLog: { select: { totalCost: true } },
+      Expense: { select: { amount: true, category: true } },
     },
     orderBy: { departureTime: 'desc' },
   })
@@ -1369,8 +1369,8 @@ export async function buildTripProfitabilityReport(params: ReportParams): Promis
 
   for (const trip of trips) {
     const revenue = trip.totalRevenue ?? 0
-    const fuelCost = trip.fuelLogs.reduce((s, f) => s + f.totalCost, 0) + (trip.fuelCost ?? 0)
-    const expenses = trip.expenses.reduce((s, e) => s + e.amount, 0)
+    const fuelCost = trip.FuelLog.reduce((s, f) => s + f.totalCost, 0) + (trip.fuelCost ?? 0)
+    const expenses = trip.Expense.reduce((s, e) => s + e.amount, 0)
     const totalCost = fuelCost + expenses
     const netProfit = revenue - totalCost
     const margin = revenue > 0 ? (netProfit / revenue) * 100 : 0
@@ -1448,10 +1448,10 @@ export async function buildFuelAnalyticsReport(params: ReportParams): Promise<Ex
   const trucks = await db.truck.findMany({
     where: params.truckId ? { id: params.truckId } : undefined,
     include: {
-      fuelLogs: {
+      FuelLog: {
         where: Object.keys(dateFilter).length > 0 ? { date: dateFilter } : undefined,
       },
-      trips: {
+      Trip: {
         where: { status: 'completed', ...(Object.keys(dateFilter).length > 0 ? { departureTime: dateFilter } : {}) },
         select: { totalMileage: true },
       },
@@ -1465,13 +1465,13 @@ export async function buildFuelAnalyticsReport(params: ReportParams): Promise<Ex
   let grandFillups = 0
 
   for (const truck of trucks) {
-    const logs = truck.fuelLogs
+    const logs = truck.FuelLog
     const liters = logs.reduce((s, f) => s + f.litersFilled, 0)
     const totalCost = logs.reduce((s, f) => s + f.totalCost, 0)
     const avgCostPerLiter = liters > 0 ? totalCost / liters : 0
     const fillups = logs.length
     const avgFill = fillups > 0 ? liters / fillups : 0
-    const distance = truck.trips.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
+    const distance = truck.Trip.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
     const efficiency = distance > 0 ? (liters / distance) * 100 : 0
 
     let rating = 'N/A'
@@ -1545,7 +1545,7 @@ export async function buildSafetyScoringReport(params: ReportParams): Promise<Ex
       inspections: {
         where: Object.keys(dateFilter).length > 0 ? { inspectionDate: dateFilter } : undefined,
       },
-      trips: {
+      Trip: {
         where: { status: 'completed', ...(Object.keys(dateFilter).length > 0 ? { departureTime: dateFilter } : {}) },
         select: { totalMileage: true },
       },
@@ -1557,7 +1557,7 @@ export async function buildSafetyScoringReport(params: ReportParams): Promise<Ex
 
   for (const driver of drivers) {
     const insps = driver.inspections
-    const trips = driver.trips
+    const trips = driver.Trip
     const totalInspections = insps.length
     const passedInspections = insps.filter((i) => i.result === 'pass').length
     const failedInspections = insps.filter((i) => i.result === 'fail').length
@@ -1614,7 +1614,7 @@ export async function buildSafetyScoringReport(params: ReportParams): Promise<Ex
       phone: d.phone,
       score: d.score,
       grade,
-      trips: d.trips,
+      trips: d.Trip,
       distance: d.distance,
       violations: d.violations,
       trend,
