@@ -644,18 +644,24 @@ export function ZoneRatesView() {
         )}
       </motion.div>
 
-      {/* Filters Row */}
+      {/* Filters Row 1: Region + City */}
       <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
         {/* Region filter */}
-        <div className="flex-1 min-w-[160px]">
+        <div className="flex-1 min-w-[180px]">
           <Select
             value={filterRegion}
             onValueChange={(v) => {
               setFilterRegion(v)
-              setCityFilter('all')
               setZoneFilter('all')
               setZones([])
               bulk.clearSelection()
+              // Auto-select first city in region
+              if (v !== 'all') {
+                const firstCity = cities.find((c) => c.region === v)
+                if (firstCity) setCityFilter(firstCity.id)
+              } else {
+                setCityFilter('all')
+              }
             }}
           >
             <SelectTrigger>
@@ -672,7 +678,7 @@ export function ZoneRatesView() {
           </Select>
         </div>
         {/* City filter */}
-        <div className="flex-1 min-w-[160px]">
+        <div className="flex-1 min-w-[180px]">
           <Select
             value={cityFilter}
             onValueChange={(v) => { setCityFilter(v); setZoneFilter('all'); bulk.clearSelection() }}
@@ -691,8 +697,12 @@ export function ZoneRatesView() {
             </SelectContent>
           </Select>
         </div>
+      </motion.div>
+
+      {/* Filters Row 2: Zone + Search */}
+      <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
         {/* Zone filter */}
-        <div className="flex-1 min-w-[160px]">
+        <div className="flex-1 min-w-[180px]">
           <Select
             value={zoneFilter}
             onValueChange={(v) => setZoneFilter(v)}
@@ -715,7 +725,7 @@ export function ZoneRatesView() {
             </SelectContent>
           </Select>
         </div>
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search zones or cities..."
