@@ -74,7 +74,7 @@ interface DestinationZone {
   destinationCityId: string
   destinationCity?: DestinationCityOption
   isActive: boolean
-  zoneRates?: ZoneRate[]
+  ZoneRate?: ZoneRate[]
   createdAt: string
   updatedAt: string
 }
@@ -402,8 +402,8 @@ export function DestinationZonesView() {
   // ─── Get rate from zoneRates array ───
 
   function getZoneRate(zone: DestinationZone): number | null {
-    if (zone.zoneRates && zone.zoneRates.length > 0) {
-      return zone.zoneRates[0].rateAmount
+    if (zone.ZoneRate && zone.ZoneRate.length > 0) {
+      return zone.ZoneRate[0].rateAmount
     }
     return null
   }
