@@ -44,7 +44,7 @@ model User {
 }
 
 model AuditLog {
-  id        String   @id
+  id                      String                    @id @default(cuid())
   userId    String
   action    String
   entity    String
@@ -60,7 +60,7 @@ model AuditLog {
 }
 
 model BorderCrossing {
-  id             String    @id
+  id                      String                    @id @default(cuid())
   tripId         String
   truckId        String
   driverId       String
@@ -96,7 +96,7 @@ model BorderCrossing {
 }
 
 model CashAdvance {
-  id                 String    @id
+  id                      String                    @id @default(cuid())
   driverId           String
   tripId             String?
   amount             Float
@@ -126,7 +126,7 @@ model CashAdvance {
 }
 
 model Client {
-  id                      String                    @id
+  id                      String                    @id @default(cuid())
   companyName             String
   contactPerson           String
   email                   String?
@@ -148,7 +148,7 @@ model Client {
 }
 
 model ClientZone {
-  id                String          @id
+  id                      String                    @id @default(cuid())
   clientId          String
   destinationZoneId String
   branchName        String?
@@ -166,7 +166,7 @@ model ClientZone {
 }
 
 model Currency {
-  id        String   @id
+  id                      String                    @id @default(cuid())
   code      String   @unique
   name      String
   symbol    String
@@ -178,7 +178,7 @@ model Currency {
 }
 
 model DeliveryStop {
-  id               String    @id
+  id                      String                    @id @default(cuid())
   tripId           String
   stopOrder        Int
   destination      String
@@ -203,7 +203,7 @@ model DeliveryStop {
 }
 
 model DepotQueue {
-  id            String    @id
+  id                      String                    @id @default(cuid())
   truckId       String
   driverId      String?
   tripId        String?
@@ -236,7 +236,7 @@ model DepotQueue {
 }
 
 model DestinationCity {
-  id              String            @id
+  id                      String                    @id @default(cuid())
   name            String            @unique
   region          String?
   isActive        Boolean           @default(true)
@@ -249,7 +249,7 @@ model DestinationCity {
 }
 
 model DestinationZone {
-  id                      String                    @id
+  id                      String                    @id @default(cuid())
   name                    String
   destinationCityId       String
   isActive                Boolean                   @default(true)
@@ -268,7 +268,7 @@ model DestinationZone {
 }
 
 model Document {
-  id          String   @id
+  id                      String                    @id @default(cuid())
   title       String
   description String?
   category    String
@@ -288,7 +288,7 @@ model Document {
 }
 
 model Driver {
-  id                  String              @id
+  id                      String                    @id @default(cuid())
   userId              String?             @unique
   firstName           String
   lastName            String
@@ -338,7 +338,7 @@ model Driver {
 }
 
 model DriverIncentive {
-  id                                    String    @id
+  id                      String                    @id @default(cuid())
   driverId                              String
   type                                  String
   title                                 String
@@ -369,7 +369,7 @@ model DriverIncentive {
 }
 
 model DriverSettlement {
-  id                String           @id
+  id                      String                    @id @default(cuid())
   driverId          String
   period            String
   periodStart       DateTime
@@ -396,7 +396,7 @@ model DriverSettlement {
 }
 
 model DriverWallet {
-  id                       String    @id
+  id                      String                    @id @default(cuid())
   driverId                 String    @unique
   availableBalance         Float     @default(0)
   totalAdvances            Float     @default(0)
@@ -414,7 +414,7 @@ model DriverWallet {
 }
 
 model DvlaRegistration {
-  id                 String    @id
+  id                      String                    @id @default(cuid())
   truckId            String
   registrationNumber String    @unique
   certificateNumber  String    @unique
@@ -453,7 +453,7 @@ model DvlaRegistration {
 }
 
 model Expense {
-  id              String           @id
+  id                      String                    @id @default(cuid())
   truckId         String
   category        String
   description     String
@@ -479,7 +479,7 @@ model Expense {
 }
 
 model ExpenseApproval {
-  id                                       String    @id
+  id                      String                    @id @default(cuid())
   expenseId                                String    @unique
   status                                   String    @default("pending")
   requestedById                            String
@@ -504,7 +504,7 @@ model ExpenseApproval {
 }
 
 model FuelBudget {
-  id           String   @id
+  id                      String                    @id @default(cuid())
   truckId      String?
   month        Int
   year         Int
@@ -525,7 +525,7 @@ model FuelBudget {
 }
 
 model FuelLog {
-  id              String   @id
+  id                      String                    @id @default(cuid())
   tripId          String
   truckId         String
   date            DateTime @default(now())
@@ -554,7 +554,7 @@ model FuelLog {
 }
 
 model FuelPrice {
-  id            String      @id
+  id                      String                    @id @default(cuid())
   stationId     String
   fuelType      String
   pricePerLiter Float
@@ -572,7 +572,7 @@ model FuelPrice {
 }
 
 model FuelStation {
-  id                    String      @id
+  id                      String                    @id @default(cuid())
   name                  String
   brand                 String
   stationCode           String?     @unique
@@ -605,7 +605,7 @@ model FuelStation {
 }
 
 model GeofenceZone {
-  id            String          @id
+  id                      String                    @id @default(cuid())
   name          String
   latitude      Float
   longitude     Float
@@ -620,7 +620,7 @@ model GeofenceZone {
 }
 
 model Insurance {
-  id                  String           @id
+  id                      String                    @id @default(cuid())
   truckId             String
   provider            String
   policyNumber        String           @unique
@@ -643,7 +643,7 @@ model Insurance {
 }
 
 model InsuranceClaim {
-  id                String    @id
+  id                      String                    @id @default(cuid())
   insuranceId       String
   truckId           String
   claimNumber       String    @unique
@@ -684,7 +684,7 @@ model InsuranceClaim {
 }
 
 model Invoice {
-  id            String        @id
+  id                      String                    @id @default(cuid())
   invoiceNumber String        @unique
   clientId      String
   tripId        String?       @unique
@@ -711,7 +711,7 @@ model Invoice {
 }
 
 model InvoiceItem {
-  id          String  @id
+  id                      String                    @id @default(cuid())
   invoiceId   String
   description String
   quantity    Float
@@ -724,7 +724,7 @@ model InvoiceItem {
 }
 
 model Item {
-  id          String     @id
+  id                      String                    @id @default(cuid())
   name        String     @unique
   description String?
   unit        String     @default("bags")
@@ -741,7 +741,7 @@ model Item {
 }
 
 model LoadBoard {
-  id               String    @id
+  id                      String                    @id @default(cuid())
   clientId         String?
   title            String
   pickupLocation   String
@@ -785,7 +785,7 @@ model LoadBoard {
 }
 
 model LoadingCity {
-  id           String         @id
+  id                      String                    @id @default(cuid())
   name         String         @unique
   region       String?
   isActive     Boolean        @default(true)
@@ -798,7 +798,7 @@ model LoadingCity {
 }
 
 model LoadingPoint {
-  id            String      @id
+  id                      String                    @id @default(cuid())
   name          String
   loadingCityId String
   address       String?
@@ -820,7 +820,7 @@ model LoadingPoint {
 }
 
 model MaintenanceRecord {
-  id             String    @id
+  id                      String                    @id @default(cuid())
   truckId        String
   type           String
   title          String
@@ -843,7 +843,7 @@ model MaintenanceRecord {
 }
 
 model Notification {
-  id          String    @id
+  id                      String                    @id @default(cuid())
   userId      String
   type        String
   title       String
@@ -871,7 +871,7 @@ model Notification {
 }
 
 model PasswordResetToken {
-  id        String    @id
+  id                      String                    @id @default(cuid())
   userId    String
   token     String    @unique
   expiresAt DateTime
@@ -885,7 +885,7 @@ model PasswordResetToken {
 }
 
 model Payroll {
-  id          String    @id
+  id                      String                    @id @default(cuid())
   driverId    String
   month       Int
   year        Int
@@ -906,7 +906,7 @@ model Payroll {
 }
 
 model PerformanceBenchmark {
-  id                 String          @id
+  id                      String                    @id @default(cuid())
   destinationZoneId  String
   expectedMinMileage Float
   expectedMaxMileage Float
@@ -926,7 +926,7 @@ model PerformanceBenchmark {
 }
 
 model Pricing {
-  id            String   @id
+  id                      String                    @id @default(cuid())
   itemName      String
   destination   String
   transportRate Float    @default(0)
@@ -939,7 +939,7 @@ model Pricing {
 }
 
 model ReportHistory {
-  id          String   @id
+  id                      String                    @id @default(cuid())
   type        String
   title       String
   format      String
@@ -956,7 +956,7 @@ model ReportHistory {
 }
 
 model RoadConditionReport {
-  id          String    @id
+  id                      String                    @id @default(cuid())
   reporterId  String
   roadName    String
   region      String
@@ -987,7 +987,7 @@ model RoadConditionReport {
 }
 
 model RoadworthyInspection {
-  id                 String    @id
+  id                      String                    @id @default(cuid())
   truckId            String
   certificateNumber  String    @unique
   inspectionType     String
@@ -1028,7 +1028,7 @@ model RoadworthyInspection {
 }
 
 model Role {
-  id          String   @id
+  id                      String                    @id @default(cuid())
   name        String   @unique
   description String?
   permissions String   @db.Text
@@ -1039,7 +1039,7 @@ model Role {
 }
 
 model SettlementLine {
-  id               String           @id
+  id                      String                    @id @default(cuid())
   settlementId     String
   tripId           String?
   description      String
@@ -1053,7 +1053,7 @@ model SettlementLine {
 }
 
 model Supplier {
-  id            String         @id
+  id                      String                    @id @default(cuid())
   name          String         @unique
   contactPerson String?
   contactPhone  String?
@@ -1071,7 +1071,7 @@ model Supplier {
 }
 
 model SystemSettings {
-  id                      String   @id
+  id                      String                    @id @default(cuid())
   companyName             String   @default("iFleetPro Ltd.")
   companyEmail            String   @default("info@fleetpro.com.gh")
   companyPhone            String   @default("+233 30 277 8899")
@@ -1125,7 +1125,7 @@ model SystemSettings {
 }
 
 model TollRecord {
-  id              String    @id
+  id                      String                    @id @default(cuid())
   truckId         String
   driverId        String?
   tripId          String?
@@ -1163,7 +1163,7 @@ model TollRecord {
 }
 
 model TrackingAlert {
-  id             String        @id
+  id                      String                    @id @default(cuid())
   truckId        String
   tripId         String?
   geofenceZoneId String?
@@ -1186,7 +1186,7 @@ model TrackingAlert {
 }
 
 model TrackingConfig {
-  id             String   @id
+  id                      String                    @id @default(cuid())
   truckId        String   @unique
   enablePhoneGps Boolean  @default(true)
   enableHardware Boolean  @default(false)
@@ -1199,7 +1199,7 @@ model TrackingConfig {
 }
 
 model Trip {
-  id                      String                    @id
+  id                      String                    @id @default(cuid())
   tripNumber              String                    @unique
   truckId                 String
   driverId                String
@@ -1293,7 +1293,7 @@ model Trip {
 }
 
 model TripComment {
-  id        String   @id
+  id                      String                    @id @default(cuid())
   tripId    String
   userId    String
   message   String
@@ -1307,7 +1307,7 @@ model TripComment {
 }
 
 model TripDeliveryDestination {
-  id                String           @id
+  id                      String                    @id @default(cuid())
   tripId            String
   destinationZoneId String?
   clientId          String?
@@ -1334,7 +1334,7 @@ model TripDeliveryDestination {
 }
 
 model TripEvent {
-  id         String   @id
+  id                      String                    @id @default(cuid())
   tripId     String
   fromStatus String?
   toStatus   String
@@ -1349,7 +1349,7 @@ model TripEvent {
 }
 
 model TripItem {
-  id                      String                   @id
+  id                      String                    @id @default(cuid())
   tripId                  String
   supplierId              String?
   loadingPointId          String?
@@ -1377,7 +1377,7 @@ model TripItem {
 }
 
 model Truck {
-  id                   String                 @id
+  id                      String                    @id @default(cuid())
   plateNumber          String                 @unique
   make                 String
   model                String
@@ -1420,7 +1420,7 @@ model Truck {
 }
 
 model TruckLocation {
-  id        String   @id
+  id                      String                    @id @default(cuid())
   truckId   String
   tripId    String?
   latitude  Float
@@ -1439,7 +1439,7 @@ model TruckLocation {
 }
 
 model Tyre {
-  id             String    @id
+  id                      String                    @id @default(cuid())
   truckId        String
   serialNumber   String    @unique
   brand          String
@@ -1458,7 +1458,7 @@ model Tyre {
 }
 
 model VehicleInspection {
-  id                  String    @id
+  id                      String                    @id @default(cuid())
   truckId             String
   driverId            String?
   tripId              String?
@@ -1498,7 +1498,7 @@ model VehicleInspection {
 }
 
 model WarehouseItem {
-  id            String    @id
+  id                      String                    @id @default(cuid())
   name          String
   category      String
   sku           String    @unique
@@ -1527,7 +1527,7 @@ model WarehouseItem {
 }
 
 model WeightVerification {
-  id              String   @id
+  id                      String                    @id @default(cuid())
   tripId          String
   checkpointType  String
   verifiedWeight  Float
@@ -1550,7 +1550,7 @@ model WeightVerification {
 }
 
 model ZoneRate {
-  id                      String          @id
+  id                      String                    @id @default(cuid())
   destinationZoneId       String
   rateAmount              Float
   minMileage              Float?
