@@ -1060,7 +1060,7 @@ export function ZoneRatesView() {
                       <SelectValue placeholder="Filter by region (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Regions</SelectItem>
+                      <SelectItem value="all">All Regions</SelectItem>
                       {regions.map((r) => (
                         <SelectItem key={r} value={r}>
                           {r}
@@ -1271,7 +1271,7 @@ export function ZoneRatesView() {
                     <SelectValue placeholder="All Regions" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Regions</SelectItem>
+                    <SelectItem value="all">All Regions</SelectItem>
                     {regions.map((r) => (
                       <SelectItem key={r} value={r}>
                         {r}

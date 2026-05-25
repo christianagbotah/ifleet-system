@@ -67,8 +67,8 @@ export function RoadConditionsView() {
   const [editingReport, setEditingReport] = useState<RoadConditionReport | null>(null)
 
   // Filters
-  const [filterRegion, setFilterRegion] = useState('')
-  const [filterSeverity, setFilterSeverity] = useState('')
+  const [filterRegion, setFilterRegion] = useState('all')
+  const [filterSeverity, setFilterSeverity] = useState('all')
 
   const loadReports = useCallback(async () => {
     setLoading(true)
@@ -77,8 +77,8 @@ export function RoadConditionsView() {
       if (activeTab === 'active') params.status = 'active'
       else if (activeTab === 'critical') params.severity = 'critical'
       else if (activeTab === 'resolved') params.status = 'resolved'
-      if (filterRegion) params.region = filterRegion
-      if (filterSeverity) params.severity = filterSeverity
+      if (filterRegion && filterRegion !== 'all') params.region = filterRegion
+      if (filterSeverity && filterSeverity !== 'all') params.severity = filterSeverity
       const res = await fetchRoadConditions(params as Parameters<typeof fetchRoadConditions>[0])
       setReports(res.data)
       setTotal(res.total || 0)
@@ -183,14 +183,14 @@ export function RoadConditionsView() {
           <Select value={filterRegion} onValueChange={setFilterRegion}>
             <SelectTrigger className="w-full sm:w-44"><SelectValue placeholder="All Regions" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Regions</SelectItem>
+              <SelectItem value="all">All Regions</SelectItem>
               {GHANA_REGIONS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
             </SelectContent>
           </Select>
           <Select value={filterSeverity} onValueChange={setFilterSeverity}>
             <SelectTrigger className="w-full sm:w-44"><SelectValue placeholder="All Severity" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Severity</SelectItem>
+              <SelectItem value="all">All Severity</SelectItem>
               <SelectItem value="critical">Critical</SelectItem>
               <SelectItem value="high">High</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>

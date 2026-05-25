@@ -166,7 +166,7 @@ export function DestinationCitiesView() {
   function openEditDialog(item: DestinationCity) {
     setEditingItem(item)
     setFormName(item.name)
-    setFormRegion(item.region)
+    setFormRegion(item.region || '')
     setFormOpen(true)
   }
 
