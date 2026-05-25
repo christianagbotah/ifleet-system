@@ -140,3 +140,31 @@ Stage Summary:
 - DriverLeaderboard.tsx and RevenueChart.tsx were the only active components with wrong Trip model field access (now fixed)
 - API endpoints that compute `driverName` (safety-scores, anomaly-dashboard, truck-pl, tracking/location, etc.) correctly build it from `firstName`/`lastName` — frontend consuming these computed fields is correct
 - Legacy pages/ folder contains wrong field names but is dead code (not imported in active routing)
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix zone rates - toast, modal speed, cascading dropdowns for all modals
+
+Work Log:
+- Read and analyzed ZoneRatesView.tsx (1516 lines), API routes for zone-rates and zone-rates/bulk
+- Identified issues: edit modal zones loaded synchronously before dialog open, Bulk Add lacked region filter, Bulk Edit had no region context
+- Added `bulkAddFormRegion` and `bulkAddLoadingZones` state variables
+- Added `bulkAddFilteredCities` and `filterCities` memoized computed values
+- Added `filterRegion` state for top-level filter bar with Region → City → Zone cascading
+- Refactored `openEditDialog` to set all form state synchronously and move zone loading to a separate `useEffect` — dialog now opens instantly
+- Updated `loadBulkAddZones` with proper loading state tracking
+- Updated `openBulkAdd` to reset region and zones properly
+- Added Region dropdown to Bulk Add dialog (grid layout with Region + City side by side)
+- Updated Bulk Add zone selects with proper loading states and empty state messages
+- Enhanced Bulk Edit dialog rows to show Region badge alongside City badge
+- Added Region filter to top filter bar (Region → City → Zone cascading)
+- Verified all toast.success/error/warning calls present for all CRUD operations (single + bulk)
+- Lint passes cleanly with 0 errors, 0 warnings
+
+Stage Summary:
+- Single Add dialog: Region → City → Zone cascading (already existed, confirmed working)
+- Single Edit dialog: Opens instantly (zone loading moved to useEffect), toast notification present
+- Bulk Add dialog: Now has Region → City → Zone cascading with proper loading/empty states
+- Bulk Edit dialog: Shows region badge alongside city name for context
+- Top filter bar: Added Region filter that cascades to City → Zone filters
+- All CRUD operations have proper toast notifications
