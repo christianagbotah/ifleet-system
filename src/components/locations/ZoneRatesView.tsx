@@ -180,16 +180,12 @@ export function ZoneRatesView() {
 
   // ─── Fetch zones (for filter & form) ───
 
-  const loadZones = React.useCallback(async (cityId: string) => {
-    if (!cityId) {
-      setZones([])
-      return
-    }
+  const loadZones = React.useCallback(async (cityId?: string) => {
     setLoadingZones(true)
     try {
       const params = new URLSearchParams()
-      params.set('destinationCityId', cityId)
-      const res = await apiFetch<{ data: DestinationZoneOption[] }>(`/api/destination-zones?${params.toString()}`)
+      if (cityId) params.set('destinationCityId', cityId)
+      const res = await apiFetch<{ data: DestinationZoneOption[] }>(`/api/destination-zones${params.toString() ? `?${params.toString()}` : ''}`)
       setZones(res.data || [])
     } catch {
       setZones([])
@@ -199,13 +195,8 @@ export function ZoneRatesView() {
   }, [])
 
   React.useEffect(() => {
-    if (cityFilter && cityFilter !== 'all') {
-      loadZones(cityFilter)
-      setZoneFilter('all')
-    } else {
-      setZones([])
-      setZoneFilter('all')
-    }
+    loadZones(cityFilter && cityFilter !== 'all' ? cityFilter : undefined)
+    setZoneFilter('all')
   }, [cityFilter, loadZones])
 
   // ─── Fetch rates ───

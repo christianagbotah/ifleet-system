@@ -101,6 +101,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(record, { status: 201 })
   } catch (error) {
     console.error('Zone rate create error:', error)
-    return NextResponse.json({ error: 'Failed to create zone rate' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Failed to create zone rate'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

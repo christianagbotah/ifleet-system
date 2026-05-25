@@ -4,7 +4,7 @@ import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MapPin, Plus, Search, Pencil, Trash2, AlertCircle,
-  RefreshCw, Loader2, DollarSign, Route, Link2,
+  RefreshCw, Loader2, DollarSign, Route,
   CheckSquare, Square, ListPlus, FileEdit, X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -118,8 +118,6 @@ export function DestinationZonesView() {
   const [formName, setFormName] = React.useState('')
   const [formCityId, setFormCityId] = React.useState('')
   const [formIsActive, setFormIsActive] = React.useState(true)
-  // Created zone ID for rate link
-  const [justCreatedId, setJustCreatedId] = React.useState<string | null>(null)
 
   // ── Bulk state ──
   const bulk = useBulkSelect<DestinationZone>()
@@ -202,7 +200,6 @@ export function DestinationZonesView() {
     setFormName('')
     setFormCityId(cityFilter && cityFilter !== 'all' ? cityFilter : '')
     setFormIsActive(true)
-    setJustCreatedId(null)
   }
 
   function openCreateDialog() {
@@ -216,7 +213,6 @@ export function DestinationZonesView() {
     setFormName(item.name)
     setFormCityId(item.destinationCityId)
     setFormIsActive(item.isActive)
-    setJustCreatedId(null)
     setFormOpen(true)
   }
 
@@ -247,15 +243,12 @@ export function DestinationZonesView() {
         toast.success('Destination zone updated successfully')
         setFormOpen(false)
       } else {
-        const created = await apiFetch<DestinationZone>('/api/destination-zones', {
+        await apiFetch<DestinationZone>('/api/destination-zones', {
           method: 'POST',
           body: JSON.stringify(body),
         })
         toast.success('Destination zone created successfully')
-        setJustCreatedId(created.id)
-        // Keep dialog open to show rate link, but reset form
-        resetForm()
-        setFormOpen(true)
+        setFormOpen(false)
       }
       loadItems()
     } catch (err) {
@@ -774,34 +767,6 @@ export function DestinationZonesView() {
             </DialogDescription>
           </DialogHeader>
 
-          {/* Just-created success message with rate link */}
-          {justCreatedId && !isEditing && (
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/40 p-4">
-              <div className="flex items-start gap-3">
-                <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">Zone created successfully!</p>
-                  <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-1">
-                    Add a rate/benchmark for this zone to track performance.
-                  </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2 h-7 text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-700 dark:text-emerald-300 dark:hover:bg-emerald-900/40"
-                    onClick={() => {
-                      setJustCreatedId(null)
-                      setFormOpen(false)
-                      toast.info('Navigate to Zone Rates to add a rate for this zone.')
-                    }}
-                  >
-                    <Link2 className="mr-1 h-3 w-3" />
-                    Go to Zone Rates
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit}>
             <DialogBody className="space-y-4">
               {/* Name */}
@@ -850,7 +815,7 @@ export function DestinationZonesView() {
               <Button type="button" variant="outline" onClick={() => setFormOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={submitting || !!justCreatedId}>
+              <Button type="submit" disabled={submitting}>
                 {submitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
