@@ -37,7 +37,7 @@ import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { apiFetch, uploadFiles, createTrip, updateTrip, fetchTrucks, fetchDrivers, type Truck, type Driver, type Trip } from '@/lib/api'
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
-import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon } from 'lucide-react'
+import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -48,6 +48,8 @@ interface ImageFile {
   file?: File
   url: string       // blob URL for preview (local) or server URL (existing)
   isUploaded: boolean // whether this is an already-uploaded image
+  uploadError?: string // error message if upload failed
+  uploading?: boolean  // currently uploading this individual image
 }
 
 const tripFormSchema = z.object({
@@ -174,6 +176,54 @@ function ImageUploadArea({
   const [uploading, setUploading] = React.useState(false)
   const [dragOver, setDragOver] = React.useState(false)
 
+  const uploadPendingImages = React.useCallback(async (currentImages: ImageFile[]) => {
+    const pending = currentImages.filter(img => !img.isUploaded && !img.uploadError && img.file)
+    if (pending.length === 0) return currentImages
+
+    setUploading(true)
+    // Mark all pending as uploading
+    const updated = currentImages.map(img =>
+      !img.isUploaded && !img.uploadError && img.file
+        ? { ...img, uploading: true, uploadError: undefined }
+        : img
+    )
+    onImagesChange(updated)
+
+    try {
+      const uploadedUrls = await uploadFiles(pending.map(img => img.file!))
+      // Replace blob URLs with server URLs
+      const result = [...updated]
+      let urlIndex = 0
+      for (let i = 0; i < result.length; i++) {
+        if (!result[i].isUploaded && result[i].uploading && result[i].file) {
+          URL.revokeObjectURL(result[i].url)
+          result[i] = {
+            url: uploadedUrls[urlIndex],
+            isUploaded: true,
+            uploading: false,
+          }
+          urlIndex++
+        }
+      }
+      onImagesChange(result)
+      toast.success(`${uploadedUrls.length} image(s) uploaded successfully`)
+      return result
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Upload failed'
+      // Mark failed images
+      const failed = updated.map(img =>
+        img.uploading
+          ? { ...img, uploading: false, uploadError: errorMsg }
+          : img
+      )
+      onImagesChange(failed)
+      toast.error(errorMsg)
+      return failed
+    } finally {
+      setUploading(false)
+    }
+  }, [onImagesChange])
+
   const handleFiles = React.useCallback(async (files: FileList | null) => {
     if (!files || files.length === 0 || disabled) return
 
@@ -194,42 +244,29 @@ function ImageUploadArea({
         isUploaded: false,
       })
     }
-    onImagesChange(newImages)
-  }, [images, onImagesChange, disabled])
-
-  const handleUpload = React.useCallback(async () => {
-    const pending = images.filter(img => !img.isUploaded && img.file)
-    if (pending.length === 0) return
-
-    setUploading(true)
-    try {
-      const uploadedUrls = await uploadFiles(pending.map(img => img.file!))
-      // Replace blob URLs with server URLs
-      const updated = [...images]
-      let urlIndex = 0
-      for (let i = 0; i < updated.length; i++) {
-        if (!updated[i].isUploaded && updated[i].file) {
-          // Revoke old blob URL
-          URL.revokeObjectURL(updated[i].url)
-          updated[i] = {
-            url: uploadedUrls[urlIndex],
-            isUploaded: true,
-          }
-          urlIndex++
-        }
-      }
-      onImagesChange(updated)
-      toast.success(`${uploadedUrls.length} image(s) uploaded`)
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed')
-    } finally {
-      setUploading(false)
+    if (newImages.length !== images.length) {
+      onImagesChange(newImages)
+      // Auto-upload new images immediately
+      setTimeout(() => uploadPendingImages(newImages), 100)
     }
-  }, [images, onImagesChange])
+    // Reset file input so the same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }, [images, onImagesChange, disabled, uploadPendingImages])
+
+  const handleRetry = React.useCallback(async () => {
+    // Clear errors and re-upload
+    const cleared = images.map(img =>
+      img.uploadError ? { ...img, uploadError: undefined } : img
+    )
+    onImagesChange(cleared)
+    setTimeout(() => uploadPendingImages(cleared), 100)
+  }, [images, onImagesChange, uploadPendingImages])
 
   const removeImage = React.useCallback((index: number) => {
     const updated = [...images]
-    URL.revokeObjectURL(updated[index].url)
+    if (!updated[index].isUploaded) {
+      URL.revokeObjectURL(updated[index].url)
+    }
     updated.splice(index, 1)
     onImagesChange(updated)
   }, [images, onImagesChange])
@@ -240,6 +277,10 @@ function ImageUploadArea({
     handleFiles(e.dataTransfer.files)
   }, [handleFiles])
 
+  const pendingCount = images.filter(img => !img.isUploaded && !img.uploadError).length
+  const failedCount = images.filter(img => img.uploadError).length
+  const isUploading = uploading || images.some(img => img.uploading)
+
   return (
     <div className="space-y-3">
       {/* Drop zone */}
@@ -248,9 +289,9 @@ function ImageUploadArea({
           relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4
           transition-colors cursor-pointer min-h-[100px]
           ${dragOver ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/20' : 'border-muted-foreground/25 hover:border-muted-foreground/50'}
-          ${disabled || uploading ? 'opacity-50 cursor-not-allowed' : ''}
+          ${disabled || isUploading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
-        onClick={() => !disabled && !uploading && fileInputRef.current?.click()}
+        onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragOver(true) }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
@@ -267,32 +308,30 @@ function ImageUploadArea({
           multiple
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
-          disabled={disabled || uploading}
+          disabled={disabled || isUploading}
         />
       </div>
 
-      {/* Upload pending button */}
-      {images.some(img => !img.isUploaded) && (
+      {/* Retry failed button */}
+      {failedCount > 0 && !isUploading && (
         <Button
           type="button"
-          variant="outline"
+          variant="destructive"
           size="sm"
           className="w-full"
-          onClick={handleUpload}
-          disabled={uploading}
+          onClick={handleRetry}
         >
-          {uploading ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Uploading...
-            </>
-          ) : (
-            <>
-              <Upload className="h-4 w-4 mr-2" />
-              Upload {images.filter(img => !img.isUploaded).length} pending image(s)
-            </>
-          )}
+          <AlertCircle className="h-4 w-4 mr-2" />
+          Retry {failedCount} failed image(s)
         </Button>
+      )}
+
+      {/* Uploading indicator */}
+      {isUploading && (
+        <div className="flex items-center justify-center gap-2 py-1">
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">Uploading image{pendingCount > 1 ? 's' : ''}...</span>
+        </div>
       )}
 
       {/* Preview grid */}
@@ -302,10 +341,31 @@ function ImageUploadArea({
             <div key={img.url} className="relative group rounded-md overflow-hidden border bg-muted aspect-square">
               <img
                 src={img.url}
-                alt={`Mileage image ${idx + 1}`}
+                alt={`Image ${idx + 1}`}
                 className="h-full w-full object-cover"
               />
-              {!img.isUploaded && (
+              {/* Status badges */}
+              {img.uploading && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <Loader2 className="h-6 w-6 text-white animate-spin" />
+                </div>
+              )}
+              {img.uploadError && !img.uploading && (
+                <>
+                  <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
+                    <AlertCircle className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-red-600 text-white text-[10px] text-center py-0.5 font-medium truncate px-1">
+                    Failed
+                  </div>
+                </>
+              )}
+              {img.isUploaded && (
+                <div className="absolute top-1 left-1">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 drop-shadow" />
+                </div>
+              )}
+              {!img.isUploaded && !img.uploadError && !img.uploading && (
                 <div className="absolute top-0 left-0 right-0 bg-amber-500 text-white text-[10px] text-center py-0.5 font-medium">
                   Pending
                 </div>
@@ -314,7 +374,7 @@ function ImageUploadArea({
                 type="button"
                 onClick={(e) => { e.stopPropagation(); removeImage(idx) }}
                 className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-                disabled={disabled || uploading}
+                disabled={disabled || isUploading}
               >
                 <X className="h-3 w-3" />
               </button>
