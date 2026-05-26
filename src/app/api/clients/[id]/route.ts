@@ -16,7 +16,7 @@ export async function GET(
     const client = await db.client.findUnique({
       where: { id },
       include: {
-        zones: {
+        ClientZone: {
           include: {
             destinationZone: {
               include: {
@@ -92,7 +92,7 @@ export async function GET(
           : null,
       },
       recentTrips,
-      zones: client.zones.map((cz) => ({
+      zones: client.ClientZone.map((cz) => ({
         id: cz.id,
         destinationZoneId: cz.destinationZoneId,
         zoneName: cz.destinationZone.name,

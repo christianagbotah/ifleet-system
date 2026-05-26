@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: {
-        zones: {
+        ClientZone: {
           include: {
             destinationZone: {
               include: {
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
           totalRevenue: tripStats._sum.totalRevenue || 0,
           lastTripDate: tripStats._max.departureTime?.toISOString() || null,
           firstTripDate: tripStats._min.departureTime?.toISOString() || null,
-          zones: client.zones.map((cz) => ({
+          zones: client.ClientZone.map((cz) => ({
             id: cz.id,
             destinationZoneId: cz.destinationZoneId,
             zoneName: cz.destinationZone.name,
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
         region: region?.trim() || null,
         notes: notes?.trim() || null,
         ...(Array.isArray(zones) && zones.length > 0 ? {
-          zones: {
+          ClientZone: {
             create: zones.map((z: { destinationZoneId: string; branchName?: string; address?: string; contactPerson?: string; phone?: string; isPrimary?: boolean }, i: number) => ({
               destinationZoneId: z.destinationZoneId,
               branchName: z.branchName?.trim() || null,
