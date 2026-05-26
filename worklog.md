@@ -369,3 +369,25 @@ Stage Summary:
 - Actual distance and fuel usage are auto-populated on the trip from fuel logs
 - Modified: src/components/trips/TripFormDialog.tsx, src/components/trips/TripDetailSheet.tsx
 - Commit: 75817fe
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Add customer details to trip detail sheet, trip list table, and trip grid view
+
+Work Log:
+- Added `client` relation to trips GET list endpoint include (selecting companyName, contactPerson, phone)
+- Added `client` relation to individual trip GET endpoint include
+- Added `client` and `clientId` stripping for driver-safe responses (both list and detail endpoints)
+- Added `client` relation to trip PUT (update) endpoint include
+- Updated Trip interface in `src/lib/api.ts` to include `customerRef`, `client` relation
+- Added customer details section to TripDetailSheet after route display (showing customer name, phone, customer ref, client company name)
+- Added Customer column to TripList.tsx desktop table header, table body, mobile card view, and skeleton
+- Added Customer column to TripsView.tsx desktop table header, table body, mobile card grid, with conditional visibility (hidden on small screens for table, shown in card view)
+- No lint errors in modified files; dev server running
+
+Stage Summary:
+- Customer details now visible in 3 places: TripDetailSheet (after route), TripsView table (Customer column), TripsView mobile cards (customer row with User icon)
+- Also updated TripList.tsx (older component) for consistency
+- Backend includes client relation data (companyName, contactPerson, phone) in all trip API responses
+- Driver-safe mode properly strips customer and client data

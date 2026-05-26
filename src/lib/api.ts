@@ -560,6 +560,7 @@ export interface Trip {
   status: string
   customerName?: string | null
   customerPhone?: string | null
+  customerRef?: string | null
   // New lifecycle fields
   waitingReason?: string | null
   waitingSince?: string | null
@@ -569,6 +570,7 @@ export interface Trip {
   notes?: string | null
   truck: { id: string; plateNumber: string; make: string; model: string }
   driver: { id: string; firstName: string; lastName: string }
+  client?: { id: string; companyName: string; contactPerson: string; phone: string } | null
   deliveryStops?: DeliveryStop[]
   tripItems?: TripItem[]
 }

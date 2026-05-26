@@ -343,6 +343,41 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                 </div>
               </div>
 
+              {/* Customer Details */}
+              {currentTrip.customerName && (
+                <div className="p-3 rounded-lg bg-muted/50 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-amber-500 shrink-0" />
+                    <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">Customer</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm pl-6">
+                    <div className="col-span-2">
+                      <span className="font-medium">{currentTrip.customerName}</span>
+                    </div>
+                    {canSeeFinancialData && currentTrip.customerPhone && (
+                      <div className="text-muted-foreground">
+                        Phone: <span className="font-medium text-foreground">{currentTrip.customerPhone}</span>
+                      </div>
+                    )}
+                    {(currentTrip as Record<string, unknown>).customerRef && canSeeFinancialData && (
+                      <div className="text-muted-foreground">
+                        Ref: <span className="font-medium text-foreground">{String((currentTrip as Record<string, unknown>).customerRef)}</span>
+                      </div>
+                    )}
+                    {(currentTrip as Record<string, unknown>).client && (() => {
+                      const client = (currentTrip as Record<string, unknown>).client as Record<string, unknown> | undefined
+                      if (!client) return null
+                      return (
+                        <div className="col-span-2 text-muted-foreground">
+                          Company: <span className="font-medium text-foreground">{client.companyName as string}</span>
+                          {client.contactPerson && <span className="text-muted-foreground"> ({client.contactPerson as string})</span>}
+                        </div>
+                      )
+                    })()}
+                  </div>
+                </div>
+              )}
+
               {/* Lifecycle Progress */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">

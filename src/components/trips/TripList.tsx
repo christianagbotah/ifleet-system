@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowUpDown, ChevronRight, Inbox } from 'lucide-react'
+import { ArrowUpDown, ChevronRight, Inbox, User } from 'lucide-react'
 import { apiFetch } from '@/lib/apiFetch'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -93,6 +93,7 @@ function TripTableSkeleton() {
           <TableCell><Skeleton className="h-5 w-32" /></TableCell>
           <TableCell><Skeleton className="h-5 w-28" /></TableCell>
           <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+          <TableCell><Skeleton className="h-5 w-28" /></TableCell>
           <TableCell><Skeleton className="h-5 w-8" /></TableCell>
           <TableCell className="text-right"><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
           <TableCell className="text-right"><Skeleton className="h-5 w-16 ml-auto" /></TableCell>
@@ -180,10 +181,21 @@ function TripMobileCard({
           <span>{trip.destinationCity?.name || 'Unknown'}</span>
         </div>
 
-        <div className="text-sm text-muted-foreground mb-3">
+        <div className="text-sm text-muted-foreground mb-1">
           {trip.truck?.plateNumber || 'No truck'}
           {trip.driver ? ` · ${trip.driver.name}` : ''}
         </div>
+
+        {(trip as Record<string, unknown>).customerName && (
+          <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+            <User className="h-3 w-3" />
+            <span>{String((trip as Record<string, unknown>).customerName)}</span>
+            {(trip as Record<string, unknown>).client && (() => {
+              const client = (trip as Record<string, unknown>).client as Record<string, unknown>
+              return client.companyName ? ` (${client.companyName as string})` : ''
+            })()}
+          </div>
+        )}
 
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">
@@ -254,6 +266,7 @@ export function TripList({ onNewTrip, onSelectTrip }: TripListProps) {
               <TableRow>
                 <TableHead className="w-[140px]">Trip #</TableHead>
                 <TableHead>Route</TableHead>
+                <TableHead>Customer</TableHead>
                 <TableHead>Truck / Driver</TableHead>
                 <TableHead>Items</TableHead>
                 <TableHead className="text-center">Dest.</TableHead>
@@ -293,6 +306,7 @@ export function TripList({ onNewTrip, onSelectTrip }: TripListProps) {
             <TableRow>
               <TableHead className="w-[140px]">Trip #</TableHead>
               <TableHead>Route</TableHead>
+              <TableHead>Customer</TableHead>
               <TableHead>Truck / Driver</TableHead>
               <TableHead>Items</TableHead>
               <TableHead className="text-center">Dest.</TableHead>
@@ -331,6 +345,23 @@ export function TripList({ onNewTrip, onSelectTrip }: TripListProps) {
                     <span>{trip.loadingCity?.name || '—'}</span>
                     <ChevronRight className="h-3 w-3 text-muted-foreground" />
                     <span>{trip.destinationCity?.name || '—'}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm">
+                    {(trip as Record<string, unknown>).customerName ? (
+                      <div>
+                        <div className="font-medium truncate max-w-[150px]">{String((trip as Record<string, unknown>).customerName)}</div>
+                        {(trip as Record<string, unknown>).client && (() => {
+                          const client = (trip as Record<string, unknown>).client as Record<string, unknown>
+                          return client.companyName ? (
+                            <div className="text-muted-foreground text-xs truncate max-w-[150px]">{client.companyName as string}</div>
+                          ) : null
+                        })()}
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>

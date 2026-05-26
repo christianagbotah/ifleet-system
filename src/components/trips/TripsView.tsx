@@ -319,6 +319,7 @@ export function TripsView() {
                       <TableHead>Truck</TableHead>
                       <TableHead className="hidden md:table-cell">Driver</TableHead>
                       <TableHead className="hidden lg:table-cell">Route</TableHead>
+                      <TableHead className="hidden md:table-cell">Customer</TableHead>
                       <TableHead className="hidden sm:table-cell">Cargo</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Revenue</TableHead>
@@ -342,6 +343,18 @@ export function TripsView() {
                           <span className="bg-muted rounded px-1.5 py-0.5">{trip.loadingLocation}</span>
                           <span className="mx-1 text-muted-foreground">→</span>
                           <span className="bg-muted rounded px-1.5 py-0.5">{trip.destination}</span>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-sm">
+                          {trip.customerName ? (
+                            <div>
+                              <div className="font-medium truncate max-w-[140px]">{trip.customerName}</div>
+                              {trip.client?.companyName && (
+                                <div className="text-muted-foreground text-xs truncate max-w-[140px]">{trip.client.companyName}</div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                         <TableCell className="hidden sm:table-cell text-xs">
                           <div className="flex items-center gap-1.5">
@@ -431,7 +444,18 @@ export function TripsView() {
                     </div>
                   </div>
 
-                  {/* Row 4: Cargo */}
+                  {/* Row 4: Customer */}
+                  {trip.customerName && (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+                      <User className="h-3.5 w-3.5 shrink-0" />
+                      <span className="font-medium text-foreground truncate">{trip.customerName}</span>
+                      {trip.client?.companyName && (
+                        <span className="truncate">({trip.client.companyName})</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Row 5: Cargo */}
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
                     <Package className="h-3.5 w-3.5 shrink-0" />
                     <span>
@@ -446,7 +470,7 @@ export function TripsView() {
                     )}
                   </div>
 
-                  {/* Row 5: Revenue (if available) */}
+                  {/* Row 6: Revenue (if available) */}
                   {trip.totalRevenue && (
                     <div className="text-sm font-semibold text-right pt-1 border-t">
                       {CURRENCY_SYMBOL}{trip.totalRevenue.toLocaleString()}

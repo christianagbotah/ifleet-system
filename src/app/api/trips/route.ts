@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
         include: {
           truck: { select: { id: true, plateNumber: true, make: true, model: true } },
           driver: { select: { id: true, firstName: true, lastName: true } },
+          client: { select: { id: true, companyName: true, contactPerson: true, phone: true } },
           TripItem: {
             include: {
               supplier: { select: { id: true, name: true } },
@@ -107,6 +108,8 @@ export async function GET(request: NextRequest) {
           delete (safe as Record<string, unknown>).customerPhone
           delete (safe as Record<string, unknown>).customerRef
           delete (safe as Record<string, unknown>).customerName
+          delete (safe as Record<string, unknown>).clientId
+          ;(safe as Record<string, unknown>).client = undefined
           return safe
         })
       : trips
