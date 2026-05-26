@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
-import { AlertTriangle, MapPin, Clock, Eye, CheckCircle, XCircle, Plus, Filter, TrendingUp, RefreshCw } from 'lucide-react'
+import { AlertTriangle, MapPin, Clock, Eye, CheckCircle, XCircle, Plus, Filter, Pencil, Trash2, RefreshCw } from 'lucide-react'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import {
   fetchRoadConditions,
@@ -104,23 +104,38 @@ export function RoadConditionsView() {
 
   const totalPages = Math.ceil(total / 20)
 
-  const handleCreate = async (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>) => {
     try {
-      await createRoadConditionReport({
-        roadName: data.roadName,
-        region: data.region,
-        condition: data.condition,
-        hazardType: data.hazardType || 'none',
-        description: data.description || '',
-        severity: data.severity,
-        latitude: data.latitude ? parseFloat(data.latitude) : null,
-        longitude: data.longitude ? parseFloat(data.longitude) : null,
-      })
+      if (editingReport) {
+        await updateRoadConditionReport(editingReport.id, {
+          roadName: data.roadName,
+          region: data.region,
+          condition: data.condition,
+          hazardType: data.hazardType || 'none',
+          description: data.description || '',
+          severity: data.severity,
+          latitude: data.latitude ? parseFloat(data.latitude) : null,
+          longitude: data.longitude ? parseFloat(data.longitude) : null,
+        })
+        toast.success('Report updated successfully')
+      } else {
+        await createRoadConditionReport({
+          roadName: data.roadName,
+          region: data.region,
+          condition: data.condition,
+          hazardType: data.hazardType || 'none',
+          description: data.description || '',
+          severity: data.severity,
+          latitude: data.latitude ? parseFloat(data.latitude) : null,
+          longitude: data.longitude ? parseFloat(data.longitude) : null,
+        })
+        toast.success('Road condition reported successfully')
+      }
       setShowReportDialog(false)
-      toast.success('Road condition reported successfully')
+      setEditingReport(null)
       loadReports()
     } catch (err) {
-      toast.error('Failed to create report')
+      toast.error(editingReport ? 'Failed to update report' : 'Failed to create report')
     }
   }
 
@@ -254,19 +269,24 @@ export function RoadConditionsView() {
                     <td className="p-3 text-muted-foreground">{new Date(report.reportedAt).toLocaleDateString()}</td>
                     <td className="p-3"><Badge variant="secondary" className={STATUS_COLORS[report.status] || ''}>{report.status}</Badge></td>
                     <td className="p-3 text-right">
-                      {report.status === 'active' && (
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => handleStatus(report.id, 'resolved')} className="text-emerald-600 hover:text-emerald-700 h-8 w-8 p-0" title="Resolve">
-                            <CheckCircle className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleStatus(report.id, 'ignored')} className="text-gray-500 hover:text-gray-600 h-8 w-8 p-0" title="Ignore">
-                            <XCircle className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                      <Button variant="ghost" size="sm" onClick={() => handleDelete(report.id)} className="text-red-500 hover:text-red-600 h-8 w-8 p-0" title="Delete">
-                        <TrendingUp className="h-4 w-4 rotate-180" />
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button variant="ghost" size="sm" onClick={() => { setEditingReport(report); setShowReportDialog(true) }} className="text-sky-500 hover:text-sky-600 h-8 w-8 p-0" title="Edit">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        {report.status === 'active' && (
+                          <>
+                            <Button variant="ghost" size="sm" onClick={() => handleStatus(report.id, 'resolved')} className="text-emerald-600 hover:text-emerald-700 h-8 w-8 p-0" title="Resolve">
+                              <CheckCircle className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" onClick={() => handleStatus(report.id, 'ignored')} className="text-gray-500 hover:text-gray-600 h-8 w-8 p-0" title="Ignore">
+                              <XCircle className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(report.id)} className="text-red-500 hover:text-red-600 h-8 w-8 p-0" title="Delete">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </td>
                   </motion.tr>
                 ))
@@ -296,6 +316,9 @@ export function RoadConditionsView() {
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <Badge variant="secondary" className={STATUS_COLORS[report.status] || ''}>{report.status}</Badge>
+                      <Button variant="ghost" size="sm" onClick={() => { setEditingReport(report); setShowReportDialog(true) }} className="text-sky-500 hover:text-sky-600 h-7 w-7 p-0" title="Edit">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
                       {report.status === 'active' && (
                         <>
                           <Button variant="ghost" size="sm" onClick={() => handleStatus(report.id, 'resolved')} className="text-emerald-600 hover:text-emerald-700 h-7 w-7 p-0" title="Resolve">
@@ -307,7 +330,7 @@ export function RoadConditionsView() {
                         </>
                       )}
                       <Button variant="ghost" size="sm" onClick={() => handleDelete(report.id)} className="text-red-500 hover:text-red-600 h-7 w-7 p-0" title="Delete">
-                        <TrendingUp className="h-3.5 w-3.5 rotate-180" />
+                        <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>
                   </div>
@@ -345,7 +368,7 @@ export function RoadConditionsView() {
             <DialogTitle>{editingReport ? 'Edit' : 'Report'} Road Condition</DialogTitle>
             <DialogDescription>Share road condition information with the fleet</DialogDescription>
           </DialogHeader>
-          <ReportForm onSubmit={handleCreate} onCancel={() => setShowReportDialog(false)} initialData={editingReport} />
+          <ReportForm onSubmit={handleSave} onCancel={() => { setShowReportDialog(false); setEditingReport(null) }} initialData={editingReport} />
         </DialogContent>
       </Dialog>
     </div>
@@ -449,7 +472,7 @@ function ReportForm({ onSubmit, onCancel, initialData }: {
       </div>
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button onClick={handleSubmit}>Submit Report</Button>
+        <Button onClick={handleSubmit}>{initialData ? 'Update Report' : 'Submit Report'}</Button>
       </DialogFooter>
     </div>
   )

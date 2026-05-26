@@ -994,8 +994,13 @@ export function RouteOptimizerView() {
                             const oneWayCost = fuelLiters * fp + dist * 0.06 // approximate tolls
                             const roundTrip = oneWayCost * 2
                             return (
-                              <tr key={route.label} className="border-t hover:bg-muted/30 transition-colors">
-                                <td className="px-4 py-2.5 font-medium">{route.label}</td>
+                              <tr
+                                key={route.label}
+                                className="border-t hover:bg-muted/30 transition-colors cursor-pointer"
+                                onClick={() => { setOrigin(route.from); setDestination(route.to); setActiveTab('planner') }}
+                                title={`Plan route: ${route.label}`}
+                              >
+                                <td className="px-4 py-2.5 font-medium">{route.label} <span className="text-xs text-muted-foreground ml-1">→ Plan</span></td>
                                 <td className="text-right px-4 py-2.5 font-mono">{dist} km</td>
                                 <td className="text-right px-4 py-2.5 font-mono">₵{Math.round(oneWayCost).toLocaleString()}</td>
                                 <td className="text-right px-4 py-2.5 font-mono font-semibold text-amber-700 dark:text-amber-400">
@@ -1026,8 +1031,13 @@ export function RouteOptimizerView() {
                         const oneWayCost = fuelLiters * fp + dist * 0.06
                         const roundTrip = oneWayCost * 2
                         return (
-                          <div key={route.label} className="mobile-card p-4 space-y-2">
-                            <p className="font-semibold text-sm">{route.label}</p>
+                          <div
+                            key={route.label}
+                            className="mobile-card p-4 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                            onClick={() => { setOrigin(route.from); setDestination(route.to); setActiveTab('planner') }}
+                            title={`Plan route: ${route.label}`}
+                          >
+                            <p className="font-semibold text-sm">{route.label} <span className="text-xs text-muted-foreground font-normal">→ Plan</span></p>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
                               <span>{dist} km</span>
                               <span>One-way ₵{Math.round(oneWayCost).toLocaleString()}</span>

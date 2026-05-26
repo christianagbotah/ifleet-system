@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import {
   Plus, Search, Package, ArrowRight, MapPin, Weight, DollarSign,
   Truck, CalendarDays, RefreshCw, AlertCircle, UserCheck, X,
-  ChevronDown, Phone, Building2,
+  ChevronDown, Phone, Building2, Pencil, Trash2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,6 +24,16 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -33,7 +43,7 @@ import {
 import { CURRENCY_SYMBOL, GHANA_LOCATIONS } from '@/lib/constants'
 import { useDebounce } from '@/hooks/use-debounce'
 import {
-  fetchLoadBoard, createLoadBoard, updateLoadBoard,
+  fetchLoadBoard, createLoadBoard, updateLoadBoard, deleteLoadBoard,
   fetchTrucks, fetchDrivers, fetchClients,
   type LoadBoardItem, type Truck, type Driver, type Client,
 } from '@/lib/api'
@@ -100,6 +110,17 @@ export function LoadBoardView() {
   const [createOpen, setCreateOpen] = React.useState(false)
   const [assignOpen, setAssignOpen] = React.useState(false)
   const [assigningRecord, setAssigningRecord] = React.useState<LoadBoardItem | null>(null)
+  const [editingLoad, setEditingLoad] = React.useState<LoadBoardItem | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false)
+  const [deleteId, setDeleteId] = React.useState<string | null>(null)
+  const [editForm, setEditForm] = React.useState({
+    title: '', pickupLocation: '', dropoffLocation: '',
+    pickupRegion: '', dropoffRegion: '', commodityType: '',
+    weight: '', truckType: '', offeredRate: '', budgetMin: '', budgetMax: '',
+    pickupDate: '', deliveryDate: '', requirements: '',
+    contactName: '', contactPhone: '', clientId: '', truckCount: '1',
+  })
+  const [editing, setEditing] = React.useState(false)
 
   // Assign dialog state
   const [trucks, setTrucks] = React.useState<Truck[]>([])
@@ -253,6 +274,73 @@ export function LoadBoardView() {
     }
   }
 
+  const handleEditOpen = (record: LoadBoardItem) => {
+    setEditForm({
+      title: record.title,
+      pickupLocation: record.pickupLocation,
+      dropoffLocation: record.dropoffLocation,
+      pickupRegion: record.pickupRegion,
+      dropoffRegion: record.dropoffRegion,
+      commodityType: record.commodityType,
+      weight: record.weight?.toString() || '',
+      truckType: record.truckType || '',
+      offeredRate: record.offeredRate?.toString() || '',
+      budgetMin: record.budgetMin?.toString() || '',
+      budgetMax: record.budgetMax?.toString() || '',
+      pickupDate: record.pickupDate?.split('T')[0] || '',
+      deliveryDate: record.deliveryDate?.split('T')[0] || '',
+      requirements: record.requirements || '',
+      contactName: record.contactName || '',
+      contactPhone: record.contactPhone || '',
+      clientId: record.clientId || '',
+      truckCount: record.truckCount?.toString() || '1',
+    })
+    setEditingLoad(record)
+    setEditDialogOpen(true)
+    loadCreateData()
+  }
+
+  const handleEditSubmit = async () => {
+    if (!editingLoad) return
+    if (!editForm.title || !editForm.pickupLocation || !editForm.dropoffLocation ||
+        !editForm.pickupRegion || !editForm.dropoffRegion || !editForm.commodityType) {
+      toast.error('Please fill in all required fields')
+      return
+    }
+    setEditing(true)
+    try {
+      await updateLoadBoard(editingLoad.id, {
+        ...editForm,
+        weight: editForm.weight ? parseFloat(editForm.weight) : null,
+        offeredRate: editForm.offeredRate ? parseFloat(editForm.offeredRate) : null,
+        budgetMin: editForm.budgetMin ? parseFloat(editForm.budgetMin) : null,
+        budgetMax: editForm.budgetMax ? parseFloat(editForm.budgetMax) : null,
+        truckCount: parseInt(editForm.truckCount) || 1,
+        clientId: editForm.clientId || undefined,
+      })
+      toast.success('Load updated successfully')
+      setEditDialogOpen(false)
+      setEditingLoad(null)
+      loadRecords()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to update load')
+    } finally {
+      setEditing(false)
+    }
+  }
+
+  const handleDeleteLoad = async () => {
+    if (!deleteId) return
+    try {
+      await deleteLoadBoard(deleteId)
+      toast.success('Load deleted successfully')
+      setDeleteId(null)
+      loadRecords()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to delete load')
+    }
+  }
+
   return (
     <motion.div variants={containerVariants} animate="show" className="space-y-4 sm:space-y-6">
       {/* Header */}
@@ -344,6 +432,8 @@ export function LoadBoardView() {
                 records={filteredRecords}
                 onAssign={handleAssignOpen}
                 onStatusUpdate={handleStatusUpdate}
+                onEdit={handleEditOpen}
+                onDelete={(id) => setDeleteId(id)}
               />
             </TabsContent>
           )}
@@ -360,6 +450,36 @@ export function LoadBoardView() {
         submitting={creating}
         onSubmit={handleCreateSubmit}
       />
+
+      {/* Edit Dialog */}
+      <CreateLoadDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        form={editForm}
+        setForm={setEditForm}
+        clients={clients}
+        submitting={editing}
+        onSubmit={handleEditSubmit}
+        isEdit
+      />
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => { if (!open) setDeleteId(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Load</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this load? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteLoad} className="bg-red-500 hover:bg-red-600 text-white">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Assign Dialog */}
       <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
@@ -422,10 +542,12 @@ export function LoadBoardView() {
 
 // ─── Load Board Card Grid ────────────────────────────────────────────────────
 
-function LoadBoardGrid({ records, onAssign, onStatusUpdate }: {
+function LoadBoardGrid({ records, onAssign, onStatusUpdate, onEdit, onDelete }: {
   records: LoadBoardItem[]
   onAssign: (record: LoadBoardItem) => void
   onStatusUpdate: (record: LoadBoardItem, status: string) => void
+  onEdit: (record: LoadBoardItem) => void
+  onDelete: (id: string) => void
 }) {
   if (records.length === 0) {
     return (
@@ -434,7 +556,7 @@ function LoadBoardGrid({ records, onAssign, onStatusUpdate }: {
           icon={Package}
           title="No loads found"
           description="No loads match your current filter. Try adjusting your search or post a new load."
-          action={{ label: 'Post Load', onClick: () => { /* handled by parent */ } }}
+          action={{ label: 'Post Load', onClick: () => { /* handled by parent via onEdit/onAssign */ } }}
         />
       </div>
     )
@@ -568,12 +690,31 @@ function LoadBoardGrid({ records, onAssign, onStatusUpdate }: {
                     Mark Delivered
                   </Button>
                 )}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-sky-500 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/20 h-8 w-8 p-0"
+                  onClick={() => onEdit(record)}
+                  title="Edit"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 h-8 w-8 p-0"
+                  onClick={() => onDelete(record.id)}
+                  title="Delete"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
                 {(record.status === 'open' || record.status === 'assigned') && (
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 h-8 w-8 p-0"
                     onClick={() => onStatusUpdate(record, 'cancelled')}
+                    title="Cancel"
                   >
                     <X className="h-3.5 w-3.5" />
                   </Button>
@@ -589,7 +730,7 @@ function LoadBoardGrid({ records, onAssign, onStatusUpdate }: {
 
 // ─── Create Load Dialog ──────────────────────────────────────────────────────
 
-function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitting, onSubmit }: {
+function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitting, onSubmit, isEdit }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   form: Record<string, string>
@@ -597,6 +738,7 @@ function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitti
   clients: Client[]
   submitting: boolean
   onSubmit: () => void
+  isEdit?: boolean
 }) {
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -606,7 +748,7 @@ function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitti
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Post New Load</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit Load' : 'Post New Load'}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           {/* Title */}
@@ -811,7 +953,7 @@ function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitti
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button onClick={onSubmit} disabled={submitting} className="bg-emerald-500 hover:bg-emerald-600 text-white">
-            {submitting ? 'Posting...' : 'Post Load'}
+            {submitting ? (isEdit ? 'Saving...' : 'Posting...') : (isEdit ? 'Save Changes' : 'Post Load')}
           </Button>
         </DialogFooter>
       </DialogContent>
