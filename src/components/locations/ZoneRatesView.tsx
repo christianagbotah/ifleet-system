@@ -85,7 +85,10 @@ interface ZoneRate {
 
 interface BulkRateRow {
   id: string
+  destinationCityId: string
   destinationZoneId: string
+  zoneOptions: DestinationZoneOption[]
+  loadingZones: boolean
   rateAmount: string
   minMileage: string
   maxMileage: string
@@ -152,11 +155,8 @@ export function ZoneRatesView() {
   const [bulkAddRows, setBulkAddRows] = React.useState<BulkRateRow[]>([])
   // Bulk edit rows
   const [bulkEditRows, setBulkEditRows] = React.useState<BulkRateRow[]>([])
-  // Bulk add form zones
-  const [bulkAddFormZones, setBulkAddFormZones] = React.useState<DestinationZoneOption[]>([])
-  const [bulkAddFormCityId, setBulkAddFormCityId] = React.useState('')
-  const [bulkAddFormRegion, setBulkAddFormRegion] = React.useState('')
-  const [bulkAddLoadingZones, setBulkAddLoadingZones] = React.useState(false)
+  // (legacy bulk add shared state — no longer used)
+  // Each row now carries its own cityId + zoneOptions
 
   const isEditing = !!editingItem
 
@@ -260,11 +260,7 @@ export function ZoneRatesView() {
     return cities.filter((c) => c.region === formRegion)
   }, [cities, formRegion])
 
-  // Bulk add: filtered cities by selected region
-  const bulkAddFilteredCities = React.useMemo(() => {
-    if (!bulkAddFormRegion) return cities
-    return cities.filter((c) => c.region === bulkAddFormRegion)
-  }, [cities, bulkAddFormRegion])
+  // (bulk add city/zone selection is per-row — no shared state needed)
 
   // ─── Form handling ───
 
@@ -404,44 +400,56 @@ export function ZoneRatesView() {
 
   // ─── Bulk operations ───
 
-  async function loadBulkAddZones(cityId: string) {
-    setBulkAddFormZones([])
-    setBulkAddLoadingZones(true)
+  async function loadZonesForRow(rowId: string, cityId: string) {
+    setBulkAddRows(prev => prev.map(r => r.id === rowId ? { ...r, zoneOptions: [], loadingZones: true, destinationZoneId: '' } : r))
     if (!cityId) {
-      setBulkAddLoadingZones(false)
+      setBulkAddRows(prev => prev.map(r => r.id === rowId ? { ...r, loadingZones: false } : r))
       return
     }
     try {
       const params = new URLSearchParams()
       params.set('destinationCityId', cityId)
       const res = await apiFetch<{ data: DestinationZoneOption[] }>(`/api/destination-zones?${params.toString()}`)
-      setBulkAddFormZones(res.data || [])
+      setBulkAddRows(prev => prev.map(r => r.id === rowId ? { ...r, zoneOptions: res.data || [], loadingZones: false } : r))
     } catch {
-      setBulkAddFormZones([])
-    } finally {
-      setBulkAddLoadingZones(false)
+      setBulkAddRows(prev => prev.map(r => r.id === rowId ? { ...r, zoneOptions: [], loadingZones: false } : r))
     }
+  }
+
+  async function loadZonesForEditRow(rowId: string, cityId: string) {
+    setBulkEditRows(prev => prev.map(r => r.id === rowId ? { ...r, zoneOptions: [], loadingZones: true, destinationZoneId: '' } : r))
+    if (!cityId) {
+      setBulkEditRows(prev => prev.map(r => r.id === rowId ? { ...r, loadingZones: false } : r))
+      return
+    }
+    try {
+      const params = new URLSearchParams()
+      params.set('destinationCityId', cityId)
+      const res = await apiFetch<{ data: DestinationZoneOption[] }>(`/api/destination-zones?${params.toString()}`)
+      setBulkEditRows(prev => prev.map(r => r.id === rowId ? { ...r, zoneOptions: res.data || [], loadingZones: false } : r))
+    } catch {
+      setBulkEditRows(prev => prev.map(r => r.id === rowId ? { ...r, zoneOptions: [], loadingZones: false } : r))
+    }
+  }
+
+  function makeEmptyBulkRow(defaultCity?: string): BulkRateRow {
+    return { id: crypto.randomUUID(), destinationCityId: defaultCity || '', destinationZoneId: '', zoneOptions: [], loadingZones: false, rateAmount: '', minMileage: '', maxMileage: '', expectedFuelConsumption: '', isActive: true }
   }
 
   function openBulkAdd() {
     const defaultCity = cityFilter && cityFilter !== 'all' ? cityFilter : ''
-    setBulkAddFormCityId(defaultCity)
-    setBulkAddFormRegion('')
-    setBulkAddFormZones([])
-    if (defaultCity) loadBulkAddZones(defaultCity)
-    setBulkAddRows([
-      { id: crypto.randomUUID(), destinationZoneId: '', rateAmount: '', minMileage: '', maxMileage: '', expectedFuelConsumption: '', isActive: true },
-      { id: crypto.randomUUID(), destinationZoneId: '', rateAmount: '', minMileage: '', maxMileage: '', expectedFuelConsumption: '', isActive: true },
-      { id: crypto.randomUUID(), destinationZoneId: '', rateAmount: '', minMileage: '', maxMileage: '', expectedFuelConsumption: '', isActive: true },
-    ])
+    const row1 = makeEmptyBulkRow(defaultCity)
+    const rows = [row1, makeEmptyBulkRow(), makeEmptyBulkRow()]
+    if (defaultCity) {
+      loadZonesForRow(row1.id, defaultCity)
+    }
+    setBulkAddRows(rows)
+
     setBulkAddOpen(true)
   }
 
   function addBulkAddRow() {
-    setBulkAddRows(prev => [...prev, {
-      id: crypto.randomUUID(), destinationZoneId: '', rateAmount: '', minMileage: '',
-      maxMileage: '', expectedFuelConsumption: '', isActive: true,
-    }])
+    setBulkAddRows(prev => [...prev, makeEmptyBulkRow()])
   }
 
   function removeBulkAddRow(id: string) {
@@ -493,15 +501,27 @@ export function ZoneRatesView() {
 
   function openBulkEdit() {
     const selected = items.filter(i => bulk.selectedIds.has(i.id))
-    setBulkEditRows(selected.map(i => ({
-      id: i.id,
-      destinationZoneId: i.destinationZoneId,
-      rateAmount: String(i.rateAmount),
-      minMileage: i.minMileage ? String(i.minMileage) : '',
-      maxMileage: i.maxMileage ? String(i.maxMileage) : '',
-      expectedFuelConsumption: i.expectedFuelConsumption ? String(i.expectedFuelConsumption) : '',
-      isActive: i.isActive,
-    })))
+    const editRows = selected.map(i => {
+      const cityId = i.destinationZone?.destinationCityId || ''
+      const row: BulkRateRow = {
+        id: i.id,
+        destinationCityId: cityId,
+        destinationZoneId: i.destinationZoneId,
+        zoneOptions: [],
+        loadingZones: false,
+        rateAmount: String(i.rateAmount),
+        minMileage: i.minMileage ? String(i.minMileage) : '',
+        maxMileage: i.maxMileage ? String(i.maxMileage) : '',
+        expectedFuelConsumption: i.expectedFuelConsumption ? String(i.expectedFuelConsumption) : '',
+        isActive: i.isActive,
+      }
+      return row
+    })
+    setBulkEditRows(editRows)
+    // Load zone options for each row's city
+    editRows.forEach(r => {
+      if (r.destinationCityId) loadZonesForEditRow(r.id, r.destinationCityId)
+    })
     setBulkEditOpen(true)
   }
 
@@ -1249,77 +1269,18 @@ export function ZoneRatesView() {
               Bulk Add Rates
             </DialogTitle>
             <DialogDescription>
-              Add multiple zone rates at once. Select a region, then a city to populate available zones.
+              Add multiple zone rates at once. Each row can select a different city and zone.
             </DialogDescription>
           </DialogHeader>
 
           <DialogBody className="space-y-4 flex-1 min-h-0">
-            {/* Region & City selector for bulk add */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Region filter */}
-              <div className="space-y-2">
-                <Label>Region</Label>
-                <Select
-                  value={bulkAddFormRegion}
-                  onValueChange={(v) => {
-                    setBulkAddFormRegion(v)
-                    setBulkAddFormCityId('')
-                    setBulkAddFormZones([])
-                    setBulkAddRows(prev => prev.map(r => ({ ...r, destinationZoneId: '' })))
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="All Regions" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Regions</SelectItem>
-                    {regions.map((r) => (
-                      <SelectItem key={r} value={r}>
-                        {r}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* City filter */}
-              <div className="space-y-2">
-                <Label>
-                  Destination City <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  value={bulkAddFormCityId}
-                  onValueChange={(v) => {
-                    setBulkAddFormCityId(v)
-                    setBulkAddRows(prev => prev.map(r => ({ ...r, destinationZoneId: '' })))
-                    loadBulkAddZones(v)
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a city" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bulkAddFilteredCities.map((city) => (
-                      <SelectItem key={city.id} value={city.id}>
-                        {city.name}{city.region ? ` (${city.region})` : ''}
-                      </SelectItem>
-                    ))}
-                    {bulkAddFilteredCities.length === 0 && (
-                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                        {bulkAddFormRegion ? 'No cities in this region' : 'No cities available'}
-                      </div>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
             {/* Rows */}
             <div className="space-y-3">
               {bulkAddRows.map((row, idx) => (
-                <div key={row.id} className="rounded-lg border p-3 space-y-2 bg-muted/30">
+                <div key={row.id} className="rounded-lg border p-3 sm:p-4 space-y-3 bg-muted/30">
+                  {/* Row header */}
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-muted-foreground">Rate #{idx + 1}</span>
+                    <span className="text-xs font-semibold text-muted-foreground">Rate #{idx + 1}</span>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -1331,39 +1292,64 @@ export function ZoneRatesView() {
                     </Button>
                   </div>
 
-                  {/* Row 1: Zone | Rate | Active (3-col on sm+) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {/* Row 1: City + Zone */}
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
                     <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground">Zone *</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">City *</span>
+                      <Select
+                        value={row.destinationCityId}
+                        onValueChange={(v) => {
+                          updateBulkAddRow(row.id, 'destinationCityId', v)
+                          loadZonesForRow(row.id, v)
+                        }}
+                      >
+                        <SelectTrigger className="h-9">
+                          <SelectValue placeholder="Select city" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cities.map((city) => (
+                            <SelectItem key={city.id} value={city.id}>
+                              {city.name}{city.region ? ` (${city.region})` : ''}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-medium text-muted-foreground">Zone *</span>
                       <Select
                         value={row.destinationZoneId}
                         onValueChange={(v) => updateBulkAddRow(row.id, 'destinationZoneId', v)}
-                        disabled={!bulkAddFormCityId || bulkAddLoadingZones}
+                        disabled={!row.destinationCityId || row.loadingZones}
                       >
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder={
-                            bulkAddLoadingZones ? 'Loading zones...' :
-                            !bulkAddFormCityId ? 'Select city first' :
-                            bulkAddFormZones.length === 0 ? 'No zones for this city' :
+                            row.loadingZones ? 'Loading...' :
+                            !row.destinationCityId ? 'City first' :
+                            row.zoneOptions.length === 0 ? 'No zones' :
                             'Select zone'
                           } />
                         </SelectTrigger>
                         <SelectContent>
-                          {bulkAddFormZones.map((zone) => (
+                          {row.zoneOptions.map((zone) => (
                             <SelectItem key={zone.id} value={zone.id}>
                               {zone.name}
                             </SelectItem>
                           ))}
-                          {bulkAddFormZones.length === 0 && !bulkAddLoadingZones && bulkAddFormCityId && (
+                          {row.zoneOptions.length === 0 && !row.loadingZones && row.destinationCityId && (
                             <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                              No zones found for this city
+                              No zones for this city
                             </div>
                           )}
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
+
+                  {/* Row 2: Rate + Active */}
+                  <div className="grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_140px] gap-2 sm:gap-3 items-end">
                     <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground">Rate ({CURRENCY_SYMBOL}) *</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">Rate ({CURRENCY_SYMBOL}) *</span>
                       <Input
                         type="number"
                         placeholder="e.g., 2500"
@@ -1374,19 +1360,19 @@ export function ZoneRatesView() {
                         onChange={(e) => updateBulkAddRow(row.id, 'rateAmount', e.target.value)}
                       />
                     </div>
-                    <div className="flex items-end gap-2 pb-0.5">
+                    <div className="flex items-center justify-end gap-2 h-9">
+                      <span className="text-[11px] text-muted-foreground">{row.isActive ? 'Active' : 'Off'}</span>
                       <Switch
                         checked={row.isActive}
                         onCheckedChange={(v) => updateBulkAddRow(row.id, 'isActive', v)}
                       />
-                      <span className="text-[11px] text-muted-foreground">{row.isActive ? 'Active' : 'Inactive'}</span>
                     </div>
                   </div>
 
-                  {/* Row 2: Min Km | Max Km | Fuel (3-col on sm+) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {/* Row 3: Min Km | Max Km | Fuel */}
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
                     <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground">Min Km</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">Min Km</span>
                       <Input
                         type="number"
                         placeholder="0"
@@ -1397,7 +1383,7 @@ export function ZoneRatesView() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground">Max Km</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">Max Km</span>
                       <Input
                         type="number"
                         placeholder="0"
@@ -1408,7 +1394,7 @@ export function ZoneRatesView() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground">Fuel (L)</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">Fuel (L)</span>
                       <Input
                         type="number"
                         placeholder="0"
