@@ -322,3 +322,26 @@ Stage Summary:
 - Created: src/app/api/upload/route.ts
 - Modified: src/components/trips/TripFormDialog.tsx (ImageFile interface + ImageUploadArea component)
 - Commit: 998098b
+
+---
+Task ID: 3
+Agent: main
+Task: Fix trip view side sheet upload display + trip edit prepopulation
+
+Work Log:
+- Investigated TripDetailSheet: Fuel & Mileage section was gated on startMileage/fuelUsed/fuelCost but not startMileageImage alone
+- Fixed section visibility to include endMileage, totalMileage, and startMileageImage
+- Updated image section headers to show photo count
+- Investigated TripFormDialog edit prepopulation:
+  - notes was hardcoded to '' (line 491) — now uses trip.notes
+  - startMileage, endMileage, fuelUsed, fuelCost were hardcoded to '' — now uses trip values
+  - cargoItems was always reset to [] — now populated from TripItem relations
+  - For trips without TripItem records, creates cargo item from trip-level fields
+  - Loading points were not fetched for selected loadingCityId on edit — added fetch
+  - Delivery destinations referenced wrong field (deliveryDestinations vs TripDeliveryDestination) — fixed
+- Build passes, committed and pushed
+
+Stage Summary:
+- Root causes: fields hardcoded to empty on edit, wrong relation name for delivery destinations, cargoItems never populated from DB
+- Modified: src/components/trips/TripDetailSheet.tsx, src/components/trips/TripFormDialog.tsx
+- Commit: a8e6c8c
