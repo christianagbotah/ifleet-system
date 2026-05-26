@@ -40,7 +40,7 @@ export async function PUT(
 
     const { id } = await params
     const body = await request.json()
-    const { name, description, unit, isActive } = body
+    const { name, description, unit, isActive, supplierId } = body
 
     const existing = await db.item.findUnique({ where: { id } })
     if (!existing) {
@@ -63,9 +63,23 @@ export async function PUT(
     if (unit !== undefined) updateData.unit = unit?.trim() || 'bags'
     if (isActive !== undefined) updateData.isActive = isActive
 
+    // Validate supplier if provided
+    if (supplierId !== undefined) {
+      if (supplierId) {
+        const supplier = await db.supplier.findUnique({ where: { id: supplierId } })
+        if (!supplier) {
+          return NextResponse.json({ error: 'Supplier not found' }, { status: 400 })
+        }
+      }
+      updateData.supplierId = supplierId || null
+    }
+
     const item = await db.item.update({
       where: { id },
       data: updateData,
+      include: {
+        supplier: { select: { id: true, name: true } },
+      },
     })
 
     return NextResponse.json(item)

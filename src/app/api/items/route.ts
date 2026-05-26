@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
-    const { name, description, unit } = body
+    const { name, description, unit, supplierId } = body
 
     // Validation
     if (!name || !name.trim()) {
@@ -75,12 +75,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'An item with this name already exists' }, { status: 409 })
     }
 
+    // Validate supplier if provided
+    if (supplierId) {
+      const supplier = await db.supplier.findUnique({ where: { id: supplierId } })
+      if (!supplier) {
+        return NextResponse.json({ error: 'Supplier not found' }, { status: 400 })
+      }
+    }
+
     const item = await db.item.create({
       data: {
         name: name.trim(),
         description: description?.trim() || null,
         unit: unit?.trim() || 'bags',
         isActive: true,
+        ...(supplierId ? { supplierId } : {}),
+      },
+      include: {
+        supplier: { select: { id: true, name: true } },
       },
     })
 

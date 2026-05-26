@@ -64,12 +64,19 @@ const itemVariants = {
 
 // ─── Types ───
 
+interface Supplier {
+  id: string
+  name: string
+}
+
 interface Item {
   id: string
   name: string
   description?: string | null
   unit: string
   isActive: boolean
+  supplierId?: string | null
+  supplier?: { id: string; name: string } | null
   createdAt: string
   updatedAt: string
 }
@@ -91,10 +98,14 @@ export function ItemsView() {
   const [deleteId, setDeleteId] = React.useState<string | null>(null)
   const [deleting, setDeleting] = React.useState(false)
 
+  // Suppliers
+  const [suppliers, setSuppliers] = React.useState<Supplier[]>([])
+
   // Form fields
   const [formName, setFormName] = React.useState('')
   const [formDescription, setFormDescription] = React.useState('')
   const [formUnit, setFormUnit] = React.useState('')
+  const [formSupplierId, setFormSupplierId] = React.useState('')
 
   const isEditing = !!editingItem
 
@@ -111,6 +122,13 @@ export function ItemsView() {
     } finally {
       setLoading(false)
     }
+  }, [])
+
+  // Fetch suppliers
+  React.useEffect(() => {
+    apiFetch<{ data: Supplier[] }>('/api/suppliers')
+      .then(res => setSuppliers(res.data || []))
+      .catch(() => {})
   }, [])
 
   React.useEffect(() => {
@@ -138,6 +156,7 @@ export function ItemsView() {
     setFormName('')
     setFormDescription('')
     setFormUnit('')
+    setFormSupplierId('')
   }
 
   function openCreateDialog() {
@@ -151,6 +170,7 @@ export function ItemsView() {
     setFormName(item.name)
     setFormDescription(item.description || '')
     setFormUnit(item.unit)
+    setFormSupplierId(item.supplierId || '')
     setFormOpen(true)
   }
 
@@ -174,6 +194,12 @@ export function ItemsView() {
       }
       if (formDescription.trim()) {
         body.description = formDescription.trim()
+      }
+      if (formSupplierId) {
+        body.supplierId = formSupplierId
+      } else if (isEditing) {
+        // Send null to clear supplier when editing
+        body.supplierId = null
       }
 
       if (isEditing) {
@@ -368,6 +394,7 @@ export function ItemsView() {
                     <TableRow className="bg-muted/50 border-b">
                       <TableHead>Name</TableHead>
                       <TableHead>Unit</TableHead>
+                      <TableHead>Supplier</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -398,6 +425,13 @@ export function ItemsView() {
                               <Badge variant="outline" className="font-medium capitalize">
                                 {item.unit}
                               </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {item.supplier ? (
+                                <span className="text-sm text-muted-foreground">{item.supplier.name}</span>
+                              ) : (
+                                <span className="text-xs text-muted-foreground/50">—</span>
+                              )}
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center justify-end gap-1">
@@ -458,6 +492,9 @@ export function ItemsView() {
                               <Badge variant="outline" className="font-medium capitalize text-[10px]">
                                 {item.unit}
                               </Badge>
+                              {item.supplier && (
+                                <span className="truncate">{item.supplier.name}</span>
+                              )}
                             </div>
 
                             {/* Actions */}
@@ -549,6 +586,24 @@ export function ItemsView() {
                     {ITEM_UNITS.map((u) => (
                       <SelectItem key={u} value={u} className="capitalize">
                         {u}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Supplier */}
+              <div className="space-y-2">
+                <Label>Supplier</Label>
+                <Select value={formSupplierId} onValueChange={(v) => setFormSupplierId(v === '__none__' ? '' : v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select supplier (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">None</SelectItem>
+                    {suppliers.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
