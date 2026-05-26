@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, FileText, MessageSquare, Send, Trash2, X, Camera, Users } from 'lucide-react'
+import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { CURRENCY_SYMBOL, APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { CURRENCY_SYMBOL } from '@/lib/constants'
 import type { Trip } from '@/lib/api'
 import { apiFetch, fetchTripComments, addTripComment, deleteTripComment, type TripComment } from '@/lib/api'
 import { useAuthStore, getRoleBadgeColor } from '@/lib/store/auth'
@@ -182,120 +182,39 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
     }
   }
 
-  const handleGenerateWaybill = (t: Trip) => {
-    const now = new Date().toLocaleString('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit',
-    })
+  const [duplicating, setDuplicating] = React.useState(false)
 
-    const waybillHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Waybill - ${t.tripNumber}</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; color: #1a1a1a; padding: 40px; max-width: 800px; margin: 0 auto; }
-    .header { text-align: center; border-bottom: 3px solid #f59e0b; padding-bottom: 16px; margin-bottom: 24px; }
-    .header h1 { color: #f59e0b; font-size: 24px; margin-bottom: 4px; }
-    .header p { color: #666; font-size: 12px; }
-    .waybill-number { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 4px; }
-    .datetime { font-size: 12px; color: #666; margin-bottom: 24px; }
-    .section { margin-bottom: 20px; }
-    .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #f59e0b; font-weight: bold; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e5e7eb; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .field { margin-bottom: 8px; }
-    .field-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-    .field-value { font-size: 14px; font-weight: 500; }
-    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
-    th { background: #fef3c7; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 32px; }
-    .signature-box { text-align: center; }
-    .signature-line { border-top: 1px solid #333; margin-top: 48px; padding-top: 8px; font-size: 11px; color: #666; }
-    .footer { margin-top: 40px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #e5e7eb; padding-top: 12px; }
-    @media print { body { padding: 20px; } }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>${APP_NAME}</h1>
-    <p>Fleet Management System</p>
-  </div>
-
-  <div class="waybill-number">Waybill: ${t.tripNumber}</div>
-  <div class="datetime">Date: ${now}</div>
-
-  <div class="grid">
-    <div class="section">
-      <div class="section-title">Consignor / Shipper</div>
-      <div class="field">
-        <div class="field-label">Loading Location</div>
-        <div class="field-value">${t.loadingLocation}</div>
-      </div>
-      ${t.customerName ? `<div class="field"><div class="field-label">Customer</div><div class="field-value">${t.customerName}</div></div>` : ''}
-    </div>
-    <div class="section">
-      <div class="section-title">Consignee / Receiver</div>
-      <div class="field">
-        <div class="field-label">Destination</div>
-        <div class="field-value">${t.destination}</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Driver Information</div>
-    <table>
-      <tr><th>Name</th><td>${t.driver.firstName} ${t.driver.lastName}</td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Vehicle Information</div>
-    <table>
-      <tr><th>Plate Number</th><td>${t.truck.plateNumber}</td></tr>
-      <tr><th>Make / Model</th><td>${t.truck.make} ${t.truck.model}</td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Cargo Details</div>
-    <table>
-      <tr><th>Item</th><td>${t.itemName}</td></tr>
-      <tr><th>Quantity</th><td>${t.quantity} ${t.unit}</td></tr>
-      ${canSeeFinancialData && t.totalRevenue ? `<tr><th>Revenue</th><td>${CURRENCY_SYMBOL}${t.totalRevenue.toLocaleString()}</td></tr>` : ''}
-    </table>
-  </div>
-
-  ${t.notes ? `<div class="section"><div class="section-title">Special Instructions</div><p style="font-size:13px;color:#444;">${t.notes}</p></div>` : ''}
-
-  <div class="signatures">
-    <div class="signature-box">
-      <div class="signature-line">Driver's Signature</div>
-    </div>
-    <div class="signature-box">
-      <div class="signature-line">Receiver's Signature</div>
-    </div>
-    <div class="signature-box">
-      <div class="signature-line">Warehouse Signature</div>
-    </div>
-  </div>
-
-  <div class="footer">
-    ${APP_NAME} &mdash; ${APP_TAGLINE}<br>
-    This is a computer-generated waybill. No physical signature is required.
-  </div>
-</body>
-</html>`
-
-    const printWindow = window.open('', '_blank', 'width=800,height=600')
-    if (printWindow) {
-      printWindow.document.write(waybillHtml)
-      printWindow.document.close()
-      printWindow.onload = () => {
-        printWindow.print()
-      }
+  const handleDuplicateTrip = async () => {
+    if (!currentTrip) return
+    setDuplicating(true)
+    try {
+      const newTrip = await apiFetch<{ tripNumber: string }>('/api/trips', {
+        method: 'POST',
+        body: JSON.stringify({
+          truckId: currentTrip.truckId,
+          driverId: currentTrip.driverId,
+          loadingLocation: currentTrip.loadingLocation,
+          destination: currentTrip.destination,
+          itemName: currentTrip.itemName,
+          quantity: currentTrip.quantity,
+          unit: currentTrip.unit,
+          unitPrice: currentTrip.unitPrice,
+          totalRevenue: currentTrip.totalRevenue,
+          departureTime: new Date().toISOString(),
+          customerName: currentTrip.customerName,
+          customerPhone: currentTrip.customerPhone,
+          notes: currentTrip.notes ? `[Duplicated from ${currentTrip.tripNumber}]` : undefined,
+        }),
+      })
+      toast.success('Trip duplicated', {
+        description: `New trip ${newTrip.tripNumber} created successfully`,
+      })
+      onStatusChanged?.()
+      onOpenChange(false)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to duplicate trip')
+    } finally {
+      setDuplicating(false)
     }
   }
 
@@ -656,11 +575,16 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                 <div className="flex flex-col gap-2">
                   <Button
                     variant="outline"
-                    onClick={() => handleGenerateWaybill(currentTrip)}
+                    onClick={handleDuplicateTrip}
+                    disabled={duplicating}
                     className="w-full gap-2"
                   >
-                    <FileText className="h-4 w-4" />
-                    Generate Waybill
+                    {duplicating ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                    Duplicate Trip
                   </Button>
 
                   {!isTerminalStatus(currentTrip.status) && (
