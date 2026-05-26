@@ -4,7 +4,7 @@ import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MapPin, Plus, Search, Pencil, Trash2, AlertCircle,
-  RefreshCw, Loader2, MapPinned, Phone, User, Building2,
+  RefreshCw, Loader2, MapPinned, Phone, User, Building2, Store,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -59,11 +59,18 @@ interface LoadingCityOption {
   region: string
 }
 
+interface SupplierOption {
+  id: string
+  name: string
+}
+
 interface LoadingPoint {
   id: string
   name: string
   loadingCityId: string
   loadingCity?: LoadingCityOption
+  supplierId?: string | null
+  supplier?: { id: string; name: string } | null
   address?: string | null
   contactPerson?: string | null
   contactPhone?: string | null
@@ -84,6 +91,7 @@ const itemVariants = {
 
 export function LoadingPointsView() {
   const [search, setSearch] = React.useState('')
+  const [supplierFilter, setSupplierFilter] = React.useState<string>('all')
   const [cityFilter, setCityFilter] = React.useState<string>('all')
   const [items, setItems] = React.useState<LoadingPoint[]>([])
   const [cities, setCities] = React.useState<LoadingCityOption[]>([])
@@ -106,7 +114,11 @@ export function LoadingPointsView() {
   const [formAddress, setFormAddress] = React.useState('')
   const [formContactPerson, setFormContactPerson] = React.useState('')
   const [formContactPhone, setFormContactPhone] = React.useState('')
+  const [formSupplierId, setFormSupplierId] = React.useState('')
   const [formIsActive, setFormIsActive] = React.useState(true)
+
+  // Suppliers
+  const [suppliers, setSuppliers] = React.useState<SupplierOption[]>([])
 
   const isEditing = !!editingItem
 
@@ -124,6 +136,14 @@ export function LoadingPointsView() {
     }
   }, [])
 
+  // ─── Fetch suppliers ───
+
+  React.useEffect(() => {
+    apiFetch<{ data: SupplierOption[] }>('/api/suppliers')
+      .then((res) => setSuppliers(res.data || []))
+      .catch(() => {})
+  }, [])
+
   React.useEffect(() => {
     loadCities()
   }, [loadCities])
@@ -138,6 +158,9 @@ export function LoadingPointsView() {
       if (cityFilter && cityFilter !== 'all') {
         params.set('loadingCityId', cityFilter)
       }
+      if (supplierFilter && supplierFilter !== 'all') {
+        params.set('supplierId', supplierFilter)
+      }
       const qs = params.toString()
       const res = await apiFetch<{ data: LoadingPoint[] }>(`/api/loading-points${qs ? `?${qs}` : ''}`)
       setItems(res.data || [])
@@ -146,7 +169,7 @@ export function LoadingPointsView() {
     } finally {
       setLoading(false)
     }
-  }, [cityFilter])
+  }, [cityFilter, supplierFilter])
 
   React.useEffect(() => {
     loadItems()
@@ -162,7 +185,8 @@ export function LoadingPointsView() {
         item.name.toLowerCase().includes(q) ||
         item.address?.toLowerCase().includes(q) ||
         item.contactPerson?.toLowerCase().includes(q) ||
-        item.loadingCity?.name.toLowerCase().includes(q)
+        item.loadingCity?.name.toLowerCase().includes(q) ||
+        item.supplier?.name.toLowerCase().includes(q)
     )
   }, [items, search])
 
@@ -176,6 +200,7 @@ export function LoadingPointsView() {
     setFormAddress('')
     setFormContactPerson('')
     setFormContactPhone('')
+    setFormSupplierId('')
     setFormIsActive(true)
   }
 
@@ -192,6 +217,7 @@ export function LoadingPointsView() {
     setFormAddress(item.address || '')
     setFormContactPerson(item.contactPerson || '')
     setFormContactPhone(item.contactPhone || '')
+    setFormSupplierId(item.supplierId || '')
     setFormIsActive(item.isActive)
     setFormOpen(true)
   }
@@ -218,6 +244,11 @@ export function LoadingPointsView() {
       if (formAddress.trim()) body.address = formAddress.trim()
       if (formContactPerson.trim()) body.contactPerson = formContactPerson.trim()
       if (formContactPhone.trim()) body.contactPhone = formContactPhone.trim()
+      if (formSupplierId) {
+        body.supplierId = formSupplierId
+      } else if (isEditing) {
+        body.supplierId = null
+      }
 
       if (isEditing) {
         await apiFetch(`/api/loading-points/${editingItem!.id}`, {
@@ -319,20 +350,39 @@ export function LoadingPointsView() {
       {/* Filters Row */}
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3">
         {/* City filter */}
-        <div className="w-full sm:w-64">
+        <div className="w-full sm:w-48">
           <Select
             value={cityFilter}
             onValueChange={(v) => setCityFilter(v)}
             disabled={loadingCities}
           >
             <SelectTrigger>
-              <SelectValue placeholder={loadingCities ? 'Loading cities...' : 'Filter by city'} />
+              <SelectValue placeholder={loadingCities ? 'Loading...' : 'Filter by city'} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Cities</SelectItem>
               {cities.map((city) => (
                 <SelectItem key={city.id} value={city.id}>
                   {city.name} ({city.region})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Supplier filter */}
+        <div className="w-full sm:w-48">
+          <Select
+            value={supplierFilter}
+            onValueChange={(v) => setSupplierFilter(v)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by supplier" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Suppliers</SelectItem>
+              {suppliers.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -391,7 +441,7 @@ export function LoadingPointsView() {
                     <TableRow className="bg-muted/50 border-b">
                       <TableHead>Name</TableHead>
                       <TableHead>Loading City</TableHead>
-                      <TableHead>Address</TableHead>
+                      <TableHead>Supplier</TableHead>
                       <TableHead>Contact Person</TableHead>
                       <TableHead>Contact Phone</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
@@ -422,9 +472,14 @@ export function LoadingPointsView() {
                             )}
                           </TableCell>
                           <TableCell>
-                            <span className="text-sm text-muted-foreground">
-                              {item.address || '—'}
-                            </span>
+                            {item.supplier ? (
+                              <div className="flex items-center gap-1.5">
+                                <Store className="h-3 w-3 text-muted-foreground" />
+                                <span className="text-sm">{item.supplier.name}</span>
+                              </div>
+                            ) : (
+                              <span className="text-xs text-muted-foreground/50">—</span>
+                            )}
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-1.5">
@@ -489,6 +544,11 @@ export function LoadingPointsView() {
                               {item.loadingCity?.region ? ` (${item.loadingCity.region})` : ''}
                             </p>
                           </div>
+                          {item.supplier && (
+                            <Badge variant="secondary" className="text-[10px] shrink-0">
+                              {item.supplier.name}
+                            </Badge>
+                          )}
                         </div>
                         {item.address && (
                           <p className="text-xs text-muted-foreground">{item.address}</p>
@@ -577,6 +637,24 @@ export function LoadingPointsView() {
                     {cities.map((city) => (
                       <SelectItem key={city.id} value={city.id}>
                         {city.name} ({city.region})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Supplier */}
+              <div className="space-y-2">
+                <Label>Supplier</Label>
+                <Select value={formSupplierId} onValueChange={(v) => setFormSupplierId(v === '__none__' ? '' : v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select supplier (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">None</SelectItem>
+                    {suppliers.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

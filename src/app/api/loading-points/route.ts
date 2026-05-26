@@ -21,6 +21,8 @@ export async function GET(request: NextRequest) {
     if (search) where.name = { contains: search }
     if (isActive === 'true') where.isActive = true
     else if (isActive === 'false') where.isActive = false
+    const supplierId = searchParams.get('supplierId')
+    if (supplierId) where.supplierId = supplierId
 
     const [records, total] = await Promise.all([
       db.loadingPoint.findMany({
@@ -30,6 +32,7 @@ export async function GET(request: NextRequest) {
         take: limit,
         include: {
           loadingCity: { select: { id: true, name: true, region: true } },
+          supplier: { select: { id: true, name: true } },
         },
       }),
       db.loadingPoint.count({ where }),
@@ -50,7 +53,7 @@ export async function POST(request: NextRequest) {
     if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
-    const { name, loadingCityId, address, contactPerson, contactPhone } = body
+    const { name, loadingCityId, address, contactPerson, contactPhone, supplierId } = body
 
     if (!name?.trim() || !loadingCityId) {
       return NextResponse.json({ error: 'name and loadingCityId are required' }, { status: 400 })
@@ -59,6 +62,13 @@ export async function POST(request: NextRequest) {
     const city = await db.loadingCity.findUnique({ where: { id: loadingCityId } })
     if (!city) {
       return NextResponse.json({ error: 'Loading city not found' }, { status: 400 })
+    }
+
+    if (supplierId) {
+      const supplier = await db.supplier.findUnique({ where: { id: supplierId } })
+      if (!supplier) {
+        return NextResponse.json({ error: 'Supplier not found' }, { status: 400 })
+      }
     }
 
     const existing = await db.loadingPoint.findUnique({
@@ -78,9 +88,11 @@ export async function POST(request: NextRequest) {
         address: address?.trim() || null,
         contactPerson: contactPerson?.trim() || null,
         contactPhone: contactPhone?.trim() || null,
+        ...(supplierId ? { supplierId } : {}),
       },
       include: {
         loadingCity: { select: { id: true, name: true, region: true } },
+        supplier: { select: { id: true, name: true } },
       },
     })
 
@@ -89,7 +101,7 @@ export async function POST(request: NextRequest) {
       action: 'create',
       entity: 'LoadingPoint',
       entityId: record.id,
-      details: { name: record.name, loadingCityId, cityName: city.name },
+      details: { name: record.name, loadingCityId, cityName: city.name, supplierId: supplierId || undefined },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 

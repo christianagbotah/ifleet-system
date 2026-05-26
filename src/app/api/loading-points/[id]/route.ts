@@ -17,6 +17,7 @@ export async function GET(
       where: { id },
       include: {
         loadingCity: { select: { id: true, name: true, region: true } },
+        supplier: { select: { id: true, name: true } },
         _count: { select: { Trip: true } },
       },
     })
@@ -44,7 +45,7 @@ export async function PUT(
 
     const { id } = await params
     const body = await request.json()
-    const { name, loadingCityId, address, contactPerson, contactPhone, isActive } = body
+    const { name, loadingCityId, address, contactPerson, contactPhone, isActive, supplierId } = body
 
     const existing = await db.loadingPoint.findUnique({ where: { id } })
     if (!existing) {
@@ -73,6 +74,13 @@ export async function PUT(
       }
     }
 
+    if (supplierId) {
+      const supplier = await db.supplier.findUnique({ where: { id: supplierId } })
+      if (!supplier) {
+        return NextResponse.json({ error: 'Supplier not found' }, { status: 400 })
+      }
+    }
+
     const changes: Record<string, unknown> = {}
     if (name !== undefined && name !== existing.name) changes.name = name
     if (loadingCityId !== undefined && loadingCityId !== existing.loadingCityId) changes.loadingCityId = loadingCityId
@@ -80,6 +88,7 @@ export async function PUT(
     if (contactPerson !== undefined && contactPerson !== existing.contactPerson) changes.contactPerson = contactPerson
     if (contactPhone !== undefined && contactPhone !== existing.contactPhone) changes.contactPhone = contactPhone
     if (isActive !== undefined && isActive !== existing.isActive) changes.isActive = isActive
+    if (supplierId !== undefined && supplierId !== existing.supplierId) changes.supplierId = supplierId
 
     const updated = await db.loadingPoint.update({
       where: { id },
@@ -90,9 +99,11 @@ export async function PUT(
         ...(contactPerson !== undefined && { contactPerson: contactPerson?.trim() || null }),
         ...(contactPhone !== undefined && { contactPhone: contactPhone?.trim() || null }),
         ...(isActive !== undefined && { isActive: Boolean(isActive) }),
+        ...(supplierId !== undefined && { supplierId: supplierId || null }),
       },
       include: {
         loadingCity: { select: { id: true, name: true, region: true } },
+        supplier: { select: { id: true, name: true } },
       },
     })
 

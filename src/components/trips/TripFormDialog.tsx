@@ -116,6 +116,8 @@ interface CityOption {
 interface LoadingPointOption {
   id: string
   name: string
+  supplierId?: string | null
+  supplier?: { id: string; name: string } | null
 }
 
 interface ZoneOption {
@@ -632,7 +634,10 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
       if (name === 'loadingPointId' && data.loadingPointId) {
         const point = loadingPoints.find((pt) => pt.id === data.loadingPointId)
         if (point) {
-          form.setValue('loadingLocation', point.name)
+          const location = point.supplier
+            ? `${point.name} (${point.supplier.name})`
+            : point.name
+          form.setValue('loadingLocation', location)
         }
       }
     })
@@ -952,7 +957,9 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
                             <SelectItem value="_none" disabled>No loading points</SelectItem>
                           ) : (
                             loadingPoints.map((pt) => (
-                              <SelectItem key={pt.id} value={pt.id}>{pt.name}</SelectItem>
+                              <SelectItem key={pt.id} value={pt.id}>
+                                {pt.name}{pt.supplier ? ` — ${pt.supplier.name}` : ''}
+                              </SelectItem>
                             ))
                           )}
                         </SelectContent>
