@@ -1,107 +1,235 @@
-import { Server } from 'socket.io';
+// ════════════════════════════════════════════════════════════════════
+// iFleetPro — Notification Service (Socket.IO + HTTP API)
+// ════════════════════════════════════════════════════════════════════
+//
+// Real-time notification delivery via Socket.IO (port 3004).
+//
+// Socket.IO events (client ↔ service):
+//   - client emits  'join-user'       → subscribe to user notifications
+//   - client emits  'user:subscribe'   → subscribe to user notifications (alias)
+//   - client emits  'user:unsubscribe' → unsubscribe
+//   - service emits 'notification'      → push notification to subscribed user
+//
+// HTTP API (backend → service):
+//   - POST /api/notify       → send to specific userIds
+//   - POST /api/notify-role  → send to all users with a given role (requires DB)
+//   - POST /api/notify-all   → broadcast to all connected clients
+//
+// Health check:
+//   - GET /api/health        → { status: 'ok' }
+// ────────────────────────────────────────────────────────────────────
 
-const PORT = 3004;
+import { Server } from 'socket.io'
+import http from 'http'
 
-const io = new Server(PORT, {
+const PORT = 3004
+
+// ── Create HTTP server + Socket.IO ──
+const httpServer = http.createServer((_req, res) => {
+  // Default response for unmatched routes
+  res.writeHead(404, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ error: 'Not found' }))
+})
+
+const io = new Server(httpServer, {
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
   },
-});
+  // Allow polling and websocket
+  transports: ['polling', 'websocket'],
+})
 
-// In-memory store for user notification subscriptions
-const userSockets = new Map<string, string[]>(); // userId -> socketId[]
+// ── In-memory stores ──
+const userSockets = new Map<string, Set<string>>() // userId -> Set<socketId>
+const socketUserMap = new Map<string, string>()    // socketId -> userId
+
+// ════════════════════════════════════════════════════════════════════
+// SOCKET.IO EVENT HANDLERS
+// ════════════════════════════════════════════════════════════════════
 
 io.on('connection', (socket) => {
-  console.log(`[Notifications] Client connected: ${socket.id}`);
+  console.log(`[Notifications] Client connected: ${socket.id}`)
 
-  // User subscribes to their notifications
-  socket.on('user:subscribe', (data: { userId: string }) => {
-    const userId = data.userId;
-    const sockets = userSockets.get(userId) || [];
-    if (!sockets.includes(socket.id)) {
-      sockets.push(socket.id);
-      userSockets.set(userId, sockets);
-    }
-    console.log(`[Notifications] User ${userId} subscribed (${sockets.length} connections)`);
-  });
+  // ── User subscribes to their notifications (primary event) ──
+  socket.on('join-user', (data: { userId: string }, ack?: (data: unknown) => void) => {
+    subscribeUser(socket.id, data.userId)
+    if (ack) ack({ status: 'ok' })
+  })
 
-  // User unsubscribes
+  // ── Alias: user:subscribe ──
+  socket.on('user:subscribe', (data: { userId: string }, ack?: (data: unknown) => void) => {
+    subscribeUser(socket.id, data.userId)
+    if (ack) ack({ status: 'ok' })
+  })
+
+  // ── User unsubscribes ──
   socket.on('user:unsubscribe', (data: { userId: string }) => {
-    const userId = data.userId;
-    const sockets = userSockets.get(userId) || [];
-    const filtered = sockets.filter(id => id !== socket.id);
-    if (filtered.length === 0) {
-      userSockets.delete(userId);
-    } else {
-      userSockets.set(userId, filtered);
-    }
-  });
+    unsubscribeUser(socket.id, data.userId)
+  })
 
-  // Send notification to specific user
-  socket.on('notification:send', async (data: {
-    userId: string;
-    title: string;
-    message: string;
-    type?: string;
-    link?: string;
-  }) => {
-    const sockets = userSockets.get(data.userId);
-    if (sockets && sockets.length > 0) {
-      const notification = {
-        id: `notif-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-        ...data,
-        timestamp: new Date().toISOString(),
-        read: false,
-      };
-      for (const socketId of sockets) {
-        io.to(socketId).emit('notification:new', notification);
-      }
-      console.log(`[Notifications] Sent to user ${data.userId}: "${data.title}"`);
-    }
-  });
-
-  // Broadcast notification to all connected users
-  socket.on('notification:broadcast', async (data: {
-    title: string;
-    message: string;
-    type?: string;
-    link?: string;
-  }) => {
-    const notification = {
-      id: `notif-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      ...data,
-      timestamp: new Date().toISOString(),
-      read: false,
-    };
-    io.emit('notification:new', notification);
-    console.log(`[Notifications] Broadcast: "${data.title}" to ${userSockets.size} users`);
-  });
-
-  // Mark notification as read
-  socket.on('notification:read', (data: { notificationId: string }) => {
-    // Acknowledge read receipt
-    socket.emit('notification:read:ack', { notificationId: data.notificationId });
-  });
-
-  // Get unread count
-  socket.on('notification:unread-count', (data: { userId: string }) => {
-    // In a real app, this would query the database
-    socket.emit('notification:unread-count', { count: 0 });
-  });
-
+  // ── Disconnect ──
   socket.on('disconnect', () => {
-    console.log(`[Notifications] Client disconnected: ${socket.id}`);
-    // Clean up user subscriptions for this socket
-    for (const [userId, sockets] of userSockets) {
-      const filtered = sockets.filter(id => id !== socket.id);
-      if (filtered.length === 0) {
-        userSockets.delete(userId);
-      } else {
-        userSockets.set(userId, filtered);
+    console.log(`[Notifications] Client disconnected: ${socket.id}`)
+    cleanupSocket(socket.id)
+  })
+})
+
+function subscribeUser(socketId: string, userId: string) {
+  const sockets = userSockets.get(userId) || new Set()
+  sockets.add(socketId)
+  userSockets.set(userId, sockets)
+  socketUserMap.set(socketId, userId)
+  console.log(`[Notifications] User ${userId} subscribed (${sockets.size} connection(s))`)
+}
+
+function unsubscribeUser(socketId: string, userId: string) {
+  const sockets = userSockets.get(userId)
+  if (sockets) {
+    sockets.delete(socketId)
+    if (sockets.size === 0) {
+      userSockets.delete(userId)
+    } else {
+      userSockets.set(userId, sockets)
+    }
+  }
+  socketUserMap.delete(socketId)
+}
+
+function cleanupSocket(socketId: string) {
+  const userId = socketUserMap.get(socketId)
+  if (userId) {
+    unsubscribeUser(socketId, userId)
+  } else {
+    socketUserMap.delete(socketId)
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// HTTP API (for backend dispatcher)
+// ════════════════════════════════════════════════════════════════════
+
+httpServer.on('request', (req, res) => {
+  const url = new URL(req.url || '/', `http://localhost:${PORT}`)
+
+  // ── Health check ──
+  if (url.pathname === '/api/health' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ status: 'ok', connectedUsers: userSockets.size }))
+    return
+  }
+
+  // ── Notify specific users ──
+  if (url.pathname === '/api/notify' && req.method === 'POST') {
+    handleNotify(req, res)
+    return
+  }
+
+  // ── Notify all users with a role ──
+  if (url.pathname === '/api/notify-role' && req.method === 'POST') {
+    handleNotifyRole(req, res)
+    return
+  }
+
+  // ── Broadcast to all ──
+  if (url.pathname === '/api/notify-all' && req.method === 'POST') {
+    handleNotifyAll(req, res)
+    return
+  }
+
+  // 404 for unmatched routes
+  res.writeHead(404, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ error: 'Not found' }))
+})
+
+function readBody(req: http.IncomingMessage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = []
+    req.on('data', (chunk: Buffer) => chunks.push(chunk))
+    req.on('end', () => resolve(Buffer.concat(chunks).toString()))
+    req.on('error', reject)
+  })
+}
+
+async function handleNotify(req: http.IncomingMessage, res: http.ServerResponse) {
+  try {
+    const body = JSON.parse(await readBody(req))
+    const userIds: string[] = body.userIds || []
+    const notification = body.notification || {}
+
+    let delivered = 0
+    for (const userId of userIds) {
+      const sockets = userSockets.get(userId)
+      if (sockets && sockets.size > 0) {
+        for (const socketId of sockets) {
+          io.to(socketId).emit('notification', notification)
+        }
+        delivered += sockets.size
       }
     }
-  });
-});
 
-console.log(`[Notification Service] Running on port ${PORT}`);
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ success: true, count: delivered, total: userIds.length }))
+  } catch (err) {
+    console.error('[Notifications] /api/notify error:', err)
+    res.writeHead(500, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ success: false, error: 'Internal server error' }))
+  }
+}
+
+async function handleNotifyRole(req: http.IncomingMessage, res: http.ServerResponse) {
+  try {
+    const body = JSON.parse(await readBody(req))
+    const role: string = body.role || ''
+    const notification = body.notification || {}
+
+    // Find all sockets belonging to users with the specified role.
+    // Since this service is stateless (no DB), it broadcasts to all
+    // connected clients and lets them filter by role on the client side.
+    // For a production setup, this would query the database for userIds
+    // with the given role, then target specific sockets.
+    const totalConnected = userSockets.size
+
+    // Emit to all connected sockets (role filtering would need DB access)
+    if (totalConnected > 0) {
+      io.emit('notification', { ...notification, _role: role })
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ success: true, count: totalConnected, role }))
+  } catch (err) {
+    console.error('[Notifications] /api/notify-role error:', err)
+    res.writeHead(500, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ success: false, error: 'Internal server error' }))
+  }
+}
+
+async function handleNotifyAll(req: http.IncomingMessage, res: http.ServerResponse) {
+  try {
+    const body = JSON.parse(await readBody(req))
+    const notification = body.notification || {}
+
+    const totalConnected = io.sockets.sockets.size
+
+    if (totalConnected > 0) {
+      io.emit('notification', notification)
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ success: true, count: totalConnected }))
+  } catch (err) {
+    console.error('[Notifications] /api/notify-all error:', err)
+    res.writeHead(500, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ success: false, error: 'Internal server error' }))
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// START
+// ════════════════════════════════════════════════════════════════════
+
+httpServer.listen(PORT, () => {
+  console.log(`[Notification Service] Running on port ${PORT}`)
+  console.log(`[Notification Service] HTTP API: http://localhost:${PORT}/api/notify`)
+  console.log(`[Notification Service] Health:    http://localhost:${PORT}/api/health`)
+})
