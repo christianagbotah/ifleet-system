@@ -345,3 +345,27 @@ Stage Summary:
 - Root causes: fields hardcoded to empty on edit, wrong relation name for delivery destinations, cargoItems never populated from DB
 - Modified: src/components/trips/TripDetailSheet.tsx, src/components/trips/TripFormDialog.tsx
 - Commit: a8e6c8c
+
+---
+Task ID: 4
+Agent: main
+Task: Remove fuel fields from trip creation/edit form, clarify post-trip fuel workflow
+
+Work Log:
+- Investigated FuelLogFormDialog — already has post-trip recording mode with:
+  - Trip selector for completed trips
+  - End mileage input
+  - Auto-calculated distance = endMileage - trip.startMileage
+  - Fuel top-up amount = actual fuel used on trip
+- Investigated /api/fuel-logs POST — already updates the trip with endMileage,
+  totalMileage, fuelUsed, fuelCost when a fuel log with tripId is created
+- Removed endMileage, fuelUsed, fuelCost from TripFormDialog schema and defaults
+- Updated TripDetailSheet: "Total Distance" → "Actual Distance"
+- Build passes, committed and pushed
+
+Stage Summary:
+- Fuel data is correctly managed via the Fuel Logs module (post-trip recording)
+- The trip form now only captures start mileage + photos at departure
+- Actual distance and fuel usage are auto-populated on the trip from fuel logs
+- Modified: src/components/trips/TripFormDialog.tsx, src/components/trips/TripDetailSheet.tsx
+- Commit: 75817fe
