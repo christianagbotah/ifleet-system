@@ -190,3 +190,34 @@ Stage Summary:
 - Full-page freeze with backdrop + loader during all CRUD operations
 - 400ms debounce prevents flicker on fast requests
 - Loading overlay dismisses automatically when request completes
+---
+Task ID: 1
+Agent: main
+Task: Change soft-delete to permanent hard delete across all entities
+
+Work Log:
+- Audited all 62 DELETE routes in the codebase, identified 15 soft-delete routes using isActive: false
+- Changed loading-cities/[id] DELETE to hard delete with dependency check (LoadingPoint, Trip)
+- Changed loading-points/[id] DELETE to hard delete with dependency check (Trip, TripItem)
+- Changed destination-cities/[id] DELETE to hard delete with dependency check (DestinationZone, Trip)
+- Changed destination-zones/[id] DELETE to hard delete with dependency check (ClientZone, PerformanceBenchmark, Trip, TripDeliveryDestination, ZoneRate)
+- Changed destination-zones/bulk DELETE action to hard delete with per-zone dependency checks
+- Changed currencies/[id] DELETE to hard delete (no relations, kept default currency protection)
+- Changed pricing/[id] DELETE to hard delete (no relations)
+- Changed items/[id] DELETE to hard delete with dependency check (Trip, TripItem), removed ?hard=true param
+- Changed clients/[id] DELETE to hard delete with full dependency check (Invoice, LoadBoard, Trip, TripDeliveryDestination, ClientZone)
+- Updated clients/bulk DELETE action to use _count-based dependency checks
+- Updated frontend: LoadingCitiesView - removed includeInactive, inactive styling, Status column
+- Updated frontend: DestinationCitiesView - same changes as LoadingCities
+- Updated frontend: DestinationZonesView - removed inactive styling, updated delete confirmation text
+- Updated frontend: LoadingPointsView - removed inactive styling, Status column
+- Updated frontend: ItemsView - removed includeInactive, Power/PowerOff toggle, inactive styling, Status column
+- Updated frontend: ClientsView - changed "Deactivate" to "Delete" with updated dialog
+
+Stage Summary:
+- 16 files changed, 192 insertions, 339 deletions
+- All soft-delete routes now use permanent db.*.delete()
+- Each delete handler checks for dependent records and returns descriptive error messages
+- Frontend no longer shows inactive records or Active/Inactive badges
+- Kept isActive field and toggle for items (business state) and clients (activate/deactivate bulk actions)
+- Pushed to GitHub: commit 6837fe7
