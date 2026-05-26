@@ -567,7 +567,7 @@ export default function Home() {
         <AppSidebar currentPage={currentPage} onNavigate={navigateTo} />
         <SidebarInset>
           <AppHeader currentPage={currentPage} onNavigate={navigateTo} />
-          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
             <PageContent page={currentPage} onNavigate={navigateTo} />
           </main>
           <footer className="hidden md:block mt-auto border-t px-4 py-3 text-center text-xs text-muted-foreground shrink-0">
