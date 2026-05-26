@@ -280,3 +280,23 @@ Stage Summary:
 - Tables still scroll horizontally internally via the Table component wrapper
 - Three-layer defense: html/body → SidebarProvider/SidebarInset → main content area
 - Pushed to GitHub: commit bf62ea4
+
+---
+Task ID: 2
+Agent: main
+Task: Auto-populate destination rate when adding cargo item in trip form
+
+Work Log:
+- Read TripFormDialog.tsx to understand the "Add Item" flow and cargo item data structure
+- Confirmed zoneRate state is already populated when destinationZoneId is selected (via zone-rates API)
+- Found existing useEffect at line 712 that auto-applies zoneRate to existing cargo items for SINGLE delivery
+- Identified the gap: new items added via "Add Item" button were created with rate: 0, ignoring the current zoneRate
+- Fixed the onClick handler: now checks if deliveryType is SINGLE and zoneRate is not null, then uses zoneRate as the initial rate for the new item
+- For MULTIPLE delivery or when no zone rate exists, rate defaults to 0 as before
+- Lint passes clean (only pre-existing errors in ifleet-fresh/)
+
+Stage Summary:
+- When user selects a destination zone and clicks "Add Item" for SINGLE delivery, the rate field is auto-populated with the destination zone rate
+- Rate field remains editable if no zone rate is found (manual entry)
+- The existing auto-apply effect continues to update all cargo items when zoneRate changes after selection
+- Pushed to GitHub: commit fdf8d7b
