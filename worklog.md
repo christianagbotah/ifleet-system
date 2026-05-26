@@ -221,3 +221,19 @@ Stage Summary:
 - Frontend no longer shows inactive records or Active/Inactive badges
 - Kept isActive field and toggle for items (business state) and clients (activate/deactivate bulk actions)
 - Pushed to GitHub: commit 6837fe7
+---
+Task ID: 2
+Agent: main
+Task: Fix client creation failure
+
+Work Log:
+- Identified bug: Prisma relation field was named `ClientZone` in schema but API used `zones`
+- Fixed GET /api/clients: `zones` → `ClientZone` in include clause
+- Fixed POST /api/clients: `zones` → `ClientZone` in nested create
+- Fixed GET /api/clients/[id]: `zones` → `ClientZone` in include and mapping
+- PUT /api/clients/[id] was already using `db.clientZone.createMany()` (direct model, correct)
+
+Stage Summary:
+- Root cause: Prisma schema field `ClientZone` didn't match API code using `zones`
+- 2 files changed, 5 insertions, 5 deletions
+- Pushed to GitHub: commit 3f029c1
