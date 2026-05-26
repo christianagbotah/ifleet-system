@@ -708,6 +708,32 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
     return () => subscription.unsubscribe()
   }, [form, destinationZones, destinationCities])
 
+  // Auto-apply zone rate to cargo items for SINGLE delivery type
+  React.useEffect(() => {
+    if (form.getValues('deliveryType') !== 'SINGLE') return
+    if (zoneRate === null) return
+    setCargoItems(prev => prev.map(item => ({
+      ...item,
+      rate: zoneRate,
+      total: (item.quantity || 0) * zoneRate,
+    })))
+  }, [zoneRate, form])
+
+  // Auto-apply updated destination zone rates to linked cargo items for MULTIPLE delivery type
+  React.useEffect(() => {
+    if (form.getValues('deliveryType') !== 'MULTIPLE') return
+    setCargoItems(prev => prev.map(item => {
+      if (!item.deliveryDestinationId) return item
+      const dest = deliveryDestinations.find(d => d._tempId === item.deliveryDestinationId)
+      if (!dest || dest.zoneRate === null) return item
+      return {
+        ...item,
+        rate: dest.zoneRate,
+        total: (item.quantity || 0) * dest.zoneRate,
+      }
+    }))
+  }, [deliveryDestinations, form])
+
   // Computed total revenue from all cargo items
   const computedTotalRevenue = React.useMemo(() => {
     return cargoItems.reduce((sum, item) => sum + (item.total || 0), 0)
@@ -1484,13 +1510,13 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
                               placeholder="0"
                             />
                           </td>
-                          {/* Rate */}
+                          {/* Rate — auto-populated from zone rate */}
                           <td className="py-1 px-2">
                             <Input
                               type="number"
-                              className={`h-8 text-xs ${item.deliveryDestinationId ? 'bg-muted/50 cursor-not-allowed' : ''}`}
+                              className={`h-8 text-xs ${item.deliveryDestinationId || (form.getValues('deliveryType') === 'SINGLE' && zoneRate !== null) ? 'bg-muted/50 cursor-not-allowed' : ''}`}
                               value={item.rate || ''}
-                              readOnly={!!item.deliveryDestinationId}
+                              readOnly={!!item.deliveryDestinationId || (form.getValues('deliveryType') === 'SINGLE' && zoneRate !== null)}
                               onChange={(e) => {
                                 const rate = parseFloat(e.target.value) || 0
                                 setCargoItems(prev => prev.map((it, ii) => ii === itemIdx ? {
