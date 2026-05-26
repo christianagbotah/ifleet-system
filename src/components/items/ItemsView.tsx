@@ -550,17 +550,35 @@ export function ItemsView() {
 
           <form onSubmit={handleSubmit}>
             <DialogBody className="space-y-4">
-              {/* Name */}
-              <div className="space-y-2">
-                <Label htmlFor="item-name">
-                  Name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="item-name"
-                  placeholder="e.g., Cement, Rice, Flour"
-                  value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
-                />
+              {/* Name & Supplier — same row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="item-name">
+                    Name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="item-name"
+                    placeholder="e.g., Cement, Rice, Flour"
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Supplier</Label>
+                  <Select value={formSupplierId} onValueChange={(v) => setFormSupplierId(v === '__none__' ? '' : v)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select supplier (optional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">None</SelectItem>
+                      {suppliers.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          {s.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               {/* Description */}
@@ -586,24 +604,6 @@ export function ItemsView() {
                     {ITEM_UNITS.map((u) => (
                       <SelectItem key={u} value={u} className="capitalize">
                         {u}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Supplier */}
-              <div className="space-y-2">
-                <Label>Supplier</Label>
-                <Select value={formSupplierId} onValueChange={(v) => setFormSupplierId(v === '__none__' ? '' : v)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select supplier (optional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__none__">None</SelectItem>
-                    {suppliers.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>
-                        {s.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
