@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
     const urls: string[] = []
     const errors: string[] = []
 
-    // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'images')
+    // Ensure upload directory exists (persistent, outside public/)
+    const uploadDir = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads', 'images')
     await mkdir(uploadDir, { recursive: true })
 
     for (const file of files) {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
       // Save file to disk
       const buffer = Buffer.from(await file.arrayBuffer())
-      const absoluteFilePath = path.join(process.cwd(), 'public', relativePath)
+      const absoluteFilePath = path.join(uploadDir, uniqueFilename)
       await writeFile(absoluteFilePath, buffer)
 
       urls.push(relativePath)
