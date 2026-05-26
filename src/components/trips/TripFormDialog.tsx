@@ -37,7 +37,10 @@ import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { apiFetch, uploadFiles, createTrip, updateTrip, fetchTrucks, fetchDrivers, type Truck, type Driver, type Trip } from '@/lib/api'
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
-import { X, Upload, Loader2, Plus, AlertCircle, User } from 'lucide-react'
+import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon } from 'lucide-react'
+import { format } from 'date-fns'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 // ============ Image Upload State ============
 
@@ -969,20 +972,111 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
                   )}
                 />
               </div>
-              {/* Departure Time */}
+              {/* Departure Date & Time */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="departureTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Departure Time *</FormLabel>
-                      <FormControl>
-                        <Input type="datetime-local" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    const dateVal = field.value ? new Date(field.value) : undefined
+                    return (
+                      <FormItem>
+                        <FormLabel>Departure Date *</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="h-10 w-full font-normal justify-start text-left"
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                                {dateVal ? format(dateVal, 'dd MMM yyyy') : 'Pick a date'}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={dateVal}
+                              onSelect={(d) => {
+                                if (d) {
+                                  const existing = field.value ? new Date(field.value) : new Date()
+                                  const hh = String(existing.getHours()).padStart(2, '0')
+                                  const mm = String(existing.getMinutes()).padStart(2, '0')
+                                  const iso = `${format(d, 'yyyy-MM-dd')}T${hh}:${mm}`
+                                  field.onChange(iso)
+                                }
+                              }}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="departureTime"
+                  render={({ field }) => {
+                    const dateVal = field.value ? new Date(field.value) : undefined
+                    const hours = dateVal ? dateVal.getHours() : 6
+                    const minutes = dateVal ? dateVal.getMinutes() : 0
+                    const hourLabels = Array.from({ length: 24 }, (_, i) => {
+                      const h = i === 0 ? 12 : i > 12 ? i - 12 : i
+                      return `${String(i).padStart(2, '0')}:00 (${i < 12 ? 'AM' : 'PM'})`
+                    })
+                    return (
+                      <FormItem>
+                        <FormLabel>Departure Time *</FormLabel>
+                        <div className="flex gap-2">
+                          <Select
+                            value={String(hours)}
+                            onValueChange={(h) => {
+                              const d = dateVal || new Date()
+                              const mm = String(d.getMinutes()).padStart(2, '0')
+                              const dateStr = dateVal ? format(d, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+                              field.onChange(`${dateStr}T${h.padStart(2, '0')}:${mm}`)
+                            }}
+                          >
+                            <SelectTrigger className="flex-1">
+                              <SelectValue placeholder="Hour" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {hourLabels.map((label, i) => (
+                                <SelectItem key={i} value={String(i)}>
+                                  {label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Select
+                            value={String(minutes)}
+                            onValueChange={(m) => {
+                              const d = dateVal || new Date()
+                              const hh = String(d.getHours()).padStart(2, '0')
+                              const dateStr = dateVal ? format(d, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+                              field.onChange(`${dateStr}T${hh}:${m.padStart(2, '0')}`)
+                            }}
+                          >
+                            <SelectTrigger className="w-24">
+                              <SelectValue placeholder="Min" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 12 }, (_, i) => i * 5).map((m) => (
+                                <SelectItem key={m} value={String(m)}>
+                                  {String(m).padStart(2, '0')} min
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
                 />
               </div>
             </div>
