@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
         maxMileage: maxMileage !== undefined && maxMileage !== null ? parseFloat(maxMileage) : null,
         expectedFuelConsumption: expectedFuelConsumption !== undefined && expectedFuelConsumption !== null ? parseFloat(expectedFuelConsumption) : null,
         effectiveDate: effectiveDate ? new Date(effectiveDate) : new Date(),
+        updatedAt: new Date(),
       },
       include: {
         destinationZone: { select: { id: true, name: true } },

@@ -78,7 +78,7 @@ model BorderCrossing {
   notes          String?
   createdBy      String
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
+  updatedAt DateTime @updatedAt
   user           User      @relation(fields: [createdBy], references: [id])
   driver         Driver    @relation(fields: [driverId], references: [id])
   trip           Trip      @relation(fields: [tripId], references: [id])
@@ -115,7 +115,7 @@ model CashAdvance {
   requestDate        DateTime  @default(now())
   notes              String?
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime
+  updatedAt DateTime @updatedAt
   driver             Driver    @relation(fields: [driverId], references: [id])
   trip               Trip?     @relation(fields: [tripId], references: [id])
 
@@ -137,7 +137,7 @@ model Client {
   notes                   String?
   isActive                Boolean                   @default(true)
   createdAt               DateTime                  @default(now())
-  updatedAt               DateTime
+  updatedAt DateTime @updatedAt
   ClientZone              ClientZone[]
   Invoice                 Invoice[]
   LoadBoard               LoadBoard[]
@@ -174,7 +174,7 @@ model Currency {
   isDefault Boolean  @default(false)
   position  Int      @default(0)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model DeliveryStop {
@@ -196,7 +196,7 @@ model DeliveryStop {
   offloadCompleted DateTime?
   notes            String?
   createdAt        DateTime  @default(now())
-  updatedAt        DateTime
+  updatedAt DateTime @updatedAt
   trip             Trip      @relation(fields: [tripId], references: [id])
 
   @@index([tripId, stopOrder])
@@ -219,7 +219,7 @@ model DepotQueue {
   notes         String?
   createdBy     String
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   user          User      @relation(fields: [createdBy], references: [id])
   driver        Driver?   @relation(fields: [driverId], references: [id])
   trip          Trip?     @relation(fields: [tripId], references: [id])
@@ -241,7 +241,7 @@ model DestinationCity {
   region          String?
   isActive        Boolean           @default(true)
   createdAt       DateTime          @default(now())
-  updatedAt       DateTime
+  updatedAt DateTime @updatedAt
   DestinationZone DestinationZone[]
   Trip            Trip[]
 
@@ -280,7 +280,7 @@ model Document {
   mimeType    String
   uploadedBy  String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt DateTime @updatedAt
 
   @@index([category])
   @@index([entityType, entityId])
@@ -321,7 +321,7 @@ model Driver {
   totalMileage        Float               @default(0)
   hireDate            DateTime            @default(now())
   createdAt           DateTime            @default(now())
-  updatedAt           DateTime
+  updatedAt DateTime @updatedAt
   BorderCrossing      BorderCrossing[]
   CashAdvance         CashAdvance[]
   DepotQueue          DepotQueue[]
@@ -354,7 +354,7 @@ model DriverIncentive {
   metrics                               String?
   createdBy                             String
   createdAt                             DateTime  @default(now())
-  updatedAt                             DateTime
+  updatedAt DateTime @updatedAt
   user_DriverIncentive_approvedByToUser User?     @relation("DriverIncentive_approvedByToUser", fields: [approvedBy], references: [id])
   user_DriverIncentive_createdByToUser  User      @relation("DriverIncentive_createdByToUser", fields: [createdBy], references: [id])
   driver                                Driver    @relation(fields: [driverId], references: [id])
@@ -385,7 +385,7 @@ model DriverSettlement {
   paidAt            DateTime?
   notes             String?
   createdAt         DateTime         @default(now())
-  updatedAt         DateTime
+  updatedAt DateTime @updatedAt
   driver            Driver           @relation(fields: [driverId], references: [id])
   SettlementLine    SettlementLine[]
 
@@ -409,7 +409,7 @@ model DriverWallet {
   mobileMoneyNetwork       String?
   preferredPaymentMethod   String    @default("cash")
   createdAt                DateTime  @default(now())
-  updatedAt                DateTime
+  updatedAt DateTime @updatedAt
   driver                   Driver    @relation(fields: [driverId], references: [id])
 }
 
@@ -443,7 +443,7 @@ model DvlaRegistration {
   notes              String?
   reminderSent       Boolean   @default(false)
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime
+  updatedAt DateTime @updatedAt
   truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
 
   @@index([expiryDate])
@@ -466,7 +466,7 @@ model Expense {
   receiptUrl      String?
   tripId          String?
   createdAt       DateTime         @default(now())
-  updatedAt       DateTime
+  updatedAt DateTime @updatedAt
   trip            Trip?            @relation(fields: [tripId], references: [id])
   truck           Truck            @relation(fields: [truckId], references: [id])
   ExpenseApproval ExpenseApproval?
@@ -491,7 +491,7 @@ model ExpenseApproval {
   rejectionReason                          String?
   reviewedAt                               DateTime?
   createdAt                                DateTime  @default(now())
-  updatedAt                                DateTime
+  updatedAt DateTime @updatedAt
   user_ExpenseApproval_approvedByIdToUser  User?     @relation("ExpenseApproval_approvedByIdToUser", fields: [approvedById], references: [id])
   expense                                  Expense   @relation(fields: [expenseId], references: [id], onDelete: Cascade)
   user_ExpenseApproval_requestedByIdToUser User      @relation("ExpenseApproval_requestedByIdToUser", fields: [requestedById], references: [id])
@@ -514,7 +514,7 @@ model FuelBudget {
   actualLiters Float    @default(0)
   notes        String?
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt DateTime @updatedAt
   createdBy    String?
   truck        Truck?   @relation(fields: [truckId], references: [id])
 
@@ -543,7 +543,7 @@ model FuelLog {
   distanceCovered Float?
   notes           String?
   createdAt       DateTime @default(now())
-  updatedAt       DateTime
+  updatedAt DateTime @updatedAt
   trip            Trip     @relation(fields: [tripId], references: [id])
   truck           Truck    @relation(fields: [truckId], references: [id])
 
@@ -563,7 +563,7 @@ model FuelPrice {
   verified      Boolean     @default(false)
   notes         String?
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   fuelStation   FuelStation @relation(fields: [stationId], references: [id])
 
   @@unique([stationId, fuelType, effectiveDate])
@@ -596,7 +596,7 @@ model FuelStation {
   isActive              Boolean     @default(true)
   notes                 String?
   createdAt             DateTime    @default(now())
-  updatedAt             DateTime
+  updatedAt DateTime @updatedAt
   FuelPrice             FuelPrice[]
 
   @@index([brand])
@@ -613,7 +613,7 @@ model GeofenceZone {
   type          String          @default("depot")
   address       String?
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   TrackingAlert TrackingAlert[]
 
   @@index([type])
@@ -634,7 +634,7 @@ model Insurance {
   documentUrl         String?
   notes               String?
   createdAt           DateTime         @default(now())
-  updatedAt           DateTime
+  updatedAt DateTime @updatedAt
   truck               Truck            @relation(fields: [truckId], references: [id])
   InsuranceClaim      InsuranceClaim[]
 
@@ -669,7 +669,7 @@ model InsuranceClaim {
   assessorNotes     String?
   createdBy         String
   createdAt         DateTime  @default(now())
-  updatedAt         DateTime
+  updatedAt DateTime @updatedAt
   user              User      @relation(fields: [createdBy], references: [id])
   insurance         Insurance @relation(fields: [insuranceId], references: [id])
   truck             Truck     @relation(fields: [truckId], references: [id])
@@ -699,7 +699,7 @@ model Invoice {
   notes         String?
   terms         String?
   createdAt     DateTime      @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   trip          Trip?         @relation(fields: [tripId], references: [id])
   InvoiceItem   InvoiceItem[]
@@ -730,7 +730,7 @@ model Item {
   unit        String     @default("bags")
   isActive    Boolean    @default(true)
   createdAt   DateTime   @default(now())
-  updatedAt   DateTime
+  updatedAt DateTime @updatedAt
   supplierId  String?
   supplier    Supplier?  @relation(fields: [supplierId], references: [id])
   Trip        Trip[]
@@ -765,7 +765,7 @@ model LoadBoard {
   assignedDriverId String?
   createdBy        String
   createdAt        DateTime  @default(now())
-  updatedAt        DateTime
+  updatedAt DateTime @updatedAt
   driver           Driver?   @relation(fields: [assignedDriverId], references: [id])
   truck            Truck?    @relation(fields: [assignedTruckId], references: [id])
   client           Client?   @relation(fields: [clientId], references: [id])
@@ -790,7 +790,7 @@ model LoadingCity {
   region       String?
   isActive     Boolean        @default(true)
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime
+  updatedAt DateTime @updatedAt
   LoadingPoint LoadingPoint[]
   Trip         Trip[]
 
@@ -806,7 +806,7 @@ model LoadingPoint {
   contactPhone  String?
   isActive      Boolean     @default(true)
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   supplierId    String?
   loadingCity   LoadingCity @relation(fields: [loadingCityId], references: [id])
   supplier      Supplier?   @relation(fields: [supplierId], references: [id])
@@ -835,7 +835,7 @@ model MaintenanceRecord {
   partsUsed      String?   @db.Text
   invoiceUrl     String?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
+  updatedAt DateTime @updatedAt
   truck          Truck     @relation(fields: [truckId], references: [id])
 
   @@index([nextDueDate])
@@ -899,7 +899,7 @@ model Payroll {
   approvedBy  String?
   notes       String?
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime
+  updatedAt DateTime @updatedAt
   driver      Driver    @relation(fields: [driverId], references: [id])
 
   @@unique([driverId, month, year])
@@ -918,7 +918,7 @@ model PerformanceBenchmark {
   warningMaxFuel     Float?
   isActive           Boolean         @default(true)
   createdAt          DateTime        @default(now())
-  updatedAt          DateTime
+  updatedAt DateTime @updatedAt
   destinationZone    DestinationZone @relation(fields: [destinationZoneId], references: [id])
 
   @@index([destinationZoneId])
@@ -933,7 +933,7 @@ model Pricing {
   effectiveDate DateTime @default(now())
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
 
   @@unique([itemName, destination])
 }
@@ -972,7 +972,7 @@ model RoadConditionReport {
   imageUrl    String?
   tripId      String?
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime
+  updatedAt DateTime @updatedAt
   user        User      @relation(fields: [reporterId], references: [id])
   trip        Trip?     @relation(fields: [tripId], references: [id])
 
@@ -1017,7 +1017,7 @@ model RoadworthyInspection {
   nextInspectionDue  DateTime?
   status             String    @default("completed")
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime
+  updatedAt DateTime @updatedAt
   truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
 
   @@index([certificateExpiry])
@@ -1034,7 +1034,7 @@ model Role {
   permissions String   @db.Text
   isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt DateTime @updatedAt
   User        User[]
 }
 
@@ -1062,7 +1062,7 @@ model Supplier {
   notes         String?
   isActive      Boolean        @default(true)
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   Item          Item[]
   LoadingPoint  LoadingPoint[]
   TripItem      TripItem[]
@@ -1121,7 +1121,7 @@ model SystemSettings {
   driverIdCounter         Int      @default(1)
   driverIdPadding         Int      @default(3)
   createdAt               DateTime @default(now())
-  updatedAt               DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model TollRecord {
@@ -1149,7 +1149,7 @@ model TollRecord {
   overloadFine    Float?
   notes           String?
   createdAt       DateTime  @default(now())
-  updatedAt       DateTime
+  updatedAt DateTime @updatedAt
   driver          Driver?   @relation(fields: [driverId], references: [id])
   trip            Trip?     @relation(fields: [tripId], references: [id])
   truck           Truck     @relation(fields: [truckId], references: [id])
@@ -1193,7 +1193,7 @@ model TrackingConfig {
   updateInterval Int      @default(5)
   geofenceRadius Int      @default(500)
   isActive       Boolean  @default(true)
-  updatedAt      DateTime
+  updatedAt DateTime @updatedAt
   createdAt      DateTime @default(now())
   truck          Truck    @relation(fields: [truckId], references: [id])
 }
@@ -1250,7 +1250,7 @@ model Trip {
   clientId                String?
   notes                   String?
   createdAt               DateTime                  @default(now())
-  updatedAt               DateTime
+  updatedAt DateTime @updatedAt
   BorderCrossing          BorderCrossing[]
   CashAdvance             CashAdvance[]
   DeliveryStop            DeliveryStop[]
@@ -1298,7 +1298,7 @@ model TripComment {
   userId    String
   message   String
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
   trip      Trip     @relation(fields: [tripId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
@@ -1316,7 +1316,7 @@ model TripDeliveryDestination {
   stopOrder         Int
   status            String           @default("pending")
   createdAt         DateTime         @default(now())
-  updatedAt         DateTime
+  updatedAt DateTime @updatedAt
   actualQty         Float?
   address           String?
   notes             String?
@@ -1362,7 +1362,7 @@ model TripItem {
   sortOrder               Int                      @default(0)
   deliveryDestinationId   String?
   createdAt               DateTime                 @default(now())
-  updatedAt               DateTime
+  updatedAt DateTime @updatedAt
   tripDeliveryDestination TripDeliveryDestination? @relation(fields: [deliveryDestinationId], references: [id])
   item                    Item?                    @relation(fields: [itemId], references: [id])
   loadingPoint            LoadingPoint?            @relation(fields: [loadingPointId], references: [id])
@@ -1395,7 +1395,7 @@ model Truck {
   insuranceStatus      String                 @default("none")
   nextServiceDate      DateTime?
   createdAt            DateTime               @default(now())
-  updatedAt            DateTime
+  updatedAt DateTime @updatedAt
   BorderCrossing       BorderCrossing[]
   DepotQueue           DepotQueue[]
   DvlaRegistration     DvlaRegistration[]
@@ -1451,7 +1451,7 @@ model Tyre {
   retiredReason  String?
   notes          String?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
+  updatedAt DateTime @updatedAt
   truck          Truck     @relation(fields: [truckId], references: [id])
 
   @@index([truckId])
@@ -1485,7 +1485,7 @@ model VehicleInspection {
   followUpNotes       String?
   followUpCompletedAt DateTime?
   createdAt           DateTime  @default(now())
-  updatedAt           DateTime
+  updatedAt DateTime @updatedAt
   driver              Driver?   @relation(fields: [driverId], references: [id])
   trip                Trip?     @relation(fields: [tripId], references: [id])
   truck               Truck     @relation(fields: [truckId], references: [id])
@@ -1515,7 +1515,7 @@ model WarehouseItem {
   notes         String?
   createdBy     String
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   user          User      @relation(fields: [createdBy], references: [id])
 
   @@index([category])
@@ -1540,7 +1540,7 @@ model WeightVerification {
   notes           String?
   location        String?
   createdAt       DateTime @default(now())
-  updatedAt       DateTime
+  updatedAt DateTime @updatedAt
   trip            Trip     @relation(fields: [tripId], references: [id])
 
   @@index([checkpointType])
@@ -1559,7 +1559,7 @@ model ZoneRate {
   effectiveDate           DateTime        @default(now())
   isActive                Boolean         @default(true)
   createdAt               DateTime        @default(now())
-  updatedAt               DateTime
+  updatedAt DateTime @updatedAt
   destinationZone         DestinationZone @relation(fields: [destinationZoneId], references: [id])
 
   @@index([destinationZoneId])

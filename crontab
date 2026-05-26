@@ -1,0 +1,16 @@
+# ============================================================
+# Crontab — webDevReview auto code-quality review
+# Schedule: Every 15 minutes
+# Timezone: Africa/Accra (CRON_TZ)
+# ============================================================
+
+CRON_TZ=Africa/Accra
+
+# ── webDevReview ──────────────────────────────────────────
+# Name       : webDevReview
+# Kind       : fixed_rate (every 15 minutes)
+# Expression : */15 * * * *
+# Timezone   : Africa/Accra
+# Command    : cd /home/z/my-project && bun run lint 2>&1 | grep -v "ifleet-fresh" | tail -5
+# ──────────────────────────────────────────────────────────
+*/15 * * * * cd /home/z/my-project && bun run lint 2>&1 | grep -v "ifleet-fresh" | tail -5

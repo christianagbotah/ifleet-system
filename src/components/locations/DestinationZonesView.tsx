@@ -241,15 +241,14 @@ export function DestinationZonesView() {
           body: JSON.stringify(body),
         })
         toast.success('Destination zone updated successfully')
-        setFormOpen(false)
       } else {
         await apiFetch<DestinationZone>('/api/destination-zones', {
           method: 'POST',
           body: JSON.stringify(body),
         })
         toast.success('Destination zone created successfully')
-        setFormOpen(false)
       }
+      setFormOpen(false)
       loadItems()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to save destination zone')

@@ -1,0 +1,7 @@
+{
+  "name": "dev-keepalive",
+  "scripts": {
+    "dev": "bun --hot index.ts"
+  },
+  "dependencies": {}
+}

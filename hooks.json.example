@@ -1,0 +1,43 @@
+[
+  {
+    "id": "ifleetpro-deploy",
+    "execute-command": "/home/ifleetpro/app/scripts/webhook-deploy.sh",
+    "command-working-directory": "/home/ifleetpro/app",
+    "response-message": "Deploy triggered. Check logs at /home/ifleetpro/logs/deploy.log",
+    "trigger-rule": {
+      "and": [
+        {
+          "type": "payload-hash-sha256",
+          "secret": "CHANGE_ME_TO_A_RANDOM_SECRET",
+          "parameter": {
+            "source": "header",
+            "name": "X-Hub-Signature-256"
+          }
+        },
+        {
+          "type": "value",
+          "value": "main",
+          "parameter": {
+            "source": "payload",
+            "name": "ref"
+          },
+          "path": "substring:refs/heads/"
+        }
+      ]
+    },
+    "pass-arguments-to-command": [
+      {
+        "source": "payload",
+        "name": "head_commit.message"
+      },
+      {
+        "source": "payload",
+        "name": "head_commit.id"
+      },
+      {
+        "source": "payload",
+        "name": "pusher.name"
+      }
+    ]
+  }
+]

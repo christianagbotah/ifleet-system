@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
               expectedFuelConsumption: item.expectedFuelConsumption != null ? parseFloat(String(item.expectedFuelConsumption)) : null,
               effectiveDate: item.effectiveDate ? new Date(String(item.effectiveDate)) : new Date(),
               isActive: item.isActive !== false,
+              updatedAt: new Date(),
             },
           })
           success++
