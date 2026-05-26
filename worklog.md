@@ -258,3 +258,25 @@ Stage Summary:
 - Files modified: src/app/api/suppliers/route.ts, src/lib/constants.ts, src/app/page.tsx
 - Supplier management is now fully functional: create, read, update, delete via UI and API
 - All lint checks pass (only pre-existing errors in ifleet-fresh directory)
+
+---
+Task ID: 1
+Agent: main
+Task: Fix horizontal scrollbar issues across desktop viewport
+
+Work Log:
+- Identified root cause: main content container used `overflow-auto` which allows both horizontal and vertical scroll
+- Fixed page.tsx: changed `<main>` from `overflow-auto` to `overflow-x-hidden overflow-y-auto`
+- Fixed globals.css: added `overflow-x: hidden` to html,body as global safety net against any accidental horizontal overflow
+- Fixed sidebar.tsx (SidebarProvider): added `overflow-x-hidden` to the wrapper div
+- Fixed sidebar.tsx (SidebarInset): added `overflow-x-hidden` to the content inset area
+- Removed redundant `overflow-x-hidden` from TruckFinancialsView.tsx root div
+- Verified all view components (TripsView, TrucksView, DriversView, DashboardView, AnalyticsView, ExpensesView) are clean — no root-level overflow issues
+- Confirmed Table component already has `overflow-x-auto` on its container, so tables scroll internally without affecting the page
+- Lint passes clean (only pre-existing errors in ifleet-fresh/skills/)
+
+Stage Summary:
+- No horizontal scrollbar will ever appear at page level across any view
+- Tables still scroll horizontally internally via the Table component wrapper
+- Three-layer defense: html/body → SidebarProvider/SidebarInset → main content area
+- Pushed to GitHub: commit bf62ea4
