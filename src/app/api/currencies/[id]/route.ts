@@ -117,7 +117,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/currencies/:id — Soft-delete (set isActive=false)
+// DELETE /api/currencies/:id — Permanently delete
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -138,21 +138,18 @@ export async function DELETE(
     // Cannot delete the default currency
     if (currency.isDefault) {
       return NextResponse.json(
-        { error: 'Cannot deactivate the default currency' },
+        { error: 'Cannot delete the default currency. Set another currency as default first.' },
         { status: 400 }
       )
     }
 
-    const updatedCurrency = await db.currency.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    await db.currency.delete({ where: { id } })
 
-    return NextResponse.json(updatedCurrency)
+    return NextResponse.json({ success: true, id, message: 'Currency deleted permanently' })
   } catch (error) {
     console.error('Currency delete error:', error)
     return NextResponse.json(
-      { error: 'Failed to deactivate currency' },
+      { error: 'Failed to delete currency' },
       { status: 500 }
     )
   }

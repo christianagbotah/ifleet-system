@@ -120,7 +120,7 @@ export function DestinationCitiesView() {
     setLoading(true)
     setError(null)
     try {
-      const res = await apiFetch<{ data: DestinationCity[] }>('/api/destination-cities?includeInactive=true')
+      const res = await apiFetch<{ data: DestinationCity[] }>('/api/destination-cities')
       setItems(res.data || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch destination cities')
@@ -147,7 +147,6 @@ export function DestinationCitiesView() {
 
   // ─── Stats ───
 
-  const activeItems = items.filter((i) => i.isActive)
   const totalZones = items.reduce((sum, i) => sum + (i.zonesCount || 0), 0)
 
   // ─── Form handling ───
@@ -268,9 +267,9 @@ export function DestinationCitiesView() {
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-amber-500" />
-                  <span className="text-xs sm:text-sm text-muted-foreground">Active Cities</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">Total Cities</span>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold">{activeItems.length}</p>
+                <p className="text-2xl sm:text-3xl font-bold">{items.length}</p>
               </CardContent>
             </Card>
             <Card className="hover:shadow-md transition-shadow">
@@ -341,7 +340,6 @@ export function DestinationCitiesView() {
                       <TableHead>Name</TableHead>
                       <TableHead>Region</TableHead>
                       <TableHead className="text-center">Zones</TableHead>
-                      <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -357,7 +355,7 @@ export function DestinationCitiesView() {
                           className="border-b transition-colors hover:bg-muted/50"
                         >
                           <TableCell>
-                            <p className={`font-semibold text-sm ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                            <p className="font-semibold text-sm">
                               {item.name}
                             </p>
                           </TableCell>
@@ -368,18 +366,6 @@ export function DestinationCitiesView() {
                           </TableCell>
                           <TableCell className="text-center">
                             <span className="text-sm font-medium">{item.zonesCount || 0}</span>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
-                              className={`border-transparent text-[10px] font-medium ${
-                                item.isActive
-                                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                  : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                              }`}
-                            >
-                              {item.isActive ? 'Active' : 'Inactive'}
-                            </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center justify-end gap-1">
@@ -424,21 +410,11 @@ export function DestinationCitiesView() {
                       <div className="mobile-card p-4 space-y-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
-                            <p className={`font-semibold text-sm truncate ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                            <p className="font-semibold text-sm truncate">
                               {item.name}
                             </p>
                             <p className="text-xs text-muted-foreground">{item.region}</p>
                           </div>
-                          <Badge
-                            variant="outline"
-                            className={`border-transparent text-[10px] font-medium shrink-0 ${
-                              item.isActive
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                            }`}
-                          >
-                            {item.isActive ? 'Active' : 'Inactive'}
-                          </Badge>
                         </div>
                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
                           <span className="font-medium">{item.zonesCount || 0} zones</span>

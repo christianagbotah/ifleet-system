@@ -37,14 +37,7 @@ export async function POST(request: NextRequest) {
         id: true,
         companyName: true,
         isActive: true,
-        trips: {
-          where: { status: { in: ['scheduled', 'loading', 'loaded', 'waiting_at_depot', 'departed_depot', 'in_transit', 'arrived_destination', 'waiting_to_offload', 'offloading'] } },
-          select: { id: true, tripNumber: true },
-        },
-        invoices: {
-          where: { status: { in: ['draft', 'sent', 'overdue'] } },
-          select: { id: true, invoiceNumber: true },
-        },
+        _count: { select: { Invoice: true, LoadBoard: true, Trip: true, TripDeliveryDestination: true, ClientZone: true } },
       },
     })
 
@@ -62,38 +55,40 @@ export async function POST(request: NextRequest) {
       }
 
       if (action === 'delete') {
-        // Check if client has active trips
-        if (client.trips.length > 0) {
+        const deps = client._count
+        const parts: string[] = []
+        if (deps.Invoice) parts.push(`${deps.Invoice} invoice(s)`)
+        if (deps.LoadBoard) parts.push(`${deps.LoadBoard} load board entry(s)`)
+        if (deps.Trip) parts.push(`${deps.Trip} trip(s)`)
+        if (deps.TripDeliveryDestination) parts.push(`${deps.TripDeliveryDestination} delivery destination(s)`)
+        if (deps.ClientZone) parts.push(`${deps.ClientZone} zone assignment(s)`)
+
+        if (parts.length > 0) {
           failed++
           errors.push({
             id,
-            message: `Cannot delete client "${client.companyName}": has ${client.trips.length} active trip(s)`,
+            message: `Cannot delete "${client.companyName}": has ${parts.join(', ')}`,
           })
           continue
         }
 
-        // Check if client has unpaid invoices
-        if (client.invoices.length > 0) {
+        try {
+          await db.client.delete({ where: { id } })
+
+          createAuditLog({
+            userId: auth.userId,
+            action: 'delete',
+            entity: 'Client',
+            entityId: id,
+            details: { companyName: client.companyName, bulk: true },
+            ipAddress: getClientIp(request),
+          }).catch(() => {})
+
+          success++
+        } catch {
           failed++
-          errors.push({
-            id,
-            message: `Cannot delete client "${client.companyName}": has ${client.invoices.length} unpaid invoice(s)`,
-          })
-          continue
+          errors.push({ id, message: `Failed to delete client "${client.companyName}"` })
         }
-
-        await db.client.delete({ where: { id } })
-
-        createAuditLog({
-          userId: auth.userId,
-          action: 'delete',
-          entity: 'Client',
-          entityId: id,
-          details: { companyName: client.companyName, bulk: true },
-          ipAddress: getClientIp(request),
-        }).catch(() => {})
-
-        success++
       } else if (action === 'activate') {
         await db.client.update({
           where: { id },

@@ -245,11 +245,11 @@ export function ClientsView() {
     setDeactivating(true)
     try {
       await deleteClient(id)
-      toast.success('Client deactivated successfully')
+      toast.success('Client deleted successfully')
       setDeactivateId(null)
       loadClients()
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to deactivate client')
+      toast.error(err instanceof Error ? err.message : 'Failed to delete client')
     } finally {
       setDeactivating(false)
     }
@@ -583,16 +583,14 @@ export function ClientsView() {
                                 >
                                   <Pencil className="h-3 w-3" />
                                 </Button>
-                                {client.isActive && (
-                                  <Button
+                                <Button
                                     variant="ghost"
                                     size="sm"
                                     className="h-7 text-xs text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                                     onClick={() => setDeactivateId(client.id)}
                                   >
-                                    Deactivate
+                                    Delete
                                   </Button>
-                                )}
                               </div>
                             </TableCell>
                           </motion.tr>
@@ -701,16 +699,14 @@ export function ClientsView() {
                           >
                             <Pencil className="h-3 w-3" />
                           </Button>
-                          {client.isActive && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 text-xs text-red-500 hover:text-red-600"
-                              onClick={() => setDeactivateId(client.id)}
-                            >
-                              Deactivate
-                            </Button>
-                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 text-xs text-red-500 hover:text-red-600"
+                            onClick={() => setDeactivateId(client.id)}
+                          >
+                            Delete
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -1030,14 +1026,13 @@ export function ClientsView() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Deactivate Confirmation */}
+      {/* Delete Confirmation */}
       <AlertDialog open={!!deactivateId} onOpenChange={() => setDeactivateId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Deactivate Client</AlertDialogTitle>
+            <AlertDialogTitle>Delete Client</AlertDialogTitle>
             <AlertDialogDescription>
-              This will mark the client as inactive. They will no longer appear in active client lists.
-              Any completed trips will remain in the system. This action can be reversed by editing the client.
+              This will permanently delete this client. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1047,7 +1042,7 @@ export function ClientsView() {
               disabled={deactivating}
               className="bg-red-500 hover:bg-red-600 text-white"
             >
-              {deactivating ? 'Deactivating...' : 'Deactivate Client'}
+              {deactivating ? 'Deleting...' : 'Delete Client'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

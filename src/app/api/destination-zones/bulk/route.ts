@@ -202,7 +202,10 @@ export async function POST(request: NextRequest) {
 
       const zones = await db.destinationZone.findMany({
         where: { id: { in: ids } },
-        select: { id: true, name: true, isActive: true },
+        select: {
+          id: true, name: true,
+          _count: { select: { ClientZone: true, PerformanceBenchmark: true, Trip: true, TripDeliveryDestination: true, ZoneRate: true } },
+        },
       })
 
       let success = 0
@@ -216,17 +219,23 @@ export async function POST(request: NextRequest) {
           errors.push({ id, message: 'Zone not found' })
           continue
         }
-        if (!zone.isActive) {
+
+        const deps = zone._count
+        const depParts: string[] = []
+        if (deps.ClientZone) depParts.push(`${deps.ClientZone} client zone(s)`)
+        if (deps.PerformanceBenchmark) depParts.push(`${deps.PerformanceBenchmark} benchmark(s)`)
+        if (deps.Trip) depParts.push(`${deps.Trip} trip(s)`)
+        if (deps.TripDeliveryDestination) depParts.push(`${deps.TripDeliveryDestination} delivery destination(s)`)
+        if (deps.ZoneRate) depParts.push(`${deps.ZoneRate} rate(s)`)
+
+        if (depParts.length > 0) {
           failed++
-          errors.push({ id, message: `"${zone.name}" is already inactive` })
+          errors.push({ id, message: `"${zone.name}" has ${depParts.join(', ')}` })
           continue
         }
 
         try {
-          await db.destinationZone.update({
-            where: { id },
-            data: { isActive: false },
-          })
+          await db.destinationZone.delete({ where: { id } })
           success++
 
           createAuditLog({
@@ -234,7 +243,7 @@ export async function POST(request: NextRequest) {
             action: 'delete',
             entity: 'DestinationZone',
             entityId: id,
-            details: { name: zone.name, softDeleted: true, bulk: true },
+            details: { name: zone.name, bulk: true },
             ipAddress: getClientIp(request),
           }).catch(() => {})
         } catch {

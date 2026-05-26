@@ -81,15 +81,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Pricing entry not found' }, { status: 404 })
     }
 
-    // Soft delete
-    const updatedPricing = await db.pricing.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    await db.pricing.delete({ where: { id } })
 
-    return NextResponse.json(updatedPricing)
+    return NextResponse.json({ success: true, id, message: 'Pricing entry deleted permanently' })
   } catch (error) {
     console.error('Pricing delete error:', error)
-    return NextResponse.json({ error: 'Failed to deactivate pricing entry' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete pricing entry' }, { status: 500 })
   }
 }

@@ -126,26 +126,34 @@ export async function DELETE(
 
     const { id } = await params
 
-    const existing = await db.loadingPoint.findUnique({ where: { id } })
+    const existing = await db.loadingPoint.findUnique({
+      where: { id },
+      include: { _count: { select: { Trip: true, TripItem: true } } },
+    })
     if (!existing) {
       return NextResponse.json({ error: 'Loading point not found' }, { status: 404 })
     }
 
-    const updated = await db.loadingPoint.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    const depCount = (existing._count.Trip || 0) + (existing._count.TripItem || 0)
+    if (depCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete: this loading point has ${existing._count.Trip} trip(s) and ${existing._count.TripItem} trip item(s). Remove or reassign them first.` },
+        { status: 400 }
+      )
+    }
+
+    await db.loadingPoint.delete({ where: { id } })
 
     createAuditLog({
       userId: auth.userId,
       action: 'delete',
       entity: 'LoadingPoint',
       entityId: id,
-      details: { name: existing.name, softDeleted: true },
+      details: { name: existing.name },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
-    return NextResponse.json(updated)
+    return NextResponse.json({ success: true, id, message: 'Loading point deleted permanently' })
   } catch (error) {
     console.error('Loading point delete error:', error)
     return NextResponse.json({ error: 'Failed to delete loading point' }, { status: 500 })

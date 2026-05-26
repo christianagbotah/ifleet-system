@@ -192,8 +192,6 @@ export function DestinationZonesView() {
 
   // ─── Stats ───
 
-  const activeZones = items.filter((i) => i.isActive)
-
   // ─── Form handling ───
 
   function resetForm() {
@@ -515,7 +513,6 @@ export function DestinationZonesView() {
                       <TableHead>Name</TableHead>
                       <TableHead>City</TableHead>
                       <TableHead className="text-right">Rate</TableHead>
-                      <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -540,7 +537,7 @@ export function DestinationZonesView() {
                               />
                             </TableCell>
                             <TableCell>
-                              <p className={`font-semibold text-sm ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                              <p className="font-semibold text-sm">
                                 {item.name}
                               </p>
                             </TableCell>
@@ -559,18 +556,6 @@ export function DestinationZonesView() {
                                   No rate
                                 </Badge>
                               )}
-                            </TableCell>
-                            <TableCell>
-                              <Badge
-                                variant="outline"
-                                className={`border-transparent text-[10px] font-medium ${
-                                  item.isActive
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                    : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                                }`}
-                              >
-                                {item.isActive ? 'Active' : 'Inactive'}
-                              </Badge>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center justify-end gap-1">
@@ -636,23 +621,13 @@ export function DestinationZonesView() {
                             <div className="min-w-0 flex-1">
                               <div className="flex items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <p className={`font-semibold text-sm truncate ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                                  <p className="font-semibold text-sm truncate">
                                     {item.name}
                                   </p>
                                   <p className="text-xs text-muted-foreground">
                                     {item.destinationCity?.name || '—'}
                                   </p>
                                 </div>
-                                <Badge
-                                  variant="outline"
-                                  className={`border-transparent text-[10px] font-medium shrink-0 ${
-                                    item.isActive
-                                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                      : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                                  }`}
-                                >
-                                  {item.isActive ? 'Active' : 'Inactive'}
-                                </Badge>
                               </div>
                             </div>
                           </div>
@@ -696,7 +671,7 @@ export function DestinationZonesView() {
 
               {/* Footer count */}
               <div className="text-center text-xs text-muted-foreground py-3">
-                Showing {filteredItems.length} of {items.length} zone{items.length !== 1 ? 's' : ''} &middot; {activeZones.length} active
+                Showing {filteredItems.length} of {items.length} zone{items.length !== 1 ? 's' : ''}
               </div>
             </>
           )}
@@ -996,8 +971,8 @@ export function DestinationZonesView() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete {bulk.selectedCount} Zone{bulk.selectedCount !== 1 ? 's' : ''}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to deactivate {bulk.selectedCount} selected zone{bulk.selectedCount !== 1 ? 's' : ''}?
-              They will be marked as inactive and hidden from new trips.
+              Are you sure you want to delete {bulk.selectedCount} selected zone{bulk.selectedCount !== 1 ? 's' : ''}?
+              This action cannot be undone. All zone data will be permanently removed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

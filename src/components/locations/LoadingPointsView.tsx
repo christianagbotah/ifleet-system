@@ -168,8 +168,6 @@ export function LoadingPointsView() {
 
   // ─── Stats ───
 
-  const activePoints = items.filter((i) => i.isActive)
-
   // ─── Form handling ───
 
   function resetForm() {
@@ -300,9 +298,9 @@ export function LoadingPointsView() {
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-amber-500" />
-                  <span className="text-xs sm:text-sm text-muted-foreground">Active Points</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">Total Points</span>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold">{activePoints.length}</p>
+                <p className="text-2xl sm:text-3xl font-bold">{items.length}</p>
               </CardContent>
             </Card>
             <Card className="hover:shadow-md transition-shadow">
@@ -396,7 +394,6 @@ export function LoadingPointsView() {
                       <TableHead>Address</TableHead>
                       <TableHead>Contact Person</TableHead>
                       <TableHead>Contact Phone</TableHead>
-                      <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -412,7 +409,7 @@ export function LoadingPointsView() {
                           className="border-b transition-colors hover:bg-muted/50"
                         >
                           <TableCell>
-                            <p className={`font-semibold text-sm ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                            <p className="font-semibold text-sm">
                               {item.name}
                             </p>
                           </TableCell>
@@ -440,18 +437,6 @@ export function LoadingPointsView() {
                               <Phone className="h-3 w-3 text-muted-foreground" />
                               <span className="text-sm">{item.contactPhone || '—'}</span>
                             </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
-                              className={`border-transparent text-[10px] font-medium ${
-                                item.isActive
-                                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                  : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                              }`}
-                            >
-                              {item.isActive ? 'Active' : 'Inactive'}
-                            </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center justify-end gap-1">
@@ -496,7 +481,7 @@ export function LoadingPointsView() {
                       <div className="mobile-card p-4 space-y-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
-                            <p className={`font-semibold text-sm truncate ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                            <p className="font-semibold text-sm truncate">
                               {item.name}
                             </p>
                             <p className="text-xs text-muted-foreground">
@@ -504,16 +489,6 @@ export function LoadingPointsView() {
                               {item.loadingCity?.region ? ` (${item.loadingCity.region})` : ''}
                             </p>
                           </div>
-                          <Badge
-                            variant="outline"
-                            className={`border-transparent text-[10px] font-medium shrink-0 ${
-                              item.isActive
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                            }`}
-                          >
-                            {item.isActive ? 'Active' : 'Inactive'}
-                          </Badge>
                         </div>
                         {item.address && (
                           <p className="text-xs text-muted-foreground">{item.address}</p>
@@ -559,7 +534,7 @@ export function LoadingPointsView() {
 
               {/* Footer count */}
               <div className="text-center text-xs text-muted-foreground py-3">
-                Showing {filteredItems.length} of {items.length} point{items.length !== 1 ? 's' : ''} &middot; {activePoints.length} active
+                Showing {filteredItems.length} of {items.length} point{items.length !== 1 ? 's' : ''}
               </div>
             </>
           )}

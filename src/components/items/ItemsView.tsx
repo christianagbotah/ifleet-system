@@ -4,7 +4,7 @@ import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Package, Plus, Search, Pencil, Trash2, AlertCircle,
-  RefreshCw, Download, Power, PowerOff, Loader2,
+  RefreshCw, Download, Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -104,7 +104,7 @@ export function ItemsView() {
     setLoading(true)
     setError(null)
     try {
-      const res = await apiFetch<{ data: Item[] }>('/api/items?includeInactive=true')
+      const res = await apiFetch<{ data: Item[] }>('/api/items')
       setItems(res.data || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch items')
@@ -131,8 +131,6 @@ export function ItemsView() {
   }, [items, search])
 
   // ─── Stats ───
-
-  const activeItems = items.filter((i) => i.isActive)
 
   // ─── Form handling ───
 
@@ -197,21 +195,6 @@ export function ItemsView() {
       toast.error(err instanceof Error ? err.message : 'Failed to save item')
     } finally {
       setSubmitting(false)
-    }
-  }
-
-  // ─── Toggle active ───
-
-  async function handleToggleActive(item: Item) {
-    try {
-      await apiFetch(`/api/items/${item.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({ isActive: !item.isActive }),
-      })
-      toast.success(item.isActive ? 'Item deactivated' : 'Item activated')
-      loadItems()
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to update item')
     }
   }
 
@@ -322,15 +305,6 @@ export function ItemsView() {
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-2">
                   <Package className="h-4 w-4 text-amber-500" />
-                  <span className="text-xs sm:text-sm text-muted-foreground">Total Active Items</span>
-                </div>
-                <p className="text-2xl sm:text-3xl font-bold">{activeItems.length}</p>
-              </CardContent>
-            </Card>
-            <Card className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <Package className="h-4 w-4 text-muted-foreground" />
                   <span className="text-xs sm:text-sm text-muted-foreground">Total Items</span>
                 </div>
                 <p className="text-2xl sm:text-3xl font-bold">{items.length}</p>
@@ -394,7 +368,6 @@ export function ItemsView() {
                     <TableRow className="bg-muted/50 border-b">
                       <TableHead>Name</TableHead>
                       <TableHead>Unit</TableHead>
-                      <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -411,7 +384,7 @@ export function ItemsView() {
                           >
                             <TableCell>
                               <div className="min-w-0">
-                                <p className={`font-semibold text-sm ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                                <p className="font-semibold text-sm">
                                   {item.name}
                                 </p>
                                 {item.description && (
@@ -427,18 +400,6 @@ export function ItemsView() {
                               </Badge>
                             </TableCell>
                             <TableCell>
-                              <Badge
-                                variant="outline"
-                                className={`border-transparent text-[10px] font-medium ${
-                                  item.isActive
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                    : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                                }`}
-                              >
-                                {item.isActive ? 'Active' : 'Inactive'}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
                               <div className="flex items-center justify-end gap-1">
                                 <Button
                                   variant="ghost"
@@ -448,19 +409,6 @@ export function ItemsView() {
                                   title="Edit item"
                                 >
                                   <Pencil className="h-3.5 w-3.5" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className={`h-8 w-8 ${item.isActive ? 'text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20' : 'text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'}`}
-                                  onClick={() => handleToggleActive(item)}
-                                  title={item.isActive ? 'Deactivate item' : 'Activate item'}
-                                >
-                                  {item.isActive ? (
-                                    <PowerOff className="h-3.5 w-3.5" />
-                                  ) : (
-                                    <Power className="h-3.5 w-3.5" />
-                                  )}
                                 </Button>
                                 <Button
                                   variant="ghost"
@@ -496,23 +444,13 @@ export function ItemsView() {
                             {/* Header row */}
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0 flex-1">
-                                <p className={`font-semibold text-sm truncate ${!item.isActive ? 'text-muted-foreground' : ''}`}>
+                                <p className="font-semibold text-sm truncate">
                                   {item.name}
                                 </p>
                                 {item.description && (
                                   <p className="text-xs text-muted-foreground truncate">{item.description}</p>
                                 )}
                               </div>
-                              <Badge
-                                variant="outline"
-                                className={`border-transparent text-[10px] font-medium shrink-0 ${
-                                  item.isActive
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                    : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                                }`}
-                              >
-                                {item.isActive ? 'Active' : 'Inactive'}
-                              </Badge>
                             </div>
 
                             {/* Details row */}
@@ -532,14 +470,6 @@ export function ItemsView() {
                               >
                                 <Pencil className="mr-1 h-3 w-3" />
                                 Edit
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className={`h-8 text-xs ${item.isActive ? 'text-amber-600' : 'text-emerald-600'}`}
-                                onClick={() => handleToggleActive(item)}
-                              >
-                                {item.isActive ? <PowerOff className="h-3 w-3" /> : <Power className="h-3 w-3" />}
                               </Button>
                               <Button
                                 variant="outline"

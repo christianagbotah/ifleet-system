@@ -126,26 +126,41 @@ export async function DELETE(
 
     const { id } = await params
 
-    const existing = await db.destinationZone.findUnique({ where: { id } })
+    const existing = await db.destinationZone.findUnique({
+      where: { id },
+      include: { _count: { select: { ClientZone: true, PerformanceBenchmark: true, Trip: true, TripDeliveryDestination: true, ZoneRate: true } } },
+    })
     if (!existing) {
       return NextResponse.json({ error: 'Destination zone not found' }, { status: 404 })
     }
 
-    const updated = await db.destinationZone.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    const deps = existing._count
+    const parts: string[] = []
+    if (deps.ClientZone) parts.push(`${deps.ClientZone} client zone(s)`)
+    if (deps.PerformanceBenchmark) parts.push(`${deps.PerformanceBenchmark} benchmark(s)`)
+    if (deps.Trip) parts.push(`${deps.Trip} trip(s)`)
+    if (deps.TripDeliveryDestination) parts.push(`${deps.TripDeliveryDestination} delivery destination(s)`)
+    if (deps.ZoneRate) parts.push(`${deps.ZoneRate} rate(s)`)
+
+    if (parts.length > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete: this zone has ${parts.join(', ')}. Remove or reassign them first.` },
+        { status: 400 }
+      )
+    }
+
+    await db.destinationZone.delete({ where: { id } })
 
     createAuditLog({
       userId: auth.userId,
       action: 'delete',
       entity: 'DestinationZone',
       entityId: id,
-      details: { name: existing.name, softDeleted: true },
+      details: { name: existing.name },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
-    return NextResponse.json(updated)
+    return NextResponse.json({ success: true, id, message: 'Destination zone deleted permanently' })
   } catch (error) {
     console.error('Destination zone delete error:', error)
     return NextResponse.json({ error: 'Failed to delete destination zone' }, { status: 500 })

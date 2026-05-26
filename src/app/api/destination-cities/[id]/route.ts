@@ -107,26 +107,34 @@ export async function DELETE(
 
     const { id } = await params
 
-    const existing = await db.destinationCity.findUnique({ where: { id } })
+    const existing = await db.destinationCity.findUnique({
+      where: { id },
+      include: { _count: { select: { DestinationZone: true, Trip: true } } },
+    })
     if (!existing) {
       return NextResponse.json({ error: 'Destination city not found' }, { status: 404 })
     }
 
-    const updated = await db.destinationCity.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    const depCount = (existing._count.DestinationZone || 0) + (existing._count.Trip || 0)
+    if (depCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete: this destination city has ${existing._count.DestinationZone} zone(s) and ${existing._count.Trip} trip(s). Remove or reassign them first.` },
+        { status: 400 }
+      )
+    }
+
+    await db.destinationCity.delete({ where: { id } })
 
     createAuditLog({
       userId: auth.userId,
       action: 'delete',
       entity: 'DestinationCity',
       entityId: id,
-      details: { name: existing.name, softDeleted: true },
+      details: { name: existing.name },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
-    return NextResponse.json(updated)
+    return NextResponse.json({ success: true, id, message: 'Destination city deleted permanently' })
   } catch (error) {
     console.error('Destination city delete error:', error)
     return NextResponse.json({ error: 'Failed to delete destination city' }, { status: 500 })

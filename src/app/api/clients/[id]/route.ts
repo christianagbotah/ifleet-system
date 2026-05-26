@@ -223,52 +223,47 @@ export async function DELETE(
     if (writeGuard instanceof NextResponse) return writeGuard
 
     const { id } = await params
-    const client = await db.client.findUnique({ where: { id } })
+    const client = await db.client.findUnique({
+      where: { id },
+      include: { _count: { select: { Invoice: true, LoadBoard: true, Trip: true, TripDeliveryDestination: true, ClientZone: true } } },
+    })
 
     if (!client) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 })
     }
 
-    if (!client.isActive) {
-      return NextResponse.json({ error: 'Client is already inactive' }, { status: 400 })
-    }
+    const deps = client._count
+    const parts: string[] = []
+    if (deps.Invoice) parts.push(`${deps.Invoice} invoice(s)`)
+    if (deps.LoadBoard) parts.push(`${deps.LoadBoard} load board entry(s)`)
+    if (deps.Trip) parts.push(`${deps.Trip} trip(s)`)
+    if (deps.TripDeliveryDestination) parts.push(`${deps.TripDeliveryDestination} delivery destination(s)`)
+    if (deps.ClientZone) parts.push(`${deps.ClientZone} zone assignment(s)`)
 
-    // Check for active trips
-    const activeTripsCount = await db.trip.count({
-      where: {
-        clientId: id,
-        status: { notIn: ['completed', 'cancelled'] },
-      },
-    })
-
-    if (activeTripsCount > 0) {
+    if (parts.length > 0) {
       return NextResponse.json({
-        error: `Cannot deactivate client with ${activeTripsCount} active trip(s). Complete or cancel all trips first.`,
+        error: `Cannot delete: this client has ${parts.join(', ')}. Remove or reassign them first.`,
       }, { status: 400 })
     }
 
-    // Soft delete
-    const updated = await db.client.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    await db.client.delete({ where: { id } })
 
     createAuditLog({
       userId: auth.userId,
       action: 'delete',
       entity: 'Client',
       entityId: id,
-      details: { companyName: client.companyName, deactivated: true },
+      details: { companyName: client.companyName },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
     return NextResponse.json({
       success: true,
-      id: updated.id,
-      message: 'Client deactivated successfully',
+      id,
+      message: 'Client deleted permanently',
     })
   } catch (error) {
     console.error('DELETE /api/clients/[id] error:', error)
-    return NextResponse.json({ error: 'Failed to deactivate client' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete client' }, { status: 500 })
   }
 }

@@ -109,26 +109,34 @@ export async function DELETE(
 
     const { id } = await params
 
-    const existing = await db.loadingCity.findUnique({ where: { id } })
+    const existing = await db.loadingCity.findUnique({
+      where: { id },
+      include: { _count: { select: { LoadingPoint: true, Trip: true } } },
+    })
     if (!existing) {
       return NextResponse.json({ error: 'Loading city not found' }, { status: 404 })
     }
 
-    const updated = await db.loadingCity.update({
-      where: { id },
-      data: { isActive: false },
-    })
+    const depCount = (existing._count.LoadingPoint || 0) + (existing._count.Trip || 0)
+    if (depCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete: this loading city has ${existing._count.LoadingPoint} loading point(s) and ${existing._count.Trip} trip(s). Remove or reassign them first.` },
+        { status: 400 }
+      )
+    }
+
+    await db.loadingCity.delete({ where: { id } })
 
     createAuditLog({
       userId: auth.userId,
       action: 'delete',
       entity: 'LoadingCity',
       entityId: id,
-      details: { name: existing.name, softDeleted: true },
+      details: { name: existing.name },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
-    return NextResponse.json(updated)
+    return NextResponse.json({ success: true, id, message: 'Loading city deleted permanently' })
   } catch (error) {
     console.error('Loading city delete error:', error)
     return NextResponse.json({ error: 'Failed to delete loading city' }, { status: 500 })
