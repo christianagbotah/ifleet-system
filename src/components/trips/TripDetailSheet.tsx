@@ -511,7 +511,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                         <InfoItem icon={Route} label="End Mileage" value={`${fullTrip.endMileage.toLocaleString()} km`} />
                       )}
                       {fullTrip.totalMileage != null && fullTrip.totalMileage > 0 && (
-                        <InfoItem icon={Route} label="Total Distance" value={`${fullTrip.totalMileage.toLocaleString()} km`} />
+                        <InfoItem icon={Route} label="Actual Distance" value={`${fullTrip.totalMileage.toLocaleString()} km`} />
                       )}
                       {fullTrip.fuelUsed != null && fullTrip.fuelUsed > 0 && (
                         <InfoItem icon={Fuel} label="Fuel Used" value={`${fullTrip.fuelUsed} L`} />

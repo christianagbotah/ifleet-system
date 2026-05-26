@@ -81,9 +81,7 @@ const tripFormSchema = z.object({
   destinationZoneId: z.string().optional(),
   // Financial
   totalRevenue: z.coerce.number().optional(),
-  fuelCost: z.coerce.number().optional(),
-  endMileage: z.coerce.number().optional(),
-  fuelUsed: z.coerce.number().optional(),
+  // Note: endMileage, fuelUsed, fuelCost are recorded via Fuel Logs (post-trip fuel recording)
   notes: z.string().optional(),
 })
 
@@ -438,9 +436,6 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
       destinationCityId: '',
       destinationZoneId: '',
       totalRevenue: '' as unknown as number,
-      fuelCost: '' as unknown as number,
-      endMileage: '' as unknown as number,
-      fuelUsed: '' as unknown as number,
       notes: '',
     },
   })
@@ -484,10 +479,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
           customerPhone: trip.customerPhone || '',
           waybillNumber: trip.waybillNumber || '',
           totalRevenue: trip.totalRevenue ?? ('' as unknown as number),
-          fuelCost: trip.fuelCost ?? ('' as unknown as number),
           startMileage: trip.startMileage ?? ('' as unknown as number),
-          endMileage: trip.endMileage ?? ('' as unknown as number),
-          fuelUsed: trip.fuelUsed ?? ('' as unknown as number),
           notes: trip.notes || '',
           deliveryType: (trip as Record<string, unknown>).deliveryType || 'SINGLE',
           loadingCityId: (trip as Record<string, unknown>).loadingCityId || '',
@@ -514,10 +506,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
           customerPhone: '',
           waybillNumber: '',
           totalRevenue: '' as unknown as number,
-          fuelCost: '' as unknown as number,
           startMileage: '' as unknown as number,
-          endMileage: '' as unknown as number,
-          fuelUsed: '' as unknown as number,
           notes: '',
           deliveryType: 'SINGLE',
           loadingCityId: '',
