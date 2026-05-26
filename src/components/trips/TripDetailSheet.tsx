@@ -53,11 +53,14 @@ interface FuelLogEntry {
   date: string
   odometer: number | null
   litersFilled: number
+  costPerLiter: number | null
   totalCost: number
   fuelType: string
   stationName: string | null
+  receiptNumber: string | null
   endMileage: number | null
   endMileageImage: string | null
+  distanceCovered: number | null
   notes: string | null
 }
 
@@ -550,6 +553,71 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                         </div>
                       ) : null
                     })()}
+
+                    {/* Fuel Log Summary Cards */}
+                    {fullTrip.fuelLogs && fullTrip.fuelLogs.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                          <Fuel className="h-3 w-3" />
+                          Fuel Log Records ({fullTrip.fuelLogs.length})
+                        </div>
+                        {fullTrip.fuelLogs.map((log) => (
+                          <div key={log.id} className="rounded-lg border bg-muted/20 p-3 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-medium text-foreground">
+                                {log.fuelType} — {log.litersFilled}L
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {log.date ? (() => {
+                                  try { return new Date(log.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) } catch { return log.date }
+                                })() : '—'}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                              {canSeeFinancialData && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Total Cost</span>
+                                  <span className="font-medium">{CURRENCY_SYMBOL}{log.totalCost.toLocaleString()}</span>
+                                </div>
+                              )}
+                              {canSeeFinancialData && log.costPerLiter != null && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Cost/Liter</span>
+                                  <span className="font-medium">{CURRENCY_SYMBOL}{log.costPerLiter.toFixed(2)}</span>
+                                </div>
+                              )}
+                              {log.stationName && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Station</span>
+                                  <span className="font-medium">{log.stationName}</span>
+                                </div>
+                              )}
+                              {log.receiptNumber && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Receipt #</span>
+                                  <span className="font-medium">{log.receiptNumber}</span>
+                                </div>
+                              )}
+                              {log.endMileage != null && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">End Mileage</span>
+                                  <span className="font-medium">{log.endMileage.toLocaleString()} km</span>
+                                </div>
+                              )}
+                              {log.distanceCovered != null && log.distanceCovered > 0 && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Distance</span>
+                                  <span className="font-medium text-emerald-600 dark:text-emerald-400">{log.distanceCovered.toLocaleString()} km</span>
+                                </div>
+                              )}
+                            </div>
+                            {log.notes && (
+                              <p className="text-xs italic text-muted-foreground mt-1">{log.notes}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </>
               )}
