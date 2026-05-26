@@ -36,21 +36,36 @@ interface UsePushNotificationsReturn {
   pushCount: number
 }
 
-/** Check if the push notification service is reachable (non-throwing) */
+/** Check if the push notification service is reachable (non-throwing).
+ *  Result is cached for the session to avoid repeated 404 console spam. */
+let _pushAvailableCache: boolean | null = null
+let _pushAvailablePromise: Promise<boolean> | null = null
+
 async function isPushServiceAvailable(): Promise<boolean> {
-  try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 3000)
-    const res = await fetch('/socket.io/?XTransformPort=3004&EIO=4&transport=polling', {
-      method: 'GET',
-      signal: controller.signal,
-    })
-    clearTimeout(timer)
-    // Socket.IO handshake returns 200 with a numeric payload
-    return res.ok
-  } catch {
-    return false
-  }
+  // Return cached result if we already checked
+  if (_pushAvailableCache !== null) return _pushAvailableCache
+
+  // Deduplicate concurrent checks
+  if (_pushAvailablePromise) return _pushAvailablePromise
+
+  _pushAvailablePromise = (async () => {
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 3000)
+      const res = await fetch('/socket.io/?XTransformPort=3004&EIO=4&transport=polling', {
+        method: 'GET',
+        signal: controller.signal,
+      })
+      clearTimeout(timer)
+      // Socket.IO handshake returns 200 with a numeric payload
+      _pushAvailableCache = res.ok
+    } catch {
+      _pushAvailableCache = false
+    }
+    return _pushAvailableCache
+  })()
+
+  return _pushAvailablePromise
 }
 
 export function usePushNotifications(
@@ -81,7 +96,11 @@ export function usePushNotifications(
     // This prevents the 502 Bad Gateway console spam when the service is down.
     isPushServiceAvailable().then((available) => {
       if (!available) {
-        console.warn('[Push] Notification service not available — push notifications disabled')
+        // Only warn once per session to avoid console spam
+        if (!sessionStorage.getItem('_pushWarned')) {
+          console.warn('[Push] Notification service not available — push notifications disabled')
+          sessionStorage.setItem('_pushWarned', '1')
+        }
         setIsConnected(false)
         return
       }
