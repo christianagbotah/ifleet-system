@@ -1406,13 +1406,15 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
                   variant="outline"
                   size="sm"
                   onClick={() => {
+                    const deliveryType = form.getValues('deliveryType')
+                    const autoRate = (deliveryType === 'SINGLE' && zoneRate !== null) ? zoneRate : 0
                     setCargoItems(prev => [...prev, {
                       id: crypto.randomUUID(),
                       itemId: '',
                       itemName: '',
                       unit: 'bags',
                       quantity: 0,
-                      rate: 0,
+                      rate: autoRate,
                       total: 0,
                       deliveryDestinationId: '',
                     }])
