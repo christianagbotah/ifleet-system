@@ -300,3 +300,25 @@ Stage Summary:
 - Rate field remains editable if no zone rate is found (manual entry)
 - The existing auto-apply effect continues to update all cargo items when zoneRate changes after selection
 - Pushed to GitHub: commit fdf8d7b
+
+---
+Task ID: 2
+Agent: main
+Task: Fix image upload on trip form - images stuck showing "Upload N pending image(s)"
+
+Work Log:
+- Investigated upload flow: uploadFiles() in api.ts calls POST /api/upload but that route did not exist
+- Created /api/upload/route.ts POST endpoint that accepts multiple image files via FormData, validates (JPEG/PNG/WebP, 5MB max), saves to public/uploads/images/, returns { urls: string[] }
+- Enhanced ImageFile interface with optional uploadError and uploading fields for per-image status tracking
+- Rewrote ImageUploadArea component:
+  - Images auto-upload immediately when selected (no manual upload button needed)
+  - Per-image visual status: spinner overlay (uploading), green checkmark (success), red overlay + "Failed" badge (error)
+  - "Retry failed" button appears when uploads fail
+  - File input resets after selection for re-selecting same file
+- Build passes successfully, committed and pushed
+
+Stage Summary:
+- Root cause: /api/upload endpoint was missing, so all uploads failed silently
+- Created: src/app/api/upload/route.ts
+- Modified: src/components/trips/TripFormDialog.tsx (ImageFile interface + ImageUploadArea component)
+- Commit: 998098b
