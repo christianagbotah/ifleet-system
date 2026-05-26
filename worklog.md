@@ -237,3 +237,24 @@ Stage Summary:
 - Root cause: Prisma schema field `ClientZone` didn't match API code using `zones`
 - 2 files changed, 5 insertions, 5 deletions
 - Pushed to GitHub: commit 3f029c1
+---
+Task ID: 1
+Agent: Main
+Task: Build complete supplier management feature
+
+Work Log:
+- Analyzed existing codebase: Supplier model exists in Prisma with fields (name, contactPerson, contactPhone, email, address, notes, isActive) and relations to Item, LoadingPoint, TripItem
+- Found existing GET /api/suppliers endpoint (read-only, lists suppliers)
+- Created POST /api/suppliers - Create supplier with name uniqueness validation
+- Created PUT /api/suppliers/[id] - Update supplier with duplicate name check
+- Created DELETE /api/suppliers/[id] - Hard delete with dependency protection (checks Item, LoadingPoint, TripItem relations)
+- Updated GET /api/suppliers to include _count for items, loading points, and trip items
+- Created SuppliersView component with full CRUD UI: search, stats cards, desktop table, mobile cards, create/edit dialog, delete confirmation
+- Added "Suppliers" navigation entry under Operations group in sidebar with Store icon
+- Wired up dynamic import and switch case in page.tsx
+
+Stage Summary:
+- Files created: src/app/api/suppliers/[id]/route.ts, src/components/suppliers/SuppliersView.tsx
+- Files modified: src/app/api/suppliers/route.ts, src/lib/constants.ts, src/app/page.tsx
+- Supplier management is now fully functional: create, read, update, delete via UI and API
+- All lint checks pass (only pre-existing errors in ifleet-fresh directory)

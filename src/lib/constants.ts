@@ -41,6 +41,7 @@ import {
   CalendarDays,
   CircleDollarSign,
   Scale,
+  Store,
   type LucideIcon,
 } from "lucide-react"
 
@@ -127,6 +128,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "active-trip", label: "Active Trip", icon: Navigation },
       { id: "waybills", label: "Waybills", icon: FileText },
       { id: "clients", label: "Clients", icon: Building2 },
+      { id: "suppliers", label: "Suppliers", icon: Store },
       { id: "route-optimizer", label: "Route Optimizer", icon: Compass },
       { id: "road-conditions", label: "Road Conditions", icon: AlertTriangle },
       { id: "load-board", label: "Load Board", icon: Package },

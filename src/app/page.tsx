@@ -100,6 +100,10 @@ const ClientsView = dynamic(
   () => import('@/components/clients/ClientsView').then(m => ({ default: m.ClientsView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const SuppliersView = dynamic(
+  () => import('@/components/suppliers/SuppliersView').then(m => ({ default: m.SuppliersView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const AnalyticsView = dynamic(
   () => import('@/components/analytics/AnalyticsView').then(m => ({ default: m.AnalyticsView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -339,6 +343,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <WaybillsView />
     case 'clients':
       return <ClientsView />
+    case 'suppliers':
+      return <SuppliersView />
     case 'route-optimizer':
       return <RouteOptimizerView />
     case 'documents':
