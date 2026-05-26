@@ -498,11 +498,11 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
               })()}
 
               {/* Fuel & Mileage */}
-              {fullTrip && (fullTrip.startMileage || fullTrip.fuelUsed || fullTrip.fuelCost || fullTrip.startMileageImage) && (
+              {fullTrip && (fullTrip.startMileage || fullTrip.endMileage || fullTrip.totalMileage || fullTrip.fuelUsed || fullTrip.fuelCost || fullTrip.startMileageImage) && (
                 <>
                   <Separator />
                   <div className="space-y-3">
-                    <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Fuel & Mileage</h4>
+                    <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Mileage & Uploads</h4>
                     <div className="grid grid-cols-2 gap-3">
                       {fullTrip.startMileage != null && (
                         <InfoItem icon={Route} label="Start Mileage" value={`${fullTrip.startMileage.toLocaleString()} km`} />
@@ -524,16 +524,15 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                     {/* Start Mileage Photos */}
                     {(() => {
                       const images = parseMileageImages(fullTrip.startMileageImage)
-                      if (images.length === 0) return null
-                      return (
+                      return images.length > 0 ? (
                         <div className="space-y-2">
                           <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                             <Camera className="h-3 w-3" />
-                            Start Mileage Photos
+                            Uploaded Photos ({images.length})
                           </div>
                           <ImageGallery images={images} onPreview={setPreviewImage} />
                         </div>
-                      )
+                      ) : null
                     })()}
 
                     {/* End Mileage Photos from Fuel Logs */}
@@ -541,16 +540,15 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                       const endImages = (fullTrip.fuelLogs || [])
                         .filter((log) => log.endMileageImage)
                         .flatMap((log) => parseMileageImages(log.endMileageImage))
-                      if (endImages.length === 0) return null
-                      return (
+                      return endImages.length > 0 ? (
                         <div className="space-y-2">
                           <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                             <Camera className="h-3 w-3" />
-                            End Mileage Photos
+                            End Mileage Photos ({endImages.length})
                           </div>
                           <ImageGallery images={endImages} onPreview={setPreviewImage} />
                         </div>
-                      )
+                      ) : null
                     })()}
                   </div>
                 </>

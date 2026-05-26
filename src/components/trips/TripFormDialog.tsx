@@ -484,11 +484,11 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
           customerPhone: trip.customerPhone || '',
           waybillNumber: trip.waybillNumber || '',
           totalRevenue: trip.totalRevenue ?? ('' as unknown as number),
-          fuelCost: '' as unknown as number,
-          startMileage: '' as unknown as number,
-          endMileage: '' as unknown as number,
-          fuelUsed: '' as unknown as number,
-          notes: '',
+          fuelCost: trip.fuelCost ?? ('' as unknown as number),
+          startMileage: trip.startMileage ?? ('' as unknown as number),
+          endMileage: trip.endMileage ?? ('' as unknown as number),
+          fuelUsed: trip.fuelUsed ?? ('' as unknown as number),
+          notes: trip.notes || '',
           deliveryType: (trip as Record<string, unknown>).deliveryType || 'SINGLE',
           loadingCityId: (trip as Record<string, unknown>).loadingCityId || '',
           loadingPointId: (trip as Record<string, unknown>).loadingPointId || '',
@@ -576,15 +576,55 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
         })
         .finally(() => setLoadingOptions(false))
 
-      // Reset cascading states
+      // Reset/populate cascading states
       setLoadingPoints([])
       setDestinationZones([])
       setZoneRate(null)
-      setCargoItems([])
+
+      // Populate cargoItems from trip's TripItem data
+      const tripItems = (trip as Record<string, unknown>).TripItem as Record<string, unknown>[] | undefined
+      if (trip && Array.isArray(tripItems) && tripItems.length > 0) {
+        const isMultiple = (trip as Record<string, unknown>).deliveryType === 'MULTIPLE'
+        setCargoItems(tripItems.map((ti) => {
+          const itemData = ti.item as Record<string, unknown> | undefined
+          return {
+            _tempId: crypto.randomUUID(),
+            itemId: (ti.itemId as string) || '',
+            itemName: (itemData?.name as string) || (ti.itemName as string) || 'Unknown',
+            unit: (itemData?.unit as string) || (ti.unit as string) || 'bags',
+            quantity: Number(ti.quantity) || 0,
+            rate: ti.rate ? Number(ti.rate) : null,
+            total: ti.total ? Number(ti.total) : null,
+            deliveryDestinationId: isMultiple ? ((ti.deliveryDestinationId as string) || '') : '',
+          }
+        }))
+      } else if (trip) {
+        // For single-delivery trips without TripItem records, create one from trip-level fields
+        setCargoItems([{
+          _tempId: crypto.randomUUID(),
+          itemId: (trip as Record<string, unknown>).itemId || '',
+          itemName: trip.itemName || '',
+          unit: trip.unit || 'bags',
+          quantity: trip.quantity || 0,
+          rate: trip.unitPrice ? Number(trip.unitPrice) : null,
+          total: trip.totalRevenue ? Number(trip.totalRevenue) : null,
+          deliveryDestinationId: '',
+        }])
+      } else {
+        setCargoItems([])
+      }
+
+      // Fetch loading points for the selected loading city when editing
+      const editLoadingCityId = trip ? (trip as Record<string, unknown>).loadingCityId as string | undefined : undefined
+      if (editLoadingCityId) {
+        apiFetch<{ data: LoadingPointOption[] }>(`/api/loading-points?loadingCityId=${editLoadingCityId}`)
+          .then((res) => setLoadingPoints(res.data || []))
+          .catch(() => setLoadingPoints([]))
+      }
 
       // Reset/populate delivery destinations
-      if (trip && (trip as Record<string, unknown>).deliveryDestinations) {
-        const existingDests = (trip as Record<string, unknown>).deliveryDestinations as Record<string, unknown>[]
+      if (trip && (trip as Record<string, unknown>).TripDeliveryDestination) {
+        const existingDests = (trip as Record<string, unknown>).TripDeliveryDestination as Record<string, unknown>[]
         if (Array.isArray(existingDests) && existingDests.length > 0) {
           setDeliveryDestinations(existingDests.map(d => ({
             _tempId: (d.id as string) || crypto.randomUUID(),
