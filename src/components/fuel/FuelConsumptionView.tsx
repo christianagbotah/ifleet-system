@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import {
   Banknote,
   Route,
@@ -257,19 +258,9 @@ export function FuelConsumptionView() {
         {/* Date From */}
         <div className="flex items-center gap-2">
           <Calendar className="size-4 text-muted-foreground" />
-          <Input
-            type="date"
-            value={dateFrom}
-            onChange={(e) => { setDateFrom(e.target.value); setActivePeriod('') }}
-            className="w-[150px]"
-          />
+          <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} className="w-[150px]" />
           <span className="text-muted-foreground text-sm">to</span>
-          <Input
-            type="date"
-            value={dateTo}
-            onChange={(e) => { setDateTo(e.target.value); setActivePeriod('') }}
-            className="w-[150px]"
-          />
+          <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} className="w-[150px]" />
         </div>
 
         {/* Truck Filter */}

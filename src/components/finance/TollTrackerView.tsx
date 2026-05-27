@@ -28,6 +28,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import { DatePicker } from '@/components/ui/date-picker'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import {
   fetchTollRecords, createTollRecord, updateTollRecord, deleteTollRecord,
@@ -440,8 +441,8 @@ export function TollTrackerView() {
                     </SelectContent>
                   </Select>
                   <Input type="text" placeholder="Route" className="h-9 text-sm" value={filterRoute} onChange={e => setFilterRoute(e.target.value)} />
-                  <Input type="date" className="h-9 text-sm" value={filterDateFrom} onChange={e => setFilterDateFrom(e.target.value)} />
-                  <Input type="date" className="h-9 text-sm" value={filterDateTo} onChange={e => setFilterDateTo(e.target.value)} />
+                  <DatePicker value={filterDateFrom} onChange={(val) => setFilterDateFrom(val)} className="h-9" />
+                  <DatePicker value={filterDateTo} onChange={(val) => setFilterDateTo(val)} className="h-9" />
                   <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9 text-xs text-muted-foreground">
                     <X className="h-3.5 w-3.5 mr-1" /> Clear
                   </Button>
@@ -500,7 +501,8 @@ export function TollTrackerView() {
                         </TableHeader>
                         <TableBody>
                           {records.map(r => (
-                            <TableRow key={r.id} className="cursor-pointer hover:bg-muted/50" onClick={() => { setSelectedRecord(r); setShowViewDialog(true) }}>
+                            <TableRow key={r.id} className="cursor-pointer hover:bg-muted/50" onClick={() => { setSelectedRecord(r);
+setShowViewDialog(true) }}>
                               <TableCell className="text-xs py-2.5">{formatDate(r.tollDate)}</TableCell>
                               <TableCell className="text-xs font-medium py-2.5">{r.truck.plateNumber}</TableCell>
                               <TableCell className="text-xs py-2.5">{r.driver ? `${r.driver.firstName} ${r.driver.lastName}` : '—'}</TableCell>
@@ -673,7 +675,7 @@ export function TollTrackerView() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs">Date *</Label>
-                <Input type="date" className="h-9 text-sm" value={form.tollDate} onChange={e => setForm(f => ({ ...f, tollDate: e.target.value }))} />
+                <DatePicker value={form.tollDate} onChange={(val) => setForm(f => ({ ...f, tollDate: val }))} className="h-9" />
               </div>
               {form.tollType === 'toll' && (
                 <div className="space-y-1.5">

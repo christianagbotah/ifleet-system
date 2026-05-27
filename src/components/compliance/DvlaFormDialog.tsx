@@ -25,6 +25,7 @@ import {
 import { Loader2, Car } from 'lucide-react'
 import { APP_COMPANY } from '@/lib/constants'
 import { apiFetch } from '@/lib/api'
+import { DatePicker } from '@/components/ui/date-picker'
 import { toast } from 'sonner'
 
 // ─── Exported Types ───────────────────────────────────────────────────────
@@ -484,23 +485,13 @@ export function DvlaFormDialog({ open, onOpenChange, registration, onSuccess }: 
                 <Label htmlFor="reg-date">
                   Registration Date <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="reg-date"
-                  type="date"
-                  value={registrationDate}
-                  onChange={(e) => setRegistrationDate(e.target.value)}
-                />
+                <DatePicker value={registrationDate} onChange={(val) => setRegistrationDate(val)} id="reg-date" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="exp-date">
                   Expiry Date <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="exp-date"
-                  type="date"
-                  value={expiryDate}
-                  onChange={(e) => setExpiryDate(e.target.value)}
-                />
+                <DatePicker value={expiryDate} onChange={(val) => setExpiryDate(val)} id="exp-date" />
               </div>
             </div>
 

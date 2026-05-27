@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   ChartContainer,
@@ -479,19 +479,11 @@ export function ProfitabilityView() {
                 <>
                   <div className="min-w-[150px]">
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">From</label>
-                    <Input
-                      type="date"
-                      value={dateFrom}
-                      onChange={e => setDateFrom(e.target.value)}
-                    />
+                    <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} />
                   </div>
                   <div className="min-w-[150px]">
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">To</label>
-                    <Input
-                      type="date"
-                      value={dateTo}
-                      onChange={e => setDateTo(e.target.value)}
-                    />
+                    <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} />
                   </div>
                 </>
               )}

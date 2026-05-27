@@ -24,7 +24,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { StatsCard } from '@/components/ui/stats-card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -44,6 +43,7 @@ import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend, PieChart, Pie, Cell,
 } from 'recharts'
+import { DatePicker } from '@/components/ui/date-picker'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { fetchFuelAnalytics, fetchTrucks, fetchFuelAnomalies, type FuelAnalyticsData, type FuelAnomalyDetection, type Truck } from '@/lib/api'
 
@@ -215,20 +215,8 @@ export function FuelAnalyticsView() {
             ))}
           </SelectContent>
         </Select>
-        <Input
-          type="date"
-          value={dateFrom}
-          onChange={e => setDateFrom(e.target.value)}
-          className="w-full sm:w-40"
-          placeholder="From"
-        />
-        <Input
-          type="date"
-          value={dateTo}
-          onChange={e => setDateTo(e.target.value)}
-          className="w-full sm:w-40"
-          placeholder="To"
-        />
+        <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} className="w-full sm:w-40" />
+        <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} className="w-full sm:w-40" />
         {(truckFilter !== 'all' || dateFrom || dateTo) && (
           <Button
             variant="ghost"

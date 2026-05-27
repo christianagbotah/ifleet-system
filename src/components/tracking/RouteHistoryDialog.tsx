@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { fetchLocationHistory, type TruckLocation } from '@/lib/api'
@@ -197,11 +198,11 @@ export function RouteHistoryDialog({ open, onOpenChange, truckId, plateNumber }:
         <DialogBody className="flex flex-col sm:flex-row items-end gap-3">
           <div className="flex-1 w-full">
             <Label className="text-xs text-muted-foreground">From</Label>
-            <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="mt-1" />
+            <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} className="mt-1" />
           </div>
           <div className="flex-1 w-full">
             <Label className="text-xs text-muted-foreground">To</Label>
-            <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="mt-1" />
+            <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} className="mt-1" />
           </div>
           <Button onClick={loadHistory} disabled={loading || !truckId}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

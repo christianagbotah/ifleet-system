@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -423,11 +424,7 @@ export function InsuranceClaimsView() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Incident Date *</Label>
-                <Input
-                  type="date"
-                  value={createForm.incidentDate}
-                  onChange={(e) => setCreateForm((p) => ({ ...p, incidentDate: e.target.value }))}
-                />
+                <DatePicker value={createForm.incidentDate} onChange={(val) => setCreateForm((p) => ({ ...p, incidentDate: val }))} />
               </div>
               <div className="space-y-2">
                 <Label>Claim Amount ({CURRENCY_SYMBOL}) *</Label>

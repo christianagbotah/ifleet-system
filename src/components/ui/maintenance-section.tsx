@@ -40,6 +40,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Skeleton } from '@/components/ui/skeleton'
 
 // --- Types ---
@@ -531,12 +532,7 @@ function ScheduleDialog({
           {/* Scheduled Date */}
           <div className="space-y-2">
             <Label className="text-sm">Scheduled Date</Label>
-            <Input
-              type="date"
-              value={scheduledDate}
-              onChange={(e) => setScheduledDate(e.target.value)}
-              required
-            />
+            <DatePicker value={scheduledDate} onChange={(val) => setScheduledDate(val)} />
           </div>
 
           {/* Cost + Mileage row */}

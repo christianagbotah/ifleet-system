@@ -25,6 +25,7 @@ import { formatCurrency } from '@/lib/currency'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Badge } from '@/components/ui/badge'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 import {
@@ -347,7 +348,8 @@ export default function ZoneRatesPage() {
                             <Button variant="ghost" size="icon" onClick={() => handleEdit(rate)}>
                               <Pencil className="size-4" />
                             </Button>
-                            <Button variant="ghost" size="icon" onClick={() => { setSelectedRate(rate); setDeleteOpen(true) }}>
+                            <Button variant="ghost" size="icon" onClick={() => { setSelectedRate(rate);
+setDeleteOpen(true) }}>
                               <Trash2 className="size-4 text-destructive" />
                             </Button>
                           </div>
@@ -412,7 +414,7 @@ export default function ZoneRatesPage() {
                 <FormField control={form.control} name="effectiveDate" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Effective Date *</FormLabel>
-                    <FormControl><Input type="date" {...field} /></FormControl>
+                    <FormControl><DatePicker value={field.value} onChange={(val) => field.onChange(val)} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />

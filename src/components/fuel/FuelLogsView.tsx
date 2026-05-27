@@ -62,6 +62,7 @@ import {
   type FuelLogStats,
   type Truck,
 } from '@/lib/api'
+import { DatePicker } from '@/components/ui/date-picker'
 import { useDebounce } from '@/hooks/use-debounce'
 import { FuelLogFormDialog } from '@/components/fuel/FuelLogFormDialog'
 import { ImportCSVDialog } from '@/components/import-csv-dialog'
@@ -354,20 +355,8 @@ export function FuelLogsView() {
             <SelectItem value="Petrol">Petrol</SelectItem>
           </SelectContent>
         </Select>
-        <Input
-          type="date"
-          value={dateFrom}
-          onChange={(e) => setDateFrom(e.target.value)}
-          className="w-full lg:w-40"
-          placeholder="From"
-        />
-        <Input
-          type="date"
-          value={dateTo}
-          onChange={(e) => setDateTo(e.target.value)}
-          className="w-full lg:w-40"
-          placeholder="To"
-        />
+        <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} className="w-full lg:w-40" />
+        <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} className="w-full lg:w-40" />
       </motion.div>
 
       {/* Bulk Action Toolbar */}

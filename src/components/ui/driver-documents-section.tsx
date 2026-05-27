@@ -21,6 +21,7 @@ import { toast } from '@/lib/toast-config'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -445,13 +446,7 @@ export function DriverDocumentsSection({ driverId, driverName }: DriverDocuments
                 <Label htmlFor="doc-expiry" className="text-xs">
                   Expiry Date <span className="text-muted-foreground">(optional)</span>
                 </Label>
-                <Input
-                  id="doc-expiry"
-                  type="date"
-                  value={form.expiryDate}
-                  onChange={(e) => setForm((prev) => ({ ...prev, expiryDate: e.target.value }))}
-                  className="h-9 text-sm"
-                />
+                <DatePicker id="doc-expiry" value={form.expiryDate} onChange={(val) => setForm((prev) => ({ ...prev, expiryDate: val }))} className="h-9" />
               </div>
 
               {/* Notes */}

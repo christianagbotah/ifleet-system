@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -293,12 +294,7 @@ function CreateInvoiceDialog({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label className="text-sm font-medium">Due Date *</Label>
-              <Input
-                type="date"
-                className="mt-1.5"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-              />
+              <DatePicker value={dueDate} onChange={(val) => setDueDate(val)} className="mt-1.5" />
             </div>
             <div>
               <Label className="text-sm font-medium">Tax Rate (%)</Label>
@@ -1028,19 +1024,15 @@ export function InvoicesView() {
                   ))}
                 </SelectContent>
               </Select>
-              <Input
-                type="date"
-                className="h-9 w-full sm:w-40"
-                placeholder="From"
+              <DatePicker
                 value={dateFrom}
-                onChange={(e) => { setDateFrom(e.target.value); setPage(1) }}
-              />
-              <Input
-                type="date"
+                onChange={(val) => { setDateFrom(val); setPage(1) }}
                 className="h-9 w-full sm:w-40"
-                placeholder="To"
+              />
+              <DatePicker
                 value={dateTo}
-                onChange={(e) => { setDateTo(e.target.value); setPage(1) }}
+                onChange={(val) => { setDateTo(val); setPage(1) }}
+                className="h-9 w-full sm:w-40"
               />
             </div>
           </CardContent>

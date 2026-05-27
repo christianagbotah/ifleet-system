@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import {
   Select,
   SelectContent,
@@ -849,21 +850,9 @@ export function AuditLogView() {
               </SelectContent>
             </Select>
 
-            <Input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => { setDateFrom(e.target.value); setPage(1) }}
-              className="h-9"
-              placeholder="From date"
-            />
+            <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} className="h-9" />
 
-            <Input
-              type="date"
-              value={dateTo}
-              onChange={(e) => { setDateTo(e.target.value); setPage(1) }}
-              className="h-9"
-              placeholder="To date"
-            />
+            <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} className="h-9" />
 
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />

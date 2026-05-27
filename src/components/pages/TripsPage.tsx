@@ -43,6 +43,7 @@ import { formatCurrency } from '@/lib/currency'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Badge } from '@/components/ui/badge'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 import {
@@ -159,7 +160,8 @@ interface TripData {
   truck?: Truck
   fromWarehouse?: Warehouse
   toWarehouse?: Warehouse
-  cashAdvances?: Array<{ id: string; amount: number; purpose: string; status: string }>
+  cashAdvances?: Array<{ id: string;
+amount: number; purpose: string; status: string }>
   incentives?: Array<{ id: string; amount: number; incentiveType: string; status: string }>
 }
 
@@ -751,18 +753,16 @@ export default function TripsPage() {
               Date Range
             </span>
             <div className="flex flex-col sm:flex-row gap-2 flex-1">
-              <Input
-                type="date"
+              <DatePicker
                 value={startDate}
-                onChange={(e) => { setStartDate(e.target.value); setCurrentPage(1) }}
+                onChange={(val) => { setStartDate(val); setCurrentPage(1) }}
                 className="w-full sm:w-auto"
                 placeholder="Start date"
               />
               <span className="hidden sm:flex items-center text-muted-foreground text-sm">to</span>
-              <Input
-                type="date"
+              <DatePicker
                 value={endDate}
-                onChange={(e) => { setEndDate(e.target.value); setCurrentPage(1) }}
+                onChange={(val) => { setEndDate(val); setCurrentPage(1) }}
                 className="w-full sm:w-auto"
                 placeholder="End date"
               />
@@ -1190,14 +1190,14 @@ export default function TripsPage() {
                 <FormField control={form.control} name="departureDate" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Departure</FormLabel>
-                    <FormControl><Input type="date" {...field} /></FormControl>
+                    <FormControl><DatePicker value={field.value} onChange={(val) => field.onChange(val)} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="arrivalDate" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Arrival</FormLabel>
-                    <FormControl><Input type="date" {...field} /></FormControl>
+                    <FormControl><DatePicker value={field.value} onChange={(val) => field.onChange(val)} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />

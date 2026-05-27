@@ -7,7 +7,6 @@ import {
   Users, Truck, MapPin, GitCompareArrows, FileText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -28,6 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { apiFetch } from '@/lib/api'
+import { DatePicker } from '@/components/ui/date-picker'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { toast } from 'sonner'
 
@@ -279,19 +279,11 @@ export function ReportsView() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs text-muted-foreground">From Date</Label>
-                <Input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                />
+                <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs text-muted-foreground">To Date</Label>
-                <Input
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
-                />
+                <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} />
               </div>
             </div>
           </CardContent>

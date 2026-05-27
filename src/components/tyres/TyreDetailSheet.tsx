@@ -26,7 +26,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -66,7 +66,8 @@ interface TyreDetailSheetProps {
     retiredDate?: string | null
     retiredReason?: string | null
     lastInspection?: string | null
-    truck: { id: string; plateNumber: string; make: string; model: string }
+    truck: { id: string;
+plateNumber: string; make: string; model: string }
   } | null
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -631,11 +632,7 @@ function ChangeConditionDialog({
                 </Label>
               </div>
               {updateInspection && (
-                <Input
-                  type="date"
-                  value={inspectionDate}
-                  onChange={(e) => setInspectionDate(e.target.value)}
-                />
+                <DatePicker value={inspectionDate} onChange={(val) => setInspectionDate(val)} />
               )}
             </div>
 

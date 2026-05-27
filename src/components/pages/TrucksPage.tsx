@@ -34,6 +34,7 @@ import { useBulkSelect } from '@/hooks/use-bulk-select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Badge } from '@/components/ui/badge'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 import {
@@ -167,7 +168,8 @@ const insuranceStatusColors: Record<string, string> = {
   none: 'text-muted-foreground',
 }
 
-function SortIcon({ field, sortField, sortDir }: { field: string; sortField: string; sortDir: 'asc' | 'desc' }) {
+function SortIcon({ field, sortField, sortDir }: { field: string;
+sortField: string; sortDir: 'asc' | 'desc' }) {
   if (sortField !== field) return <ChevronUp className="size-3 opacity-30" />
   return sortDir === 'asc' ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />
 }
@@ -988,7 +990,7 @@ export default function TrucksPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Next Service Date</FormLabel>
-                          <FormControl><Input type="date" {...field} /></FormControl>
+                          <FormControl><DatePicker value={field.value} onChange={(val) => field.onChange(val)} /></FormControl>
                           <FormMessage />
                         </FormItem>
                       )}

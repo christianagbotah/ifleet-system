@@ -34,6 +34,7 @@ import {
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from '@/components/ui/sheet'
+import { DatePicker } from '@/components/ui/date-picker'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import {
   apiFetch, fetchWarehouseItems, fetchWarehouseAnalytics,
@@ -291,7 +292,7 @@ function ItemFormDialog({
             {/* Expiry Date */}
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">Expiry Date</Label>
-              <Input type="date" value={form.expiryDate} onChange={e => update('expiryDate', e.target.value)} />
+              <DatePicker value={form.expiryDate} onChange={(val) => update('expiryDate', val)} />
             </div>
 
             {/* Notes */}

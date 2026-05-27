@@ -43,6 +43,8 @@ import { useAuthStore } from '@/lib/store/auth'
 import { useEntityHighlight } from '@/lib/hooks/useEntityHighlight'
 import { toast } from 'sonner'
 
+import { DatePicker } from '@/components/ui/date-picker'
+
 // ==================== TYPES ====================
 
 interface CashAdvance {
@@ -1002,11 +1004,11 @@ export function CashAdvancesView() {
           >
             <div className="flex-1">
               <label className="text-xs font-medium text-muted-foreground mb-1 block">From Date</label>
-              <Input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(1) }} />
+              <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} />
             </div>
             <div className="flex-1">
               <label className="text-xs font-medium text-muted-foreground mb-1 block">To Date</label>
-              <Input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1) }} />
+              <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} />
             </div>
             <div className="flex-1">
               <label className="text-xs font-medium text-muted-foreground mb-1 block">Driver</label>

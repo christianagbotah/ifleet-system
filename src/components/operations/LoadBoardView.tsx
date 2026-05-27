@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -891,19 +892,11 @@ function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitti
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Pickup Date</Label>
-              <Input
-                type="date"
-                value={form.pickupDate}
-                onChange={(e) => updateField('pickupDate', e.target.value)}
-              />
+              <DatePicker value={form.pickupDate} onChange={(val) => updateField('pickupDate', val)} />
             </div>
             <div className="space-y-2">
               <Label>Delivery Date</Label>
-              <Input
-                type="date"
-                value={form.deliveryDate}
-                onChange={(e) => updateField('deliveryDate', e.target.value)}
-              />
+              <DatePicker value={form.deliveryDate} onChange={(val) => updateField('deliveryDate', val)} />
             </div>
           </div>
 

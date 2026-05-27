@@ -25,6 +25,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Loader2, ShieldCheck } from 'lucide-react'
 import { apiFetch } from '@/lib/api'
+import { DatePicker } from '@/components/ui/date-picker'
 import { toast } from 'sonner'
 
 // ─── Exported Types ───────────────────────────────────────────────────────
@@ -382,12 +383,7 @@ export function RoadworthyFormDialog({ open, onOpenChange, inspection, onSuccess
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="insp-date">Inspection Date <span className="text-destructive">*</span></Label>
-                  <Input
-                    id="insp-date"
-                    type="date"
-                    value={inspectionDate}
-                    onChange={(e) => setInspectionDate(e.target.value)}
-                  />
+                  <DatePicker value={inspectionDate} onChange={(val) => setInspectionDate(val)} id="insp-date" />
                 </div>
                 <div className="space-y-2">
                   <Label>Result <span className="text-destructive">*</span></Label>
@@ -520,21 +516,11 @@ export function RoadworthyFormDialog({ open, onOpenChange, inspection, onSuccess
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="cert-expiry">Certificate Expiry Date</Label>
-                  <Input
-                    id="cert-expiry"
-                    type="date"
-                    value={certificateExpiry}
-                    onChange={(e) => setCertificateExpiry(e.target.value)}
-                  />
+                  <DatePicker value={certificateExpiry} onChange={(val) => setCertificateExpiry(val)} id="cert-expiry" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="next-insp">Next Inspection Due</Label>
-                  <Input
-                    id="next-insp"
-                    type="date"
-                    value={nextInspectionDue}
-                    onChange={(e) => setNextInspectionDue(e.target.value)}
-                  />
+                  <DatePicker value={nextInspectionDue} onChange={(val) => setNextInspectionDue(val)} id="next-insp" />
                 </div>
               </div>
 

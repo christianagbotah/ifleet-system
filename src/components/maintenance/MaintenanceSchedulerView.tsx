@@ -65,6 +65,7 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { apiFetch } from '@/lib/api'
+import { DatePicker } from '@/components/ui/date-picker'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { toast } from 'sonner'
 import { TruckHistorySheet } from '@/components/maintenance/TruckHistorySheet'
@@ -1000,11 +1001,7 @@ function ScheduleServiceDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-2">
               <Label className="text-sm font-medium">Scheduled Date</Label>
-              <Input
-                type="date"
-                value={scheduledDate}
-                onChange={(e) => setScheduledDate(e.target.value)}
-              />
+              <DatePicker value={scheduledDate} onChange={(val) => setScheduledDate(val)} />
             </div>
             <div className="grid gap-2">
               <Label className="text-sm font-medium">Due Mileage (km)</Label>

@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import {
   Form,
   FormControl,
@@ -259,7 +260,7 @@ export function ExpenseFormDialog({
                   <FormItem>
                     <FormLabel>Date *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

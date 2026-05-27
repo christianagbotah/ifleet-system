@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import {
   ChartContainer,
   ChartTooltip,
@@ -249,7 +249,8 @@ export function CostAnalyticsView() {
     setLoading(true)
     setError(null)
     try {
-      const params: { truckId?: string; dateFrom?: string; dateTo?: string } = {}
+      const params: { truckId?: string;
+        dateFrom?: string; dateTo?: string } = {}
       if (selectedTruck !== 'all') params.truckId = selectedTruck
       if (dateFrom) params.dateFrom = dateFrom
       if (dateTo) params.dateTo = dateTo
@@ -445,19 +446,11 @@ export function CostAnalyticsView() {
               </div>
               <div className="min-w-[150px]">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">From</label>
-                <Input
-                  type="date"
-                  value={dateFrom}
-                  onChange={e => setDateFrom(e.target.value)}
-                />
+                <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} />
               </div>
               <div className="min-w-[150px]">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">To</label>
-                <Input
-                  type="date"
-                  value={dateTo}
-                  onChange={e => setDateTo(e.target.value)}
-                />
+                <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} />
               </div>
               <Button
                 variant="outline"

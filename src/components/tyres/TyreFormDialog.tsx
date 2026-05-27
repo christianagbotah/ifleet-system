@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Label } from '@/components/ui/label'
 import { SearchableSelect, type SearchableOption } from '@/components/ui/searchable-select'
 import {
@@ -35,7 +36,8 @@ interface TyreFormDialogProps {
   tyre?: {
     id: string
     truckId: string
-    truck: { id: string; plateNumber: string; make: string; model: string }
+    truck: { id: string;
+plateNumber: string; make: string; model: string }
     serialNumber: string
     brand: string
     purchaseDate: string
@@ -251,12 +253,7 @@ export function TyreFormDialog({ open, onOpenChange, tyre, onSuccess }: TyreForm
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="tyre-date">Purchase Date <span className="text-destructive">*</span></Label>
-                <Input
-                  id="tyre-date"
-                  type="date"
-                  value={purchaseDate}
-                  onChange={(e) => setPurchaseDate(e.target.value)}
-                />
+                <DatePicker value={purchaseDate} onChange={(val) => setPurchaseDate(val)} id="tyre-date" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tyre-price">

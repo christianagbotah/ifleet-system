@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/select'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
+import { DatePicker } from '@/components/ui/date-picker'
 import { fetchTrucks, fetchTrips, type Truck, type Trip, type FuelLog, createFuelLog, updateFuelLog, uploadDocument, uploadFiles } from '@/lib/api'
 import { toast } from 'sonner'
 import { ReceiptScanner, type ScannedReceiptData } from '@/components/scanner/ReceiptScanner'
@@ -804,8 +805,8 @@ export function FuelLogFormDialog({
                 />
               )}
 
-              {/* Date & Fuel Type */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Date, Fuel Type & End Mileage (post-trip) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
                   name="date"
@@ -813,7 +814,11 @@ export function FuelLogFormDialog({
                     <FormItem>
                       <FormLabel>Date *</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <DatePicker
+                          value={field.value}
+                          onChange={(val) => field.onChange(val)}
+                          placeholder="Select date"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -840,6 +845,32 @@ export function FuelLogFormDialog({
                     </FormItem>
                   )}
                 />
+                {formMode === 'post_trip' && (
+                  <FormField
+                    control={form.control}
+                    name="endMileage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>End Mileage (km) *</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="e.g., 146000"
+                            min="0"
+                            {...field}
+                            value={field.value ?? ''}
+                          />
+                        </FormControl>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {distanceCovered !== null
+                            ? `Distance: ${distanceCovered.toLocaleString()} km`
+                            : 'Enter to calculate distance'}
+                        </p>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
 
               {/* Standard mode: Odometer & Fuel Levels */}
@@ -986,34 +1017,6 @@ export function FuelLogFormDialog({
                   )}
                 />
               </div>
-
-              {/* Post-trip specific: End Mileage */}
-              {formMode === 'post_trip' && (
-                <FormField
-                  control={form.control}
-                  name="endMileage"
-                  render={({ field }) => (
-                    <FormItem className="sm:max-w-xs">
-                      <FormLabel>End Mileage (km) *</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="e.g., 146000"
-                          min="0"
-                          {...field}
-                          value={field.value ?? ''}
-                        />
-                      </FormControl>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {distanceCovered !== null
-                          ? `Distance covered: ${distanceCovered.toLocaleString()} km`
-                          : 'Enter end mileage to calculate distance'}
-                      </p>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
 
               {/* Station & Receipt */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

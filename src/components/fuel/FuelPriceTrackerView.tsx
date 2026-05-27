@@ -26,6 +26,7 @@ import {
   updateFuelStation, deleteFuelStation,
   type FuelStation, type FuelPriceAnalytics
 } from '@/lib/api'
+import { DatePicker } from '@/components/ui/date-picker'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 
 // ============ DATA ============
@@ -830,7 +831,7 @@ function UpdatePriceForm({ station, onSubmit, loading }: { station: FuelStation;
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Effective Date</Label>
-            <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
+            <DatePicker value={date} onChange={(val) => setDate(val)} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Source</Label>

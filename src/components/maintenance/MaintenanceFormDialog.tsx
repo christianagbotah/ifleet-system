@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
@@ -370,7 +371,7 @@ export function MaintenanceFormDialog({
                   <FormItem>
                     <FormLabel>Performed Date *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -386,7 +387,7 @@ export function MaintenanceFormDialog({
                 <FormItem>
                   <FormLabel>Next Due Date</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

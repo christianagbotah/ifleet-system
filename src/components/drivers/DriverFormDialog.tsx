@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Switch } from '@/components/ui/switch'
 import {
   Form,
@@ -500,7 +501,7 @@ export function DriverFormDialog({
                   <FormItem className="sm:max-w-xs">
                     <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -536,7 +537,7 @@ export function DriverFormDialog({
                     <FormItem>
                       <FormLabel>Card Expiry</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -615,7 +616,7 @@ export function DriverFormDialog({
                   <FormItem className="sm:max-w-xs">
                     <FormLabel>License Expiry *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

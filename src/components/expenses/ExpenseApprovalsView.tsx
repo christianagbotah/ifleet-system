@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -736,21 +737,11 @@ export function ExpenseApprovalsView() {
           >
             <div className="space-y-1.5 flex-1">
               <Label className="text-xs text-muted-foreground">From Date</Label>
-              <Input
-                type="date"
-                value={dateFrom}
-                onChange={e => { setDateFrom(e.target.value); setPage(1) }}
-                className="h-9"
-              />
+              <DatePicker value={dateFrom} onChange={(val) => setDateFrom(val)} className="h-9" />
             </div>
             <div className="space-y-1.5 flex-1">
               <Label className="text-xs text-muted-foreground">To Date</Label>
-              <Input
-                type="date"
-                value={dateTo}
-                onChange={e => { setDateTo(e.target.value); setPage(1) }}
-                className="h-9"
-              />
+              <DatePicker value={dateTo} onChange={(val) => setDateTo(val)} className="h-9" />
             </div>
             {(dateFrom || dateTo) && (
               <div className="flex items-end">

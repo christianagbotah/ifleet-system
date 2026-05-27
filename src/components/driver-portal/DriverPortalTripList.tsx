@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { DatePicker } from '@/components/ui/date-picker'
 import { apiFetch, type Trip } from '@/lib/api'
 import {
   TRIP_STATUS_META,
@@ -479,11 +480,7 @@ function ExpenseForm({
         </div>
         <div>
           <label className="text-xs font-medium text-gray-600 mb-1 block">Date</label>
-          <Input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
+          <DatePicker value={date} onChange={(val) => setDate(val)} />
         </div>
       </div>
 

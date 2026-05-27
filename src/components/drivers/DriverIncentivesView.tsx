@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -633,19 +634,11 @@ function CreateIncentiveDialog({ open, onOpenChange, onCreated }: {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium">Period Start</label>
-                <Input
-                  type="date"
-                  value={form.periodStart}
-                  onChange={(e) => setForm(f => ({ ...f, periodStart: e.target.value }))}
-                />
+                <DatePicker value={form.periodStart} onChange={(val) => setForm(f => ({ ...f, periodStart: val }))} />
               </div>
               <div>
                 <label className="text-sm font-medium">Period End</label>
-                <Input
-                  type="date"
-                  value={form.periodEnd}
-                  onChange={(e) => setForm(f => ({ ...f, periodEnd: e.target.value }))}
-                />
+                <DatePicker value={form.periodEnd} onChange={(val) => setForm(f => ({ ...f, periodEnd: val }))} />
               </div>
             </div>
           </form>

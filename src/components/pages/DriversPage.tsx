@@ -39,6 +39,7 @@ import { ColumnVisibilityMenu } from '@/components/ui/column-visibility-menu'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Badge } from '@/components/ui/badge'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 import {
@@ -131,7 +132,8 @@ const statusColors: Record<string, string> = {
   suspended: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50',
 }
 
-function SortIcon({ field, sortField, sortDir }: { field: string; sortField: string; sortDir: 'asc' | 'desc' }) {
+function SortIcon({ field, sortField, sortDir }: { field: string;
+sortField: string; sortDir: 'asc' | 'desc' }) {
   if (sortField !== field) return <ChevronUp className="size-3 opacity-30" />
   return sortDir === 'asc' ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />
 }
@@ -800,7 +802,7 @@ export default function DriversPage() {
                       <FormFieldWrapper error={form.formState.errors.licenseExpiry?.message} label="License Expiry *" description="Drivers with expired licenses will be flagged">
                         <FormItem>
                           <FormControl>
-                            <Input type="date" {...field} />
+                            <DatePicker value={field.value} onChange={(val) => field.onChange(val)} />
                           </FormControl>
                         </FormItem>
                       </FormFieldWrapper>

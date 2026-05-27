@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Loader2, ShieldCheck } from 'lucide-react'
+import { DatePicker } from '@/components/ui/date-picker'
 import { INSURANCE_TYPES } from '@/lib/constants'
 import { useCurrency } from '@/lib/currency-context'
 import { useAuthStore } from '@/lib/store/auth'
@@ -319,21 +320,11 @@ export function InsuranceFormDialog({ open, onOpenChange, insurance, onSuccess }
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="insurance-start">Start Date <span className="text-destructive">*</span></Label>
-              <Input
-                id="insurance-start"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
+              <DatePicker value={startDate} onChange={(val) => setStartDate(val)} id="insurance-start" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="insurance-end">End Date <span className="text-destructive">*</span></Label>
-              <Input
-                id="insurance-end"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+              <DatePicker value={endDate} onChange={(val) => setEndDate(val)} id="insurance-end" />
             </div>
           </div>
 
