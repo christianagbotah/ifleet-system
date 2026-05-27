@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users } from 'lucide-react'
+import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users, CheckCircle2 } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -186,6 +186,27 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
   }
 
   const [duplicating, setDuplicating] = React.useState(false)
+  const [completing, setCompleting] = React.useState(false)
+
+  const handleMarkCompleted = async () => {
+    if (!trip) return
+    setCompleting(true)
+    try {
+      const res = await apiFetch<TripFull>(`/api/trips/${trip.id}/complete`, {
+        method: 'POST',
+        body: JSON.stringify({}),
+      })
+      setFullTrip(res)
+      toast.success('Trip marked as completed', {
+        description: `All workflow stages completed for ${currentTrip.tripNumber}`,
+      })
+      onStatusChanged?.()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to mark trip as completed')
+    } finally {
+      setCompleting(false)
+    }
+  }
 
   const handleDuplicateTrip = async () => {
     if (!currentTrip) return
@@ -709,6 +730,38 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                         </>
                       )}
                     </Button>
+
+                    {/* Mark as Completed — skip all stages */}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          disabled={completing}
+                          className="w-full gap-2 border-emerald-300 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+                        >
+                          {completing ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-300 border-t-emerald-600" />
+                          ) : (
+                            <CheckCircle2 className="h-4 w-4" />
+                          )}
+                          Mark as Completed
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Mark trip as completed?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will skip all remaining workflow stages and mark trip {currentTrip.tripNumber} as completed. All lifecycle stages will be recorded. This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={handleMarkCompleted} className="bg-emerald-600 hover:bg-emerald-700">
+                            Yes, Complete Trip
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>

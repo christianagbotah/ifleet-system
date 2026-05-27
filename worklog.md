@@ -391,3 +391,36 @@ Stage Summary:
 - Also updated TripList.tsx (older component) for consistency
 - Backend includes client relation data (companyName, contactPerson, phone) in all trip API responses
 - Driver-safe mode properly strips customer and client data
+
+---
+Task ID: 1
+Agent: main
+Task: Add "Mark as Completed" feature to trip creation and trip detail sheet
+
+Work Log:
+- Created POST /api/trips/[id]/complete endpoint that marks any non-terminal trip as completed
+  - Sets status to 'completed' and all lifecycle timestamps (loadingStartedAt, loadingCompletedAt, offloadingStartedAt, offloadingCompletedAt, arrivalTime)
+  - Creates TripEvent entries for all skipped stages
+  - Increments driver totalTrips and totalMileage
+  - Dispatches completion notifications to admins and driver
+  - Includes audit log entry
+- Modified POST /api/trips to support markCompleted flag on creation
+  - When markCompleted=true, creates trip with status='completed' and all timestamps set
+  - Creates TripEvent entries for all 10 lifecycle stages
+  - Increments driver totalTrips
+- Added checkbox to TripFormDialog (only shown for new trips, not editing)
+  - Toggle with CheckSquare/Square icons
+  - Description text explains the effect
+  - Submit button text changes to "Trip created and completed" when checked
+- Added "Mark as Completed" button to TripDetailSheet Actions section
+  - Only visible for non-terminal (in-progress) trips
+  - Emerald/green themed button with confirmation AlertDialog
+  - Calls /api/trips/[id]/complete endpoint
+  - Updates trip display and triggers refresh after completion
+
+Stage Summary:
+- New endpoint: POST /api/trips/[id]/complete
+- Modified endpoint: POST /api/trips (supports markCompleted flag)
+- Modified component: TripFormDialog.tsx (mark-as-completed checkbox)
+- Modified component: TripDetailSheet.tsx (mark-as-completed button)
+- All lint checks pass, dev server compiles successfully

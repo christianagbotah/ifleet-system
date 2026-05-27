@@ -37,7 +37,7 @@ import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { apiFetch, uploadFiles, createTrip, updateTrip, fetchTrucks, fetchDrivers, type Truck, type Driver, type Trip } from '@/lib/api'
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
-import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2 } from 'lucide-react'
+import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2, CheckSquare, Square } from 'lucide-react'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -407,6 +407,9 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
   // Image upload state for start mileage
   const [mileageImages, setMileageImages] = React.useState<ImageFile[]>([])
 
+  // Mark as completed on creation
+  const [markCompleted, setMarkCompleted] = React.useState(false)
+
   // Cargo items state (flat list)
   const [cargoItems, setCargoItems] = React.useState<CargoItemRow[]>([])
   const [deliveryDestinations, setDeliveryDestinations] = React.useState<DeliveryDestinationRow[]>([])
@@ -444,6 +447,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
   React.useEffect(() => {
     if (open) {
       if (trip) {
+        setMarkCompleted(false)
         // Parse existing startMileageImage as JSON array of URLs
         let existingImageUrls: string[] = []
         try {
@@ -490,6 +494,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
         })
       } else {
         setMileageImages([])
+        setMarkCompleted(false)
         form.reset({
           truckId: '',
           driverId: '',
@@ -915,8 +920,10 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
         onOpenChange(false)
         onUpdated?.()
       } else {
+        // Include markCompleted flag for new trips
+        if (markCompleted) body.markCompleted = true
         await createTrip(body)
-        toast.success('Trip created successfully', {
+        toast.success(markCompleted ? 'Trip created and completed' : 'Trip created successfully', {
           description: `${data.loadingLocation || 'Origin'} → ${data.destination || 'Destination'} (${data.itemName})`,
         })
         onOpenChange(false)
@@ -1746,6 +1753,32 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
                 </FormItem>
               )}
             />
+
+            {/* Mark as Completed — only for new trips */}
+            {!trip && (
+              <>
+                <Separator />
+                <button
+                  type="button"
+                  onClick={() => setMarkCompleted(!markCompleted)}
+                  className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30 hover:bg-muted/60 transition-colors w-full text-left"
+                >
+                  {markCompleted ? (
+                    <CheckSquare className="h-5 w-5 text-emerald-500 shrink-0" />
+                  ) : (
+                    <Square className="h-5 w-5 text-muted-foreground shrink-0" />
+                  )}
+                  <div>
+                    <div className="text-sm font-medium">
+                      Mark as completed on creation
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      Trip will skip all workflow stages and be created with a completed status
+                    </div>
+                  </div>
+                </button>
+              </>
+            )}
 
           </form>
         </Form>

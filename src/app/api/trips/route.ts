@@ -163,7 +163,9 @@ export async function POST(request: NextRequest) {
       destinationCityId,
       deliveryType,
       startMileageImage,
+      markCompleted,
     } = body
+    const isMarkCompleted = markCompleted === true
 
     if (!truckId || !driverId || !departureTime) {
       return NextResponse.json(
@@ -258,6 +260,15 @@ export async function POST(request: NextRequest) {
         notes,
         startMileage: startMileage ? parseFloat(startMileage) : null,
         fuelLevelBefore: fuelLevelBefore ? parseFloat(fuelLevelBefore) : null,
+        // Mark as completed: set status and all lifecycle timestamps
+        ...(isMarkCompleted && {
+          status: 'completed',
+          loadingStartedAt: new Date(departureTime),
+          loadingCompletedAt: new Date(departureTime),
+          offloadingStartedAt: new Date(),
+          offloadingCompletedAt: new Date(),
+          arrivalTime: new Date(),
+        }),
       },
       include: {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
@@ -366,6 +377,39 @@ export async function POST(request: NextRequest) {
           }
         }
       }
+    }
+
+    // ── If markCompleted, create TripEvent entries for all stages and update driver stats ──
+    if (isMarkCompleted) {
+      // Create TripEvent entries for every stage in the lifecycle
+      const eventStages: { from: string; to: string }[] = []
+      eventStages.push({ from: 'scheduled', to: 'loading' })
+      eventStages.push({ from: 'loading', to: 'loaded' })
+      eventStages.push({ from: 'loaded', to: 'departed_depot' })
+      eventStages.push({ from: 'departed_depot', to: 'in_transit' })
+      eventStages.push({ from: 'in_transit', to: 'arrived_destination' })
+      eventStages.push({ from: 'arrived_destination', to: 'offloading' })
+      eventStages.push({ from: 'offloading', to: 'offloaded' })
+      eventStages.push({ from: 'offloaded', to: 'return_journey' })
+      eventStages.push({ from: 'return_journey', to: 'arrived_depot' })
+      eventStages.push({ from: 'arrived_depot', to: 'completed' })
+
+      await db.tripEvent.createMany({
+        data: eventStages.map((stage) => ({
+          tripId: trip.id,
+          fromStatus: stage.from,
+          toStatus: stage.to,
+          notes: 'Trip marked as completed on creation',
+        })),
+      })
+
+      // Increment driver stats
+      await db.driver.update({
+        where: { id: driverId },
+        data: {
+          totalTrips: { increment: 1 },
+        },
+      })
     }
 
     // Audit log: trip created (fire-and-forget)
