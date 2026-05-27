@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       db.roadConditionReport.findMany({
         where,
         include: {
-          reporter: { select: { id: true, name: true, email: true } },
+          user: { select: { id: true, name: true, email: true } },
           trip: { select: { id: true, tripNumber: true } },
         },
         orderBy: { reportedAt: 'desc' },
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
         tripId: tripId || null,
       },
       include: {
-        reporter: { select: { id: true, name: true, email: true } },
+        user: { select: { id: true, name: true, email: true } },
         trip: { select: { id: true, tripNumber: true } },
       },
     })

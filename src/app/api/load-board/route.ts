@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           client: { select: { id: true, companyName: true } },
-          assignedTruck: { select: { id: true, plateNumber: true, make: true, model: true } },
-          assignedDriver: { select: { id: true, firstName: true, lastName: true } },
-          creator: { select: { id: true, name: true } },
+          truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+          driver: { select: { id: true, firstName: true, lastName: true } },
+          user: { select: { id: true, name: true } },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
@@ -40,7 +40,13 @@ export async function GET(request: NextRequest) {
       db.loadBoard.count({ where }),
     ])
 
-    return NextResponse.json({ data: records, total, page, limit })
+    const mappedData = records.map((record: Record<string, unknown>) => ({
+      ...record,
+      assignedTruck: record.truck,
+      assignedDriver: record.driver,
+      creator: record.user,
+    }))
+    return NextResponse.json({ data: mappedData, total, page, limit })
   } catch (error) {
     console.error('Load board list error:', error)
     return NextResponse.json({ error: 'Failed to fetch load board' }, { status: 500 })
@@ -108,13 +114,19 @@ export async function POST(request: NextRequest) {
       },
       include: {
         client: { select: { id: true, companyName: true } },
-        assignedTruck: { select: { id: true, plateNumber: true, make: true, model: true } },
-        assignedDriver: { select: { id: true, firstName: true, lastName: true } },
-        creator: { select: { id: true, name: true } },
+        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+        driver: { select: { id: true, firstName: true, lastName: true } },
+        user: { select: { id: true, name: true } },
       },
     })
 
-    return NextResponse.json(record, { status: 201 })
+    const mapped = {
+      ...record,
+      assignedTruck: (record as Record<string, unknown>).truck,
+      assignedDriver: (record as Record<string, unknown>).driver,
+      creator: (record as Record<string, unknown>).user,
+    }
+    return NextResponse.json(mapped, { status: 201 })
   } catch (error) {
     console.error('Load board create error:', error)
     return NextResponse.json({ error: 'Failed to create load board entry' }, { status: 500 })

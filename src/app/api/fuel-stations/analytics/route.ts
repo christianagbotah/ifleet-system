@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     },
     orderBy: { effectiveDate: 'asc' },
     include: {
-      station: { select: { id: true, name: true, brand: true } },
+      fuelStation: { select: { id: true, name: true, brand: true } },
     },
   })
 
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     where: { fuelType },
     orderBy: { effectiveDate: 'desc' },
     include: {
-      station: {
+      fuelStation: {
         select: {
           id: true, name: true, brand: true, city: true, route: true,
           latitude: true, longitude: true, isActive: true,
@@ -78,22 +78,22 @@ export async function GET(request: NextRequest) {
 
   // Cheapest 10
   const cheapest = latestByStation
-    .filter(p => p.station.isActive)
+    .filter(p => p.fuelStation.isActive)
     .sort((a, b) => a.pricePerLiter - b.pricePerLiter)
     .slice(0, 10)
 
   // Most expensive 5
   const mostExpensive = latestByStation
-    .filter(p => p.station.isActive)
+    .filter(p => p.fuelStation.isActive)
     .sort((a, b) => b.pricePerLiter - a.pricePerLiter)
     .slice(0, 5)
 
   // 3. Brand comparison
   const brandPrices = new Map<string, number[]>()
   for (const p of latestByStation) {
-    if (!p.station.isActive) continue
-    if (!brandPrices.has(p.station.brand)) brandPrices.set(p.station.brand, [])
-    brandPrices.get(p.station.brand)!.push(p.pricePerLiter)
+    if (!p.fuelStation.isActive) continue
+    if (!brandPrices.has(p.fuelStation.brand)) brandPrices.set(p.fuelStation.brand, [])
+    brandPrices.get(p.fuelStation.brand)!.push(p.pricePerLiter)
   }
 
   const brandComparison = Array.from(brandPrices.entries()).map(([brand, prices]) => {
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
   }).sort((a, b) => a.avgPrice - b.avgPrice)
 
   // 4. Overall summary
-  const allCurrentPrices = latestByStation.filter(p => p.station.isActive).map(p => p.pricePerLiter)
+  const allCurrentPrices = latestByStation.filter(p => p.fuelStation.isActive).map(p => p.pricePerLiter)
   const overallAvg = allCurrentPrices.length > 0
     ? Math.round((allCurrentPrices.reduce((a, b) => a + b, 0) / allCurrentPrices.length) * 100) / 100
     : 0
@@ -134,6 +134,15 @@ export async function GET(request: NextRequest) {
   const cheapestPrice = cheapest.length > 0 ? cheapest[0].pricePerLiter : 0
   const activeStations = await db.fuelStation.count({ where: { isActive: true } })
 
+  const mappedCheapest = cheapest.map((p: Record<string, unknown>) => ({
+    ...p,
+    station: p.fuelStation,
+  }))
+  const mappedMostExpensive = mostExpensive.map((p: Record<string, unknown>) => ({
+    ...p,
+    station: p.fuelStation,
+  }))
+
   return NextResponse.json({
     summary: {
       overallAvg,
@@ -144,8 +153,8 @@ export async function GET(request: NextRequest) {
       totalPrices: allCurrentPrices.length,
     },
     trends: monthlyAvg,
-    cheapest,
-    mostExpensive,
+    cheapest: mappedCheapest,
+    mostExpensive: mappedMostExpensive,
     brandComparison,
   })
 }

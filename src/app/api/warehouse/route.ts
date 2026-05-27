@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       db.warehouseItem.findMany({
         where,
         include: {
-          creator: { select: { id: true, name: true } },
+          user: { select: { id: true, name: true } },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         createdBy: auth.userId,
       },
       include: {
-        creator: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true } },
       },
     })
 

@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
       const currentMileage = truck.currentMileage || 0
 
       // Calculate total trip mileage (sum of all trip totalMileage or endMileage)
-      const totalTripMileage = truck.trips.reduce((sum, trip) => {
+      const totalTripMileage = truck.Trip.reduce((sum, trip) => {
         return sum + (trip.totalMileage || trip.endMileage || 0)
       }, 0)
 
@@ -120,12 +120,12 @@ export async function GET(request: NextRequest) {
         const component = componentKey as ComponentType
 
         // Filter maintenance records relevant to this component
-        const componentRecords = truck.maintenance.filter((r) => {
+        const componentRecords = truck.MaintenanceRecord.filter((r) => {
           return mapRecordTypeToComponent(r.type, r.title) === component
         })
 
         // Also include any records whose nextDueDate/nextDueMileage falls in this component's range
-        const relatedRecords = truck.maintenance.filter((r) => {
+        const relatedRecords = truck.MaintenanceRecord.filter((r) => {
           // If a general service was done, it might cover oil change too
           if (component !== 'general_service') {
             return mapRecordTypeToComponent(r.type, r.title) === component

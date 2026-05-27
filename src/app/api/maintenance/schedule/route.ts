@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     const trucks = await db.truck.findMany({
       where: truckId ? { id: truckId } : undefined,
       include: {
-        maintenance: {
+        MaintenanceRecord: {
           where: { status: 'completed' },
           orderBy: { performedAt: 'desc' },
           take: 1,
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const MILEAGE_BUFFER = 500 // km buffer for odometer-based due calculation
 
     for (const truck of trucks) {
-      const latestRecord = truck.maintenance[0] || null
+      const latestRecord = truck.MaintenanceRecord[0] || null
 
       if (!latestRecord) {
         // No maintenance history

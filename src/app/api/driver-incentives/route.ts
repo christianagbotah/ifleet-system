@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           driver: { select: { id: true, firstName: true, lastName: true, phone: true, photo: true } },
-          creator: { select: { id: true, name: true } },
-          approver: { select: { id: true, name: true } },
+          user_DriverIncentive_createdByToUser: { select: { id: true, name: true } },
+          user_DriverIncentive_approvedByToUser: { select: { id: true, name: true } },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
@@ -32,7 +32,12 @@ export async function GET(request: NextRequest) {
       db.driverIncentive.count({ where }),
     ])
 
-    return NextResponse.json({ data: incentives, total, page, limit })
+    const mappedData = incentives.map((record: Record<string, unknown>) => ({
+      ...record,
+      creator: record.user_DriverIncentive_createdByToUser,
+      approver: record.user_DriverIncentive_approvedByToUser,
+    }))
+    return NextResponse.json({ data: mappedData, total, page, limit })
   } catch (error) {
     console.error('Driver incentives list error:', error)
     return NextResponse.json({ error: 'Failed to fetch driver incentives' }, { status: 500 })
@@ -76,7 +81,7 @@ export async function POST(request: NextRequest) {
       },
       include: {
         driver: { select: { id: true, firstName: true, lastName: true, phone: true, photo: true } },
-        creator: { select: { id: true, name: true } },
+        user_DriverIncentive_createdByToUser: { select: { id: true, name: true } },
       },
     })
 
@@ -85,7 +90,11 @@ export async function POST(request: NextRequest) {
       details: { title, amount, type }, ipAddress: getClientIp(request),
     })
 
-    return NextResponse.json(incentive, { status: 201 })
+    const mapped = {
+      ...(incentive as Record<string, unknown>),
+      creator: (incentive as Record<string, unknown>).user_DriverIncentive_createdByToUser,
+    }
+    return NextResponse.json(mapped, { status: 201 })
   } catch (error) {
     console.error('Driver incentive create error:', error)
     return NextResponse.json({ error: 'Failed to create driver incentive' }, { status: 500 })

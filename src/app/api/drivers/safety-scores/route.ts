@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
     }
 
     const driverIds = drivers.map((d) => d.id)
-    const truckIds = drivers.flatMap((d) => d.trucks.map((t) => t.id))
+    const truckIds = drivers.flatMap((d) => d.Truck.map((t) => t.id))
 
     // ============ Batch queries for the period ============
 
@@ -277,15 +277,15 @@ export async function GET(request: NextRequest) {
     // Map truckId -> driverId
     const truckToDriver = new Map<string, string>()
     for (const driver of drivers) {
-      for (const truck of driver.trucks) {
+      for (const truck of driver.Truck) {
         truckToDriver.set(truck.id, driver.id)
       }
     }
 
     // Map driverId -> trucks
-    const driverTrucks = new Map<string, typeof drivers[0]['trucks']>()
+    const driverTrucks = new Map<string, typeof drivers[0]['Truck']>()
     for (const driver of drivers) {
-      driverTrucks.set(driver.id, driver.trucks)
+      driverTrucks.set(driver.id, driver.Truck)
     }
 
     // Count alerts per type per driver
@@ -374,7 +374,7 @@ export async function GET(request: NextRequest) {
         ? daysBetween(now, new Date(driver.ghanaCardExpiry))
         : null
 
-      const trucks = driver.trucks
+      const trucks = driver.Truck
       const truckInsuranceOk = trucks.some((t) => t.insuranceStatus === 'active')
       // For roadworthy, we'll check based on insurance status as proxy if no roadworthy data
       const truckRoadworthyOk = trucks.length > 0 // Assume OK if truck is assigned and active

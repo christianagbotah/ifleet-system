@@ -37,7 +37,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     include: {
       client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true, city: true, region: true } },
       trip: { select: { id: true, tripNumber: true } },
-      items: { orderBy: { order: 'asc' } },
+      InvoiceItem: { orderBy: { order: 'asc' } },
     },
   })
 
@@ -168,9 +168,9 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   doc.text('LINE ITEMS', margin, y)
   y += 4
 
-  if (invoice.items.length > 0) {
+  if (invoice.InvoiceItem.length > 0) {
     const tableHeaders = ['#', 'Description', 'Qty', 'Unit Price', 'Total']
-    const tableRows = invoice.items.map((item) => [
+    const tableRows = invoice.InvoiceItem.map((item) => [
       String(item.order + 1),
       item.description,
       item.quantity.toString(),
@@ -200,7 +200,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     y = tableStartY + headerH
 
     // Table body rows
-    invoice.items.forEach((item, rowIdx) => {
+    invoice.InvoiceItem.forEach((item, rowIdx) => {
       if (y > 260) {
         doc.addPage()
         doc.setFillColor(...C.amber)

@@ -1155,7 +1155,7 @@ export async function buildCostAnalyticsReportPdf(params: ReportParams): Promise
         },
         select: { amount: true },
       },
-      trips: {
+      Trip: {
         where: {
           status: 'completed',
           ...(Object.keys(dateFilter).length > 0 ? { departureTime: dateFilter } : {}),
@@ -1258,8 +1258,8 @@ export async function buildTripProfitabilityReportPdf(params: ReportParams): Pro
     include: {
       driver: { select: { firstName: true, lastName: true } },
       truck: { select: { plateNumber: true } },
-      fuelLogs: { select: { totalCost: true } },
-      expenses: { select: { amount: true } },
+      FuelLog: { select: { totalCost: true } },
+      Expense: { select: { amount: true } },
     },
     orderBy: { departureTime: 'desc' },
   })
@@ -1469,7 +1469,7 @@ export async function buildSafetyScoringReportPdf(params: ReportParams): Promise
         where: Object.keys(dateFilter).length > 0 ? { departureTime: dateFilter } : undefined,
         select: { id: true, totalMileage: true, status: true },
       },
-      trackingAlerts: {
+      TrackingAlert: {
         where: {
           type: { in: ['speeding', 'route_deviation', 'idle'] },
           ...(Object.keys(dateFilter).length > 0 ? { createdAt: dateFilter } : {}),
@@ -1531,8 +1531,8 @@ export async function buildSafetyScoringReportPdf(params: ReportParams): Promise
     const tripCount = completedTrips.length
     const distance = completedTrips.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
 
-    const violations = d.trackingAlerts.filter((a) => a.type === 'speeding' || a.type === 'route_deviation').length
-    const incidents = d.trackingAlerts.filter((a) => a.type === 'idle').length
+    const violations = d.TrackingAlert.filter((a) => a.type === 'speeding' || a.type === 'route_deviation').length
+    const incidents = d.TrackingAlert.filter((a) => a.type === 'idle').length
 
     // Safety score: start at 100, deduct for violations and incidents
     let score = 100
@@ -1541,7 +1541,7 @@ export async function buildSafetyScoringReportPdf(params: ReportParams): Promise
     score = Math.max(0, Math.min(100, score))
 
     const grade = getGrade(score)
-    const trend = getTrend(d.trackingAlerts)
+    const trend = getTrend(d.TrackingAlert)
 
     if (score > highestScore) highestScore = score
     if (score < lowestScore) lowestScore = score

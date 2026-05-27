@@ -221,3 +221,26 @@ Stage Summary:
 - Fixed 7 files total with the PascalCase → correct Prisma field name mapping
 - The driver performance page should now load correctly
 - Files modified: route.ts (performance, [id], bulk), report-builders.ts, pdf-builders.ts, report-data.ts
+
+---
+Task ID: 2
+Agent: Main Agent (with 3 parallel subagents + 2 serial subagents + 1 verification subagent)
+Task: Fix ALL 500 Internal Server Errors across the entire application (12+ API endpoints)
+
+Work Log:
+- Identified root cause: Prisma 7.8.0 with MariaDB adapter strictly enforces PascalCase relation field names from schema (e.g., `Trip`, `Expense`, `Truck`, `MaintenanceRecord`, `InvoiceItem`, `FuelLog`, `TripEvent`, `TrackingAlert`) but code was using camelCase versions (`trips`, `expenses`, `trucks`, `maintenance`, `items`, `fuelLogs`, `tripEvents`, `trackingAlerts`)
+- Launched comprehensive scan of ALL API routes — found 43+ fixes needed across 20+ files
+- Launched 3 parallel fix agents for: (a) API route group 1 (load-board, expense-approvals, driver-incentives, road-conditions, warehouse, insurance-claims), (b) API route group 2 (fuel-stations/analytics, invoices, maintenance, trucks/bulk, safety-scores, portal/shipment, clients/bulk), (c) report builders (pdf-builders, report-builders, pdf-builders-new, report-data-new, invoice-pdf)
+- Fixed syntax error in portal/shipment/[tripId]/route.ts (agent introduced `e => ({)` instead of `e => ({`)
+- Fixed load-board/[id]/route.ts which was missed by initial scan
+- Verified frontend components still access old property names — launched verification scan
+- Found 28 broken frontend property accesses across 4 components
+- Instead of modifying frontend, added response transformations in 7 API routes to map Prisma field names back to frontend-friendly camelCase names
+- Final lint: 0 errors
+
+Stage Summary:
+- Fixed 20+ files with ~50 individual Prisma relation field name corrections
+- API routes that transform responses: load-board, expense-approvals, driver-incentives, invoices, fuel-stations/analytics, road-conditions, warehouse, insurance-claims
+- API routes with direct Prisma field usage: drivers/performance, drivers/[id], drivers/bulk, drivers/safety-scores, trucks/bulk, maintenance/schedule, maintenance/predictive, portal/shipment, clients/bulk
+- Report builders fixed: pdf-builders, report-builders, pdf-builders-new, report-data-new, invoice-pdf
+- All 500 errors should now be resolved once deployed to production

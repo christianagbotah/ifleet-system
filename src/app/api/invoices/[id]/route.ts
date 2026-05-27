@@ -19,7 +19,7 @@ export async function GET(
       include: {
         client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true, city: true, region: true } },
         trip: { select: { id: true, tripNumber: true } },
-        items: { orderBy: { order: 'asc' } },
+        InvoiceItem: { orderBy: { order: 'asc' } },
       },
     })
 
@@ -35,7 +35,11 @@ export async function GET(
       }
     }
 
-    return NextResponse.json(invoice)
+    const mapped = {
+      ...(invoice as Record<string, unknown>),
+      items: (invoice as Record<string, unknown>).InvoiceItem,
+    }
+    return NextResponse.json(mapped)
   } catch (error) {
     console.error('[Invoices] Get failed:', error)
     return NextResponse.json({ error: 'Failed to fetch invoice' }, { status: 500 })
@@ -128,11 +132,15 @@ export async function PUT(
       include: {
         client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true, city: true, region: true } },
         trip: { select: { id: true, tripNumber: true } },
-        items: { orderBy: { order: 'asc' } },
+        InvoiceItem: { orderBy: { order: 'asc' } },
       },
     })
 
-    return NextResponse.json(result)
+    const mapped = {
+      ...(result as Record<string, unknown>),
+      items: (result as Record<string, unknown>).InvoiceItem,
+    }
+    return NextResponse.json(mapped)
   } catch (error) {
     console.error('[Invoices] Update failed:', error)
     return NextResponse.json({ error: 'Failed to update invoice' }, { status: 500 })

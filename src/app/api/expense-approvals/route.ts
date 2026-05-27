@@ -32,8 +32,8 @@ export async function GET(request: NextRequest) {
               trip: { select: { id: true, tripNumber: true, loadingLocation: true, destination: true } },
             },
           },
-          requestedBy: { select: { id: true, name: true, email: true } },
-          approvedBy: { select: { id: true, name: true, email: true } },
+          user_ExpenseApproval_requestedByIdToUser: { select: { id: true, name: true, email: true } },
+          user_ExpenseApproval_approvedByIdToUser: { select: { id: true, name: true, email: true } },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
@@ -93,7 +93,12 @@ export async function GET(request: NextRequest) {
       totalCount: allApprovalsResult._count ?? 0,
     }
 
-    return NextResponse.json({ data: approvals, total, page, limit, summary })
+    const mappedData = approvals.map((record: Record<string, unknown>) => ({
+      ...record,
+      requestedBy: record.user_ExpenseApproval_requestedByIdToUser,
+      approvedBy: record.user_ExpenseApproval_approvedByIdToUser,
+    }))
+    return NextResponse.json({ data: mappedData, total, page, limit, summary })
   } catch (error) {
     console.error('Expense approvals list error:', error)
     return NextResponse.json({ error: 'Failed to fetch expense approvals' }, { status: 500 })
@@ -150,7 +155,7 @@ export async function POST(request: NextRequest) {
             trip: { select: { id: true, tripNumber: true, loadingLocation: true, destination: true } },
           },
         },
-        requestedBy: { select: { id: true, name: true, email: true } },
+        user_ExpenseApproval_requestedByIdToUser: { select: { id: true, name: true, email: true } },
       },
     })
 
@@ -169,7 +174,11 @@ export async function POST(request: NextRequest) {
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
-    return NextResponse.json(approval, { status: 201 })
+    const mapped = {
+      ...(approval as Record<string, unknown>),
+      requestedBy: (approval as Record<string, unknown>).user_ExpenseApproval_requestedByIdToUser,
+    }
+    return NextResponse.json(mapped, { status: 201 })
   } catch (error) {
     console.error('Expense approval create error:', error)
     return NextResponse.json({ error: 'Failed to create expense approval' }, { status: 500 })

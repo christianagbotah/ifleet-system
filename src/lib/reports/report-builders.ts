@@ -61,7 +61,7 @@ export async function buildTripSummaryReport(params: ReportParams): Promise<Exce
       driver: { select: { firstName: true, lastName: true } },
       truck: { select: { plateNumber: true, make: true, model: true } },
       client: { select: { companyName: true } },
-      expenses: { select: { amount: true } },
+      Expense: { select: { amount: true } },
     },
     orderBy: { departureTime: 'desc' },
   })
@@ -69,7 +69,7 @@ export async function buildTripSummaryReport(params: ReportParams): Promise<Exce
   const totalTrips = trips.length
   const completedTrips = trips.filter((t) => t.status === 'completed').length
   const totalRevenue = trips.reduce((sum, t) => sum + (t.totalRevenue ?? 0), 0)
-  const totalExpenses = trips.reduce((sum, t) => sum + t.expenses.reduce((s, e) => s + e.amount, 0), 0)
+  const totalExpenses = trips.reduce((sum, t) => sum + t.Expense.reduce((s, e) => s + e.amount, 0), 0)
   const avgRevenue = totalTrips > 0 ? totalRevenue / totalTrips : 0
 
   const columns: ColumnDef[] = [
@@ -98,7 +98,7 @@ export async function buildTripSummaryReport(params: ReportParams): Promise<Exce
   report.addHeadersFromDefs(columns)
 
   for (const trip of trips) {
-    const tripExpenses = trip.expenses.reduce((s, e) => s + e.amount, 0)
+    const tripExpenses = trip.Expense.reduce((s, e) => s + e.amount, 0)
     report.addTypedRow({
       tripNumber: trip.tripNumber,
       date: trip.departureTime,
@@ -403,7 +403,7 @@ export async function buildDriverPerformanceReport(params: ReportParams): Promis
     const completedTrips = trips.filter((t) => t.status === 'completed').length
     const completionRate = totalTrips > 0 ? completedTrips / totalTrips : 0
     const totalRevenue = trips.reduce((s, t) => s + (t.totalRevenue ?? 0), 0)
-    const totalExpenses = trips.reduce((s, t) => s + t.expenses.reduce((se, e) => se + e.amount, 0), 0)
+    const totalExpenses = trips.reduce((s, t) => s + t.Expense.reduce((se, e) => se + e.amount, 0), 0)
     const totalMileage = trips.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
 
     fleetTotalTrips += totalTrips
@@ -414,7 +414,7 @@ export async function buildDriverPerformanceReport(params: ReportParams): Promis
 
     reportData.push({
       driver: `${driver.firstName} ${driver.lastName}`, employeeId: driver.employeeId,
-      truck: driver.trucks.length > 0 ? driver.trucks[0].plateNumber : 'Unassigned',
+      truck: driver.Truck.length > 0 ? driver.Truck[0].plateNumber : 'Unassigned',
       totalTrips, completedTrips, completionRate, totalRevenue, totalExpenses,
       netProfit: totalRevenue - totalExpenses, totalMileage, rating: driver.rating, hireDate: driver.hireDate,
     })

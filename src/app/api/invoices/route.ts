@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         include: {
           client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true } },
           trip: { select: { id: true, tripNumber: true } },
-          items: { orderBy: { order: 'asc' } },
+          InvoiceItem: { orderBy: { order: 'asc' } },
         },
         orderBy: { issueDate: 'desc' },
         skip: (page - 1) * limit,
@@ -82,8 +82,13 @@ export async function GET(request: NextRequest) {
       },
     })
 
+    const mappedInvoices = invoices.map((invoice: Record<string, unknown>) => ({
+      ...invoice,
+      items: invoice.InvoiceItem,
+    }))
+
     return NextResponse.json({
-      data: invoices,
+      data: mappedInvoices,
       total,
       page,
       limit,
@@ -178,7 +183,7 @@ export async function POST(request: NextRequest) {
         paidAmount: 0,
         notes: notes || null,
         terms: terms || null,
-        items: {
+        InvoiceItem: {
           create: items.map((item: { description: string; quantity: number; unitPrice: number; total: number; order: number }, index: number) => ({
             description: item.description,
             quantity: item.quantity,
@@ -191,11 +196,15 @@ export async function POST(request: NextRequest) {
       include: {
         client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true } },
         trip: { select: { id: true, tripNumber: true } },
-        items: { orderBy: { order: 'asc' } },
+        InvoiceItem: { orderBy: { order: 'asc' } },
       },
     })
 
-    return NextResponse.json(invoice, { status: 201 })
+    const mapped = {
+      ...(invoice as Record<string, unknown>),
+      items: (invoice as Record<string, unknown>).InvoiceItem,
+    }
+    return NextResponse.json(mapped, { status: 201 })
   } catch (error) {
     console.error('[Invoices] Create failed:', error)
     return NextResponse.json({ error: 'Failed to create invoice' }, { status: 500 })

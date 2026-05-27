@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       include: {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         insurance: { select: { id: true, provider: true, policyNumber: true, type: true } },
-        creator: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true } },
       },
       orderBy: { incidentDate: 'desc' },
       skip: (page - 1) * limit,
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     include: {
       truck: { select: { id: true, plateNumber: true, make: true, model: true } },
       insurance: { select: { id: true, provider: true, policyNumber: true, type: true } },
-      creator: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
     },
   })
 

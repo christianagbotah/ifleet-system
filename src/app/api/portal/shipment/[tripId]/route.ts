@@ -86,7 +86,7 @@ export async function GET(
         truck: { select: { plateNumber: true, make: true, model: true } },
         driver: { select: { firstName: true, lastName: true, phone: true, employeeId: true } },
         deliveryStops: { orderBy: { stopOrder: 'asc' } },
-        tripEvents: { orderBy: { createdAt: 'asc' } },
+        TripEvent: { orderBy: { createdAt: 'asc' }},
         client: { select: { id: true, companyName: true } },
       },
     })
@@ -134,7 +134,7 @@ export async function GET(
       }))
 
     // Build timeline
-    const timeline = trip.tripEvents.map(e => ({
+    const timeline = trip.TripEvent.map(e => ({
       status: e.toStatus,
       fromStatus: e.fromStatus ?? undefined,
       timestamp: e.createdAt.toISOString(),

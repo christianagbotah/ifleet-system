@@ -25,7 +25,7 @@ export async function buildTripSummaryPdf(params: ReportParams): Promise<jsPDF> 
       driver: { select: { firstName: true, lastName: true } },
       truck: { select: { plateNumber: true, make: true } },
       client: { select: { companyName: true } },
-      expenses: { select: { amount: true } },
+      Expense: { select: { amount: true } },
     },
     orderBy: { departureTime: 'desc' },
   })
@@ -33,7 +33,7 @@ export async function buildTripSummaryPdf(params: ReportParams): Promise<jsPDF> 
   const totalTrips = trips.length
   const completedTrips = trips.filter((t) => t.status === 'completed').length
   const totalRevenue = trips.reduce((s, t) => s + (t.totalRevenue ?? 0), 0)
-  const totalExpenses = trips.reduce((s, t) => s + t.expenses.reduce((se, e) => se + e.amount, 0), 0)
+  const totalExpenses = trips.reduce((s, t) => s + t.Expense.reduce((se, e) => se + e.amount, 0), 0)
 
   const pdf = new PdfReport('landscape')
   pdf.addHeader()
@@ -50,7 +50,7 @@ export async function buildTripSummaryPdf(params: ReportParams): Promise<jsPDF> 
 
   const headers = ['Trip #', 'Date', 'Driver', 'Truck', 'Route', 'Cargo', 'Client', 'Status', 'Revenue', 'Expenses', 'Net']
   const rows = trips.map((t) => {
-    const exp = t.expenses.reduce((s, e) => s + e.amount, 0)
+    const exp = t.Expense.reduce((s, e) => s + e.amount, 0)
     return [
       t.tripNumber,
       fmtDate(t.departureTime),
@@ -349,7 +349,7 @@ export async function buildDriverPerformancePdf(params: ReportParams): Promise<j
     const completedTrips = trips.filter((t) => t.status === 'completed').length
     const completionRate = totalTrips > 0 ? ((completedTrips / totalTrips) * 100).toFixed(1) + '%' : '-'
     const totalRevenue = trips.reduce((s, t) => s + (t.totalRevenue ?? 0), 0)
-    const totalExpenses = trips.reduce((s, t) => s + t.expenses.reduce((se, e) => se + e.amount, 0), 0)
+    const totalExpenses = trips.reduce((s, t) => s + t.Expense.reduce((se, e) => se + e.amount, 0), 0)
     const totalMileage = trips.reduce((s, t) => s + (t.totalMileage ?? 0), 0)
 
     fleetTotalTrips += totalTrips
@@ -361,7 +361,7 @@ export async function buildDriverPerformancePdf(params: ReportParams): Promise<j
     rows.push([
       `${d.firstName} ${d.lastName}`,
       d.employeeId,
-      d.trucks.length > 0 ? d.trucks[0].plateNumber : 'Unassigned',
+      d.Truck.length > 0 ? d.Truck[0].plateNumber : 'Unassigned',
       String(totalTrips),
       String(completedTrips),
       completionRate,

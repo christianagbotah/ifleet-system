@@ -16,9 +16,9 @@ export async function GET(
       where: { id },
       include: {
         client: { select: { id: true, companyName: true } },
-        assignedTruck: { select: { id: true, plateNumber: true, make: true, model: true } },
-        assignedDriver: { select: { id: true, firstName: true, lastName: true } },
-        creator: { select: { id: true, name: true } },
+        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+        driver: { select: { id: true, firstName: true, lastName: true } },
+        user: { select: { id: true, name: true } },
       },
     })
 
@@ -26,7 +26,13 @@ export async function GET(
       return NextResponse.json({ error: 'Load board entry not found' }, { status: 404 })
     }
 
-    return NextResponse.json(record)
+    const mapped = {
+      ...record,
+      assignedTruck: (record as Record<string, unknown>).truck,
+      assignedDriver: (record as Record<string, unknown>).driver,
+      creator: (record as Record<string, unknown>).user,
+    }
+    return NextResponse.json(mapped)
   } catch (error) {
     console.error('Load board detail error:', error)
     return NextResponse.json({ error: 'Failed to fetch load board entry' }, { status: 500 })
@@ -114,13 +120,19 @@ export async function PUT(
       data: updateData,
       include: {
         client: { select: { id: true, companyName: true } },
-        assignedTruck: { select: { id: true, plateNumber: true, make: true, model: true } },
-        assignedDriver: { select: { id: true, firstName: true, lastName: true } },
-        creator: { select: { id: true, name: true } },
+        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+        driver: { select: { id: true, firstName: true, lastName: true } },
+        user: { select: { id: true, name: true } },
       },
     })
 
-    return NextResponse.json(record)
+    const mapped = {
+      ...record,
+      assignedTruck: (record as Record<string, unknown>).truck,
+      assignedDriver: (record as Record<string, unknown>).driver,
+      creator: (record as Record<string, unknown>).user,
+    }
+    return NextResponse.json(mapped)
   } catch (error) {
     console.error('Load board update error:', error)
     return NextResponse.json({ error: 'Failed to update load board entry' }, { status: 500 })

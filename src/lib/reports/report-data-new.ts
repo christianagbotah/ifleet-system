@@ -859,8 +859,8 @@ export async function fetchTripProfitabilityData(params: ReportParams): Promise<
       truck: { select: { plateNumber: true, make: true } },
       driver: { select: { firstName: true, lastName: true } },
       client: { select: { companyName: true } },
-      fuelLogs: { select: { totalCost: true } },
-      expenses: { select: { amount: true, category: true } },
+      FuelLog: { select: { totalCost: true } },
+      Expense: { select: { amount: true, category: true } },
     },
     orderBy: { departureTime: 'desc' },
   })
@@ -873,8 +873,8 @@ export async function fetchTripProfitabilityData(params: ReportParams): Promise<
 
   const rows = trips.map(t => {
     const revenue = t.totalRevenue ?? 0
-    const fuelCost = t.fuelLogs.reduce((s, f) => s + f.totalCost, 0)
-    const expCost = t.expenses.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
+    const fuelCost = t.FuelLog.reduce((s, f) => s + f.totalCost, 0)
+    const expCost = t.Expense.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
     const totalCost = fuelCost + expCost
     const profit = revenue - totalCost
     const margin = revenue > 0 ? Math.round((profit / revenue) * 10000) / 100 : 0

@@ -107,11 +107,11 @@ export async function POST(request: NextRequest) {
         success++
       } else if (action === 'deactivate') {
         // Check if client has active trips before deactivating
-        if (client.trips.length > 0) {
+        if ((client._count?.Trip || 0) > 0) {
           failed++
           errors.push({
             id,
-            message: `Cannot deactivate client "${client.companyName}": has ${client.trips.length} active trip(s)`,
+            message: `Cannot deactivate client "${client.companyName}": has ${client._count?.Trip || 0} active trip(s)`,
           })
           continue
         }
