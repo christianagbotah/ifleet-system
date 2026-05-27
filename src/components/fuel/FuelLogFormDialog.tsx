@@ -649,8 +649,9 @@ export function FuelLogFormDialog({
           </div>
         </DialogHeader>
 
+        <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="contents">
         <DialogBody>
-          <Form {...form}>
           {/* Mode toggle (only for new entries) */}
           {!fuelLog && (
             <div className="flex gap-2 mb-4">
@@ -745,7 +746,7 @@ export function FuelLogFormDialog({
             </div>
           )}
 
-            <form id="fuel-log-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-4">
               {/* Truck selection — hidden in post-trip mode when a trip is selected */}
               {!(formMode === 'post_trip' && selectedTrip) && (
                 <FormField
@@ -1109,8 +1110,7 @@ export function FuelLogFormDialog({
                   disabled={submitting}
                 />
               </div>
-            </form>
-          </Form>
+            </div>
         </DialogBody>
 
         <DialogFooter className="gap-2 sm:gap-0">
@@ -1124,7 +1124,6 @@ export function FuelLogFormDialog({
           </Button>
           <Button
             type="submit"
-            form="fuel-log-form"
             className="bg-amber-500 hover:bg-amber-600 text-white"
             disabled={submitting}
           >
@@ -1138,6 +1137,8 @@ export function FuelLogFormDialog({
                   : 'Record Fuel Fill'}
           </Button>
         </DialogFooter>
+        </form>
+        </Form>
       </DialogContent>
 
       {/* Fuel Receipt Scanner (standard mode only) */}
