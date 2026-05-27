@@ -244,3 +244,27 @@ Stage Summary:
 - API routes with direct Prisma field usage: drivers/performance, drivers/[id], drivers/bulk, drivers/safety-scores, trucks/bulk, maintenance/schedule, maintenance/predictive, portal/shipment, clients/bulk
 - Report builders fixed: pdf-builders, report-builders, pdf-builders-new, report-data-new, invoice-pdf
 - All 500 errors should now be resolved once deployed to production
+---
+Task ID: 3
+Agent: Main Agent (with 2 parallel subagents)
+Task: Fix remaining 500 errors, undefined.length crashes, and card height uniformity
+
+Work Log:
+- Fixed /api/fuel-stations/route.ts: fuelPrices → FuelPrice in includes, added response transformation
+- Fixed /api/fuel-stations/[id]/route.ts: fuelPrices → FuelPrice in includes, added response transformation
+- Fixed /api/drivers/route.ts: Added Truck → trucks response transformation for GET list
+- Fixed /api/drivers/[id]/route.ts: Default payroll to [] when undefined (Driver role)
+- Fixed /api/trucks/[id]/route.ts: Added full PascalCase → camelCase transformation (Tyre→tyres, Insurance→insurance, MaintenanceRecord→maintenance, Expense→expenses, Trip→trips)
+- Fixed /api/expense-approvals/route.ts: Removed _avg on DateTime aggregate (MySQL incompatible), using manual calculation instead
+- Fixed src/components/drivers/DriversView.tsx: Added optional chaining for driver.trucks?.length, driver.trucks?.[0]?.plateNumber
+- Fixed src/components/drivers/DriverDetailSheet.tsx: Added optional chaining for driver.trucks, driver.trips, driver.payroll length accesses
+- Fixed src/components/trucks/TruckDetailSheet.tsx: Added optional chaining for truck.tyres, truck.maintenance, truck.expenses, truck.trips length accesses
+- Fixed card height uniformity on drivers page: Added h-full to Cards, flex-1 min-h-0 wrapper, mt-auto on action buttons
+- Fixed card height uniformity on truck-financials page: Added h-full to KpiCard
+- Fixed card height uniformity on toll-tracker page: Added h-full to summary Cards, flex-1 on value areas
+- Lint passes: 0 errors
+
+Stage Summary:
+- All 500 errors from fuel-stations, expense-approvals resolved
+- undefined.length crashes on drivers, driver detail, and truck detail pages resolved
+- Card height uniformity achieved on drivers, truck-financials, and toll-tracker pages

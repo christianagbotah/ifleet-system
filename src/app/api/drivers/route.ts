@@ -45,7 +45,11 @@ export async function GET(request: NextRequest) {
       db.driver.count({ where }),
     ])
 
-    return NextResponse.json({ data: drivers, total, page, limit })
+    const mappedDrivers = drivers.map((driver: Record<string, unknown>) => {
+      const { Truck, ...rest } = driver
+      return { ...rest, trucks: Truck ?? [] }
+    })
+    return NextResponse.json({ data: mappedDrivers, total, page, limit })
   } catch (error) {
     console.error('Drivers list error:', error)
     return NextResponse.json({ error: 'Failed to fetch drivers' }, { status: 500 })

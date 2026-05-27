@@ -26,7 +26,17 @@ export async function GET(
       return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
     }
 
-    return NextResponse.json(truck)
+    const { Tyre, Insurance, MaintenanceRecord, Expense, Trip, driver, ...rest } = truck as Record<string, unknown>
+    const response = {
+      ...rest,
+      tyres: Tyre ?? [],
+      insurance: Insurance ?? [],
+      maintenance: MaintenanceRecord ?? [],
+      expenses: Expense ?? [],
+      trips: Trip ?? [],
+      driver,
+    }
+    return NextResponse.json(response)
   } catch (error) {
     console.error('Truck detail error:', error)
     return NextResponse.json({ error: 'Failed to fetch truck' }, { status: 500 })

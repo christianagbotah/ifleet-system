@@ -126,7 +126,7 @@ export function DriverDetailSheet({ open, onOpenChange, driverId }: DriverDetail
                       {driver.status}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {driver.trucks.length > 0 ? driver.trucks[0].plateNumber : 'No truck assigned'}
+                      {driver.trucks?.length > 0 ? driver.trucks?.[0]?.plateNumber : 'No truck assigned'}
                     </span>
                   </div>
                 </div>
@@ -158,8 +158,8 @@ export function DriverDetailSheet({ open, onOpenChange, driverId }: DriverDetail
             <Tabs defaultValue="profile" className="w-full">
               <TabsList className="w-full">
                 <TabsTrigger value="profile" className="flex-1">Profile</TabsTrigger>
-                <TabsTrigger value="trips" className="flex-1">Trips ({driver.trips.length})</TabsTrigger>
-                <TabsTrigger value="payroll" className="flex-1">Payroll ({driver.payroll.length})</TabsTrigger>
+                <TabsTrigger value="trips" className="flex-1">Trips ({driver.trips?.length ?? 0})</TabsTrigger>
+                <TabsTrigger value="payroll" className="flex-1">Payroll ({driver.payroll?.length ?? 0})</TabsTrigger>
                 <TabsTrigger value="documents" className="flex-1">Documents</TabsTrigger>
               </TabsList>
 
@@ -219,7 +219,7 @@ export function DriverDetailSheet({ open, onOpenChange, driverId }: DriverDetail
               </TabsContent>
 
               <TabsContent value="trips" className="mt-4">
-                {driver.trips.length === 0 ? (
+                {(driver.trips?.length ?? 0) === 0 ? (
                   <div className="text-center py-8">
                     <Route className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">No trips recorded</p>
@@ -257,7 +257,7 @@ export function DriverDetailSheet({ open, onOpenChange, driverId }: DriverDetail
               </TabsContent>
 
               <TabsContent value="payroll" className="mt-4">
-                {driver.payroll.length === 0 ? (
+                {(driver.payroll?.length ?? 0) === 0 ? (
                   <div className="text-center py-8">
                     <Banknote className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">No payroll records</p>

@@ -326,49 +326,49 @@ export function TollTrackerView() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
-            <Card className="border-emerald-200 dark:border-emerald-900/30">
-              <CardContent className="p-4">
+            <Card className="h-full border-emerald-200 dark:border-emerald-900/30">
+              <CardContent className="flex flex-col flex-1 p-4">
                 <div className="flex items-center gap-2 text-emerald-600 mb-1">
                   <Receipt className="h-4 w-4" />
                   <span className="text-xs font-medium uppercase tracking-wide">Total Tolls (YTD)</span>
                 </div>
-                <p className="text-2xl font-bold">{formatCurrency(summary?.totalSpend || 0)}</p>
+                <p className="text-2xl font-bold flex-1">{formatCurrency(summary?.totalSpend || 0)}</p>
                 <p className="text-xs text-muted-foreground">{summary?.recordCount || 0} records</p>
               </CardContent>
             </Card>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-            <Card className="border-amber-200 dark:border-amber-900/30">
-              <CardContent className="p-4">
+            <Card className="h-full border-amber-200 dark:border-amber-900/30">
+              <CardContent className="flex flex-col flex-1 p-4">
                 <div className="flex items-center gap-2 text-amber-600 mb-1">
                   <AlertTriangle className="h-4 w-4" />
                   <span className="text-xs font-medium uppercase tracking-wide">Overload Fines</span>
                 </div>
-                <p className="text-2xl font-bold">{formatCurrency(summary?.totalFines || 0)}</p>
+                <p className="text-2xl font-bold flex-1">{formatCurrency(summary?.totalFines || 0)}</p>
                 <p className="text-xs text-muted-foreground">{summary?.overloadCount || 0} incidents</p>
               </CardContent>
             </Card>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Card className="border-teal-200 dark:border-teal-900/30">
-              <CardContent className="p-4">
+            <Card className="h-full border-teal-200 dark:border-teal-900/30">
+              <CardContent className="flex flex-col flex-1 p-4">
                 <div className="flex items-center gap-2 text-teal-600 mb-1">
                   <Route className="h-4 w-4" />
                   <span className="text-xs font-medium uppercase tracking-wide">Most Used Route</span>
                 </div>
-                <p className="text-lg font-bold truncate">{summary?.mostUsedRoute || 'N/A'}</p>
+                <p className="text-lg font-bold truncate flex-1">{summary?.mostUsedRoute || 'N/A'}</p>
                 <p className="text-xs text-muted-foreground">{formatCurrency(summary?.mostUsedRouteSpend || 0)} spent</p>
               </CardContent>
             </Card>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <Card className="border-sky-200 dark:border-sky-900/30">
-              <CardContent className="p-4">
+            <Card className="h-full border-sky-200 dark:border-sky-900/30">
+              <CardContent className="flex flex-col flex-1 p-4">
                 <div className="flex items-center gap-2 text-sky-600 mb-1">
                   <TrendingUp className="h-4 w-4" />
                   <span className="text-xs font-medium uppercase tracking-wide">Avg Per Trip</span>
                 </div>
-                <p className="text-2xl font-bold">{formatCurrency(summary?.avgPerTrip || 0)}</p>
+                <p className="text-2xl font-bold flex-1">{formatCurrency(summary?.avgPerTrip || 0)}</p>
                 <p className="text-xs text-muted-foreground">per trip with tolls</p>
               </CardContent>
             </Card>

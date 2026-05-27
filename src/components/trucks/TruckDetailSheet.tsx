@@ -132,8 +132,8 @@ export function TruckDetailSheet({ open, onOpenChange, truckId }: TruckDetailShe
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full">
                 <TabsTrigger value="overview" className="flex-1">Overview</TabsTrigger>
-                <TabsTrigger value="tyres" className="flex-1">Tyres ({truck.tyres.length})</TabsTrigger>
-                <TabsTrigger value="maintenance" className="flex-1">Service ({truck.maintenance.length})</TabsTrigger>
+                <TabsTrigger value="tyres" className="flex-1">Tyres ({truck.tyres?.length ?? 0})</TabsTrigger>
+                <TabsTrigger value="maintenance" className="flex-1">Service ({truck.maintenance?.length ?? 0})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="space-y-4 mt-4">
@@ -151,7 +151,7 @@ export function TruckDetailSheet({ open, onOpenChange, truckId }: TruckDetailShe
                 <div>
                   <h4 className="text-sm font-semibold mb-3">Recent Expenses</h4>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {truck.expenses.length === 0 ? (
+                    {(truck.expenses?.length ?? 0) === 0 ? (
                       <p className="text-sm text-muted-foreground text-center py-2">No expenses</p>
                     ) : (
                       truck.expenses.map((exp) => (
@@ -172,7 +172,7 @@ export function TruckDetailSheet({ open, onOpenChange, truckId }: TruckDetailShe
                 <div>
                   <h4 className="text-sm font-semibold mb-3">Recent Trips</h4>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {truck.trips.length === 0 ? (
+                    {(truck.trips?.length ?? 0) === 0 ? (
                       <p className="text-sm text-muted-foreground text-center py-2">No trips</p>
                     ) : (
                       truck.trips.map((trip) => (
@@ -195,7 +195,7 @@ export function TruckDetailSheet({ open, onOpenChange, truckId }: TruckDetailShe
               </TabsContent>
 
               <TabsContent value="tyres" className="mt-4">
-                {truck.tyres.length === 0 ? (
+                {(truck.tyres?.length ?? 0) === 0 ? (
                   <div className="text-center py-8">
                     <CircleDot className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">No tyre data available</p>
@@ -229,7 +229,7 @@ export function TruckDetailSheet({ open, onOpenChange, truckId }: TruckDetailShe
               </TabsContent>
 
               <TabsContent value="maintenance" className="mt-4">
-                {truck.maintenance.length === 0 ? (
+                {(truck.maintenance?.length ?? 0) === 0 ? (
                   <div className="text-center py-8">
                     <Wrench className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">No maintenance records</p>

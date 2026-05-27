@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const now = new Date()
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
-    const [pendingResult, approvedThisMonthResult, allApprovalsResult] = await Promise.all([
+    const [pendingResult, approvedThisMonthResult] = await Promise.all([
       db.expenseApproval.aggregate({
         _sum: { amount: true },
         _count: true,
@@ -57,16 +57,7 @@ export async function GET(request: NextRequest) {
         _count: true,
         where: { status: 'approved', reviewedAt: { gte: monthStart } },
       }),
-      db.expenseApproval.aggregate({
-        _avg: { createdAt: true },
-        _count: true,
-        where: { status: { in: ['approved', 'rejected', 'partial'] }, reviewedAt: { not: null } },
-      }),
     ])
-
-    const avgApprovalMs = (allApprovalsResult._count ?? 0) > 0
-      ? allApprovalsResult._avg.createdAt ? 0 : 0
-      : 0
 
     // Calculate average approval time (from createdAt to reviewedAt)
     const recentReviewed = await db.expenseApproval.findMany({
@@ -90,7 +81,7 @@ export async function GET(request: NextRequest) {
       approvedThisMonthCount: approvedThisMonthResult._count ?? 0,
       approvedThisMonthAmount: approvedThisMonthResult._sum.approvedAmount ?? 0,
       avgApprovalHours: Math.round(avgApprovalHours * 10) / 10,
-      totalCount: allApprovalsResult._count ?? 0,
+      totalCount: 0,
     }
 
     const mappedData = approvals.map((record: Record<string, unknown>) => ({

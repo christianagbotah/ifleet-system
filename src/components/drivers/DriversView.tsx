@@ -423,7 +423,7 @@ export function DriversView() {
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
               >
-                <Card ref={(el) => { rowRefs.current[driver.id] = el }} className={`hover:shadow-md transition-shadow relative ${selectedIds.has(driver.id) ? 'ring-2 ring-amber-500 bg-amber-50/50 dark:bg-amber-950/20' : ''}${driver.id === highlightEntityId ? ' ' + highlightClassName : ''}`}>
+                <Card ref={(el) => { rowRefs.current[driver.id] = el }} className={`h-full hover:shadow-md transition-shadow relative ${selectedIds.has(driver.id) ? 'ring-2 ring-amber-500 bg-amber-50/50 dark:bg-amber-950/20' : ''}${driver.id === highlightEntityId ? ' ' + highlightClassName : ''}`}>
                   {canWrite && (
                     <div className="absolute top-3 right-3 z-10">
                       <Checkbox
@@ -435,7 +435,8 @@ export function DriversView() {
                     </div>
                   )}
                   <CardContent className="p-4 sm:p-5">
-                    <div className="flex items-start gap-3">
+                    <div className="flex flex-col flex-1 min-h-0">
+                      <div className="flex items-start gap-3">
                       <Avatar className="h-11 w-11">
                         {driver.photo ? (
                           <img src={driver.photo} alt="" className="h-full w-full object-cover" />
@@ -520,16 +521,16 @@ export function DriversView() {
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted-foreground">Assigned Truck</span>
                         <span className="font-medium">
-                          {driver.trucks.length > 0 ? (
-                            driver.trucks[0].plateNumber
+                          {driver.trucks?.length > 0 ? (
+                            driver.trucks?.[0]?.plateNumber
                           ) : (
                             <span className="text-muted-foreground italic">None</span>
                           )}
                         </span>
                       </div>
-                    </div>
+                      </div>
 
-                    <div className="flex gap-2 mt-4 pt-3 border-t">
+                      <div className="flex gap-2 mt-4 pt-3 border-t mt-auto">
                       <Button
                         variant="outline"
                         size="sm"
@@ -542,34 +543,35 @@ export function DriversView() {
                         <Eye className="mr-1 h-3 w-3" />
                         View Details
                       </Button>
-                      {canWrite && (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 h-8 text-xs"
-                            onClick={() => {
-                              setVerifyDriverId(driver.id)
-                              setVerifyDialogOpen(true)
-                            }}
-                          >
-                            <ShieldCheck className="mr-1 h-3 w-3" />
-                            Verify
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 h-8 text-xs"
-                            onClick={() => {
-                              setEditingDriver(driver)
-                              setFormOpen(true)
-                            }}
-                          >
-                            <Pencil className="mr-1 h-3 w-3" />
-                            Edit
-                          </Button>
-                        </>
-                      )}
+                        {canWrite && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1 h-8 text-xs"
+                              onClick={() => {
+                                setVerifyDriverId(driver.id)
+                                setVerifyDialogOpen(true)
+                              }}
+                            >
+                              <ShieldCheck className="mr-1 h-3 w-3" />
+                              Verify
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1 h-8 text-xs"
+                              onClick={() => {
+                                setEditingDriver(driver)
+                                setFormOpen(true)
+                              }}
+                            >
+                              <Pencil className="mr-1 h-3 w-3" />
+                              Edit
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

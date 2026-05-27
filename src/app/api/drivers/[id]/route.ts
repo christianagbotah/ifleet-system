@@ -66,7 +66,7 @@ export async function GET(
     const response = {
       ...rest,
       ...(Trip ? { trips: Trip } : {}),
-      ...(Payroll ? { payroll: Payroll } : {}),
+      ...(Payroll ? { payroll: Payroll } : { payroll: [] }),
       ...(Truck ? { trucks: Truck } : {}),
     }
 

@@ -214,7 +214,7 @@ function KpiCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Card className="gap-0 py-4">
+      <Card className="h-full gap-0 py-4">
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="space-y-1">

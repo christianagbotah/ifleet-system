@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     db.fuelStation.findMany({
       where,
       include: {
-        fuelPrices: {
+        FuelPrice: {
           orderBy: { effectiveDate: 'desc' },
           take: 4,
         },
@@ -52,7 +52,11 @@ export async function GET(request: NextRequest) {
     db.fuelStation.count({ where }),
   ])
 
-  return NextResponse.json({ data: stations, total, page, limit })
+  const mappedStations = stations.map((station: Record<string, unknown>) => {
+    const { FuelPrice, ...rest } = station
+    return { ...rest, fuelPrices: FuelPrice ?? [] }
+  })
+  return NextResponse.json({ data: mappedStations, total, page, limit })
 }
 
 // POST /api/fuel-stations — create station
@@ -88,10 +92,12 @@ export async function POST(request: NextRequest) {
         rating,
         notes,
       },
-      include: { fuelPrices: true },
+      include: { FuelPrice: true },
     })
 
-    return NextResponse.json(station, { status: 201 })
+    const { FuelPrice, ...rest } = station as Record<string, unknown>
+    const response = { ...rest, fuelPrices: FuelPrice ?? [] }
+    return NextResponse.json(response, { status: 201 })
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'Failed to create station'
     return NextResponse.json({ error: msg }, { status: 400 })

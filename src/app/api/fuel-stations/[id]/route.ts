@@ -15,7 +15,7 @@ export async function GET(
   const station = await db.fuelStation.findUnique({
     where: { id },
     include: {
-      fuelPrices: {
+      FuelPrice: {
         orderBy: { effectiveDate: 'desc' },
       },
     },
@@ -25,7 +25,8 @@ export async function GET(
     return NextResponse.json({ error: 'Station not found.' }, { status: 404 })
   }
 
-  return NextResponse.json(station)
+  const { FuelPrice, ...rest } = station as Record<string, unknown>
+  return NextResponse.json({ ...rest, fuelPrices: FuelPrice ?? [] })
 }
 
 // PUT /api/fuel-stations/[id]
@@ -65,10 +66,11 @@ export async function PUT(
     const station = await db.fuelStation.update({
       where: { id },
       data: updateData,
-      include: { fuelPrices: true },
+      include: { FuelPrice: true },
     })
 
-    return NextResponse.json(station)
+    const { FuelPrice, ...rest } = station as Record<string, unknown>
+    return NextResponse.json({ ...rest, fuelPrices: FuelPrice ?? [] })
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'Failed to update station'
     return NextResponse.json({ error: msg }, { status: 400 })
