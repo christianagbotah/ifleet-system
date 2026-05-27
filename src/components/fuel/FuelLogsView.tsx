@@ -18,6 +18,9 @@ import {
   Download,
   Upload,
   X,
+  Eye,
+  Truck,
+  Route,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -65,6 +68,13 @@ import {
 import { DatePicker } from '@/components/ui/date-picker'
 import { useDebounce } from '@/hooks/use-debounce'
 import { FuelLogFormDialog } from '@/components/fuel/FuelLogFormDialog'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet'
 import { ImportCSVDialog } from '@/components/import-csv-dialog'
 import { toast } from 'sonner'
 import { useEntityHighlight } from '@/lib/hooks/useEntityHighlight'
@@ -98,6 +108,7 @@ export function FuelLogsView() {
   const [page, setPage] = React.useState(1)
   const [stats, setStats] = React.useState<FuelLogStats | null>(null)
   const [formOpen, setFormOpen] = React.useState(false)
+  const [viewLog, setViewLog] = React.useState<FuelLog | null>(null)
   const [editingLog, setEditingLog] = React.useState<FuelLog | null>(null)
   const [deleteId, setDeleteId] = React.useState<string | null>(null)
   const [deleting, setDeleting] = React.useState(false)
@@ -510,6 +521,17 @@ export function FuelLogsView() {
                               className="h-8 w-8"
                               onClick={(e) => {
                                 e.stopPropagation()
+                                setViewLog(log)
+                              }}
+                            >
+                              <Eye className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={(e) => {
+                                e.stopPropagation()
                                 setEditingLog(log)
                                 setFormOpen(true)
                               }}
@@ -583,6 +605,18 @@ export function FuelLogsView() {
                       </div>
                     </div>
                     <div className="flex items-center justify-end gap-2 pt-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setViewLog(log)
+                        }}
+                      >
+                        <Eye className="mr-1 h-3 w-3" />
+                        View
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
@@ -690,6 +724,149 @@ export function FuelLogsView() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* View Details Sheet */}
+      <Sheet open={!!viewLog} onOpenChange={(open) => { if (!open) setViewLog(null) }}>
+        <SheetContent side="right" className="sm:max-w-md overflow-y-auto">
+          {viewLog && (
+            <>
+              <SheetHeader>
+                <SheetTitle>Fuel Log Details</SheetTitle>
+                <SheetDescription>
+                  {new Date(viewLog.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </SheetDescription>
+              </SheetHeader>
+              <div className="space-y-5 px-4 pb-4">
+                {/* Truck & Trip */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Truck className="h-3 w-3" />
+                      Truck
+                    </div>
+                    <p className="text-sm font-semibold">{viewLog.truck?.plateNumber || viewLog.truckId}</p>
+                  </div>
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Route className="h-3 w-3" />
+                      Trip
+                    </div>
+                    <p className="text-sm font-semibold">{viewLog.trip?.tripNumber || '—'}</p>
+                  </div>
+                </div>
+
+                {/* Fuel Info */}
+                <div className="space-y-2">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Fuel Information</h4>
+                  <div className="rounded-lg border divide-y">
+                    <div className="flex items-center justify-between p-3">
+                      <span className="text-sm text-muted-foreground">Fuel Type</span>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs font-medium border-transparent ${
+                          viewLog.fuelType === 'Diesel'
+                            ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+                            : 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400'
+                        }`}
+                      >
+                        {viewLog.fuelType}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3">
+                      <span className="text-sm text-muted-foreground">Liters Filled</span>
+                      <span className="text-sm font-semibold">{viewLog.litersFilled.toLocaleString()} L</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3">
+                      <span className="text-sm text-muted-foreground">Cost / Liter</span>
+                      <span className="text-sm font-medium">{viewLog.costPerLiter ? formatCurrency(viewLog.costPerLiter) : '—'}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3">
+                      <span className="text-sm text-muted-foreground">Total Cost</span>
+                      <span className="text-sm font-bold text-amber-600 dark:text-amber-400">{formatCurrency(viewLog.totalCost)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mileage */}
+                {(viewLog.odometer || viewLog.fuelLevelBefore != null || viewLog.fuelLevelAfter != null) && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Mileage</h4>
+                    <div className="rounded-lg border divide-y">
+                      {viewLog.odometer && (
+                        <div className="flex items-center justify-between p-3">
+                          <span className="text-sm text-muted-foreground">Odometer</span>
+                          <span className="text-sm font-medium">{viewLog.odometer.toLocaleString()} km</span>
+                        </div>
+                      )}
+                      {viewLog.fuelLevelBefore != null && (
+                        <div className="flex items-center justify-between p-3">
+                          <span className="text-sm text-muted-foreground">Level Before</span>
+                          <span className="text-sm font-medium">{viewLog.fuelLevelBefore}%</span>
+                        </div>
+                      )}
+                      {viewLog.fuelLevelAfter != null && (
+                        <div className="flex items-center justify-between p-3">
+                          <span className="text-sm text-muted-foreground">Level After</span>
+                          <span className="text-sm font-medium">{viewLog.fuelLevelAfter}%</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Station & Receipt */}
+                {(viewLog.stationName || viewLog.receiptNumber) && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Station & Receipt</h4>
+                    <div className="rounded-lg border divide-y">
+                      {viewLog.stationName && (
+                        <div className="flex items-center justify-between p-3">
+                          <span className="text-sm text-muted-foreground">Station</span>
+                          <span className="text-sm font-medium">{viewLog.stationName}</span>
+                        </div>
+                      )}
+                      {viewLog.receiptNumber && (
+                        <div className="flex items-center justify-between p-3">
+                          <span className="text-sm text-muted-foreground">Receipt #</span>
+                          <span className="text-sm font-medium font-mono">{viewLog.receiptNumber}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Images */}
+                {viewLog.images && (() => {
+                  try {
+                    const parsed = JSON.parse(viewLog.images)
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                      return (
+                        <div className="space-y-2">
+                          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Attached Photos</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {parsed.map((url: string, idx: number) => (
+                              <div key={idx} className="rounded-lg overflow-hidden border bg-muted aspect-square">
+                                <img src={url} alt={`Photo ${idx + 1}`} className="h-full w-full object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    }
+                  } catch { /* ignore */ }
+                  return null
+                })()}
+
+                {/* Timestamps */}
+                <div className="text-xs text-muted-foreground space-y-0.5 pt-2 border-t">
+                  <p>Created: {new Date(viewLog.createdAt).toLocaleString()}</p>
+                  <p>Updated: {new Date(viewLog.updatedAt).toLocaleString()}</p>
+                </div>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deleteId} onOpenChange={(open) => { if (!open) setDeleteId(null) }}>

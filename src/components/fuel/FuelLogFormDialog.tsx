@@ -90,8 +90,10 @@ function ImageUploadArea({
   disabled?: boolean
 }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const cameraInputRef = React.useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = React.useState(false)
   const [dragOver, setDragOver] = React.useState(false)
+  const [choiceOpen, setChoiceOpen] = React.useState(false)
 
   const uploadPendingImages = React.useCallback(async (currentImages: ImageFile[]) => {
     const pending = currentImages.filter(img => !img.isUploaded && !img.uploadError && img.file)
@@ -140,6 +142,7 @@ function ImageUploadArea({
 
   const handleFiles = React.useCallback(async (files: FileList | null) => {
     if (!files || files.length === 0 || disabled) return
+    setChoiceOpen(false)
 
     const newImages: ImageFile[] = [...images]
     for (let i = 0; i < files.length; i++) {
@@ -163,6 +166,7 @@ function ImageUploadArea({
       setTimeout(() => uploadPendingImages(newImages), 100)
     }
     if (fileInputRef.current) fileInputRef.current.value = ''
+    if (cameraInputRef.current) cameraInputRef.current.value = ''
   }, [images, onImagesChange, disabled, uploadPendingImages])
 
   const handleRetry = React.useCallback(async () => {
@@ -192,8 +196,77 @@ function ImageUploadArea({
   const failedCount = images.filter(img => img.uploadError).length
   const isUploading = uploading || images.some(img => img.uploading)
 
+  // On mobile, open a choice dialog (file vs camera). On desktop, go straight to file picker.
+  const handleUploadClick = React.useCallback(() => {
+    if (disabled || isUploading) return
+    // Detect mobile via touch support and small screen
+    if ('ontouchstart' in window && window.innerWidth < 768) {
+      setChoiceOpen(true)
+    } else {
+      fileInputRef.current?.click()
+    }
+  }, [disabled, isUploading])
+
   return (
     <div className="space-y-3">
+      {/* Full-page upload overlay */}
+      {isUploading && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center">
+          <div className="bg-card rounded-xl border shadow-xl p-8 flex flex-col items-center gap-4 max-w-xs mx-4">
+            <div className="relative">
+              <Loader2 className="h-12 w-12 animate-spin text-amber-500" />
+            </div>
+            <div className="text-center">
+              <p className="font-semibold text-sm">Uploading Images</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {pendingCount} image{pendingCount > 1 ? 's' : ''} remaining — please wait
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile: File or Camera choice dialog */}
+      {choiceOpen && (
+        <div className="fixed inset-0 z-[90] bg-black/50 flex items-end sm:items-center justify-center">
+          <div
+            className="bg-card rounded-t-2xl sm:rounded-xl border shadow-xl w-full sm:max-w-sm sm:mx-4 p-4 space-y-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-sm font-semibold text-center py-2">Add Photo</p>
+            <button
+              type="button"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-left"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium">Choose from Files</p>
+                <p className="text-xs text-muted-foreground">Select from gallery or file manager</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-left"
+              onClick={() => cameraInputRef.current?.click()}
+            >
+              <Camera className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium">Take Photo</p>
+                <p className="text-xs text-muted-foreground">Use camera to capture now</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-sm text-muted-foreground"
+              onClick={() => setChoiceOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       <div
         className={`
           relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4
@@ -201,7 +274,7 @@ function ImageUploadArea({
           ${dragOver ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/20' : 'border-muted-foreground/25 hover:border-muted-foreground/50'}
           ${disabled || isUploading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
-        onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
+        onClick={handleUploadClick}
         onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragOver(true) }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
@@ -211,11 +284,22 @@ function ImageUploadArea({
           Click to upload or drag & drop
         </p>
         <p className="text-xs text-muted-foreground/70">Receipts, fuel logs, mileage photos — max 5MB each</p>
+        {/* Hidden file input for gallery */}
         <input
           ref={fileInputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp"
           multiple
+          className="hidden"
+          onChange={(e) => handleFiles(e.target.files)}
+          disabled={disabled || isUploading}
+        />
+        {/* Hidden camera input */}
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          capture="environment"
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
           disabled={disabled || isUploading}
