@@ -162,3 +162,19 @@ Stage Summary:
 - All API endpoints tested and returning proper responses
 - Build script updated to run `prisma generate` before `next build`
 - VPS should now be able to build and run without the P1012 error
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Make trip selection searchable in Post-Trip Fuel Recording form
+
+Work Log:
+- Added `disabled` prop to `SearchableSelect` component (`src/components/ui/searchable-select.tsx`)
+- Replaced regular `<Select>` dropdown with `SearchableSelect` for the completed trip selector in `FuelLogFormDialog.tsx`
+- Searchable select now supports searching by trip number, loading location, or destination
+- Lint passes clean, dev server compiles successfully
+
+Stage Summary:
+- Post-Trip Fuel Recording trip selector is now searchable via a Command/Combobox input
+- Users can type to filter through completed trips instead of scrolling a long dropdown list
+- SearchableSelect component now supports optional `disabled` prop

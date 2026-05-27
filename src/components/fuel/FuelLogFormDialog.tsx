@@ -684,24 +684,18 @@ export function FuelLogFormDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Select Completed Trip *</FormLabel>
-                    <Select onValueChange={(val) => handlePostTripSelect(val)} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={loadingCompletedTrips ? 'Loading trips...' : 'Select a completed trip'} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {completedTrips.length === 0 ? (
-                          <SelectItem value="_none" disabled>No completed trips found</SelectItem>
-                        ) : (
-                          completedTrips.map((trip) => (
-                            <SelectItem key={trip.id} value={trip.id}>
-                              {trip.tripNumber} — {trip.loadingLocation} → {trip.destination}
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
+                    <SearchableSelect
+                      options={completedTrips.map(t => ({
+                        value: t.id,
+                        label: `${t.tripNumber} — ${t.loadingLocation} → ${t.destination}`,
+                      }))}
+                      value={field.value}
+                      onValueChange={(val) => handlePostTripSelect(val)}
+                      placeholder={loadingCompletedTrips ? 'Loading trips...' : 'Search or select a completed trip'}
+                      searchPlaceholder="Search by trip #, location, destination..."
+                      emptyMessage="No matching trips found."
+                      disabled={loadingCompletedTrips}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}

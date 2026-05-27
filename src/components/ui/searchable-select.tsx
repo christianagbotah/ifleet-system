@@ -29,6 +29,7 @@ interface SearchableSelectProps {
   placeholder?: string
   searchPlaceholder?: string
   emptyMessage?: string
+  disabled?: boolean
   value: string
   onValueChange: (value: string) => void
   options: SearchableOption[]
@@ -39,6 +40,7 @@ export function SearchableSelect({
   placeholder = "Select an option...",
   searchPlaceholder = "Search...",
   emptyMessage = "No option found.",
+  disabled = false,
   value,
   onValueChange,
   options,
@@ -56,6 +58,7 @@ export function SearchableSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className={cn(
             "w-full justify-between font-normal h-9 text-sm",
             !selectedLabel && "text-muted-foreground",
