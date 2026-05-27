@@ -268,3 +268,31 @@ Stage Summary:
 - All 500 errors from fuel-stations, expense-approvals resolved
 - undefined.length crashes on drivers, driver detail, and truck detail pages resolved
 - Card height uniformity achieved on drivers, truck-financials, and toll-tracker pages
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix login 500 error and all remaining Prisma field name mismatches
+
+Work Log:
+- Investigated login 500 error by starting dev server locally
+- Found root cause: Prisma MariaDB adapter requires 'mariadb://' URL prefix but .env uses 'mysql://'
+- Fixed db.ts to auto-convert 'mysql://' to 'mariadb://' connection string prefix
+- Ran comprehensive scan of ALL API routes for remaining Prisma field name mismatches
+- Fixed 9 additional files with wrong field names in Prisma include/select:
+  - border-crossings/[id]: 'creator:' → 'user:'
+  - depot-queue/[id]: 'creator:' → 'user:'
+  - insurance-claims/[id]: 'creator:' → 'user:' (3 occurrences)
+  - driver-incentives/[id]: 'creator:'/'approver:' → 'user_DriverIncentive_createdByToUser'/'user_DriverIncentive_approvedByToUser'
+  - warehouse/[id]: 'creator:' → 'user:'
+  - settlements/[id]: 'lines:' → 'SettlementLine:'
+  - settlements/generate: 'lines:' → 'SettlementLine:' (2 occurrences)
+  - delivery-destinations/[id]: 'tripItems:' → 'TripItem:'
+  - delivery-destinations: 'tripItems:' → 'TripItem:'
+- Added better error logging to login route
+- Regenerated Prisma client
+- Committed as 158281b and pushed to GitHub
+
+Stage Summary:
+- Root cause of ALL 500 errors: mysql:// vs mariadb:// URL prefix in Prisma adapter
+- 11 files modified, 43 insertions, 21 deletions
+- Push successful to origin/main
