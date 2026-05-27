@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -270,7 +270,7 @@ model DestinationZone {
 model Document {
   id                      String                    @id @default(cuid())
   title       String
-  description String?
+  description String?  @db.Text
   category    String
   entityType  String?
   entityId    String?
@@ -342,7 +342,7 @@ model DriverIncentive {
   driverId                              String
   type                                  String
   title                                 String
-  description                           String?
+  description                           String?  @db.Text
   amount                                Float
   period                                String
   periodStart                           DateTime?
@@ -439,7 +439,7 @@ model DvlaRegistration {
   renewalFee         Float?
   status             String    @default("active")
   documentUrl        String?
-  transferHistory    String?  
+  transferHistory    String?   @db.Text
   notes              String?
   reminderSent       Boolean   @default(false)
   createdAt          DateTime  @default(now())
@@ -539,8 +539,8 @@ model FuelLog {
   fuelType        String   @default("Diesel")
   receiptNumber   String?
   endMileage      Float?
-  endMileageImage String?
-  images          String?   // JSON array of uploaded image URLs (receipts, fuel logs, mileage photos)
+  endMileageImage String?   @db.Text
+  images          String?   @db.Text // JSON array of uploaded image URLs (receipts, fuel logs, mileage photos)
   distanceCovered Float?
   notes           String?
   createdAt       DateTime @default(now())
@@ -651,23 +651,23 @@ model InsuranceClaim {
   claimType         String
   incidentDate      DateTime
   incidentLocation  String
-  description       String
+  description       String    @db.Text
   status            String    @default("draft")
   claimAmount       Float
   approvedAmount    Float?
   deductible        Float?
   assignedAdjuster  String?
-  policeReport      String?
-  thirdPartyDetails String?
-  damagePhotos      String?
+  policeReport      String?   @db.Text
+  thirdPartyDetails String?   @db.Text
+  damagePhotos      String?   @db.Text
   repairEstimate    Float?
   submittedAt       DateTime?
   reviewedAt        DateTime?
   approvedAt        DateTime?
   paidAt            DateTime?
   closedAt          DateTime?
-  notes             String?
-  assessorNotes     String?
+  notes             String?   @db.Text
+  assessorNotes     String?   @db.Text
   createdBy         String
   createdAt         DateTime  @default(now())
   updatedAt DateTime @updatedAt
@@ -714,7 +714,7 @@ model Invoice {
 model InvoiceItem {
   id                      String                    @id @default(cuid())
   invoiceId   String
-  description String
+  description String    @db.Text
   quantity    Float
   unitPrice   Float
   total       Float
@@ -727,7 +727,7 @@ model InvoiceItem {
 model Item {
   id                      String                    @id @default(cuid())
   name        String     @unique
-  description String?
+  description String?   @db.Text
   unit        String     @default("bags")
   isActive    Boolean    @default(true)
   createdAt   DateTime   @default(now())
@@ -825,7 +825,7 @@ model MaintenanceRecord {
   truckId        String
   type           String
   title          String
-  description    String?
+  description    String?   @db.Text
   odometer       Float?
   cost           Float?
   performedBy    String?
@@ -833,7 +833,7 @@ model MaintenanceRecord {
   nextDueDate    DateTime?
   nextDueMileage Float?
   status         String    @default("completed")
-  partsUsed      String?  
+  partsUsed      String?   @db.Text
   invoiceUrl     String?
   createdAt      DateTime  @default(now())
   updatedAt DateTime @updatedAt
@@ -853,7 +853,7 @@ model Notification {
   isRead      Boolean   @default(false)
   readAt      DateTime?
   link        String?
-  metadata    String?  
+  metadata    String?   @db.Text
   smsSent     Boolean   @default(false)
   smsSentAt   DateTime?
   smsError    String?
@@ -963,14 +963,14 @@ model RoadConditionReport {
   region      String
   condition   String
   hazardType  String
-  description String?
+  description String?   @db.Text
   severity    String
   latitude    Float?
   longitude   Float?
   reportedAt  DateTime  @default(now())
   resolvedAt  DateTime?
   status      String    @default("active")
-  imageUrl    String?
+  imageUrl    String?   @db.Text
   tripId      String?
   createdAt   DateTime  @default(now())
   updatedAt DateTime @updatedAt
@@ -1008,9 +1008,9 @@ model RoadworthyInspection {
   bodyCheck          String    @default("pass")
   electricalCheck    String    @default("pass")
   odometerReading    Float?
-  defectsFound       String?  
-  advisories         String?  
-  recommendations    String?  
+  defectsFound       String?   @db.Text
+  advisories         String?   @db.Text
+  recommendations    String?   @db.Text  
   certificateIssued  Boolean   @default(false)
   certificateExpiry  DateTime?
   certificateUrl     String?
@@ -1032,7 +1032,7 @@ model Role {
   id                      String                    @id @default(cuid())
   name        String   @unique
   description String?
-  permissions String  
+  permissions String    @db.Text
   isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1231,7 +1231,7 @@ model Trip {
   fuelLevelAfter          Float?
   fuelUsed                Float?
   fuelCost                Float?
-  startMileageImage       String?
+  startMileageImage       String?   @db.Text
   deliveryType            String                    @default("SINGLE")
   loadingCityId           String?
   loadingPointId          String?
@@ -1342,7 +1342,7 @@ model TripEvent {
   userId     String?
   notes      String?
   location   String?
-  metadata   String? 
+  metadata   String?   @db.Text
   createdAt  DateTime @default(now())
   trip       Trip     @relation(fields: [tripId], references: [id])
 
