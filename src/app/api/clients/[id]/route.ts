@@ -184,8 +184,8 @@ export async function PUT(
       const tripsToLink = await db.trip.findMany({
         where: {
           OR: [
-            { customerName: { contains: companyName.trim(), mode: 'insensitive' } },
-            { customerName: { contains: contactPerson?.trim() || '', mode: 'insensitive' } },
+            { customerName: { contains: companyName.trim() } },
+            { customerName: { contains: contactPerson?.trim() || '' } },
           ],
           clientId: null,
         },

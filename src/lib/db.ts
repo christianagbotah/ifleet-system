@@ -28,7 +28,7 @@ const databaseUrl = loadDatabaseUrl()
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: ['error'],
+    log: ['error', 'warn'],
     datasourceUrl: databaseUrl || undefined,
   })
 
