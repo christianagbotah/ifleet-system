@@ -1131,10 +1131,10 @@ export function FuelLogFormDialog({
             Cancel
           </Button>
           <Button
-            type="submit"
-            form="fuel-log-form"
+            type="button"
             className="bg-amber-500 hover:bg-amber-600 text-white"
             disabled={submitting}
+            onClick={form.handleSubmit(onSubmit)}
           >
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {submitting
