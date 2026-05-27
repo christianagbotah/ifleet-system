@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@/generated/client'
 
 // ============ GET: List invoices ============
 export async function GET(request: NextRequest) {

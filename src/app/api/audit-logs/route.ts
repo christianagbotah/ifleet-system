@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-server'
 import { db } from '@/lib/db'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@/generated/client'
 
 // ============ Entity Label Resolution ============
 

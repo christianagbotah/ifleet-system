@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@/generated/client'
 import { requireRole, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 

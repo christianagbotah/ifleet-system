@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@/generated/client'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
@@ -25,11 +26,15 @@ function loadDatabaseUrl(): string {
 
 const databaseUrl = loadDatabaseUrl()
 
+const adapter = new PrismaMariaDb(databaseUrl || 'mysql://root:root@localhost:3306/ifleetpro_data', {
+  database: 'ifleetpro_data',
+})
+
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
+    adapter,
     log: ['error', 'warn'],
-    datasourceUrl: databaseUrl || undefined,
   })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
