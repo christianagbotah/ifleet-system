@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Globe, Clock, CheckCircle, AlertTriangle, Plus, RefreshCw,
@@ -500,7 +500,8 @@ function CreateForm({ trucks, drivers, trips, onSubmit, onCancel }: {
   }
 
   return (
-    <div className="space-y-4">
+    <>
+      <DialogBody className="space-y-4">
       <div className="space-y-2">
         <Label>Trip *</Label>
         <Select value={tripId} onValueChange={setTripId}>
@@ -596,13 +597,14 @@ function CreateForm({ trucks, drivers, trips, onSubmit, onCancel }: {
           <Input placeholder="Optional notes" value={notes} onChange={e => setNotes(e.target.value)} />
         </div>
       </div>
+      </DialogBody>
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
         <Button onClick={handleSubmit} disabled={submitting}>
           {submitting ? 'Creating...' : 'Create Crossing'}
         </Button>
       </DialogFooter>
-    </div>
+    </>
   )
 }
 
@@ -638,7 +640,8 @@ function UpdateForm({ crossing, onSubmit, onCancel }: {
   if (!crossing) return null
 
   return (
-    <div className="space-y-4">
+    <>
+      <DialogBody className="space-y-4">
       {/* Crossing Info */}
       <div className="rounded-lg bg-muted/50 p-3 space-y-1 text-sm">
         <p className="font-medium">{crossing.borderName} — {crossing.country}</p>
@@ -671,12 +674,13 @@ function UpdateForm({ crossing, onSubmit, onCancel }: {
         <Label>Notes</Label>
         <Textarea placeholder="Additional notes..." value={notes} onChange={e => setNotes(e.target.value)} rows={3} />
       </div>
+      </DialogBody>
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
         <Button onClick={handleSubmit} disabled={submitting}>
           {submitting ? 'Updating...' : 'Update Crossing'}
         </Button>
       </DialogFooter>
-    </div>
+    </>
   )
 }

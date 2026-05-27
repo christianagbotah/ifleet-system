@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { AlertTriangle, MapPin, Clock, Eye, CheckCircle, XCircle, Plus, Filter, Pencil, Trash2, RefreshCw } from 'lucide-react'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import {
@@ -398,8 +398,9 @@ function ReportForm({ onSubmit, onCancel, initialData }: {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+    <>
+      <DialogBody className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Road Name *</Label>
           <Input placeholder="e.g. N1 Accra-Kumasi Highway" value={roadName} onChange={e => setRoadName(e.target.value)} />
@@ -470,10 +471,11 @@ function ReportForm({ onSubmit, onCancel, initialData }: {
           <Input type="number" step="any" placeholder="e.g. -0.1870" value={longitude} onChange={e => setLongitude(e.target.value)} />
         </div>
       </div>
+      </DialogBody>
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
         <Button onClick={handleSubmit}>{initialData ? 'Update Report' : 'Submit Report'}</Button>
       </DialogFooter>
-    </div>
+    </>
   )
 }

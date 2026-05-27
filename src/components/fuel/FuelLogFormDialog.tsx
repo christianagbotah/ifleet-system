@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Paperclip, Loader2, Camera, Route, Truck, Info, StickyNote } from 'lucide-react'
+import { Paperclip, Loader2, Camera, Route, Truck, Info, StickyNote, Upload, AlertCircle, CheckCircle2, X } from 'lucide-react'
 import {
   Dialog,
   DialogBody,
@@ -34,7 +34,7 @@ import {
 } from '@/components/ui/select'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
-import { fetchTrucks, fetchTrips, type Truck, type Trip, type FuelLog, createFuelLog, updateFuelLog, uploadDocument } from '@/lib/api'
+import { fetchTrucks, fetchTrips, type Truck, type Trip, type FuelLog, createFuelLog, updateFuelLog, uploadDocument, uploadFiles } from '@/lib/api'
 import { toast } from 'sonner'
 import { ReceiptScanner, type ScannedReceiptData } from '@/components/scanner/ReceiptScanner'
 
@@ -56,6 +56,228 @@ const fuelLogFormSchema = z.object({
 })
 
 type FuelLogFormValues = z.infer<typeof fuelLogFormSchema>
+
+// ============ Image Upload State ============
+
+interface ImageFile {
+  file?: File
+  url: string       // blob URL for preview (local) or server URL (existing)
+  isUploaded: boolean // whether this is an already-uploaded image
+  uploadError?: string
+  uploading?: boolean
+}
+
+function ImageUploadArea({
+  images,
+  onImagesChange,
+  disabled,
+}: {
+  images: ImageFile[]
+  onImagesChange: (imgs: ImageFile[]) => void
+  disabled?: boolean
+}) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = React.useState(false)
+  const [dragOver, setDragOver] = React.useState(false)
+
+  const uploadPendingImages = React.useCallback(async (currentImages: ImageFile[]) => {
+    const pending = currentImages.filter(img => !img.isUploaded && !img.uploadError && img.file)
+    if (pending.length === 0) return currentImages
+
+    setUploading(true)
+    const updated = currentImages.map(img =>
+      !img.isUploaded && !img.uploadError && img.file
+        ? { ...img, uploading: true, uploadError: undefined }
+        : img
+    )
+    onImagesChange(updated)
+
+    try {
+      const uploadedUrls = await uploadFiles(pending.map(img => img.file!))
+      const result = [...updated]
+      let urlIndex = 0
+      for (let i = 0; i < result.length; i++) {
+        if (!result[i].isUploaded && result[i].uploading && result[i].file) {
+          URL.revokeObjectURL(result[i].url)
+          result[i] = {
+            url: uploadedUrls[urlIndex],
+            isUploaded: true,
+            uploading: false,
+          }
+          urlIndex++
+        }
+      }
+      onImagesChange(result)
+      toast.success(`${uploadedUrls.length} image(s) uploaded successfully`)
+      return result
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Upload failed'
+      const failed = updated.map(img =>
+        img.uploading
+          ? { ...img, uploading: false, uploadError: errorMsg }
+          : img
+      )
+      onImagesChange(failed)
+      toast.error(errorMsg)
+      return failed
+    } finally {
+      setUploading(false)
+    }
+  }, [onImagesChange])
+
+  const handleFiles = React.useCallback(async (files: FileList | null) => {
+    if (!files || files.length === 0 || disabled) return
+
+    const newImages: ImageFile[] = [...images]
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      if (!file.type.startsWith('image/')) {
+        toast.error(`"${file.name}" is not an image file`)
+        continue
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`"${file.name}" exceeds 5MB limit`)
+        continue
+      }
+      newImages.push({
+        file,
+        url: URL.createObjectURL(file),
+        isUploaded: false,
+      })
+    }
+    if (newImages.length !== images.length) {
+      onImagesChange(newImages)
+      setTimeout(() => uploadPendingImages(newImages), 100)
+    }
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }, [images, onImagesChange, disabled, uploadPendingImages])
+
+  const handleRetry = React.useCallback(async () => {
+    const cleared = images.map(img =>
+      img.uploadError ? { ...img, uploadError: undefined } : img
+    )
+    onImagesChange(cleared)
+    setTimeout(() => uploadPendingImages(cleared), 100)
+  }, [images, onImagesChange, uploadPendingImages])
+
+  const removeImage = React.useCallback((index: number) => {
+    const updated = [...images]
+    if (!updated[index].isUploaded) {
+      URL.revokeObjectURL(updated[index].url)
+    }
+    updated.splice(index, 1)
+    onImagesChange(updated)
+  }, [images, onImagesChange])
+
+  const handleDrop = React.useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setDragOver(false)
+    handleFiles(e.dataTransfer.files)
+  }, [handleFiles])
+
+  const pendingCount = images.filter(img => !img.isUploaded && !img.uploadError).length
+  const failedCount = images.filter(img => img.uploadError).length
+  const isUploading = uploading || images.some(img => img.uploading)
+
+  return (
+    <div className="space-y-3">
+      <div
+        className={`
+          relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4
+          transition-colors cursor-pointer min-h-[100px]
+          ${dragOver ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/20' : 'border-muted-foreground/25 hover:border-muted-foreground/50'}
+          ${disabled || isUploading ? 'opacity-50 cursor-not-allowed' : ''}
+        `}
+        onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragOver(true) }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+      >
+        <Upload className="h-6 w-6 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground text-center">
+          Click to upload or drag & drop
+        </p>
+        <p className="text-xs text-muted-foreground/70">Receipts, fuel logs, mileage photos — max 5MB each</p>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          className="hidden"
+          onChange={(e) => handleFiles(e.target.files)}
+          disabled={disabled || isUploading}
+        />
+      </div>
+
+      {failedCount > 0 && !isUploading && (
+        <Button
+          type="button"
+          variant="destructive"
+          size="sm"
+          className="w-full"
+          onClick={handleRetry}
+        >
+          <AlertCircle className="h-4 w-4 mr-2" />
+          Retry {failedCount} failed image(s)
+        </Button>
+      )}
+
+      {isUploading && (
+        <div className="flex items-center justify-center gap-2 py-1">
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">Uploading image{pendingCount > 1 ? 's' : ''}...</span>
+        </div>
+      )}
+
+      {images.length > 0 && (
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          {images.map((img, idx) => (
+            <div key={img.url} className="relative group rounded-md overflow-hidden border bg-muted aspect-square">
+              <img
+                src={img.url}
+                alt={`Image ${idx + 1}`}
+                className="h-full w-full object-cover"
+              />
+              {img.uploading && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <Loader2 className="h-6 w-6 text-white animate-spin" />
+                </div>
+              )}
+              {img.uploadError && !img.uploading && (
+                <>
+                  <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
+                    <AlertCircle className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-red-600 text-white text-[10px] text-center py-0.5 font-medium truncate px-1">
+                    Failed
+                  </div>
+                </>
+              )}
+              {img.isUploaded && (
+                <div className="absolute top-1 left-1">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 drop-shadow" />
+                </div>
+              )}
+              {!img.isUploaded && !img.uploadError && !img.uploading && (
+                <div className="absolute top-0 left-0 right-0 bg-amber-500 text-white text-[10px] text-center py-0.5 font-medium">
+                  Pending
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); removeImage(idx) }}
+                className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                disabled={disabled || isUploading}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 interface FuelLogFormDialogProps {
   open: boolean
@@ -83,6 +305,9 @@ export function FuelLogFormDialog({
   const [loadingTrips, setLoadingTrips] = React.useState(false)
   const [uploadingReceipt, setUploadingReceipt] = React.useState(false)
   const [scannerOpen, setScannerOpen] = React.useState(false)
+
+  // Image upload state for receipts, fuel & mileage photos
+  const [fuelImages, setFuelImages] = React.useState<ImageFile[]>([])
 
   // Post-trip mode
   const [formMode, setFormMode] = React.useState<FormMode>(fuelLog ? 'standard' : initialMode)
@@ -117,6 +342,20 @@ export function FuelLogFormDialog({
 
   React.useEffect(() => {
     if (!open) return
+
+    // Reset/populate images
+    if (fuelLog && (fuelLog as Record<string, unknown>).images) {
+      try {
+        const parsed = JSON.parse(String((fuelLog as Record<string, unknown>).images))
+        if (Array.isArray(parsed)) {
+          setFuelImages(parsed.map((url: string) => ({ url, isUploaded: true })))
+        }
+      } catch {
+        setFuelImages([])
+      }
+    } else {
+      setFuelImages([])
+    }
 
     // Reset form based on create vs edit
     if (fuelLog) {
@@ -285,6 +524,14 @@ export function FuelLogFormDialog({
       if (!body.notes) delete body.notes
       if (!body.distanceCovered) delete body.distanceCovered
 
+      // Store uploaded image URLs as JSON array
+      const uploadedImageUrls = fuelImages.filter(img => img.isUploaded).map(img => img.url)
+      if (uploadedImageUrls.length > 0) {
+        body.images = JSON.stringify(uploadedImageUrls)
+      } else {
+        body.images = null
+      }
+
       if (fuelLog) {
         await updateFuelLog(fuelLog.id, body)
         toast.success('Fuel log updated successfully')
@@ -400,6 +647,7 @@ export function FuelLogFormDialog({
         </DialogHeader>
 
         <DialogBody>
+          <Form {...form}>
           {/* Mode toggle (only for new entries) */}
           {!fuelLog && (
             <div className="flex gap-2 mb-4">
@@ -500,7 +748,6 @@ export function FuelLogFormDialog({
             </div>
           )}
 
-          <Form {...form}>
             <form id="fuel-log-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* Truck selection — hidden in post-trip mode when a trip is selected */}
               {!(formMode === 'post_trip' && selectedTrip) && (
@@ -846,6 +1093,22 @@ export function FuelLogFormDialog({
                   </FormItem>
                 )}
               />
+
+              {/* Photos & Receipts */}
+              <div className="space-y-2">
+                <FormLabel className="flex items-center gap-1.5 text-sm font-medium">
+                  <Camera className="h-3.5 w-3.5" />
+                  Photos & Receipts
+                </FormLabel>
+                <p className="text-xs text-muted-foreground">
+                  Upload fuel receipts, mileage logs, and other supporting photos
+                </p>
+                <ImageUploadArea
+                  images={fuelImages}
+                  onImagesChange={setFuelImages}
+                  disabled={submitting}
+                />
+              </div>
             </form>
           </Form>
         </DialogBody>

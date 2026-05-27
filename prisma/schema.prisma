@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -49,7 +49,7 @@ model AuditLog {
   action    String
   entity    String
   entityId  String?
-  details   String?  @db.Text
+  details   String? 
   ipAddress String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
@@ -439,7 +439,7 @@ model DvlaRegistration {
   renewalFee         Float?
   status             String    @default("active")
   documentUrl        String?
-  transferHistory    String?   @db.Text
+  transferHistory    String?  
   notes              String?
   reminderSent       Boolean   @default(false)
   createdAt          DateTime  @default(now())
@@ -540,6 +540,7 @@ model FuelLog {
   receiptNumber   String?
   endMileage      Float?
   endMileageImage String?
+  images          String?   // JSON array of uploaded image URLs (receipts, fuel logs, mileage photos)
   distanceCovered Float?
   notes           String?
   createdAt       DateTime @default(now())
@@ -832,7 +833,7 @@ model MaintenanceRecord {
   nextDueDate    DateTime?
   nextDueMileage Float?
   status         String    @default("completed")
-  partsUsed      String?   @db.Text
+  partsUsed      String?  
   invoiceUrl     String?
   createdAt      DateTime  @default(now())
   updatedAt DateTime @updatedAt
@@ -852,7 +853,7 @@ model Notification {
   isRead      Boolean   @default(false)
   readAt      DateTime?
   link        String?
-  metadata    String?   @db.Text
+  metadata    String?  
   smsSent     Boolean   @default(false)
   smsSentAt   DateTime?
   smsError    String?
@@ -943,7 +944,7 @@ model ReportHistory {
   type        String
   title       String
   format      String
-  parameters  String?  @db.Text
+  parameters  String? 
   generatedBy String
   fileSize    Int?
   status      String   @default("completed")
@@ -1007,9 +1008,9 @@ model RoadworthyInspection {
   bodyCheck          String    @default("pass")
   electricalCheck    String    @default("pass")
   odometerReading    Float?
-  defectsFound       String?   @db.Text
-  advisories         String?   @db.Text
-  recommendations    String?   @db.Text
+  defectsFound       String?  
+  advisories         String?  
+  recommendations    String?  
   certificateIssued  Boolean   @default(false)
   certificateExpiry  DateTime?
   certificateUrl     String?
@@ -1031,7 +1032,7 @@ model Role {
   id                      String                    @id @default(cuid())
   name        String   @unique
   description String?
-  permissions String   @db.Text
+  permissions String  
   isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1341,7 +1342,7 @@ model TripEvent {
   userId     String?
   notes      String?
   location   String?
-  metadata   String?  @db.Text
+  metadata   String? 
   createdAt  DateTime @default(now())
   trip       Trip     @relation(fields: [tripId], references: [id])
 
@@ -1473,8 +1474,8 @@ model VehicleInspection {
   warningCount        Int       @default(0)
   failCount           Int       @default(0)
   defectsFound        Boolean   @default(false)
-  defectDetails       String?   @db.Text
-  photos              String?   @db.Text
+  defectDetails       String?  
+  photos              String?  
   inspectedBy         String?
   inspectorName       String?
   signature           String?

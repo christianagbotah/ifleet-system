@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
@@ -200,8 +200,7 @@ function ApprovalDialog({
           <DialogDescription>{cfg.description}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          {/* Expense Summary */}
+        <DialogBody className="space-y-4 py-2">
           <div className="rounded-lg border bg-muted/30 p-3 space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Category</span>
@@ -281,7 +280,7 @@ function ApprovalDialog({
               rows={2}
             />
           </div>
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>

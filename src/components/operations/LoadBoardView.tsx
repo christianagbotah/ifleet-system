@@ -18,6 +18,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -488,7 +489,7 @@ export function LoadBoardView() {
             <DialogTitle>Assign Load</DialogTitle>
           </DialogHeader>
           {assigningRecord && (
-            <div className="space-y-4 py-2">
+            <DialogBody className="space-y-4 py-2">
               <div className="text-sm text-muted-foreground">
                 <span className="font-medium text-foreground">{assigningRecord.title}</span>
                 <br />
@@ -526,7 +527,7 @@ export function LoadBoardView() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </DialogBody>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setAssignOpen(false)}>Cancel</Button>
@@ -750,7 +751,7 @@ function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitti
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit Load' : 'Post New Load'}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-2">
+        <DialogBody className="grid gap-4 py-2">
           {/* Title */}
           <div className="space-y-2">
             <Label>Title *</Label>
@@ -949,7 +950,7 @@ function CreateLoadDialog({ open, onOpenChange, form, setForm, clients, submitti
               />
             </div>
           </div>
-        </div>
+        </DialogBody>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button onClick={onSubmit} disabled={submitting} className="bg-emerald-500 hover:bg-emerald-600 text-white">

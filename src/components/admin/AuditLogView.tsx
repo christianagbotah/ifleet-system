@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -455,7 +456,7 @@ function EntityHistoryDialog({
         )}
 
         {trailData && !loading && !error && (
-          <div className="flex-1 overflow-y-auto flex flex-col lg:flex-row gap-4 mt-2 px-2">
+          <DialogBody className="flex-1 overflow-y-auto flex flex-col lg:flex-row gap-4 mt-2 px-2">
             {/* Timeline */}
             <div className="flex-1 min-w-0">
               {trailData.logs.length === 0 ? (
@@ -606,7 +607,7 @@ function EntityHistoryDialog({
                 </CardContent>
               </Card>
             </div>
-          </div>
+          </DialogBody>
         )}
       </DialogContent>
     </Dialog>

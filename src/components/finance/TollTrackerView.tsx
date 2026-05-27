@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -594,7 +594,7 @@ export function TollTrackerView() {
             <DialogDescription>Add a new toll, weighbridge fee, checkpoint cost, or parking charge.</DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-2">
+          <DialogBody className="grid gap-4 py-2">
             {/* Row 1: Truck + Driver */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -735,7 +735,7 @@ export function TollTrackerView() {
               <Label className="text-xs">Notes</Label>
               <Textarea className="text-sm min-h-[60px]" placeholder="Optional notes..." value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} />
             </div>
-          </div>
+          </DialogBody>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreateDialog(false)} className="text-sm">Cancel</Button>

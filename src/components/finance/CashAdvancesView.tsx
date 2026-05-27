@@ -24,7 +24,7 @@ import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from '@/components/ui/sheet'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -282,7 +282,7 @@ function CashAdvanceFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
+        <DialogBody className="space-y-4 py-2">
           {/* Driver Selection */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">Driver *</Label>
@@ -418,7 +418,7 @@ function CashAdvanceFormDialog({
               rows={3}
             />
           </div>
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
@@ -491,7 +491,7 @@ function RejectDialog({
             Please provide a reason for rejecting this advance request.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-3 py-2">
+        <DialogBody className="space-y-3 py-2">
           <div className="space-y-2">
             <Label className="text-sm font-medium">Rejection Reason *</Label>
             <Textarea
@@ -501,7 +501,7 @@ function RejectDialog({
               rows={3}
             />
           </div>
-        </div>
+        </DialogBody>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button

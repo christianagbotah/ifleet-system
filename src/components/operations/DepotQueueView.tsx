@@ -18,7 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/ui/empty-state'
 import { StatsCard } from '@/components/ui/stats-card'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -209,7 +209,7 @@ function DepotQueueFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
+        <DialogBody className="space-y-4 py-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label className="text-sm font-medium">Truck *</Label>
@@ -265,7 +265,7 @@ function DepotQueueFormDialog({
             <Label className="text-sm font-medium">Notes</Label>
             <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Additional notes..." rows={3} />
           </div>
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
@@ -343,7 +343,7 @@ function DetailDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-2">
+          <DialogBody className="space-y-4 py-2">
             <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Status</span>
@@ -425,7 +425,7 @@ function DetailDialog({
                 <p className="text-sm text-muted-foreground rounded-lg border bg-muted/30 p-3">{entry.notes}</p>
               </div>
             )}
-          </div>
+          </DialogBody>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2 pt-2 border-t">

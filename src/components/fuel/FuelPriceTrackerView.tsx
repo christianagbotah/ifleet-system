@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -687,7 +687,7 @@ function AddStationForm({ onSubmit, loading }: { onSubmit: (data: Record<string,
       <DialogHeader>
         <DialogTitle>Add Fuel Station</DialogTitle>
       </DialogHeader>
-      <div className="grid gap-3 py-2 max-h-[65vh] overflow-y-auto pr-1">
+      <DialogBody className="grid gap-3 py-2">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Station Name *</Label>
@@ -768,7 +768,7 @@ function AddStationForm({ onSubmit, loading }: { onSubmit: (data: Record<string,
           <Label className="text-xs">Notes</Label>
           <Textarea placeholder="Any additional notes..." value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2} />
         </div>
-      </div>
+      </DialogBody>
       <DialogFooter className="pt-2">
         <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
         <Button onClick={handleSubmit} disabled={loading}>
@@ -809,7 +809,7 @@ function UpdatePriceForm({ station, onSubmit, loading }: { station: FuelStation;
       <DialogHeader>
         <DialogTitle>Update Fuel Price</DialogTitle>
       </DialogHeader>
-      <div className="py-2 space-y-4">
+      <DialogBody className="py-2 space-y-4">
         <div className="bg-stone-50 dark:bg-stone-900/30 rounded-lg p-3">
           <p className="font-semibold text-sm">{station.name}</p>
           <p className="text-xs text-muted-foreground">{station.brand} · {station.city || station.route || 'Ghana'}</p>
@@ -848,7 +848,7 @@ function UpdatePriceForm({ station, onSubmit, loading }: { station: FuelStation;
           <Label className="text-xs">Notes</Label>
           <Textarea placeholder="Any notes..." value={notes} onChange={e => setNotes(e.target.value)} rows={2} />
         </div>
-      </div>
+      </DialogBody>
       <DialogFooter className="pt-2">
         <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
         <Button onClick={handleSubmit} disabled={loading}>

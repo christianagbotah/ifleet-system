@@ -1700,6 +1700,7 @@ export interface FuelLog {
   stationName: string | null
   fuelType: string
   receiptNumber: string | null
+  images?: string | null
   createdAt: string
   updatedAt: string
   truck?: { id: string; plateNumber: string; make: string; model: string }

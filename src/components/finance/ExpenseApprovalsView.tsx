@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
@@ -217,7 +217,7 @@ function ApprovalDialog({
           <DialogDescription>{cfg.description}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2 flex-1 min-h-0 overflow-y-auto">
+        <DialogBody className="space-y-4 py-2">
           {/* Expense Summary */}
           <div className="rounded-lg border bg-muted/30 p-3 space-y-2 text-sm">
             <div className="flex justify-between">
@@ -298,7 +298,7 @@ function ApprovalDialog({
               rows={2}
             />
           </div>
-        </div>
+        </DialogBody>
 
         <DialogFooter className="shrink-0 border-t pt-3">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
@@ -395,7 +395,7 @@ function SubmitForApprovalDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2 flex-1 min-h-0 overflow-y-auto">
+        <DialogBody className="space-y-4 py-2">
           {loading ? (
             <div className="space-y-3">
               <Skeleton className="h-10 w-full" />
@@ -455,7 +455,7 @@ function SubmitForApprovalDialog({
               </div>
             </>
           )}
-        </div>
+        </DialogBody>
 
         <DialogFooter className="shrink-0 border-t pt-3">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>

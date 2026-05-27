@@ -62,6 +62,8 @@ export async function PUT(
       stationName,
       fuelType,
       receiptNumber,
+      notes,
+      images,
     } = body
 
     // Recalculate costPerLiter if litersFilled or totalCost changed
@@ -93,6 +95,8 @@ export async function PUT(
         ...(stationName !== undefined && { stationName }),
         ...(fuelType !== undefined && { fuelType }),
         ...(receiptNumber !== undefined && { receiptNumber }),
+        ...(notes !== undefined && { notes }),
+        ...(images !== undefined && { images }),
         // Always update costPerLiter when litersFilled or totalCost changes
         ...((litersFilled !== undefined || totalCost !== undefined) && {
           costPerLiter: recalculatedCostPerLiter,

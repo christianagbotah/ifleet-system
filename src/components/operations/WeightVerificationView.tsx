@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Scale, Weight, Truck, Plus, RefreshCw,
@@ -582,7 +582,8 @@ function CreateForm({ trips, onSubmit, onCancel }: {
   }
 
   return (
-    <div className="space-y-4">
+    <>
+      <DialogBody className="space-y-4">
       <div className="space-y-2">
         <Label>Trip *</Label>
         <Select value={tripId} onValueChange={setTripId}>
@@ -653,13 +654,14 @@ function CreateForm({ trips, onSubmit, onCancel }: {
         />
       </div>
 
+      </DialogBody>
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
         <Button onClick={handleSubmit} disabled={submitting}>
           {submitting ? 'Creating...' : 'Create Verification'}
         </Button>
       </DialogFooter>
-    </div>
+    </>
   )
 }
 
@@ -702,7 +704,8 @@ function UpdateForm({ verification, onSubmit, onCancel }: {
   if (!verification) return null
 
   return (
-    <div className="space-y-4">
+    <>
+      <DialogBody className="space-y-4">
       {/* Verification Info */}
       <div className="rounded-lg bg-muted/50 p-3 space-y-1 text-sm">
         <p className="font-medium">Trip: {verification.trip?.tripNumber || '—'}</p>
@@ -786,12 +789,14 @@ function UpdateForm({ verification, onSubmit, onCancel }: {
         />
       </div>
 
+      </DialogBody>
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
         <Button onClick={handleSubmit} disabled={submitting}>
           {submitting ? 'Updating...' : 'Update Verification'}
         </Button>
       </DialogFooter>
-    </div>
+    </>
   )
 }
+

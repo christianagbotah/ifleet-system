@@ -22,7 +22,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
 import { Switch as SwitchToggle } from '@/components/ui/switch'
 import { toast } from 'sonner'
@@ -1738,7 +1738,7 @@ function CurrenciesManager() {
               {editingCurrency ? 'Update the currency details below.' : 'Add a new currency to the system.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <DialogBody className="space-y-4 py-2">
             <div className="space-y-2">
               <Label htmlFor="curr-code">Currency Code <span className="text-red-500">*</span></Label>
               <Input
@@ -1786,7 +1786,7 @@ function CurrenciesManager() {
                 <SwitchToggle checked={formIsDefault} onCheckedChange={setFormIsDefault} />
               </div>
             )}
-          </div>
+          </DialogBody>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setFormOpen(false)}>Cancel</Button>
             <Button

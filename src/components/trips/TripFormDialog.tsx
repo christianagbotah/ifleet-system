@@ -576,7 +576,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
       setZoneRate(null)
 
       // Populate cargoItems from trip's TripItem data
-      const tripItems = (trip as Record<string, unknown>).TripItem as Record<string, unknown>[] | undefined
+      const tripItems = trip ? (trip as Record<string, unknown>).TripItem as Record<string, unknown>[] | undefined : undefined
       if (trip && Array.isArray(tripItems) && tripItems.length > 0) {
         const isMultiple = (trip as Record<string, unknown>).deliveryType === 'MULTIPLE'
         setCargoItems(tripItems.map((ti) => {

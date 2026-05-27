@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -584,7 +585,7 @@ export function FuelBudgetView() {
           <DialogHeader>
             <DialogTitle>Create Fuel Budget</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <DialogBody className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Scope</Label>
               <Select value={formTruckId} onValueChange={setFormTruckId}>
@@ -669,7 +670,7 @@ export function FuelBudgetView() {
                 rows={2}
               />
             </div>
-          </div>
+          </DialogBody>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
             <Button onClick={handleCreate} disabled={saving}>
@@ -687,7 +688,7 @@ export function FuelBudgetView() {
               Edit Budget — {editingBudget?.truck?.plateNumber || 'Fleet-Wide'}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <DialogBody className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Budget Limit (GHS) *</Label>
               <Input
@@ -715,7 +716,7 @@ export function FuelBudgetView() {
                 rows={2}
               />
             </div>
-          </div>
+          </DialogBody>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingBudget(null)}>Cancel</Button>
             <Button onClick={handleUpdate} disabled={saving}>

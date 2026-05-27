@@ -39,6 +39,7 @@ import { StatsCard } from '@/components/ui/stats-card'
 import { EmptyState } from '@/components/ui/empty-state'
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -942,7 +943,7 @@ function ScheduleServiceDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <DialogBody className="grid gap-4 py-4">
           {/* Truck Info */}
           {selectedTruck ? (
             <div className="rounded-lg border p-3 bg-muted/30">
@@ -1015,7 +1016,7 @@ function ScheduleServiceDialog({
               />
             </div>
           </div>
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>

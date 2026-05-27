@@ -116,6 +116,7 @@ export async function POST(request: NextRequest) {
       receiptNumber,
       endMileage,
       endMileageImage,
+      images,
       distanceCovered: bodyDistanceCovered,
       notes,
     } = body
@@ -183,6 +184,7 @@ export async function POST(request: NextRequest) {
         ...(endMileageImage && { endMileageImage }),
         ...(resolvedDistanceCovered !== null && { distanceCovered: resolvedDistanceCovered }),
         ...(notes && { notes }),
+        ...(images && { images }),
       },
       include: {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },

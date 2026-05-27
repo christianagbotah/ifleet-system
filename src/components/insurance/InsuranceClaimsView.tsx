@@ -19,6 +19,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -374,7 +375,7 @@ export function InsuranceClaimsView() {
           <DialogHeader>
             <DialogTitle>File New Insurance Claim</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-2">
+          <DialogBody className="grid gap-4 py-2">
             {/* Insurance Policy */}
             <div className="space-y-2">
               <Label>Insurance Policy *</Label>
@@ -490,7 +491,7 @@ export function InsuranceClaimsView() {
                 onChange={(e) => setCreateForm((p) => ({ ...p, policeReport: e.target.value }))}
               />
             </div>
-          </div>
+          </DialogBody>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
             <Button onClick={handleCreateSubmit} disabled={creating} className="bg-emerald-500 hover:bg-emerald-600 text-white">
