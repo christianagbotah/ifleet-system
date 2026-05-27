@@ -941,8 +941,8 @@ export function FuelLogFormDialog({
                     <FormItem>
                       <FormLabel>{formMode === 'post_trip' ? 'Fuel Cost *' : 'Total Cost *'}</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                        <div className="relative flex items-center">
+                          <span className="absolute left-3 text-sm text-muted-foreground pointer-events-none">
                             {CURRENCY_SYMBOL}
                           </span>
                           <Input
@@ -967,8 +967,8 @@ export function FuelLogFormDialog({
                     <FormItem>
                       <FormLabel>Cost/Liter *</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                        <div className="relative flex items-center">
+                          <span className="absolute left-3 text-sm text-muted-foreground pointer-events-none">
                             {CURRENCY_SYMBOL}
                           </span>
                           <Input
