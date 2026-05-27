@@ -47,9 +47,9 @@ const fuelLogFormSchema = z.object({
   endMileage: z.coerce.number().min(0).optional().or(z.nan()),
   fuelLevelBefore: z.coerce.number().min(0).max(100).optional().or(z.nan()),
   fuelLevelAfter: z.coerce.number().min(0).max(100).optional().or(z.nan()),
-  litersFilled: z.coerce.number().min(0.01, 'Liters must be greater than 0'),
-  costPerLiter: z.coerce.number().min(0).optional().or(z.nan()),
-  totalCost: z.coerce.number().min(0.01, 'Total cost is required'),
+  litersFilled: z.coerce.number().min(0).optional().or(z.nan()),
+  costPerLiter: z.coerce.number().min(0.01, 'Cost per liter is required'),
+  totalCost: z.coerce.number().min(0.01, 'Fuel cost is required'),
   stationName: z.string().optional(),
   receiptNumber: z.string().optional(),
   notes: z.string().optional(),
@@ -492,15 +492,13 @@ export function FuelLogFormDialog({
       .finally(() => setLoadingTrips(false))
   }, [form])
 
-  // Auto-calculate costPerLiter when both liters and total are available
+  // Auto-calculate litersFilled from totalCost / costPerLiter
   React.useEffect(() => {
-    if (litersFilled && litersFilled > 0 && totalCost && totalCost > 0) {
-      const calc = totalCost / litersFilled
-      if (!costPerLiter || isNaN(costPerLiter)) {
-        form.setValue('costPerLiter', parseFloat(calc.toFixed(2)))
-      }
+    if (totalCost && totalCost > 0 && costPerLiter && costPerLiter > 0) {
+      const calc = totalCost / costPerLiter
+      form.setValue('litersFilled', parseFloat(calc.toFixed(2)))
     }
-  }, [litersFilled, totalCost, costPerLiter, form])
+  }, [totalCost, costPerLiter, form])
 
   async function onSubmit(data: FuelLogFormValues) {
     setSubmitting(true)
@@ -512,13 +510,17 @@ export function FuelLogFormDialog({
         body.distanceCovered = Math.round((data.endMileage - startMileagePostTrip) * 10) / 10
       }
 
+      // Ensure litersFilled is calculated from totalCost / costPerLiter
+      if (data.totalCost && data.costPerLiter && data.costPerLiter > 0) {
+        body.litersFilled = parseFloat((data.totalCost / data.costPerLiter).toFixed(2))
+      }
       // Clean up empty/NaN optional fields
       if (!body.tripId) delete body.tripId
       if (!body.odometer || isNaN(body.odometer as number)) delete body.odometer
       if (!body.endMileage || isNaN(body.endMileage as number)) delete body.endMileage
       if (!body.fuelLevelBefore || isNaN(body.fuelLevelBefore as number)) delete body.fuelLevelBefore
       if (!body.fuelLevelAfter || isNaN(body.fuelLevelAfter as number)) delete body.fuelLevelAfter
-      if (!body.costPerLiter || isNaN(body.costPerLiter as number)) delete body.costPerLiter
+      if (!body.litersFilled || isNaN(body.litersFilled as number)) delete body.litersFilled
       if (!body.stationName) delete body.stationName
       if (!body.receiptNumber) delete body.receiptNumber
       if (!body.notes) delete body.notes
@@ -905,55 +907,8 @@ export function FuelLogFormDialog({
                 </div>
               )}
 
-              {/* Liters Filled, Cost/Liter, Total Cost */}
+              {/* Fuel Cost, Cost/Liter, Fuel Top Up (auto-calculated) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="litersFilled"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{formMode === 'post_trip' ? 'Fuel Top Up (L) *' : 'Liters Filled *'}</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0.0"
-                          min="0"
-                          step="0.1"
-                          {...field}
-                          value={field.value ?? ''}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="costPerLiter"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Cost/Liter</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                            {CURRENCY_SYMBOL}
-                          </span>
-                          <Input
-                            type="number"
-                            placeholder="Auto"
-                            min="0"
-                            step="0.01"
-                            className="pl-10"
-                            {...field}
-                            value={field.value ?? ''}
-                          />
-                        </div>
-                      </FormControl>
-                      <p className="text-xs text-muted-foreground mt-1">Auto-calculated if empty</p>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="totalCost"
@@ -976,6 +931,56 @@ export function FuelLogFormDialog({
                           />
                         </div>
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="costPerLiter"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cost/Liter *</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                            {CURRENCY_SYMBOL}
+                          </span>
+                          <Input
+                            type="number"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                            className="pl-10"
+                            {...field}
+                            value={field.value ?? ''}
+                          />
+                        </div>
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground mt-1">Price per liter at the station</p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="litersFilled"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{formMode === 'post_trip' ? 'Fuel Top Up (L)' : 'Liters Filled'}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Auto"
+                          min="0"
+                          step="0.1"
+                          readOnly
+                          className="bg-muted cursor-not-allowed"
+                          {...field}
+                          value={field.value ?? ''}
+                        />
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground mt-1">Auto-calculated from Fuel Cost ÷ Cost/Liter</p>
                       <FormMessage />
                     </FormItem>
                   )}
