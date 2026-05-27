@@ -982,7 +982,6 @@ export function FuelLogFormDialog({
                           />
                         </div>
                       </FormControl>
-                      <p className="text-xs text-muted-foreground mt-1">Price per liter at the station</p>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -1005,7 +1004,6 @@ export function FuelLogFormDialog({
                           value={field.value ?? ''}
                         />
                       </FormControl>
-                      <p className="text-xs text-muted-foreground mt-1">Auto-calculated from Fuel Cost ÷ Cost/Liter</p>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -1125,10 +1123,10 @@ export function FuelLogFormDialog({
             Cancel
           </Button>
           <Button
-            type="button"
+            type="submit"
+            form="fuel-log-form"
             className="bg-amber-500 hover:bg-amber-600 text-white"
             disabled={submitting}
-            onClick={form.handleSubmit(onSubmit)}
           >
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {submitting

@@ -178,3 +178,20 @@ Stage Summary:
 - Post-Trip Fuel Recording trip selector is now searchable via a Command/Combobox input
 - Users can type to filter through completed trips instead of scrolling a long dropdown list
 - SearchableSelect component now supports optional `disabled` prop
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Remove field helper texts and fix Save Post-Trip Record button
+
+Work Log:
+- Removed "Price per liter at the station" helper text under Cost/Liter field (line 985)
+- Removed "Auto-calculated from Fuel Cost ÷ Cost/Liter" helper text under Fuel Top Up field (line 1008)
+- Fixed submit button: changed from `type="button"` + `onClick={form.handleSubmit(onSubmit)}` to `type="submit"` + `form="fuel-log-form"`
+- The submit button sits outside the `<form>` element (in DialogFooter), so the HTML `form` attribute is needed to natively link it to the form element
+- Lint passes clean
+
+Stage Summary:
+- Field alignment restored — no more helper text distortion
+- Submit button now properly triggers form validation and submission via native HTML form association
+- The `<form id="fuel-log-form">` element's `onSubmit={form.handleSubmit(onSubmit)}` handler is now correctly triggered by the submit button
