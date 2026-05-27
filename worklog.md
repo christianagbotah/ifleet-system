@@ -134,3 +134,31 @@ Stage Summary:
 - Fuel log form now has drag-and-drop image uploads for receipts, fuel logs, and mileage photos
 - Same UX as trip form: auto-upload on selection, retry failed, preview grid with status badges
 - Images stored as JSON array of URLs in the FuelLog.images database field
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix Prisma version mismatch — upgrade to Prisma 7.8.0 for VPS compatibility
+
+Work Log:
+- Diagnosed issue: Local project had Prisma 6.x but VPS requires Prisma 7+
+- Error on VPS: `P1012 - the URL must start with the protocol file:` because schema still had `provider = "sqlite"` and `url = env("DATABASE_URL")` which is invalid in Prisma 7
+- Upgraded `prisma` and `@prisma/client` from 6.x to 7.8.0
+- Updated schema generator from `prisma-client-js` to `prisma-client` with `output = "../src/generated"`
+- Removed `url` from datasource block (Prisma 7 breaking change)
+- Created `prisma.config.ts` for CLI commands (db push, migrate)
+- Installed `@prisma/adapter-mariadb` + `mariadb` for MySQL driver adapter
+- Updated `src/lib/db.ts` to use `PrismaMariaDb` adapter with connection string
+- Updated 9 API route files: changed `import { Prisma } from '@prisma/client'` to `import { Prisma } from '@/generated/client'`
+- Added `prisma generate` to build script
+- Added `src/generated/**` to ESLint ignore
+- Verified: `/api/trips` returns 401 (auth required), NOT 500
+- Verified: `/api/notifications` returns 401 (auth required), NOT 500
+- Lint passes with 0 errors
+- Committed as `c93890d` and pushed to `main`
+
+Stage Summary:
+- Prisma successfully upgraded from 6.x to 7.8.0
+- MySQL connection works through MariaDB driver adapter
+- All API endpoints tested and returning proper responses
+- Build script updated to run `prisma generate` before `next build`
+- VPS should now be able to build and run without the P1012 error
