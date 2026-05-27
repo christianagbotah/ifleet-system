@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         lastName: true,
         status: true,
         verificationStatus: true,
-        trips: {
+        Trip: {
           where: { status: { in: ['scheduled', 'loading', 'loaded', 'waiting_at_depot', 'departed_depot', 'in_transit', 'arrived_destination', 'waiting_to_offload', 'offloading'] } },
           select: { id: true, tripNumber: true },
         },
@@ -61,11 +61,11 @@ export async function POST(request: NextRequest) {
 
       if (action === 'delete') {
         // Only allow if driver has no active trips
-        if (driver.trips.length > 0) {
+        if (driver.Trip.length > 0) {
           failed++
           errors.push({
             id,
-            message: `Cannot delete: driver has ${driver.trips.length} active trip(s)`,
+            message: `Cannot delete: driver has ${driver.Trip.length} active trip(s)`,
           })
           continue
         }
@@ -103,11 +103,11 @@ export async function POST(request: NextRequest) {
         success++
       } else if (action === 'deactivate') {
         // Check if driver has active trips before deactivating
-        if (driver.trips.length > 0) {
+        if (driver.Trip.length > 0) {
           failed++
           errors.push({
             id,
-            message: `Cannot deactivate: driver has ${driver.trips.length} active trip(s)`,
+            message: `Cannot deactivate: driver has ${driver.Trip.length} active trip(s)`,
           })
           continue
         }

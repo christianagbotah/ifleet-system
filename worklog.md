@@ -195,3 +195,29 @@ Stage Summary:
 - Field alignment restored — no more helper text distortion
 - Submit button now properly triggers form validation and submission via native HTML form association
 - The `<form id="fuel-log-form">` element's `onSubmit={form.handleSubmit(onSubmit)}` handler is now correctly triggered by the submit button
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix "Failed to load driver performance data" error on #driver-performance page
+
+Work Log:
+- Investigated the error by reading the API route at `/api/drivers/performance/route.ts`
+- Created a direct database test script to reproduce the Prisma query
+- Discovered root cause: Prisma schema defines Driver's Trip relation as `Trip` (PascalCase), but the API route was using `trips` (camelCase) in the Prisma `select` statement
+- Prisma threw `PrismaClientValidationError: Unknown field 'trips' for select statement on model 'Driver'`
+- Fixed the performance API route: changed `trips:` → `Trip:` and `driver.trips` → `driver.Trip`
+- Conducted comprehensive search and found the same bug in 4 additional files
+- Fixed `/api/drivers/[id]/route.ts`: changed `trips:` → `Trip:` and `payroll:` → `Payroll:` in the admin branch Prisma query; added response transformation to map PascalCase keys to camelCase for frontend compatibility
+- Fixed `/api/drivers/bulk/route.ts`: changed `trips:` → `Trip:` in Prisma query and `driver.trips` → `driver.Trip` in 3 access points
+- Fixed `/lib/reports/report-builders.ts`: changed `driver.trips` → `driver.Trip`
+- Fixed `/lib/reports/pdf-builders.ts`: changed `d.trips` → `d.Trip`
+- Fixed `/lib/reports/report-data.ts`: changed `d.trips` → `d.Trip` in 4 places (filter, reduce, index access, length)
+- Verified fix with direct database test: all 6 drivers loaded successfully with correct trip counts and revenue
+- Ran lint: no errors
+
+Stage Summary:
+- Root cause: Prisma 7.8.0 with MariaDB adapter enforces exact relation field names from schema (PascalCase `Trip`, `Payroll`, `Truck`) while code was using camelCase (`trips`, `payroll`, `trucks`)
+- Fixed 7 files total with the PascalCase → correct Prisma field name mapping
+- The driver performance page should now load correctly
+- Files modified: route.ts (performance, [id], bulk), report-builders.ts, pdf-builders.ts, report-data.ts

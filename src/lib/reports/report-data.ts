@@ -467,11 +467,11 @@ export async function fetchDriverPerformanceData(params: ReportParams): Promise<
   ]
 
   const rows = drivers.map((d) => {
-    const completedTrips = d.trips.filter((t) => t.status === 'completed')
-    const totalRevenue = completedTrips.reduce((sum, t) => sum + (t.totalRevenue || 0), 0)
+    const completedTrips = d.Trip.filter((t: { status: string }) => t.status === 'completed')
+    const totalRevenue = completedTrips.reduce((sum: number, t: { totalRevenue?: number }) => sum + (t.totalRevenue || 0), 0)
     const avgRevenue = completedTrips.length > 0 ? totalRevenue / completedTrips.length : 0
-    const totalMileage = completedTrips.reduce((sum, t) => sum + (t.totalMileage || 0), 0)
-    const lastTrip = d.trips[0]
+    const totalMileage = completedTrips.reduce((sum: number, t: { totalMileage?: number }) => sum + (t.totalMileage || 0), 0)
+    const lastTrip = d.Trip[0]
     const latestPay = d.payroll[0]
 
     return [
@@ -483,7 +483,7 @@ export async function fetchDriverPerformanceData(params: ReportParams): Promise<
       csvDate(d.hireDate),
       d.licenseClass,
       csvPercent(d.rating * 20),
-      d.trips.length,
+      d.Trip.length,
       csvNumber(totalMileage, 1),
       csvCurrency(totalRevenue),
       csvCurrency(avgRevenue),

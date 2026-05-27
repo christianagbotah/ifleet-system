@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
         licenseNumber: true,
         status: true,
         // Trips in the selected date range (for stats)
-        trips: {
+        Trip: {
           where: {
             departureTime: { gte: rangeStart, lte: rangeEnd },
           },
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
     }
 
     const driverPerformance = drivers.map((driver) => {
-      const trips = driver.trips
+      const trips = driver.Trip
       const totalTrips = trips.length
       const completedTrips = trips.filter((t) => t.status === 'completed').length
       const activeTrips = trips.filter((t) => NON_TERMINAL_STATUSES.includes(t.status)).length

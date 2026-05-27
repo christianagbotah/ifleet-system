@@ -344,7 +344,7 @@ export async function buildDriverPerformancePdf(params: ReportParams): Promise<j
   const rows: (string | number)[][] = []
 
   for (const d of drivers) {
-    const trips = d.trips
+    const trips = d.Trip
     const totalTrips = trips.length
     const completedTrips = trips.filter((t) => t.status === 'completed').length
     const completionRate = totalTrips > 0 ? ((completedTrips / totalTrips) * 100).toFixed(1) + '%' : '-'

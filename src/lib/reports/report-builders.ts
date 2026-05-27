@@ -398,7 +398,7 @@ export async function buildDriverPerformanceReport(params: ReportParams): Promis
   const reportData: Record<string, unknown>[] = []
 
   for (const driver of drivers) {
-    const trips = driver.trips
+    const trips = driver.Trip
     const totalTrips = trips.length
     const completedTrips = trips.filter((t) => t.status === 'completed').length
     const completionRate = totalTrips > 0 ? completedTrips / totalTrips : 0

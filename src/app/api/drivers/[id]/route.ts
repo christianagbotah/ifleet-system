@@ -43,14 +43,14 @@ export async function GET(
             }
           : {
               // Admin/Manager see everything
-              trips: {
+              Trip: {
                 orderBy: { departureTime: 'desc' },
                 take: 20,
                 include: {
                   truck: { select: { id: true, plateNumber: true, make: true, model: true } },
                 },
               },
-              payroll: {
+              Payroll: {
                 orderBy: [{ year: 'desc' }, { month: 'desc' }],
               },
             }),
@@ -61,7 +61,16 @@ export async function GET(
       return NextResponse.json({ error: 'Driver not found' }, { status: 404 })
     }
 
-    return NextResponse.json(driver)
+    // Transform PascalCase Prisma relation keys to camelCase for frontend
+    const { Trip, Payroll, Truck, ...rest } = driver as Record<string, unknown>
+    const response = {
+      ...rest,
+      ...(Trip ? { trips: Trip } : {}),
+      ...(Payroll ? { payroll: Payroll } : {}),
+      ...(Truck ? { trucks: Truck } : {}),
+    }
+
+    return NextResponse.json(response)
   } catch (error) {
     console.error('Driver detail error:', error)
     return NextResponse.json({ error: 'Failed to fetch driver' }, { status: 500 })
