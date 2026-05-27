@@ -650,7 +650,6 @@ export function FuelLogFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="contents">
         <DialogBody>
           {/* Mode toggle (only for new entries) */}
           {!fuelLog && (
@@ -1123,9 +1122,14 @@ export function FuelLogFormDialog({
             Cancel
           </Button>
           <Button
-            type="submit"
+            type="button"
             className="bg-amber-500 hover:bg-amber-600 text-white"
             disabled={submitting}
+            onClick={() => {
+              // Trigger validation manually
+              const result = form.handleSubmit(onSubmit)
+              result()
+            }}
           >
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {submitting
@@ -1137,7 +1141,6 @@ export function FuelLogFormDialog({
                   : 'Record Fuel Fill'}
           </Button>
         </DialogFooter>
-        </form>
         </Form>
       </DialogContent>
 
