@@ -57,7 +57,7 @@ export async function PUT(
             destinationCity: { select: { id: true, name: true } },
           },
         },
-        tripItems: {
+        TripItem: {
           include: {
             item: { select: { id: true, name: true, unit: true } },
             supplier: { select: { id: true, name: true } },

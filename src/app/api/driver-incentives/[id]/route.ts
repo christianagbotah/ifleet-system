@@ -17,8 +17,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       where: { id },
       include: {
         driver: { select: { id: true, firstName: true, lastName: true, phone: true, photo: true } },
-        creator: { select: { id: true, name: true } },
-        approver: { select: { id: true, name: true } },
+        user_DriverIncentive_createdByToUser: { select: { id: true, name: true } },
+        user_DriverIncentive_approvedByToUser: { select: { id: true, name: true } },
       },
     })
     if (!incentive) return NextResponse.json({ error: 'Incentive not found' }, { status: 404 })
@@ -70,8 +70,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       data: updateData,
       include: {
         driver: { select: { id: true, firstName: true, lastName: true, phone: true, photo: true } },
-        creator: { select: { id: true, name: true } },
-        approver: { select: { id: true, name: true } },
+        user_DriverIncentive_createdByToUser: { select: { id: true, name: true } },
+        user_DriverIncentive_approvedByToUser: { select: { id: true, name: true } },
       },
     })
 

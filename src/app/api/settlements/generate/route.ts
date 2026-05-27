@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
         expenseDeductions,
         bonusAmount,
         netPay,
-        lines: {
+        SettlementLine: {
           create: lines.map(line => ({
             tripId: line.tripId || null,
             description: line.description,
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
         driver: {
           select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true },
         },
-        lines: {
+        SettlementLine: {
           include: {
             trip: {
               select: {

@@ -19,7 +19,7 @@ export async function GET(
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
         trip: { select: { id: true, tripNumber: true, loadingLocation: true, destination: true, status: true } },
-        creator: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true } },
       },
     })
 

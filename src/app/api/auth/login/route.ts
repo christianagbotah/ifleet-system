@@ -140,7 +140,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ user: userData, token })
   } catch (error) {
-    console.error('Login error:', error)
+    console.error('[Login] Error during login:', error instanceof Error ? error.message : error)
+    console.error('[Login] Stack:', error instanceof Error ? error.stack : 'N/A')
     return NextResponse.json({ error: 'Login failed' }, { status: 500 })
   }
 }

@@ -17,7 +17,7 @@ export async function GET(
     include: {
       truck: { select: { id: true, plateNumber: true, make: true, model: true } },
       insurance: { select: { id: true, provider: true, policyNumber: true, type: true, coverAmount: true } },
-      creator: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
     },
   })
 
@@ -93,7 +93,7 @@ export async function PUT(
       include: {
         truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         insurance: { select: { id: true, provider: true, policyNumber: true, type: true } },
-        creator: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true } },
       },
     })
 
@@ -124,7 +124,7 @@ export async function PUT(
     include: {
       truck: { select: { id: true, plateNumber: true, make: true, model: true } },
       insurance: { select: { id: true, provider: true, policyNumber: true, type: true } },
-      creator: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
     },
   })
 

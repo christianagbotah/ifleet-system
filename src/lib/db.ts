@@ -24,10 +24,31 @@ function loadDatabaseUrl(): string {
   return process.env.DATABASE_URL || ''
 }
 
-const databaseUrl = loadDatabaseUrl()
+let databaseUrl = loadDatabaseUrl()
 
-const adapter = new PrismaMariaDb(databaseUrl || 'mysql://root:root@localhost:3306/ifleetpro_data', {
-  database: 'ifleetpro_data',
+// The @prisma/adapter-mariadb requires the connection string to use
+// the mariadb:// protocol prefix.  Automatically convert mysql:// to
+// mariadb:// so that .env files using mysql:// still work.
+if (databaseUrl.startsWith('mysql://')) {
+  databaseUrl = 'mariadb://' + databaseUrl.slice('mysql://'.length)
+}
+
+// Extract database name from the URL for the adapter option
+function extractDatabaseName(url: string): string {
+  try {
+    const urlObj = new URL(url)
+    // pathname starts with '/', strip it
+    const dbName = urlObj.pathname.slice(1).split('?')[0]
+    return dbName || 'ifleetpro_data'
+  } catch {
+    return 'ifleetpro_data'
+  }
+}
+
+const databaseName = extractDatabaseName(databaseUrl)
+
+const adapter = new PrismaMariaDb(databaseUrl, {
+  database: databaseName,
 })
 
 export const db =

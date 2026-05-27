@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params
     const item = await db.warehouseItem.findUnique({
       where: { id },
-      include: { creator: { select: { id: true, name: true } } },
+      include: { user: { select: { id: true, name: true } } },
     })
     if (!item) return NextResponse.json({ error: 'Warehouse item not found' }, { status: 404 })
     return NextResponse.json(item)
@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const item = await db.warehouseItem.update({
       where: { id },
       data: updateData,
-      include: { creator: { select: { id: true, name: true } } },
+      include: { user: { select: { id: true, name: true } } },
     })
 
     createAuditLog({

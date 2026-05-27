@@ -15,7 +15,7 @@ export async function GET(
         driver: {
           select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true, phone: true },
         },
-        lines: {
+        SettlementLine: {
           include: {
             trip: {
               select: {
@@ -101,7 +101,7 @@ export async function PUT(
         driver: {
           select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true },
         },
-        lines: true,
+        SettlementLine: true,
       },
     })
 
