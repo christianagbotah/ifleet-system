@@ -299,8 +299,8 @@ export function FuelPriceTrackerView() {
                 const petrol = getLatestPrice(station, 'Petrol')
                 return (
                   <motion.div key={station.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                    <Card className="hover:shadow-md transition-shadow">
-                      <CardContent className="p-4 space-y-3">
+                    <Card className="hover:shadow-md transition-shadow h-full flex flex-col">
+                      <CardContent className="p-4 space-y-3 flex flex-col flex-1">
                         {/* Header */}
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
@@ -358,10 +358,10 @@ export function FuelPriceTrackerView() {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex gap-2 pt-1">
-                          <Dialog open={updatePriceOpen && selectedStation?.id === station.id} onOpenChange={open => { if (!open) setUpdatePriceOpen(false); else setSelectedStation(station) }}>
+                        <div className="flex gap-2 pt-1 mt-auto">
+                          <Dialog open={updatePriceOpen && selectedStation?.id === station.id} onOpenChange={open => { if (open) { setSelectedStation(station); setUpdatePriceOpen(true); } else { setUpdatePriceOpen(false); } }}>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={() => setSelectedStation(station)}>
+                              <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={() => { setSelectedStation(station); setUpdatePriceOpen(true); }}>
                                 <DollarSign className="h-3.5 w-3.5 mr-1" /> Update Price
                               </Button>
                             </DialogTrigger>
