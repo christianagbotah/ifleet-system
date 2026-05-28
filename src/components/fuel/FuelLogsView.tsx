@@ -836,25 +836,47 @@ export function FuelLogsView() {
                 )}
 
                 {/* Images */}
-                {viewLog.images && (() => {
+                {(() => {
+                  if (!viewLog.images) return null
+                  let parsed: string[]
                   try {
-                    const parsed = JSON.parse(viewLog.images)
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                      return (
-                        <div className="space-y-2">
-                          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Attached Photos</h4>
-                          <div className="grid grid-cols-2 gap-2">
-                            {parsed.map((url: string, idx: number) => (
-                              <div key={idx} className="rounded-lg overflow-hidden border bg-muted aspect-square">
-                                <img src={url} alt={`Photo ${idx + 1}`} className="h-full w-full object-cover" />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )
+                    parsed = JSON.parse(viewLog.images)
+                  } catch {
+                    // If images is a plain string URL (legacy), treat as single image
+                    if (typeof viewLog.images === 'string' && viewLog.images.startsWith('/')) {
+                      parsed = [viewLog.images]
+                    } else {
+                      console.error('[FuelLogDetail] Failed to parse images:', viewLog.images)
+                      return null
                     }
-                  } catch { /* ignore */ }
-                  return null
+                  }
+                  if (!Array.isArray(parsed) || parsed.length === 0) return null
+
+                  return (
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Attached Photos</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {parsed.map((url: string, idx: number) => (
+                          <div key={idx} className="rounded-lg overflow-hidden border bg-muted aspect-square">
+                            <img
+                              src={url}
+                              alt={`Photo ${idx + 1}`}
+                              className="h-full w-full object-cover"
+                              onError={(e) => {
+                                console.error('[FuelLogDetail] Image failed to load:', url)
+                                const target = e.currentTarget
+                                target.style.display = 'none'
+                                const parent = target.parentElement
+                                if (parent) {
+                                  parent.innerHTML = '<div class="flex flex-col items-center justify-center h-full gap-1 p-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span class="text-[10px] text-muted-foreground text-center">Image not available</span></div>'
+                                }
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
                 })()}
 
                 {/* Timestamps */}
