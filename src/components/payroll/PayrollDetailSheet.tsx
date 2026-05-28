@@ -87,6 +87,51 @@ export function PayrollDetailSheet({
       })
     : null
 
+  const footerContent = (
+    <div className="flex flex-row gap-2">
+      <Button
+        variant="outline"
+        className="flex-1"
+        onClick={() => onEdit(record)}
+      >
+        <Pencil className="mr-2 h-4 w-4" />
+        Edit
+      </Button>
+      {record.status === 'pending' && (
+        <Button
+          className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
+          onClick={() => onStatusChange(record.id, 'approved')}
+        >
+          <CheckCircle className="mr-2 h-4 w-4" />
+          Approve
+        </Button>
+      )}
+      {record.status === 'approved' && (
+        <Button
+          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+          onClick={() => onStatusChange(record.id, 'paid')}
+        >
+          <CreditCard className="mr-2 h-4 w-4" />
+          Mark as Paid
+        </Button>
+      )}
+      {canDelete && (
+        <Button
+          variant="destructive"
+          className="flex-1"
+          onClick={() => {
+            if (window.confirm('Are you sure you want to delete this payroll record? This action cannot be undone.')) {
+              onDeleted()
+            }
+          }}
+        >
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete
+        </Button>
+      )}
+    </div>
+  )
+
   return (
     <ResponsiveSheet
       open={open}
@@ -98,6 +143,7 @@ export function PayrollDetailSheet({
         </span>
       }
       description={record.driver.phone}
+      footer={footerContent}
     >
       <div className="space-y-5 p-4 md:p-6">
         {/* Status badge */}
@@ -207,65 +253,6 @@ export function PayrollDetailSheet({
           </div>
         )}
       </div>
-
-      <ResponsiveSheet.Footer>
-        <div className="flex flex-row gap-2">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() => onEdit(record)}
-          >
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit
-          </Button>
-          {record.status === 'pending' && (
-            <Button
-              className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
-              onClick={() => onStatusChange(record.id, 'approved')}
-            >
-              <CheckCircle className="mr-2 h-4 w-4" />
-              Approve
-            </Button>
-          )}
-          {record.status === 'approved' && (
-            <Button
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
-              onClick={() => onStatusChange(record.id, 'paid')}
-            >
-              <CreditCard className="mr-2 h-4 w-4" />
-              Mark as Paid
-            </Button>
-          )}
-          {canDelete && (
-            <Button
-              variant="destructive"
-              className="flex-1"
-              onClick={() => {
-                if (window.confirm('Are you sure you want to delete this payroll record? This action cannot be undone.')) {
-                  onDeleted()
-                }
-              }}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </Button>
-          )}
-        </div>
-      </ResponsiveSheet.Footer>
     </ResponsiveSheet>
   )
-}
-
-// ────────────────────────────────────────────────────────────────────
-// Namespace sub-component for convenience
-// ────────────────────────────────────────────────────────────────────
-
-ResponsiveSheet.Footer = function ResponsiveSheetFooter({
-  children,
-  className,
-}: {
-  children: React.ReactNode
-  className?: string
-}) {
-  return <div className={className}>{children}</div>
 }
