@@ -296,3 +296,21 @@ Stage Summary:
 - Root cause of ALL 500 errors: mysql:// vs mariadb:// URL prefix in Prisma adapter
 - 11 files modified, 43 insertions, 21 deletions
 - Push successful to origin/main
+---
+Task ID: 1
+Agent: Main
+Task: Fix trip profitability chart bar extending beyond actual revenue value
+
+Work Log:
+- Analyzed ProfitabilityView.tsx and the profitability API route
+- Found root cause: Summary KPI cards were calculated from paginated trips (first page only), while all charts (by-route, by-truck, monthly trend) were calculated from ALL trips in the period
+- This caused a mismatch where charts showed higher totals than the KPI summary cards
+- Refactored `/api/trips/profitability/route.ts`: moved summary calculation after allTrips fetch, computing from allTrips instead of paginated tripProfitability
+- Added `domain={[0, 'auto']}` and `allowDecimals={false}` to YAxis on both by-route bar chart and monthly trend line chart for cleaner scale rendering
+- Best/worst route now also derived from the aggregated byRoute data (from allTrips)
+- Verified clean lint pass
+
+Stage Summary:
+- Key fix: `/src/app/api/trips/profitability/route.ts` — summary now uses allTrips (consistent with charts)
+- Minor improvement: YAxis domain and decimals config on both charts in ProfitabilityView.tsx
+- All KPI summary figures and chart visualizations now reflect the same underlying dataset

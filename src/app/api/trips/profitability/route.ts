@@ -124,39 +124,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // ─── Summary ───
-    const totalRevenue = tripProfitability.reduce((s, t) => s + t.revenue, 0)
-    const totalCost = tripProfitability.reduce((s, t) => s + t.totalCost, 0)
-    const totalProfit = totalRevenue - totalCost
-    const profitableTrips = tripProfitability.filter(t => t.netProfit > 0).length
-    const lossTrips = tripProfitability.filter(t => t.netProfit < 0).length
-    const tripsWithRevenue = tripProfitability.filter(t => t.revenue > 0)
-    const avgMargin = tripsWithRevenue.length > 0
-      ? Math.round((tripsWithRevenue.reduce((s, t) => s + t.margin, 0) / tripsWithRevenue.length) * 100) / 100
-      : 0
-
-    // Best/worst route
-    const routeMap = new Map<string, { revenue: number; profit: number }>()
-    for (const t of tripProfitability) {
-      const key = `${t.loadingLocation} → ${t.destination}`
-      const existing = routeMap.get(key) || { revenue: 0, profit: 0 }
-      existing.revenue += t.revenue
-      existing.profit += t.netProfit
-      routeMap.set(key, existing)
-    }
-    let bestRoute = '--'
-    let worstRoute = '--'
-    if (routeMap.size > 0) {
-      let bestProfit = -Infinity
-      let worstProfit = Infinity
-      for (const [r, data] of routeMap) {
-        if (data.profit > bestProfit) { bestProfit = data.profit; bestRoute = r }
-        if (data.profit < worstProfit) { worstProfit = data.profit; worstRoute = r }
-      }
-    }
-
-    // ─── Aggregations (based on current page trips for route/truck/client grouping) ───
-    // For comprehensive aggregates, we also need ALL trips (not just the current page)
+    // ─── Fetch ALL trips for consistent aggregations (summary, charts, best/worst route) ───
     const allTrips = await db.trip.findMany({
       where,
       include: {
@@ -267,6 +235,37 @@ export async function GET(request: NextRequest) {
       cost: Math.round(m.cost * 100) / 100,
       profit: Math.round(m.profit * 100) / 100,
     }))
+
+    // ─── Summary (computed from ALL trips for consistency with charts) ───
+    const allTripProfits = allTrips.map(trip => {
+      const rev = trip.totalRevenue ?? 0
+      const fuel = trip.FuelLog.reduce((s, fl) => s + fl.totalCost, 0)
+      const other = trip.Expense.filter(e => e.category !== 'fuel').reduce((s, e) => s + e.amount, 0)
+      const cost = fuel + other
+      return { revenue: rev, cost, profit: rev - cost }
+    })
+
+    const totalRevenue = allTripProfits.reduce((s, t) => s + t.revenue, 0)
+    const totalCost = allTripProfits.reduce((s, t) => s + t.cost, 0)
+    const totalProfit = totalRevenue - totalCost
+    const profitableTrips = allTripProfits.filter(t => t.profit > 0).length
+    const lossTrips = allTripProfits.filter(t => t.profit < 0).length
+    const tripsWithRevenue = allTripProfits.filter(t => t.revenue > 0)
+    const avgMargin = tripsWithRevenue.length > 0
+      ? Math.round((tripsWithRevenue.reduce((s, t) => s + (t.revenue > 0 ? Math.round((t.profit / t.revenue) * 10000) / 100 : 0), 0) / tripsWithRevenue.length) * 100) / 100
+      : 0
+
+    // Best/worst route (from ALL trips)
+    let bestRoute = '--'
+    let worstRoute = '--'
+    if (byRoute.length > 0) {
+      let bestProfit = -Infinity
+      let worstProfit = Infinity
+      for (const r of byRoute) {
+        if (r.profit > bestProfit) { bestProfit = r.profit; bestRoute = r.route }
+        if (r.profit < worstProfit) { worstProfit = r.profit; worstRoute = r.route }
+      }
+    }
 
     // ─── Response ───
     return NextResponse.json({

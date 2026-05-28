@@ -802,6 +802,8 @@ export function ProfitabilityView() {
                             axisLine={false}
                             fontSize={12}
                             tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
+                            domain={[0, 'auto']}
+                            allowDecimals={false}
                           />
                           <ChartTooltip
                             content={<ChartTooltipContent formatter={(value) => formatCurrency(value as number)} />}
@@ -1113,6 +1115,8 @@ export function ProfitabilityView() {
                           axisLine={false}
                           fontSize={12}
                           tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
+                          domain={[0, 'auto']}
+                          allowDecimals={false}
                         />
                         <ChartTooltip
                           content={<ChartTooltipContent formatter={(value) => formatCurrency(value as number)} />}
