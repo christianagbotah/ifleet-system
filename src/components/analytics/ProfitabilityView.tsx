@@ -629,7 +629,7 @@ export function ProfitabilityView() {
                               Trip # <SortIcon active={sortKey === 'tripNumber'} />
                             </th>
                             <th className="px-3 py-3 text-left font-medium cursor-pointer hover:bg-muted/80 whitespace-nowrap" onClick={() => handleSort('departureTime', sortKey, sortDir, setSortKey, setSortDir)}>
-                              Date <SortIcon active={sortKey === 'departureTime'} />
+                              Date &amp; Time <SortIcon active={sortKey === 'departureTime'} />
                             </th>
                             <th className="px-3 py-3 text-left font-medium whitespace-nowrap hidden lg:table-cell">Truck</th>
                             <th className="px-3 py-3 text-left font-medium whitespace-nowrap hidden md:table-cell">Driver</th>
@@ -660,8 +660,13 @@ export function ProfitabilityView() {
                               <td className="px-3 py-3 font-medium whitespace-nowrap text-amber-700 dark:text-amber-400">
                                 {trip.tripNumber}
                               </td>
-                              <td className="px-3 py-3 whitespace-nowrap text-muted-foreground">
-                                {new Date(trip.departureTime).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+                              <td className="px-3 py-3 whitespace-nowrap">
+                                <div className="text-sm text-muted-foreground">
+                                  {new Date(trip.departureTime).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </div>
+                                <div className="text-xs text-muted-foreground/70">
+                                  {new Date(trip.departureTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                                </div>
                               </td>
                               <td className="px-3 py-3 whitespace-nowrap hidden lg:table-cell">
                                 {trip.truck.plateNumber}
@@ -704,7 +709,7 @@ export function ProfitabilityView() {
                             <MarginCell margin={trip.margin} />
                           </div>
                           <p className="text-xs text-muted-foreground">
-                            {new Date(trip.departureTime).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} · {trip.truck.plateNumber}
+                            {new Date(trip.departureTime).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} · {new Date(trip.departureTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} · {trip.truck.plateNumber}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">
                             {trip.loadingLocation} → {trip.destination}
@@ -802,15 +807,14 @@ export function ProfitabilityView() {
                             axisLine={false}
                             fontSize={12}
                             tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
-                            domain={[0, 'auto']}
                             allowDecimals={false}
                           />
                           <ChartTooltip
                             content={<ChartTooltipContent formatter={(value) => formatCurrency(value as number)} />}
                           />
                           <ChartLegend />
-                          <Bar dataKey="revenue" fill="hsl(38, 92%, 50%)" radius={[4, 4, 0, 0]} maxBarSize={32} />
-                          <Bar dataKey="cost" fill="hsl(0, 84%, 60%)" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                          <Bar dataKey="revenue" fill="hsl(38, 92%, 50%)" radius={[2, 2, 0, 0]} maxBarSize={32} />
+                          <Bar dataKey="cost" fill="hsl(0, 84%, 60%)" radius={[2, 2, 0, 0]} maxBarSize={32} />
                         </BarChart>
                       </ChartContainer>
                     )}
@@ -1115,7 +1119,6 @@ export function ProfitabilityView() {
                           axisLine={false}
                           fontSize={12}
                           tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
-                          domain={[0, 'auto']}
                           allowDecimals={false}
                         />
                         <ChartTooltip
@@ -1127,24 +1130,24 @@ export function ProfitabilityView() {
                           dataKey="revenue"
                           stroke="hsl(38, 92%, 50%)"
                           strokeWidth={2}
-                          dot={{ r: 4, fill: 'hsl(38, 92%, 50%)' }}
-                          activeDot={{ r: 6 }}
+                          dot={{ r: 3, fill: 'hsl(38, 92%, 50%)' }}
+                          activeDot={{ r: 5 }}
                         />
                         <Line
                           type="monotone"
                           dataKey="cost"
                           stroke="hsl(0, 84%, 60%)"
                           strokeWidth={2}
-                          dot={{ r: 4, fill: 'hsl(0, 84%, 60%)' }}
-                          activeDot={{ r: 6 }}
+                          dot={{ r: 3, fill: 'hsl(0, 84%, 60%)' }}
+                          activeDot={{ r: 5 }}
                         />
                         <Line
                           type="monotone"
                           dataKey="profit"
                           stroke="hsl(142, 71%, 45%)"
                           strokeWidth={2}
-                          dot={{ r: 4, fill: 'hsl(142, 71%, 45%)' }}
-                          activeDot={{ r: 6 }}
+                          dot={{ r: 3, fill: 'hsl(142, 71%, 45%)' }}
+                          activeDot={{ r: 5 }}
                         />
                       </LineChart>
                     </ChartContainer>
