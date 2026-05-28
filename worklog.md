@@ -412,3 +412,22 @@ Stage Summary:
 - Invoice detail view consistently uses right-side ResponsiveSheet across the app
 - All files pass ESLint with zero errors
 - Dev server running successfully on port 3000
+
+---
+Task ID: 1
+Agent: Main
+Task: Fix Reports page not showing comprehensive Reports Hub — was rendering old ReportsView
+
+Work Log:
+- User reported that the old simple report page (4 types: driver, truck, zone, comparative) was still showing after multiple VPS deploys
+- Investigated and found root cause: page.tsx was importing old `ReportsView` from `@/components/reports/ReportsView` instead of the new comprehensive `ReportsPage` from `@/components/pages/ReportsPage`
+- Created `src/lib/reports/types.ts` with all 26 ReportType definitions and ExportFormat type (was missing)
+- Updated page.tsx dynamic import to point to `@/components/pages/ReportsPage` (default export)
+- Verified lint passes with 0 errors
+- Committed as `64bf4e9` and pushed to origin/main
+
+Stage Summary:
+- Root cause: The comprehensive ReportsPage (26 types, categories, search, filters, export buttons) was built but never wired into the router. page.tsx still imported the old 4-type ReportsView.
+- Fix: Changed dynamic import in page.tsx from `@/components/reports/ReportsView` to `@/components/pages/ReportsPage`
+- Created missing types file at `src/lib/reports/types.ts`
+- The comprehensive Reports Hub should now display correctly after VPS redeploy
