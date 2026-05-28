@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
     const urls: string[] = []
     const errors: string[] = []
 
-    // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'images')
+    // Persistent upload directory — outside public/ so it survives standalone deployments
+    const uploadDir = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads', 'images')
     await mkdir(uploadDir, { recursive: true })
 
     for (const file of files) {
@@ -49,9 +49,9 @@ export async function POST(request: NextRequest) {
       const uniqueFilename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`
       const relativePath = `/uploads/images/${uniqueFilename}`
 
-      // Save file to disk
+      // Save file to persistent upload directory
       const buffer = Buffer.from(await file.arrayBuffer())
-      const absoluteFilePath = path.join(process.cwd(), 'public', relativePath)
+      const absoluteFilePath = path.join(uploadDir, uniqueFilename)
       await writeFile(absoluteFilePath, buffer)
 
       urls.push(relativePath)
