@@ -330,6 +330,89 @@ export function InvoiceDetailSheet({
       }
       description={`Invoice for ${inv.client?.companyName ?? 'Unknown'}`}
       width="sm:max-w-lg"
+      footer={
+        <div className="flex flex-col gap-2">
+          {/* Top row: utility actions */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDownloadPdf}
+              className="flex-1 gap-1.5"
+            >
+              <FileDown className="h-4 w-4" />
+              Download
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrint}
+              className="flex-1 gap-1.5"
+            >
+              <Printer className="h-4 w-4" />
+              Print
+            </Button>
+          </div>
+          {/* Bottom row: status actions */}
+          <div className="flex gap-2">
+            {inv.status === 'draft' && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleMarkSent}
+                className="flex-1 border-sky-200 text-sky-600 hover:bg-sky-50 dark:border-sky-800 dark:text-sky-400 dark:hover:bg-sky-950/30"
+              >
+                <Send className="h-4 w-4 mr-1" />
+                Mark as Sent
+              </Button>
+            )}
+            {inv.status === 'sent' && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleMarkPaid}
+                className="flex-1 border-emerald-200 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+              >
+                <CircleDollarSign className="h-4 w-4 mr-1" />
+                Mark as Paid
+              </Button>
+            )}
+            {(inv.status === 'draft' || inv.status === 'cancelled') && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={deleting}
+                    className="flex-1 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                  >
+                    {deleting ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-200 border-t-red-500" />
+                    ) : (
+                      <Trash2 className="h-4 w-4 mr-1" />
+                    )}
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this invoice?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete invoice {inv.invoiceNumber}. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                      Delete Invoice
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
+        </div>
+      }
     >
       {/* ── Body ── */}
       <div className="space-y-5 p-4 md:p-6">
@@ -558,90 +641,6 @@ export function InvoiceDetailSheet({
         )}
       </div>
 
-      {/* ── Footer ── */}
-      <ResponsiveSheet.Footer>
-        <div className="flex flex-col gap-2">
-          {/* Top row: utility actions */}
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleDownloadPdf}
-              className="flex-1 gap-1.5"
-            >
-              <FileDown className="h-4 w-4" />
-              Download
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePrint}
-              className="flex-1 gap-1.5"
-            >
-              <Printer className="h-4 w-4" />
-              Print
-            </Button>
-          </div>
-          {/* Bottom row: status actions */}
-          <div className="flex gap-2">
-            {inv.status === 'draft' && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleMarkSent}
-                className="flex-1 border-sky-200 text-sky-600 hover:bg-sky-50 dark:border-sky-800 dark:text-sky-400 dark:hover:bg-sky-950/30"
-              >
-                <Send className="h-4 w-4 mr-1" />
-                Mark as Sent
-              </Button>
-            )}
-            {inv.status === 'sent' && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleMarkPaid}
-                className="flex-1 border-emerald-200 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
-              >
-                <CircleDollarSign className="h-4 w-4 mr-1" />
-                Mark as Paid
-              </Button>
-            )}
-            {(inv.status === 'draft' || inv.status === 'cancelled') && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={deleting}
-                    className="flex-1 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
-                  >
-                    {deleting ? (
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-200 border-t-red-500" />
-                    ) : (
-                      <Trash2 className="h-4 w-4 mr-1" />
-                    )}
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete this invoice?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will permanently delete invoice {inv.invoiceNumber}. This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                      Delete Invoice
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
-          </div>
-        </div>
-      </ResponsiveSheet.Footer>
     </ResponsiveSheet>
   )
 }
