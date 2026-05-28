@@ -2345,6 +2345,18 @@ export async function bulkInvoiceAction(action: string, ids: string[]): Promise<
   return apiFetch('/api/invoices/bulk', { method: 'POST', body: JSON.stringify({ action, ids }) })
 }
 
+export async function generateInvoiceFromTrip(tripId: string): Promise<Invoice> {
+  return apiFetch<Invoice>('/api/invoices/generate-from-trip', {
+    method: 'POST',
+    body: JSON.stringify({ tripId }),
+  })
+}
+
+/** Fetch a single invoice by ID (used for refreshing after edits) */
+export async function fetchInvoice(id: string): Promise<Invoice> {
+  return apiFetch<Invoice>(`/api/invoices/${id}`)
+}
+
 export async function downloadInvoicePdf(invoiceId: string, invoiceNumber?: string): Promise<void> {
   const { token } = useAuthStore.getState()
   const res = await fetch(`/api/invoices/${invoiceId}/pdf`, {

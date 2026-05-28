@@ -383,3 +383,32 @@ Stage Summary:
 - Live price variations are now deterministic (same input always produces same output)
 - POST handler matches brands case-insensitively
 - Lint passes: 0 errors
+---
+Task ID: 1
+Agent: Main
+Task: Wire up invoice generation from trips with editable line items and right-side sheet view
+
+Work Log:
+- Created POST /api/invoices/generate-from-trip API endpoint that calls generateInvoiceForTrip() service
+- Added generateInvoiceFromTrip() and fetchInvoice() client helpers to src/lib/api.ts
+- Completely rebuilt InvoiceDetailSheet component with:
+  - View mode and Edit mode toggle for line items
+  - "Add Item" button (dashed border row) to add insurance, charges, etc.
+  - "Remove" (X) button per row to delete items
+  - Inline editable description, quantity, and unitPrice fields
+  - Live subtotal/tax/total recalculation in edit mode
+  - Unsaved changes indicator
+  - Delete confirmation dialog
+  - All existing actions preserved (PDF download, print, mark sent/paid)
+- Replaced InvoiceDetailDialog (center modal) with InvoiceDetailSheet (right-side ResponsiveSheet) in InvoicesView
+- Added "Invoice" section to TripDetailSheet with:
+  - "Generate Invoice" button when no invoice exists for the trip
+  - Invoice summary card (number, status, total) when invoice exists
+  - "View Details" link that opens the InvoiceDetailSheet as nested sheet
+- Invoice generation automatically creates client, builds line items from trip data, calculates totals
+
+Stage Summary:
+- Full invoice generation flow is now wired: Trip → Generate Invoice → View/Edit in Sheet → Add Extra Items → Save
+- Invoice detail view consistently uses right-side ResponsiveSheet across the app
+- All files pass ESLint with zero errors
+- Dev server running successfully on port 3000

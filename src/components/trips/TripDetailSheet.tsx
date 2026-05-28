@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users, CheckCircle2 } from 'lucide-react'
+import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users, CheckCircle2, Receipt } from 'lucide-react'
 import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -21,8 +21,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
-import type { Trip } from '@/lib/api'
-import { apiFetch, fetchTripComments, addTripComment, deleteTripComment, type TripComment } from '@/lib/api'
+import type { Trip, Invoice } from '@/lib/api'
+import { apiFetch, fetchTripComments, addTripComment, deleteTripComment, generateInvoiceFromTrip, type TripComment } from '@/lib/api'
 import { useAuthStore, getRoleBadgeColor } from '@/lib/store/auth'
 import {
   TRIP_STATUS_META,
@@ -32,6 +32,7 @@ import {
   isTerminalStatus,
 } from '@/lib/trip-lifecycle'
 import { toast } from 'sonner'
+import { InvoiceDetailSheet } from '@/components/invoices/InvoiceDetailSheet'
 
 interface TripDetailSheetProps {
   trip: Trip | null
@@ -182,6 +183,45 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
   const [duplicating, setDuplicating] = React.useState(false)
   const [completing, setCompleting] = React.useState(false)
 
+  // Invoice state
+  const [tripInvoice, setTripInvoice] = React.useState<Invoice | null>(null)
+  const [generatingInvoice, setGeneratingInvoice] = React.useState(false)
+  const [invoiceSheetOpen, setInvoiceSheetOpen] = React.useState(false)
+
+  // Fetch invoice linked to this trip
+  React.useEffect(() => {
+    if (open && trip) {
+      apiFetch<Invoice | null>(`/api/invoices?tripId=${trip.id}&limit=1`)
+        .then((res) => {
+          if (res && (res as Record<string, unknown>).data) {
+            const data = (res as Record<string, unknown>).data as Invoice[]
+            setTripInvoice(data.length > 0 ? data[0] : null)
+          }
+        })
+        .catch(() => {})
+    }
+    if (!open) {
+      setTripInvoice(null)
+      setInvoiceSheetOpen(false)
+    }
+  }, [open, trip])
+
+  const handleGenerateInvoice = async () => {
+    if (!trip) return
+    setGeneratingInvoice(true)
+    try {
+      const invoice = await generateInvoiceFromTrip(trip.id)
+      setTripInvoice(invoice)
+      toast.success('Invoice generated', {
+        description: `${invoice.invoiceNumber} — ${CURRENCY_SYMBOL}${invoice.totalAmount.toLocaleString()}`,
+      })
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to generate invoice')
+    } finally {
+      setGeneratingInvoice(false)
+    }
+  }
+
   const handleMarkCompleted = async () => {
     if (!trip) return
     setCompleting(true)
@@ -281,6 +321,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
   }
 
   return (
+    <React.Fragment>
     <ResponsiveSheet
       open={open}
       onOpenChange={onOpenChange}
@@ -688,6 +729,49 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
 
               <Separator />
 
+              {/* Invoice Section */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Invoice</h4>
+                {tripInvoice ? (
+                  <div className="p-3 rounded-lg bg-muted/50 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Receipt className="h-4 w-4 text-amber-500" />
+                        <span className="text-sm font-medium">{tripInvoice.invoiceNumber}</span>
+                      </div>
+                      <button
+                        onClick={() => setInvoiceSheetOpen(true)}
+                        className="text-xs text-amber-600 dark:text-amber-400 hover:underline"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="text-muted-foreground">Status</div>
+                      <div className="font-medium capitalize">{tripInvoice.status}</div>
+                      <div className="text-muted-foreground">Total</div>
+                      <div className="font-bold text-amber-600">{CURRENCY_SYMBOL}{tripInvoice.totalAmount.toLocaleString()}</div>
+                    </div>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={handleGenerateInvoice}
+                    disabled={generatingInvoice}
+                    className="w-full gap-2 border-amber-200 text-amber-600 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                  >
+                    {generatingInvoice ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-200 border-t-amber-600" />
+                    ) : (
+                      <Receipt className="h-4 w-4" />
+                    )}
+                    Generate Invoice
+                  </Button>
+                )}
+              </div>
+
+              <Separator />
+
               {/* Actions */}
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Actions</h4>
@@ -939,6 +1023,27 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
           )}
         </AnimatePresence>
     </ResponsiveSheet>
+
+      {/* Invoice Detail Sheet (nested) */}
+      <InvoiceDetailSheet
+        invoice={tripInvoice}
+        open={invoiceSheetOpen}
+        onOpenChange={setInvoiceSheetOpen}
+        onRefresh={() => {
+          // Re-fetch invoice data after edits
+          if (trip) {
+            apiFetch<Invoice | null>(`/api/invoices?tripId=${trip.id}&limit=1`)
+              .then((res) => {
+                if (res && (res as Record<string, unknown>).data) {
+                  const data = (res as Record<string, unknown>).data as Invoice[]
+                  setTripInvoice(data.length > 0 ? data[0] : null)
+                }
+              })
+              .catch(() => {})
+          }
+        }}
+      />
+    </React.Fragment>
   )
 }
 
