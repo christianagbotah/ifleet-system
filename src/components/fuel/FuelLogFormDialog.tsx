@@ -35,7 +35,7 @@ import {
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { DatePicker } from '@/components/ui/date-picker'
-import { fetchTrucks, fetchTrips, type Truck, type Trip, type FuelLog, createFuelLog, updateFuelLog, uploadDocument, uploadFiles } from '@/lib/api'
+import { fetchTrucks, fetchTrips, fetchFuelStations, type Truck, type Trip, type FuelLog, type FuelStation, createFuelLog, updateFuelLog, uploadDocument, uploadFiles } from '@/lib/api'
 import { toast } from 'sonner'
 import { ReceiptScanner, type ScannedReceiptData } from '@/components/scanner/ReceiptScanner'
 
@@ -412,6 +412,10 @@ export function FuelLogFormDialog({
   const [loadingCompletedTrips, setLoadingCompletedTrips] = React.useState(false)
   const [selectedTrip, setSelectedTrip] = React.useState<Trip | null>(null)
 
+  // Filling stations for searchable dropdown
+  const [stations, setStations] = React.useState<FuelStation[]>([])
+  const [loadingStations, setLoadingStations] = React.useState(false)
+
   const form = useForm<FuelLogFormValues>({
     resolver: zodResolver(fuelLogFormSchema),
     defaultValues: {
@@ -497,6 +501,13 @@ export function FuelLogFormDialog({
       .then((result) => setTrucks(result.data))
       .catch(() => toast.error('Failed to load trucks'))
       .finally(() => setLoadingTrucks(false))
+
+    // Fetch filling stations for searchable dropdown
+    setLoadingStations(true)
+    fetchFuelStations({ limit: 200, isActive: 'true' })
+      .then((result) => setStations(result.data))
+      .catch(() => setStations([]))
+      .finally(() => setLoadingStations(false))
 
     // In post-trip mode, fetch completed trips
     if (!fuelLog && initialMode === 'post_trip') {
@@ -1113,13 +1124,24 @@ export function FuelLogFormDialog({
                   name="stationName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Station Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., Shell Tema"
-                          {...field}
-                        />
-                      </FormControl>
+                      <FormLabel>Filling Station</FormLabel>
+                      <SearchableSelect
+                        options={[
+                          ...stations.map(s => {
+                            const cityPart = s.city ? ` (${s.city})` : ''
+                            const label = s.name && s.name !== s.brand
+                              ? `${s.brand} ${s.name}${cityPart}`
+                              : `${s.brand}${cityPart}`
+                            return { value: s.name, label }
+                          }),
+                        ]}
+                        value={field.value || ''}
+                        onValueChange={field.onChange}
+                        placeholder={loadingStations ? 'Loading stations...' : 'Search or select filling station'}
+                        searchPlaceholder="Search by brand, name, city..."
+                        emptyMessage="No matching stations found. Type a custom name below."
+                        disabled={loadingStations}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
