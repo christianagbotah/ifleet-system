@@ -53,3 +53,4 @@ server.log
 # Skills directory
 /skills/.git-credentials
 .git-credentials
+.env
