@@ -1,48 +1,52 @@
+// ─── Report Types & Interfaces ──────────────────────────────────────────
+
+export type ReportType =
+  // Financial
+  | 'trip_summary'
+  | 'expense_report'
+  | 'fleet_profit_loss'
+  | 'payroll_report'
+  | 'cash_advances_report'
+  | 'toll_report'
+  // Operations
+  | 'daily_summary'
+  | 'driver_performance'
+  | 'driver_incentives_report'
+  | 'waybill_report'
+  | 'load_board_report'
+  | 'border_crossings_report'
+  | 'depot_queue_report'
+  // Fleet
+  | 'fleet_overview'
+  | 'maintenance_report'
+  | 'tyre_report'
+  | 'compliance_report'
+  | 'insurance_claims_report'
+  | 'safety_report'
+  // Analytics
+  | 'cost_analytics'
+  | 'trip_profitability'
+  | 'fuel_report'
+  | 'fuel_anomaly_report'
+  | 'fuel_analytics'
+  | 'safety_scoring'
+  // Other
+  | 'warehouse_report'
+
+export type ExportFormat = 'pdf' | 'xlsx' | 'csv'
+
 export interface ReportParams {
   dateFrom?: string
   dateTo?: string
   truckId?: string
   driverId?: string
-  clientId?: string
-  status?: string
   tripId?: string
-  period?: string
-  periodStart?: string
-  periodEnd?: string
-  date?: string
-  depotName?: string
-  country?: string
-  tollType?: string
-  pickupRegion?: string
-  category?: string
+  zoneId?: string
+  [key: string]: string | undefined
 }
 
-export type ReportType =
-  | 'trip_summary'
-  | 'fuel_report'
-  | 'expense_report'
-  | 'payroll_report'
-  | 'fleet_overview'
-  | 'daily_summary'
-  | 'waybill_report'
-  | 'driver_performance'
-  | 'maintenance_report'
-  | 'compliance_report'
-  | 'tyre_report'
-  | 'insurance_claims_report'
-  | 'warehouse_report'
-  | 'driver_incentives_report'
-  | 'toll_report'
-  | 'safety_report'
-  | 'cash_advances_report'
-  | 'border_crossings_report'
-  | 'depot_queue_report'
-  | 'load_board_report'
-  | 'fuel_anomaly_report'
-  | 'fleet_profit_loss'
-  | 'cost_analytics'
-  | 'trip_profitability'
-  | 'fuel_analytics'
-  | 'safety_scoring'
-
-export type ExportFormat = 'pdf' | 'xlsx' | 'csv'
+export interface GenerateReportRequest {
+  type: ReportType
+  format: ExportFormat
+  params: ReportParams
+}

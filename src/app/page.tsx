@@ -133,7 +133,7 @@ const DocumentsView = dynamic(
   { ssr: false, loading: () => <ViewLoader /> }
 )
 const ReportsView = dynamic(
-  () => import('@/components/reports/ReportsView').then(m => ({ default: m.ReportsView })),
+  () => import('@/components/pages/ReportsPage'),
   { ssr: false, loading: () => <ViewLoader /> }
 )
 const CostAnalyticsView = dynamic(
