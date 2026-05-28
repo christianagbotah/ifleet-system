@@ -3139,6 +3139,24 @@ export async function fetchFuelPriceAnalytics(params?: {
   return apiFetch<FuelPriceAnalytics>(`/api/fuel-stations/analytics${qs ? `?${qs}` : ""}`)
 }
 
+export async function fetchLiveFuelPrices(): Promise<{
+  lastUpdated: string
+  source: string
+  prices: Record<string, number>
+  brandPrices: { brand: string; petrol?: number; diesel?: number }[]
+}> {
+  return apiFetch("/api/fuel-stations/live-prices")
+}
+
+export async function applyLivePrices(data: {
+  brandUpdates: { brand: string; diesel?: number; petrol?: number }[]
+}): Promise<{ updated: number }> {
+  return apiFetch("/api/fuel-stations/live-prices", {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+}
+
 // ============ ROAD CONDITION REPORTS ============
 
 export interface RoadConditionReport {

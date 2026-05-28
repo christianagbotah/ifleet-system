@@ -4,7 +4,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   Fuel, MapPin, Star, Plus, Search, Filter, TrendingDown, TrendingUp,
   DollarSign, Building2, Phone, Clock, Navigation, Truck, CreditCard, Award,
-  Wrench, Droplets, ChevronDown, ExternalLink, RefreshCw, Loader2, X, Calculator, BarChart3
+  Wrench, Droplets, ChevronDown, ExternalLink, RefreshCw, Loader2, X, Calculator, BarChart3,
+  Globe, CheckCircle2, AlertTriangle
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -23,7 +24,7 @@ import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   fetchFuelStations, fetchFuelPriceAnalytics, createFuelStation, createFuelPrice,
-  updateFuelStation, deleteFuelStation,
+  updateFuelStation, deleteFuelStation, fetchLiveFuelPrices, applyLivePrices,
   type FuelStation, type FuelPriceAnalytics
 } from '@/lib/api'
 import { DatePicker } from '@/components/ui/date-picker'
@@ -63,6 +64,13 @@ export function FuelPriceTrackerView() {
   // Savings calculator
   const [calcLiters, setCalcLiters] = useState(5000)
   const [calcCurrentPrice, setCalcCurrentPrice] = useState(0)
+
+  // Live prices
+  const [livePricesOpen, setLivePricesOpen] = useState(false)
+  const [liveData, setLiveData] = useState<{ lastUpdated: string; source: string; prices: Record<string, number>; brandPrices: { brand: string; petrol?: number; diesel?: number }[] } | null>(null)
+  const [liveLoading, setLiveLoading] = useState(false)
+  const [applyingLive, setApplyingLive] = useState(false)
+  const [selectedBrands, setSelectedBrands] = useState<Set<string>>(new Set())
 
   const loadAnalytics = useCallback(async () => {
     try {
@@ -156,6 +164,42 @@ export function FuelPriceTrackerView() {
     } catch { toast.error('Failed to delete') }
   }
 
+  const handleFetchLivePrices = async () => {
+    setLiveLoading(true)
+    setLivePricesOpen(true)
+    try {
+      const data = await fetchLiveFuelPrices()
+      setLiveData(data)
+      // Auto-select brands that exist in our station list
+      const ourBrands = new Set(stations.map(s => s.brand))
+      const matched = data.brandPrices
+        .filter(bp => ourBrands.has(bp.brand))
+        .map(bp => bp.brand)
+      setSelectedBrands(new Set(matched))
+    } catch {
+      toast.error('Failed to fetch live prices')
+    }
+    setLiveLoading(false)
+  }
+
+  const handleApplyLivePrices = async () => {
+    if (!liveData || selectedBrands.size === 0) return
+    setApplyingLive(true)
+    try {
+      const updates = liveData.brandPrices
+        .filter(bp => selectedBrands.has(bp.brand))
+        .map(bp => ({ brand: bp.brand, diesel: bp.diesel, petrol: bp.petrol }))
+      const result = await applyLivePrices({ brandUpdates: updates })
+      toast.success(`Updated ${result.updated} prices across ${selectedBrands.size} brand(s)`)
+      setLivePricesOpen(false)
+      loadStations()
+      loadAnalytics()
+    } catch {
+      toast.error('Failed to apply live prices')
+    }
+    setApplyingLive(false)
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -168,6 +212,35 @@ export function FuelPriceTrackerView() {
           <Button variant="outline" size="sm" onClick={() => { loadAnalytics(); loadStations(); }}>
             <RefreshCw className="h-4 w-4 mr-1" /> Refresh
           </Button>
+          <Dialog open={livePricesOpen} onOpenChange={open => { setLivePricesOpen(open); if (!open) { setLiveData(null); setSelectedBrands(new Set()) } }}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" onClick={handleFetchLivePrices}>
+                <Globe className="h-4 w-4 mr-1" /> Live Prices
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-xl">
+              <LivePriceReview
+                data={liveData}
+                loading={liveLoading}
+                applying={applyingLive}
+                selectedBrands={selectedBrands}
+                onToggleBrand={(brand) => {
+                  setSelectedBrands(prev => {
+                    const next = new Set(prev)
+                    if (next.has(brand)) next.delete(brand)
+                    else next.add(brand)
+                    return next
+                  })
+                }}
+                onSelectAll={() => {
+                  if (liveData) setSelectedBrands(new Set(liveData.brandPrices.map(b => b.brand)))
+                }}
+                onDeselectAll={() => setSelectedBrands(new Set())}
+                onApply={handleApplyLivePrices}
+                onRetry={handleFetchLivePrices}
+              />
+            </DialogContent>
+          </Dialog>
           <Dialog open={addStationOpen} onOpenChange={setAddStationOpen}>
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Add Station</Button>
@@ -657,6 +730,129 @@ export function FuelPriceTrackerView() {
         </TabsContent>
       </Tabs>
     </div>
+  )
+}
+
+// ============ LIVE PRICE REVIEW ============
+
+function LivePriceReview({
+  data,
+  loading,
+  applying,
+  selectedBrands,
+  onToggleBrand,
+  onSelectAll,
+  onDeselectAll,
+  onApply,
+  onRetry,
+}: {
+  data: { lastUpdated: string; source: string; prices: Record<string, number>; brandPrices: { brand: string; petrol?: number; diesel?: number }[] } | null
+  loading: boolean
+  applying: boolean
+  selectedBrands: Set<string>
+  onToggleBrand: (brand: string) => void
+  onSelectAll: () => void
+  onDeselectAll: () => void
+  onApply: () => void
+  onRetry: () => void
+}) {
+  if (loading) {
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2"><Globe className="h-5 w-5" /> Fetching Live Prices...</DialogTitle>
+        </DialogHeader>
+        <DialogBody className="flex items-center justify-center py-12">
+          <div className="text-center space-y-3">
+            <Loader2 className="h-8 w-8 animate-spin text-amber-500 mx-auto" />
+            <p className="text-sm text-muted-foreground">Fetching current fuel prices from NPA Ghana...</p>
+          </div>
+        </DialogBody>
+      </>
+    )
+  }
+
+  if (!data) {
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-amber-500" /> Failed to Fetch</DialogTitle>
+        </DialogHeader>
+        <DialogBody className="py-8 text-center space-y-4">
+          <p className="text-sm text-muted-foreground">Could not retrieve live prices. This may be due to a network issue.</p>
+          <Button variant="outline" onClick={onRetry}><RefreshCw className="h-4 w-4 mr-1" /> Try Again</Button>
+        </DialogBody>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2"><Globe className="h-5 w-5" /> Live Fuel Prices</DialogTitle>
+      </DialogHeader>
+      <DialogBody className="space-y-4 py-2">
+        {/* Source info */}
+        <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 space-y-1">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-[10px]"><Globe className="h-3 w-3 mr-1" />{data.source}</Badge>
+            <span className="text-[10px] text-muted-foreground">Updated: {new Date(data.lastUpdated).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+          </div>
+        </div>
+
+        {/* Indicative prices */}
+        <div className="grid grid-cols-2 gap-2">
+          {Object.entries(data.prices).filter(([k]) => ['Diesel', 'Petrol', 'LPG'].includes(k)).map(([type, price]) => (
+            <div key={type} className="bg-stone-50 dark:bg-stone-900/30 rounded-lg p-2.5 text-center">
+              <p className="text-[10px] uppercase font-medium text-muted-foreground">{type}</p>
+              <p className="text-lg font-bold">{CURRENCY_SYMBOL}{price.toFixed(2)}<span className="text-xs font-normal text-muted-foreground">/L</span></p>
+            </div>
+          ))}
+        </div>
+
+        <Separator />
+
+        {/* Brand prices with selection */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium text-muted-foreground">Brand Prices — select to apply</p>
+            <div className="flex gap-1">
+              <Button variant="ghost" size="sm" className="text-[10px] h-6 px-2" onClick={onSelectAll}>Select all</Button>
+              <Button variant="ghost" size="sm" className="text-[10px] h-6 px-2" onClick={onDeselectAll}>Clear</Button>
+            </div>
+          </div>
+          <div className="max-h-48 overflow-y-auto rounded-lg border divide-y">
+            {data.brandPrices.map(bp => (
+              <label key={bp.brand} className="flex items-center gap-3 px-3 py-2 hover:bg-stone-50 dark:hover:bg-stone-900/20 cursor-pointer">
+                <Checkbox
+                  checked={selectedBrands.has(bp.brand)}
+                  onCheckedChange={() => onToggleBrand(bp.brand)}
+                />
+                <span className="text-sm font-medium flex-1">{bp.brand}</span>
+                <span className="text-xs text-muted-foreground">{bp.petrol ? `${CURRENCY_SYMBOL}${bp.petrol.toFixed(2)}` : '--'}</span>
+                <span className="text-[10px] text-muted-foreground">P</span>
+                <span className="text-xs font-medium">{bp.diesel ? `${CURRENCY_SYMBOL}${bp.diesel.toFixed(2)}` : '--'}</span>
+                <span className="text-[10px] text-muted-foreground">D</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
+          <p className="text-[11px] text-muted-foreground flex items-start gap-1.5">
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-blue-500" />
+            Applying live prices will create new price entries for all stations matching the selected brands. Prices marked as unverified and should be confirmed by your team.
+          </p>
+        </div>
+      </DialogBody>
+      <DialogFooter className="pt-2">
+        <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+        <Button onClick={onApply} disabled={applying || selectedBrands.size === 0}>
+          {applying ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-1" />}
+          Apply {selectedBrands.size > 0 ? `(${selectedBrands.size})` : ''}
+        </Button>
+      </DialogFooter>
+    </>
   )
 }
 
