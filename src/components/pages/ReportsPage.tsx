@@ -1,51 +1,50 @@
 'use client'
 
-import { useState } from 'react'
-import { useDebounce } from '@/hooks/use-debounce'
-import { useQuery } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
   DollarSign,
-  Users,
-  Truck,
-  Download,
-  Filter,
-  ArrowUpDown,
-  ChevronRight,
-  AlertCircle,
-  RefreshCw,
-  Search,
-  ChevronUp,
-  ChevronDown,
+  Receipt,
+  TrendingUp,
+  Banknote,
+  Wallet,
+  CreditCard,
+  Activity,
+  UserCheck,
+  Award,
   FileText,
-  Loader2,
-} from 'lucide-react'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
+  ClipboardList,
+  Globe,
+  Building2,
+  Truck,
+  Wrench,
+  CircleDot,
+  Shield,
+  AlertTriangle,
+  ShieldCheck,
   PieChart,
-  Pie,
-  Cell,
-  Legend,
-  Line,
-  ComposedChart,
-} from 'recharts'
-import { cn } from '@/lib/utils'
-import { useAppStore } from '@/lib/store'
-import { formatCurrency, formatShortCurrency } from '@/lib/currency'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+  Target,
+  Fuel,
+  BarChart3,
+  Zap,
+  Package,
+  Search,
+  Download,
+  Loader2,
+  Printer,
+  FileSpreadsheet,
+  Filter,
+  X,
+  ChevronDown,
+  CalendarDays,
+  type LucideIcon,
+} from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { ReportsSkeleton } from '@/components/ui/page-skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
+import { DatePicker } from '@/components/ui/date-picker'
 import {
   Select,
   SelectContent,
@@ -53,773 +52,811 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { toast } from '@/lib/toast-config'
-import { exportToCSV } from '@/lib/export'
-import { buildReportHtml, type ReportData } from '@/lib/pdf-export'
+import { useAuthStore } from '@/lib/store/auth'
+import { toast } from 'sonner'
+import { triggerDownload } from '@/lib/export'
+import type { ReportType, ExportFormat, ReportParams } from '@/lib/reports/types'
 
-// Re-export for local use
-type ReportsData = ReportData
+// ─── Report Category Definitions ─────────────────────────────────────────
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-const CHART_COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
-
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.5, delay, ease: 'easeOut' } },
-})
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-// ─── Summary Card ───────────────────────────────────────────────────────────
-interface SummaryCardProps {
-  label: string
-  value: string
-  subLabel?: string
-  icon: React.ReactNode
-  iconBg: string
-  trend?: 'up' | 'down' | null
+interface ReportDefinition {
+  type: ReportType
+  name: string
+  description: string
+  icon: LucideIcon
+  category: 'financial' | 'operations' | 'fleet' | 'analytics' | 'other'
+  params?: Partial<ReportParams>
 }
 
-function SummaryCard({ label, value, subLabel, icon, iconBg, trend }: SummaryCardProps) {
+interface CategoryGroup {
+  id: string
+  name: string
+  description: string
+  icon: LucideIcon
+  color: string
+  bgColor: string
+  borderColor: string
+  reports: ReportDefinition[]
+}
+
+const REPORTS: ReportDefinition[] = [
+  // ── Financial ──
+  { type: 'trip_summary', name: 'Trip Summary', description: 'Comprehensive trip data including revenue, expenses, and profitability per trip.', icon: FileText, category: 'financial' },
+  { type: 'expense_report', name: 'Expense Report', description: 'Itemized expenses grouped by category, truck, and trip.', icon: Receipt, category: 'financial' },
+  { type: 'fleet_profit_loss', name: 'Fleet Profit & Loss', description: 'Full P&L statement for the entire fleet operation.', icon: TrendingUp, category: 'financial' },
+  { type: 'payroll_report', name: 'Payroll Report', description: 'Driver payroll calculations, deductions, and net pay.', icon: Banknote, category: 'financial' },
+  { type: 'cash_advances_report', name: 'Cash Advances', description: 'All cash advance transactions with outstanding balances.', icon: Wallet, category: 'financial' },
+  { type: 'toll_report', name: 'Toll & Checkpoint', description: 'Toll fees and checkpoint costs across all routes.', icon: CreditCard, category: 'financial' },
+
+  // ── Operations ──
+  { type: 'daily_summary', name: 'Daily Operations Summary', description: 'Snapshot of daily fleet activity, trips, and key metrics.', icon: Activity, category: 'operations' },
+  { type: 'driver_performance', name: 'Driver Performance', description: 'Individual driver KPIs including trips, revenue, and efficiency.', icon: UserCheck, category: 'operations' },
+  { type: 'driver_incentives_report', name: 'Driver Incentives', description: 'Incentive calculations, bonuses earned, and payment status.', icon: Award, category: 'operations' },
+  { type: 'waybill_report', name: 'Waybill Report', description: 'Detailed waybill data for shipment tracking and documentation.', icon: ClipboardList, category: 'operations', params: { tripId: '' } },
+  { type: 'load_board_report', name: 'Load Board Report', description: 'Available loads, matching history, and utilization rates.', icon: FileSpreadsheet, category: 'operations' },
+  { type: 'border_crossings_report', name: 'Border Crossings', description: 'Cross-border trip data with documentation and clearance status.', icon: Globe, category: 'operations' },
+  { type: 'depot_queue_report', name: 'Depot Queue', description: 'Depot loading/unloading queue status and wait times.', icon: Building2, category: 'operations' },
+
+  // ── Fleet ──
+  { type: 'fleet_overview', name: 'Fleet Overview', description: 'Complete fleet status including availability, utilization, and location.', icon: Truck, category: 'fleet' },
+  { type: 'maintenance_report', name: 'Maintenance Report', description: 'Maintenance records, upcoming services, and cost breakdown.', icon: Wrench, category: 'fleet' },
+  { type: 'tyre_report', name: 'Tyre Management', description: 'Tyre lifecycle tracking, replacements, and cost per kilometer.', icon: CircleDot, category: 'fleet' },
+  { type: 'compliance_report', name: 'Compliance & Documents', description: 'Document expiry alerts, license renewals, and compliance status.', icon: Shield, category: 'fleet' },
+  { type: 'insurance_claims_report', name: 'Insurance Claims', description: 'Active claims, claim history, and settlement status.', icon: AlertTriangle, category: 'fleet' },
+  { type: 'safety_report', name: 'Safety Inspections', description: 'Vehicle inspection results, defect reports, and safety scores.', icon: ShieldCheck, category: 'fleet' },
+
+  // ── Analytics ──
+  { type: 'cost_analytics', name: 'Cost Analytics', description: 'Breakdown of operational costs with trend analysis.', icon: PieChart, category: 'analytics' },
+  { type: 'trip_profitability', name: 'Trip Profitability', description: 'Profit margins per trip with revenue vs cost breakdown.', icon: Target, category: 'analytics' },
+  { type: 'fuel_report', name: 'Fuel Report', description: 'Fuel consumption data by truck, driver, and period.', icon: Fuel, category: 'analytics' },
+  { type: 'fuel_anomaly_report', name: 'Fuel Anomalies', description: 'Flagged fuel transactions with unusual patterns.', icon: AlertTriangle, category: 'analytics' },
+  { type: 'fuel_analytics', name: 'Fuel Analytics', description: 'Deep analysis of fuel efficiency trends and optimization opportunities.', icon: BarChart3, category: 'analytics' },
+  { type: 'safety_scoring', name: 'Safety Scoring', description: 'Driver and fleet safety scores with risk assessment.', icon: ShieldCheck, category: 'analytics' },
+
+  // ── Other ──
+  { type: 'warehouse_report', name: 'Warehouse Inventory', description: 'Current stock levels, movements, and storage utilization.', icon: Package, category: 'other' },
+]
+
+const CATEGORIES: CategoryGroup[] = [
+  {
+    id: 'financial',
+    name: 'Financial Reports',
+    description: 'Revenue, expenses, payroll, and financial statements',
+    icon: DollarSign,
+    color: 'text-emerald-700 dark:text-emerald-400',
+    bgColor: 'bg-emerald-100 dark:bg-emerald-950/50',
+    borderColor: 'border-emerald-200 dark:border-emerald-800',
+    reports: REPORTS.filter((r) => r.category === 'financial'),
+  },
+  {
+    id: 'operations',
+    name: 'Operations Reports',
+    description: 'Daily activities, driver performance, and trip documentation',
+    icon: Activity,
+    color: 'text-amber-700 dark:text-amber-400',
+    bgColor: 'bg-amber-100 dark:bg-amber-950/50',
+    borderColor: 'border-amber-200 dark:border-amber-800',
+    reports: REPORTS.filter((r) => r.category === 'operations'),
+  },
+  {
+    id: 'fleet',
+    name: 'Fleet Reports',
+    description: 'Vehicle status, maintenance, compliance, and safety',
+    icon: Truck,
+    color: 'text-sky-700 dark:text-sky-400',
+    bgColor: 'bg-sky-100 dark:bg-sky-950/50',
+    borderColor: 'border-sky-200 dark:border-sky-800',
+    reports: REPORTS.filter((r) => r.category === 'fleet'),
+  },
+  {
+    id: 'analytics',
+    name: 'Analytics Reports',
+    description: 'Deep insights into costs, profitability, and fuel efficiency',
+    icon: BarChart3,
+    color: 'text-violet-700 dark:text-violet-400',
+    bgColor: 'bg-violet-100 dark:bg-violet-950/50',
+    borderColor: 'border-violet-200 dark:border-violet-800',
+    reports: REPORTS.filter((r) => r.category === 'analytics'),
+  },
+  {
+    id: 'other',
+    name: 'Other Reports',
+    description: 'Inventory and warehouse management reports',
+    icon: Package,
+    color: 'text-rose-700 dark:text-rose-400',
+    bgColor: 'bg-rose-100 dark:bg-rose-950/50',
+    borderColor: 'border-rose-200 dark:border-rose-800',
+    reports: REPORTS.filter((r) => r.category === 'other'),
+  },
+]
+
+// ─── File extension map ─────────────────────────────────────────────────
+
+const FORMAT_EXTENSIONS: Record<ExportFormat, string> = {
+  pdf: 'pdf',
+  xlsx: 'xlsx',
+  csv: 'csv',
+}
+
+const FORMAT_MIME: Record<ExportFormat, string> = {
+  pdf: 'application/pdf',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  csv: 'text/csv',
+}
+
+// ─── Animation helpers ──────────────────────────────────────────────────
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.04 },
+  },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+}
+
+// ─── Report Card Component ──────────────────────────────────────────────
+
+interface ReportCardProps {
+  report: ReportDefinition
+  dateFrom: string
+  dateTo: string
+  truckId: string
+  driverId: string
+  loadingKey: string
+  onGenerate: (type: ReportType, format: ExportFormat, params: ReportParams, loadingKey: string) => void
+}
+
+function ReportCard({ report, dateFrom, dateTo, truckId, driverId, loadingKey, onGenerate }: ReportCardProps) {
+  const Icon = report.icon
+  const isLoading = !!loadingKey
+
+  const buildParams = useCallback((): ReportParams => {
+    const params: ReportParams = {}
+    if (dateFrom) params.dateFrom = dateFrom
+    if (dateTo) params.dateTo = dateTo
+    if (truckId) params.truckId = truckId
+    if (driverId) params.driverId = driverId
+    if (report.params) Object.assign(params, report.params)
+    return params
+  }, [dateFrom, dateTo, truckId, driverId, report.params])
+
   return (
-    <Card className="hover:shadow-md transition-all duration-300">
-      <CardContent className="p-5">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1.5">
-            <p className="text-sm font-medium text-muted-foreground">{label}</p>
-            <p className="text-2xl font-bold tracking-tight">{value}</p>
-            {subLabel && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                {trend === 'up' && <TrendingUp className="size-3 text-emerald-500" />}
-                {trend === 'down' && <TrendingDown className="size-3 text-red-500" />}
-                <span>{subLabel}</span>
-              </div>
-            )}
+    <motion.div variants={cardVariants} className="h-full">
+      <Card className="group h-full hover:shadow-md transition-all duration-300 border-border/60 hover:border-border">
+        <CardContent className="p-4 sm:p-5 flex flex-col h-full gap-4">
+          {/* Icon + Title */}
+          <div className="flex items-start gap-3.5">
+            <div className="size-10 rounded-xl bg-muted flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200">
+              <Icon className="size-5 text-muted-foreground" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-semibold leading-tight truncate">{report.name}</h3>
+              <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{report.description}</p>
+            </div>
           </div>
-          <div className={cn('size-12 rounded-xl flex items-center justify-center', iconBg)}>
-            {icon}
+
+          {/* Export buttons */}
+          <div className="flex items-center gap-2 mt-auto pt-2 border-t border-border/50">
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex-1 h-8 text-xs gap-1.5 font-medium"
+              onClick={() => onGenerate(report.type, 'pdf', buildParams(), `${report.type}-pdf`)}
+              disabled={isLoading}
+            >
+              {isLoading && loadingKey === `${report.type}-pdf` ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <FileText className="size-3.5 text-red-500 dark:text-red-400" />
+              )}
+              PDF
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex-1 h-8 text-xs gap-1.5 font-medium"
+              onClick={() => onGenerate(report.type, 'xlsx', buildParams(), `${report.type}-xlsx`)}
+              disabled={isLoading}
+            >
+              {isLoading && loadingKey === `${report.type}-xlsx` ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <FileSpreadsheet className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+              )}
+              Excel
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onGenerate(report.type, 'pdf', buildParams(), `${report.type}-print`)}
+              disabled={isLoading}
+              title="Print report"
+            >
+              {isLoading && loadingKey === `${report.type}-print` ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Printer className="size-3.5 text-muted-foreground" />
+              )}
+            </Button>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 
-// ─── Custom Chart Tooltips ──────────────────────────────────────────────────
-function MonthlyTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-popover border rounded-lg shadow-lg p-3 text-sm space-y-1.5">
-        <p className="font-medium">{label}</p>
-        {payload.map((entry, idx) => (
-          <div key={idx} className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-1.5">
-              <div className="size-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-muted-foreground">{entry.name}</span>
-            </div>
-            <span className="font-semibold">{entry.name === 'Trips' ? entry.value : formatShortCurrency(entry.value)}</span>
-          </div>
-        ))}
-      </div>
-    )
-  }
-  return null
+// ─── Category Section Component ─────────────────────────────────────────
+
+interface CategorySectionProps {
+  category: CategoryGroup
+  dateFrom: string
+  dateTo: string
+  truckId: string
+  driverId: string
+  loadingKey: string | null
+  onGenerate: (type: ReportType, format: ExportFormat, params: ReportParams, loadingKey: string) => void
+  searchQuery: string
 }
 
-function StatusTooltip({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; payload: { name: string; value: number } }> }) {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload
-    return (
-      <div className="bg-popover border rounded-lg shadow-lg p-3 text-sm">
-        <p className="font-medium capitalize">{data.name}</p>
-        <p className="font-semibold">{data.value} trips</p>
-      </div>
-    )
-  }
-  return null
-}
-
-function DriverRevenueTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { driverName: string; totalRevenue: number; totalTrips: number } }> }) {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload
-    return (
-      <div className="bg-popover border rounded-lg shadow-lg p-3 text-sm">
-        <p className="font-medium">{data.driverName}</p>
-        <p className="font-semibold text-emerald-600 dark:text-emerald-400">{formatShortCurrency(data.totalRevenue)}</p>
-        <p className="text-muted-foreground">{data.totalTrips} trips</p>
-      </div>
-    )
-  }
-  return null
-}
-
-// ─── Main Component ─────────────────────────────────────────────────────────
-export default function ReportsPage() {
-  const { setCurrentView } = useAppStore()
-  const [driverSearch, setDriverSearch] = useState('')
-  const debouncedDriverSearch = useDebounce(driverSearch, 300)
-  const [driverSortField, setDriverSortField] = useState<string>('totalRevenue')
-  const [driverSortDir, setDriverSortDir] = useState<'asc' | 'desc'>('desc')
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
-
-  const { data, isLoading, error, refetch } = useQuery<ReportsData>({
-    queryKey: ['reports'],
-    queryFn: async () => {
-      const res = await fetch('/api/reports')
-      if (!res.ok) throw new Error('Failed to fetch reports data')
-      return res.json()
-    },
+function CategorySection({ category, dateFrom, dateTo, truckId, driverId, loadingKey, onGenerate, searchQuery }: CategorySectionProps) {
+  const filteredReports = category.reports.filter((r) => {
+    if (!searchQuery) return true
+    const q = searchQuery.toLowerCase()
+    return r.name.toLowerCase().includes(q) || r.description.toLowerCase().includes(q)
   })
 
-  // ── Derived data ──
-  const fs = data?.financialSummary
+  if (filteredReports.length === 0) return null
 
-  // Monthly chart data for last 6 months
-  const monthlyChartData = data?.monthlyRevenue
-    ? data.monthlyRevenue.slice(-6).map((m) => {
-        const [year, month] = m.month.split('-')
-        const monthLabel = new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
-        return {
-          ...m,
-          monthLabel,
-        }
-      })
-    : []
-
-  // Trip status pie chart data
-  const statusChartData = data?.tripStatusBreakdown
-    ? (() => {
-        const statusLabels: Record<string, string> = {
-          pending: 'Pending',
-          in_progress: 'In Progress',
-          completed: 'Completed',
-          cancelled: 'Cancelled',
-        }
-        const colors: Record<string, string> = {
-          pending: '#f59e0b',
-          in_progress: '#3b82f6',
-          completed: '#10b981',
-          cancelled: '#ef4444',
-        }
-        return Object.entries(data.tripStatusBreakdown)
-          .filter(([, value]) => value > 0)
-          .map(([key, value]) => ({
-            name: statusLabels[key] || key,
-            value,
-            color: colors[key] || '#6b7280',
-          }))
-      })()
-    : []
-
-  // Driver revenue top 5 horizontal bar
-  const topDrivers = data?.driverPerformance
-    ? [...data.driverPerformance]
-        .sort((a, b) => b.totalRevenue - a.totalRevenue)
-        .slice(0, 5)
-    : []
-
-  // Filtered & sorted driver table
-  const filteredDrivers = (() => {
-    if (!data?.driverPerformance) return []
-    const list = [...data.driverPerformance]
-      .filter((d) =>
-        d.driverName.toLowerCase().includes(debouncedDriverSearch.toLowerCase())
-      )
-      .sort((a, b) => {
-        const dir = driverSortDir === 'asc' ? 1 : -1
-        const fieldMap: Record<string, (d: typeof a) => number | string> = {
-          driverName: (d) => d.driverName,
-          totalTrips: (d) => d.totalTrips,
-          totalDistance: (d) => d.totalDistance,
-          totalRevenue: (d) => d.totalRevenue,
-          fuelEfficiency: (d) => d.fuelEfficiency,
-          avgRevenuePerTrip: (d) => d.avgRevenuePerTrip,
-        }
-        const accessor = fieldMap[driverSortField]
-        if (!accessor) return 0
-        const aVal = accessor(a)
-        const bVal = accessor(b)
-        if (typeof aVal === 'string' && typeof bVal === 'string') {
-          return dir * aVal.localeCompare(bVal)
-        }
-        return dir * ((aVal as number) - (bVal as number))
-      })
-    return list
-  })()
-
-  const toggleDriverSort = (field: string) => {
-    if (driverSortField === field) {
-      setDriverSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
-    } else {
-      setDriverSortField(field)
-      setDriverSortDir('desc')
-    }
-  }
-
-  // PDF export
-  const handleExportPDF = () => {
-    if (!data) return
-    setIsGeneratingPdf(true)
-    // Create a hidden container for the PDF report
-    const container = document.createElement('div')
-    container.className = 'pdf-report-content'
-    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;background:white;'
-    container.innerHTML = buildReportHtml(data)
-    document.body.appendChild(container)
-    // Give the browser time to render, then print
-    setTimeout(() => {
-      window.print()
-      // Clean up after print dialog closes
-      setTimeout(() => {
-        document.body.removeChild(container)
-        setIsGeneratingPdf(false)
-      }, 500)
-    }, 200)
-  }
-
-  // CSV export
-  const handleExportCSV = () => {
-    if (!data) return
-    try {
-      const driverRows = data.driverPerformance.map((d) => ({
-        Driver: d.driverName,
-        TotalTrips: d.totalTrips,
-        CompletedTrips: d.completedTrips,
-        TotalDistance: `${d.totalDistance} km`,
-        TotalRevenue: d.totalRevenue,
-        FuelUsed: `${d.totalFuelUsed} L`,
-        AvgRevenuePerTrip: d.avgRevenuePerTrip,
-        FuelEfficiency: `${d.fuelEfficiency} km/L`,
-      }))
-      const truckRows = data.truckUtilization.map((t) => ({
-        PlateNumber: t.plateNumber,
-        TruckName: t.truckName,
-        TotalTrips: t.totalTrips,
-        TotalDistance: `${t.totalDistance} km`,
-        TotalRevenue: t.totalRevenue,
-        ActiveDays: t.activeDays,
-      }))
-      const exportData = [
-        ...driverRows.map((r) => ({ ...r, _type: 'Driver' })),
-        ...truckRows.map((r) => ({ ...r, _type: 'Truck' })),
-      ] as Record<string, unknown>[]
-      exportToCSV(exportData, `fleet-report-${new Date().toISOString().split('T')[0]}`)
-      toast.success('Report exported successfully')
-    } catch {
-      toast.error('Failed to export report')
-    }
-  }
-
-  if (isLoading) return <ReportsSkeleton />
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <AlertCircle className="size-12 text-destructive" />
-        <p className="text-muted-foreground">Failed to load reports data</p>
-        <Button variant="outline" onClick={() => refetch()}>
-          <RefreshCw className="size-4" />
-          Try Again
-        </Button>
-      </div>
-    )
-  }
+  const CatIcon = category.icon
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      {/* ── Header ───────────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <button onClick={() => setCurrentView('dashboard')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Dashboard</button>
-            <ChevronRight className="size-3.5 text-muted-foreground" />
-            <span className="text-sm font-medium">Reports</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">Reports & Analytics</h1>
-            {!isLoading && data && (
-              <span className="text-sm font-medium text-muted-foreground bg-muted rounded-full px-2.5 py-0.5">
-                {data.driverPerformance.length} drivers · {data.truckUtilization.length} trucks
-              </span>
-            )}
-          </div>
-          <p className="text-muted-foreground text-sm">Comprehensive financial and operational insights for your fleet</p>
+    <section className="space-y-4">
+      {/* Category header */}
+      <div className="flex items-center gap-3">
+        <div className={`size-9 rounded-lg ${category.bgColor} flex items-center justify-center`}>
+          <CatIcon className={`size-4.5 ${category.color}`} />
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportCSV} disabled={isLoading}>
-            <Download className="size-4" />
-            Export CSV
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExportPDF} disabled={isLoading || isGeneratingPdf}>
-            {isGeneratingPdf ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <FileText className="size-4" />
-            )}
-            {isGeneratingPdf ? 'Generating PDF...' : 'Export PDF'}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
-            <RefreshCw className={cn('size-4', isLoading && 'animate-spin')} />
-            Refresh
-          </Button>
+        <div>
+          <h2 className="text-base font-semibold">{category.name}</h2>
+          <p className="text-xs text-muted-foreground">{category.description}</p>
+        </div>
+        <Badge variant="secondary" className="ml-auto text-xs font-medium tabular-nums">
+          {filteredReports.length}
+        </Badge>
+      </div>
+
+      {/* Report cards grid */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        {filteredReports.map((report) => (
+          <ReportCard
+            key={report.type}
+            report={report}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+            truckId={truckId}
+            driverId={driverId}
+            loadingKey={loadingKey ?? ''}
+            onGenerate={onGenerate}
+          />
+        ))}
+      </motion.div>
+    </section>
+  )
+}
+
+// ─── Loading Skeleton ───────────────────────────────────────────────────
+
+function ReportsHubSkeleton() {
+  return (
+    <div className="p-4 md:p-6 space-y-6">
+      {/* Filters skeleton */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
+          <Skeleton className="h-9 w-full max-w-md rounded-lg" />
+        </div>
+        <div className="flex gap-3">
+          <Skeleton className="h-9 w-40 rounded-lg" />
+          <Skeleton className="h-9 w-40 rounded-lg" />
         </div>
       </div>
 
-      {/* ── Financial Summary Cards (2x3 grid) ──────────────────────────── */}
-      <motion.div {...fadeUp(0.1)}>
-        {fs ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <SummaryCard
-              label="Total Revenue"
-              value={formatCurrency(fs.totalRevenue)}
-              subLabel="All trips combined"
-              icon={<TrendingUp className="size-6 text-emerald-600" />}
-              iconBg="bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"
-              trend={fs.totalRevenue > 0 ? 'up' : null}
-            />
-            <SummaryCard
-              label="Net Income"
-              value={formatCurrency(fs.netIncome)}
-              subLabel={fs.netIncome >= 0 ? 'Revenue minus expenses' : 'Expenses exceed revenue'}
-              icon={<DollarSign className="size-6 text-emerald-600" />}
-              iconBg="bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"
-              trend={fs.netIncome >= 0 ? 'up' : 'down'}
-            />
-            <SummaryCard
-              label="Total Expenses"
-              value={formatCurrency(fs.totalCashAdvances + fs.totalIncentives)}
-              subLabel="Cash advances + incentives"
-              icon={<TrendingDown className="size-6 text-red-600" />}
-              iconBg="bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400"
-              trend="down"
-            />
-            <SummaryCard
-              label="Cash Advances Outstanding"
-              value={formatCurrency(fs.pendingCashAdvances)}
-              subLabel={`of ${formatShortCurrency(fs.totalCashAdvances)} total`}
-              icon={<DollarSign className="size-6 text-amber-600" />}
-              iconBg="bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400"
-            />
-            <SummaryCard
-              label="Incentives Pending"
-              value={formatCurrency(fs.pendingIncentives)}
-              subLabel={`of ${formatShortCurrency(fs.totalIncentives)} total`}
-              icon={<DollarSign className="size-6 text-yellow-600" />}
-              iconBg="bg-yellow-100 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400"
-            />
-            <SummaryCard
-              label="Completed Trips Revenue"
-              value={formatCurrency(fs.completedTripsRevenue)}
-              subLabel={`${formatShortCurrency(fs.pendingTripsRevenue)} pending`}
-              icon={<BarChart3 className="size-6 text-blue-600" />}
-              iconBg="bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400"
-              trend="up"
-            />
+      {/* Category sections skeleton */}
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="size-9 rounded-lg" />
+            <div className="space-y-1.5">
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-3 w-64" />
+            </div>
           </div>
-        ) : null}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((j) => (
+              <Skeleton key={j} className="h-44 rounded-xl" />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Main Reports Hub Page ──────────────────────────────────────────────
+
+export default function ReportsPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
+  const [truckId, setTruckId] = useState('')
+  const [driverId, setDriverId] = useState('')
+  const [loadingKey, setLoadingKey] = useState<string | null>(null)
+  const [showFilters, setShowFilters] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<string>('all')
+  const token = useAuthStore((s) => s.token)
+
+  // Set document title on mount
+  useEffect(() => {
+    document.title = 'Reports Hub — iFleet Pro'
+  }, [])
+
+  // ── Report generation handler ──
+  const handleGenerate = useCallback(
+    async (type: ReportType, format: ExportFormat, params: ReportParams, key: string) => {
+      if (!token) {
+        toast.error('Authentication required. Please sign in.')
+        return
+      }
+
+      setLoadingKey(key)
+
+      try {
+        const res = await fetch('/api/reports/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ type, format, params }),
+        })
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({ error: 'Generation failed' }))
+          throw new Error(errData.error || `Failed to generate ${type} report`)
+        }
+
+        // Determine filename from Content-Disposition or construct one
+        const contentDisposition = res.headers.get('Content-Disposition')
+        let filename = `${type}-${new Date().toISOString().split('T')[0]}.${FORMAT_EXTENSIONS[format]}`
+
+        if (contentDisposition) {
+          const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+          if (match && match[1]) {
+            filename = match[1].replace(/['"]/g, '')
+          }
+        }
+
+        const blob = await res.blob()
+
+        // Print action: open in new tab
+        if (key.endsWith('-print')) {
+          const url = URL.createObjectURL(blob)
+          const printWindow = window.open(url, '_blank')
+          if (printWindow) {
+            printWindow.addEventListener('load', () => {
+              printWindow.print()
+            })
+          } else {
+            toast.warning('Pop-up blocked. Please allow pop-ups for this site.')
+            URL.revokeObjectURL(url)
+          }
+          toast.success(`${formatReportName(type)} opened for printing`)
+        } else {
+          triggerDownload(blob, filename)
+          const formatLabel = format === 'xlsx' ? 'Excel' : format.toUpperCase()
+          toast.success(`${formatReportName(type)} (${formatLabel}) downloaded successfully`)
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unexpected error occurred'
+        toast.error(message)
+      } finally {
+        setLoadingKey(null)
+      }
+    },
+    [token]
+  )
+
+  // ── Filtered categories ──
+  const filteredCategories = useMemo(() => {
+    if (activeCategory === 'all') return CATEGORIES
+    return CATEGORIES.filter((c) => c.id === activeCategory)
+  }, [activeCategory])
+
+  // ── Total filtered report count ──
+  const totalFilteredCount = useMemo(() => {
+    return filteredCategories.reduce((sum, cat) => {
+      return sum + cat.reports.filter((r) => {
+        if (!searchQuery) return true
+        const q = searchQuery.toLowerCase()
+        return r.name.toLowerCase().includes(q) || r.description.toLowerCase().includes(q)
+      }).length
+    }, 0)
+  }, [filteredCategories, searchQuery])
+
+  return (
+    <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
+      {/* ── Page Header ─────────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="size-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center">
+                <BarChart3 className="size-5 text-emerald-700 dark:text-emerald-400" />
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Reports Hub</h1>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Generate and download {REPORTS.length} report types across {CATEGORIES.length} categories
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setDateFrom('')
+                setDateTo('')
+                setTruckId('')
+                setDriverId('')
+                setSearchQuery('')
+                setActiveCategory('all')
+                toast.info('Filters cleared')
+              }}
+              className="h-8 text-xs"
+            >
+              <X className="size-3.5 mr-1" />
+              Clear All
+            </Button>
+          </div>
+        </div>
       </motion.div>
 
-      {/* ── Charts Section ──────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Monthly Revenue Bar Chart */}
-        <motion.div {...fadeUp(0.2)} className="lg:col-span-2">
-          {monthlyChartData.length > 0 ? (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                  <BarChart3 className="size-5 text-emerald-600" />
-                  Monthly Revenue & Expenses
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <ResponsiveContainer width="100%" height={300}>
-                  <ComposedChart data={monthlyChartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                    <XAxis dataKey="monthLabel" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis
-                      yAxisId="revenue"
-                      tickFormatter={(value) => formatShortCurrency(value)}
-                      tick={{ fontSize: 11 }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={80}
-                    />
-                    <YAxis
-                      yAxisId="trips"
-                      orientation="right"
-                      tick={{ fontSize: 11 }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={50}
-                      label={{ value: 'Trips', angle: -90, position: 'insideRight', style: { fontSize: 11, fill: '#3b82f6' } }}
-                    />
-                    <Tooltip content={<MonthlyTooltip />} />
-                    <Legend
-                      wrapperStyle={{ fontSize: '12px', paddingTop: '12px' }}
-                      formatter={(value) => <span className="text-xs">{value}</span>}
-                    />
-                    <Bar yAxisId="revenue" dataKey="revenue" name="Revenue" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                    <Bar yAxisId="revenue" dataKey="expenses" name="Expenses" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                    <Line
-                      type="monotone"
-                      dataKey="trips"
-                      name="Trips"
-                      stroke="#3b82f6"
-                      strokeWidth={2}
-                      dot={{ r: 4, fill: '#3b82f6' }}
-                      yAxisId="trips"
-                    />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <BarChart3 className="size-10 opacity-30 mb-3" />
-                <p className="text-sm">No monthly data available yet</p>
-              </CardContent>
-            </Card>
-          )}
-        </motion.div>
+      {/* ── Filters Bar ────────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05 }}
+        className="space-y-3"
+      >
+        {/* Search + Toggle filters */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Input
+              placeholder="Search reports..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9"
+            />
+          </div>
 
-        {/* Trip Status Pie/Donut Chart */}
-        <motion.div {...fadeUp(0.25)}>
-          {statusChartData.length > 0 ? (
-            <Card className="h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                  <Filter className="size-5 text-blue-600" />
-                  Trip Status Breakdown
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={statusChartData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={90}
-                      paddingAngle={3}
-                      dataKey="value"
-                      stroke="none"
-                    >
-                      {statusChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<StatusTooltip />} />
-                    <Legend
-                      wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
-                      formatter={(value) => <span className="text-xs">{value}</span>}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="h-full">
-              <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <Filter className="size-10 opacity-30 mb-3" />
-                <p className="text-sm">No trip status data available</p>
-              </CardContent>
-            </Card>
-          )}
-        </motion.div>
-      </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1.5 items-center bg-muted/50 rounded-lg p-1">
+              {(['all', ...CATEGORIES.map((c) => c.id)] as const).map((catId) => {
+                const cat = catId === 'all' ? null : CATEGORIES.find((c) => c.id === catId)
+                const label = catId === 'all' ? 'All' : cat?.name.split(' ')[0] ?? catId
+                return (
+                  <button
+                    key={catId}
+                    type="button"
+                    onClick={() => setActiveCategory(catId)}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer border-none outline-none ${
+                      activeCategory === catId
+                        ? 'bg-background shadow-sm text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
 
-      {/* ── Driver Revenue Top 5 Chart ──────────────────────────────────── */}
-      <motion.div {...fadeUp(0.3)}>
-        {topDrivers.length > 0 ? (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                <Users className="size-5 text-violet-600" />
-                Top 5 Drivers by Revenue
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart
-                  data={topDrivers}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tickFormatter={(value) => formatShortCurrency(value)}
-                    tick={{ fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                    width={80}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="driverName"
-                    tick={{ fontSize: 12 }}
-                    axisLine={false}
-                    tickLine={false}
-                    width={100}
-                  />
-                  <Tooltip content={<DriverRevenueTooltip />} cursor={{ fill: 'hsl(var(--muted) / 0.3)' }} />
-                  <Bar dataKey="totalRevenue" name="Revenue" radius={[0, 6, 6, 0]} maxBarSize={30}>
-                    {topDrivers.map((_, index) => (
-                      <Cell key={`driver-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className={`h-9 gap-1.5 text-xs ${showFilters ? 'bg-muted' : ''}`}
+            >
+              <Filter className="size-3.5" />
+              <span className="hidden sm:inline">Filters</span>
+              {(dateFrom || dateTo || truckId || driverId) && (
+                <Badge variant="secondary" className="ml-1 h-4 min-w-4 px-1 text-[10px] font-bold">
+                  {[dateFrom, dateTo, truckId, driverId].filter(Boolean).length}
+                </Badge>
+              )}
+              <ChevronDown className={`size-3 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+            </Button>
+          </div>
+        </div>
+
+        {/* Expandable filter panel */}
+        <AnimatePresence>
+          {showFilters && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <Card className="border-dashed">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CalendarDays className="size-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Date Range</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-muted-foreground font-medium">From</label>
+                      <DatePicker value={dateFrom} onChange={setDateFrom} placeholder="Start date" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-muted-foreground font-medium">To</label>
+                      <DatePicker value={dateTo} onChange={setDateTo} placeholder="End date" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-muted-foreground font-medium">Truck</label>
+                      <Select value={truckId} onValueChange={setTruckId}>
+                        <SelectTrigger className="h-9">
+                          <SelectValue placeholder="All trucks" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__all__">All trucks</SelectItem>
+                          {/* Truck options would be populated from API */}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-muted-foreground font-medium">Driver</label>
+                      <Select value={driverId} onValueChange={setDriverId}>
+                        <SelectTrigger className="h-9">
+                          <SelectValue placeholder="All drivers" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__all__">All drivers</SelectItem>
+                          {/* Driver options would be populated from API */}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Quick date presets */}
+                  <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-border/50">
+                    <span className="text-xs text-muted-foreground self-center mr-1">Quick:</span>
+                    {[
+                      { label: 'Today', from: 'today', to: 'today' },
+                      { label: 'This Week', from: 'week', to: 'today' },
+                      { label: 'This Month', from: 'month', to: 'today' },
+                      { label: 'Last 30 Days', from: '30d', to: 'today' },
+                      { label: 'This Year', from: 'year', to: 'today' },
+                    ].map((preset) => (
+                      <Button
+                        key={preset.label}
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs px-2.5"
+                        onClick={() => {
+                          const now = new Date()
+                          let from: Date
+
+                          switch (preset.from) {
+                            case 'today':
+                              from = now
+                              break
+                            case 'week':
+                              from = new Date(now)
+                              from.setDate(now.getDate() - now.getDay())
+                              break
+                            case 'month':
+                              from = new Date(now.getFullYear(), now.getMonth(), 1)
+                              break
+                            case '30d':
+                              from = new Date(now)
+                              from.setDate(now.getDate() - 30)
+                              break
+                            case 'year':
+                              from = new Date(now.getFullYear(), 0, 1)
+                              break
+                            default:
+                              from = now
+                          }
+
+                          const fmt = (d: Date) =>
+                            `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
+                          setDateFrom(fmt(from))
+                          setDateTo(fmt(now))
+                          toast.info(`Date range set to ${preset.label}`)
+                        }}
+                      >
+                        {preset.label}
+                      </Button>
                     ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-              <Users className="size-10 opacity-30 mb-3" />
-              <p className="text-sm">No driver data available</p>
-            </CardContent>
-          </Card>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Active filters display */}
+        {(dateFrom || dateTo || truckId || driverId) && !showFilters && (
+          <div className="flex flex-wrap gap-2">
+            {dateFrom && (
+              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
+                From: {dateFrom}
+                <button onClick={() => setDateFrom('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )}
+            {dateTo && (
+              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
+                To: {dateTo}
+                <button onClick={() => setDateTo('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )}
+            {truckId && truckId !== '__all__' && (
+              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
+                Truck: {truckId}
+                <button onClick={() => setTruckId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )}
+            {driverId && driverId !== '__all__' && (
+              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
+                Driver: {driverId}
+                <button onClick={() => setDriverId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )}
+          </div>
         )}
       </motion.div>
 
-      {/* ── Driver Performance Table ────────────────────────────────────── */}
-      <motion.div {...fadeUp(0.35)}>
-        <Card>
-          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <Users className="size-5 text-emerald-600" />
-              Driver Performance
-            </CardTitle>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search driver..."
-                  value={driverSearch}
-                  onChange={(e) => setDriverSearch(e.target.value)}
-                  className="pl-9 w-full sm:w-48"
-                />
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const rows = filteredDrivers.map((d) => ({
-                    Driver: d.driverName,
-                    TotalTrips: d.totalTrips,
-                    CompletedTrips: d.completedTrips,
-                    Distance_km: d.totalDistance,
-                    Revenue: d.totalRevenue,
-                    FuelUsed_L: d.totalFuelUsed,
-                    AvgRevenueTrip: d.avgRevenuePerTrip,
-                    FuelEfficiency: d.fuelEfficiency,
-                  }))
-                  exportToCSV(rows as Record<string, unknown>[], `driver-performance-${new Date().toISOString().split('T')[0]}`)
-                  toast.success('Driver data exported')
-                }}
-              >
-                <Download className="size-3.5" />
-                Export
-              </Button>
+      {/* ── Global loading indicator ────────────────────────────────────── */}
+      {loadingKey && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2"
+        >
+          <Loader2 className="size-4 animate-spin text-emerald-600" />
+          <span>Generating {formatReportName(loadingKey.split('-').slice(0, -1).join('-'))}...</span>
+        </motion.div>
+      )}
+
+      {/* ── Results count ───────────────────────────────────────────────── */}
+      {searchQuery && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            {totalFilteredCount} report{totalFilteredCount !== 1 ? 's' : ''} found
+            {searchQuery && (
+              <span>
+                {' '}
+                matching &ldquo;<span className="font-medium text-foreground">{searchQuery}</span>&rdquo;
+              </span>
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* ── Report Categories ──────────────────────────────────────────── */}
+      <div className="space-y-8">
+        {filteredCategories.map((category, idx) => (
+          <motion.div
+            key={category.id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08 * idx }}
+          >
+            <CategorySection
+              category={category}
+              dateFrom={dateFrom}
+              dateTo={dateTo}
+              truckId={truckId}
+              driverId={driverId}
+              loadingKey={loadingKey}
+              onGenerate={handleGenerate}
+              searchQuery={searchQuery}
+            />
+          </motion.div>
+        ))}
+
+        {/* No results */}
+        {searchQuery && totalFilteredCount === 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center py-16 text-center"
+          >
+            <div className="size-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+              <Search className="size-7 text-muted-foreground/50" />
             </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            {filteredDrivers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <Users className="size-10 opacity-30 mb-3" />
-                <p className="text-sm">
-                  {driverSearch ? 'No drivers match your search' : 'No driver performance data available'}
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto max-h-96 overflow-y-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      {[
-                        { key: 'driverName', label: 'Driver' },
-                        { key: 'totalTrips', label: 'Trips' },
-                        { key: 'totalDistance', label: 'Distance' },
-                        { key: 'totalRevenue', label: 'Revenue' },
-                        { key: 'fuelEfficiency', label: 'Fuel Eff.' },
-                        { key: 'avgRevenuePerTrip', label: 'Avg Rev/Trip' },
-                      ].map((col) => (
-                        <TableHead
-                          key={col.key}
-                          className="cursor-pointer select-none"
-                          onClick={() => toggleDriverSort(col.key)}
-                        >
-                          <span className="inline-flex items-center gap-1">
-                            {col.label}
-                            <ArrowUpDown className="size-3 opacity-40" />
-                            {driverSortField === col.key && (
-                              driverSortDir === 'asc'
-                                ? <ChevronUp className="size-3" />
-                                : <ChevronDown className="size-3" />
-                            )}
-                          </span>
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredDrivers.map((driver, idx) => (
-                      <TableRow key={driver.driverId} className={cn(idx % 2 === 1 ? 'bg-muted/30' : '')}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="size-8 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-                              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                                {driver.driverName.charAt(0)}
-                              </span>
-                            </div>
-                            <span className="font-medium">{driver.driverName}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-semibold">{driver.totalTrips}</span>
-                            <span className="text-xs text-muted-foreground">({driver.completedTrips} done)</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>{driver.totalDistance.toLocaleString()} km</TableCell>
-                        <TableCell className="font-semibold text-emerald-600 dark:text-emerald-400">
-                          {formatCurrency(driver.totalRevenue)}
-                        </TableCell>
-                        <TableCell>
-                          {driver.fuelEfficiency > 0 ? (
-                            <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800">
-                              {driver.fuelEfficiency} km/L
-                            </Badge>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {formatCurrency(driver.avgRevenuePerTrip)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </motion.div>
+            <h3 className="text-sm font-semibold mb-1">No reports found</h3>
+            <p className="text-xs text-muted-foreground max-w-xs">
+              No reports match &ldquo;{searchQuery}&rdquo;. Try a different search term or{' '}
+              <button
+                onClick={() => setSearchQuery('')}
+                className="text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer bg-transparent border-none p-0 font-medium"
+              >
+                clear the search
+              </button>
+              .
+            </p>
+          </motion.div>
+        )}
+      </div>
 
-      {/* ── Truck Utilization Table ──────────────────────────────────────── */}
-      <motion.div {...fadeUp(0.4)}>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <Truck className="size-5 text-amber-600" />
-              Truck Utilization
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            {!data?.truckUtilization.length ? (
-              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <Truck className="size-10 opacity-30 mb-3" />
-                <p className="text-sm">No truck utilization data available</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead>Plate</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead className="hidden sm:table-cell">Trips</TableHead>
-                      <TableHead className="hidden md:table-cell">Distance</TableHead>
-                      <TableHead>Revenue</TableHead>
-                      <TableHead className="hidden sm:table-cell">Active Days</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {data.truckUtilization.map((truck, idx) => {
-                      const maxTrips = Math.max(...data.truckUtilization.map((t) => t.totalTrips), 1)
-                      const utilizationPct = Math.round((truck.totalTrips / maxTrips) * 100)
-                      const badgeColor = utilizationPct >= 75
-                        ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800'
-                        : utilizationPct >= 50
-                          ? 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800'
-                          : 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'
-                      return (
-                        <TableRow key={truck.truckId} className={cn(idx % 2 === 1 ? 'bg-muted/30' : '')}>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <div className="size-8 rounded-lg bg-amber-100 dark:bg-amber-950 flex items-center justify-center">
-                                <Truck className="size-4 text-amber-600 dark:text-amber-400" />
-                              </div>
-                              <span className="font-mono text-sm font-semibold">{truck.plateNumber}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>{truck.truckName}</TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge variant="outline" className={badgeColor}>
-                              {truck.totalTrips}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {truck.totalDistance.toLocaleString()} km
-                          </TableCell>
-                          <TableCell className="font-semibold text-emerald-600 dark:text-emerald-400">
-                            {formatCurrency(truck.totalRevenue)}
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <span className="text-muted-foreground">{truck.activeDays} days</span>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* ── Cargo Stats Card ─────────────────────────────────────────────── */}
-      <motion.div {...fadeUp(0.45)}>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <Truck className="size-5 text-violet-600" />
-              Cargo Statistics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {data?.cargoStats ? (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950 rounded-xl p-4">
-                  <p className="text-sm text-muted-foreground">Total Weight</p>
-                  <p className="text-xl font-bold">{data.cargoStats.totalWeight.toLocaleString()} kg</p>
-                </div>
-                <div className="bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950 dark:to-sky-950 rounded-xl p-4">
-                  <p className="text-sm text-muted-foreground">Avg Weight / Trip</p>
-                  <p className="text-xl font-bold">{data.cargoStats.avgWeightPerTrip.toLocaleString()} kg</p>
-                </div>
-                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 rounded-xl p-4">
-                  <p className="text-sm text-muted-foreground">Most Common Cargo</p>
-                  <p className="text-xl font-bold truncate">{data.cargoStats.mostCommonCargo}</p>
-                </div>
-              </div>
-            ) : null}
-          </CardContent>
-        </Card>
+      {/* ── Footer info ─────────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+        className="pt-4 border-t border-border/50"
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <FileText className="size-3" />
+              PDF
+            </span>
+            <span className="flex items-center gap-1">
+              <FileSpreadsheet className="size-3" />
+              Excel
+            </span>
+            <span className="flex items-center gap-1">
+              <Printer className="size-3" />
+              Print (opens PDF)
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {REPORTS.length} report types available &middot; Reports apply the date range and filters set above
+          </p>
+        </div>
       </motion.div>
     </div>
   )
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────
+
+function formatReportName(type: string): string {
+  const report = REPORTS.find((r) => r.type === type)
+  if (report) return report.name
+
+  return type
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
 }
