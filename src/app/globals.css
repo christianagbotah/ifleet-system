@@ -156,3 +156,54 @@
   100% { transform: translateX(-100%); }
 }
 
+/* ── Professional Slim Orange Scrollbar ─────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(234, 88, 12, 0.45) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(234, 88, 12, 0.35);
+  border-radius: 999px;
+  border: none;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(234, 88, 12, 0.55);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: rgba(234, 88, 12, 0.7);
+}
+
+/* On the main page scroll (html/body), make track slightly visible for depth */
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  background-color: rgba(234, 88, 12, 0.3);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(234, 88, 12, 0.5);
+}
+
+.dark *::-webkit-scrollbar-thumb:active {
+  background-color: rgba(234, 88, 12, 0.65);
+}
+
+.dark {
+  scrollbar-color: rgba(234, 88, 12, 0.3) transparent;
+}
+
