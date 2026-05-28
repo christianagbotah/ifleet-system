@@ -14,7 +14,7 @@ export async function GET(
 
   const price = await db.fuelPrice.findUnique({
     where: { id },
-    include: { station: true },
+    include: { fuelStation: true },
   })
 
   if (!price) {
@@ -41,7 +41,7 @@ export async function PUT(
     const price = await db.fuelPrice.update({
       where: { id },
       data: body,
-      include: { station: true },
+      include: { fuelStation: true },
     })
 
     return NextResponse.json(price)

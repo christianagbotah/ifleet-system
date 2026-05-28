@@ -30,10 +30,10 @@ export async function GET(request: NextRequest) {
   const prices = await db.fuelPrice.findMany({
     where: {
       ...where,
-      ...(Object.keys(stationWhere).length > 0 ? { station: stationWhere } : {}),
+      ...(Object.keys(stationWhere).length > 0 ? { fuelStation: stationWhere } : {}),
     },
     include: {
-      station: {
+      fuelStation: {
         select: {
           id: true,
           name: true,
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         verified: verified ?? false,
         notes,
       },
-      include: { station: true },
+      include: { fuelStation: true },
     })
 
     return NextResponse.json(price, { status: 201 })
