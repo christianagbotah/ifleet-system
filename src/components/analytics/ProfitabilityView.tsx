@@ -215,6 +215,33 @@ function ProfitLossCell({ profit }: { profit: number }) {
   )
 }
 
+// ============ CHART DOMAIN HELPERS ============
+
+/** Compute a "nice" ceiling for the Y-axis that is >= dataMax with headroom */
+function getNiceAxisMax(dataMax: number, desiredTicks: number = 6): number {
+  if (dataMax <= 0) return 1000
+  const rawStep = dataMax / desiredTicks
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)))
+  const residual = rawStep / magnitude
+  let niceStep: number
+  if (residual <= 1.5) niceStep = 1 * magnitude
+  else if (residual <= 3) niceStep = 2 * magnitude
+  else if (residual <= 7) niceStep = 5 * magnitude
+  else niceStep = 10 * magnitude
+  const ticks = Math.ceil(dataMax / niceStep)
+  return (ticks + 1) * niceStep // +1 ensures headroom above max
+}
+
+/** Compute a [min, max] domain that covers all values with nice ticks */
+function getNiceAxisDomain(values: number[]): [number, number] {
+  if (values.length === 0) return [0, 1000]
+  const dataMin = Math.min(...values)
+  const dataMax = Math.max(...values)
+  const max = getNiceAxisMax(dataMax)
+  const min = dataMin >= 0 ? 0 : -getNiceAxisMax(Math.abs(dataMin))
+  return [min, max]
+}
+
 // ============ SUB-COMPONENTS ============
 
 function KpiCard({
@@ -415,6 +442,22 @@ export function ProfitabilityView() {
       profit: t.profit,
     }))
   }, [data])
+
+  // ─── Computed axis domains for pixel-accurate bar/line rendering ───
+  const routeDomain = useMemo<[number, number]>(() => {
+    const values = routeBarData.flatMap(d => [d.revenue, d.cost])
+    return getNiceAxisDomain(values)
+  }, [routeBarData])
+
+  const truckDomain = useMemo<[number, number]>(() => {
+    const values = truckBarData.map(d => d.profit)
+    return getNiceAxisDomain(values)
+  }, [truckBarData])
+
+  const trendDomain = useMemo<[number, number]>(() => {
+    const values = trendData.flatMap(d => [d.revenue, d.cost, d.profit])
+    return getNiceAxisDomain(values)
+  }, [trendData])
 
   // ─── Period display label ───
   const periodLabel = useMemo(() => {
@@ -803,6 +846,7 @@ export function ProfitabilityView() {
                             height={80}
                           />
                           <YAxis
+                            domain={routeDomain}
                             tickLine={false}
                             axisLine={false}
                             fontSize={12}
@@ -953,10 +997,12 @@ export function ProfitabilityView() {
                           <CartesianGrid horizontal={false} strokeDasharray="3 3" />
                           <XAxis
                             type="number"
+                            domain={truckDomain}
                             tickLine={false}
                             axisLine={false}
                             fontSize={12}
                             tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
+                            allowDecimals={false}
                           />
                           <YAxis
                             type="category"
@@ -1115,6 +1161,7 @@ export function ProfitabilityView() {
                           fontSize={12}
                         />
                         <YAxis
+                          domain={trendDomain}
                           tickLine={false}
                           axisLine={false}
                           fontSize={12}

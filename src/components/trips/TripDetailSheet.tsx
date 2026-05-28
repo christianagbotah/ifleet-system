@@ -3,13 +3,7 @@
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users, CheckCircle2 } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -287,57 +281,60 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-lg">
-        {/* Image Preview Overlay */}
-        <AnimatePresence>
-          {previewImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-              onClick={() => setPreviewImage(null)}
+    <ResponsiveSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={
+        <span className="flex items-center gap-2">
+          <Route className="h-5 w-5 text-amber-500" />
+          {currentTrip.tripNumber}
+        </span>
+      }
+      description="Trip details and management"
+      width="sm:max-w-lg"
+    >
+      {/* Image Preview Overlay */}
+      <AnimatePresence>
+        {previewImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setPreviewImage(null)}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setPreviewImage(null)
+              }}
+              className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setPreviewImage(null)
-                }}
-                className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <img
-                src={previewImage}
-                alt="Preview"
-                className="max-h-[85vh] max-w-full rounded-lg object-contain"
-                onClick={(e) => e.stopPropagation()}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <SheetHeader className="shrink-0 px-5 sm:px-6 pt-5 sm:pt-5">
-          <SheetTitle className="flex items-center gap-2">
-            <Route className="h-5 w-5 text-amber-500" />
-            {currentTrip.tripNumber}
-          </SheetTitle>
-          <SheetDescription>Trip details and management</SheetDescription>
-        </SheetHeader>
+              <X className="h-5 w-5" />
+            </button>
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="max-h-[85vh] max-w-full rounded-lg object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <AnimatePresence>
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-6 w-6 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 sm:mt-6 space-y-5 px-5 sm:px-6 overflow-y-auto flex-1 min-h-0 pb-8 sm:pb-6"
-              style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
-            >
+      {/* ── Body ── */}
+      <AnimatePresence>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="h-6 w-6 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-5 p-4 md:p-6"
+          >
               {/* Status + Route */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -941,8 +938,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
             </motion.div>
           )}
         </AnimatePresence>
-      </SheetContent>
-    </Sheet>
+    </ResponsiveSheet>
   )
 }
 

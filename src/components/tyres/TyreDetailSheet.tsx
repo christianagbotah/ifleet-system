@@ -7,13 +7,7 @@ import {
   ClipboardCheck, Archive, Clock, ArrowRightCircle,
   Pencil, Trash2, RefreshCw,
 } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import {
   Dialog,
   DialogBody,
@@ -161,272 +155,268 @@ export function TyreDetailSheet({ tyre, open, onOpenChange, onEdit, onDeleted }:
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-lg">
-        {/* Header */}
-        <SheetHeader className="shrink-0 px-5 sm:px-6 pt-5 sm:pt-5">
-          <SheetTitle className="flex items-center gap-2">
-            <CircleDot className="h-5 w-5 text-amber-500" />
-            Tyre Details
-          </SheetTitle>
-          <SheetDescription>
-            {currentTyre.serialNumber}
-          </SheetDescription>
-        </SheetHeader>
-
-        {loading ? (
-          <div className="mt-4 px-5 sm:px-6 space-y-4">
-            {[1, 2, 3, 4, 5].map(i => (
-              <Skeleton key={i} className="h-20 w-full rounded-lg" />
-            ))}
+    <ResponsiveSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={
+        <span className="flex items-center gap-2">
+          <CircleDot className="h-5 w-5 text-amber-500" />
+          Tyre Details
+        </span>
+      }
+      description={currentTyre.serialNumber}
+    >
+      {loading ? (
+        <div className="space-y-4 p-4 md:p-6">
+          {[1, 2, 3, 4, 5].map(i => (
+            <Skeleton key={i} className="h-20 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-5 p-4 md:p-6"
+        >
+          {/* Hero: Condition + Price + Age */}
+          <div className="rounded-xl border bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 p-4">
+            <div className="flex items-center justify-between mb-3">
+              {conditionMeta ? (
+                <Badge className={cn('border-transparent font-semibold text-sm px-3 py-1', conditionMeta.color)}>
+                  {conditionMeta.label}
+                </Badge>
+              ) : (
+                <Badge variant="outline">{currentTyre.condition}</Badge>
+              )}
+              {isRetired && (
+                <Badge variant="outline" className="border-orange-300 text-orange-600 dark:text-orange-400">
+                  <Archive className="h-3 w-3 mr-1" /> Retired
+                </Badge>
+              )}
+            </div>
+            <p className="text-2xl font-bold text-foreground">
+              {currencySymbol}{currentTyre.purchasePrice.toLocaleString()}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Purchase price · {ageInDays} day{ageInDays !== 1 ? 's' : ''} ago
+            </p>
           </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-3 space-y-0 overflow-y-auto flex-1 min-h-0 pb-8 sm:pb-6"
-            style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
-          >
-            {/* Hero: Condition + Price + Age */}
-            <div className="mx-5 sm:mx-6 rounded-xl border bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 p-4">
-              <div className="flex items-center justify-between mb-3">
-                {conditionMeta ? (
-                  <Badge className={cn('border-transparent font-semibold text-sm px-3 py-1', conditionMeta.color)}>
-                    {conditionMeta.label}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">{currentTyre.condition}</Badge>
-                )}
-                {isRetired && (
-                  <Badge variant="outline" className="border-orange-300 text-orange-600 dark:text-orange-400">
-                    <Archive className="h-3 w-3 mr-1" /> Retired
-                  </Badge>
-                )}
-              </div>
-              <p className="text-2xl font-bold text-foreground">
-                {currencySymbol}{currentTyre.purchasePrice.toLocaleString()}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Purchase price · {ageInDays} day{ageInDays !== 1 ? 's' : ''} ago
-              </p>
+
+          {/* Retired Warning */}
+          {isRetired && currentTyre.retiredReason && (
+            <div className="rounded-lg border border-orange-200 bg-orange-50 dark:bg-orange-900/20 dark:border-orange-800 p-3">
+              <p className="text-xs font-medium text-orange-600 dark:text-orange-400 mb-0.5">Retirement Reason</p>
+              <p className="text-sm text-orange-700 dark:text-orange-300">{currentTyre.retiredReason}</p>
+              <p className="text-xs text-orange-500 dark:text-orange-400 mt-1">Retired on {formatDate(currentTyre.retiredDate!)}</p>
             </div>
+          )}
 
-            {/* Retired Warning */}
-            {isRetired && currentTyre.retiredReason && (
-              <div className="mx-5 sm:mx-6 mt-3 rounded-lg border border-orange-200 bg-orange-50 dark:bg-orange-900/20 dark:border-orange-800 p-3">
-                <p className="text-xs font-medium text-orange-600 dark:text-orange-400 mb-0.5">Retirement Reason</p>
-                <p className="text-sm text-orange-700 dark:text-orange-300">{currentTyre.retiredReason}</p>
-                <p className="text-xs text-orange-500 dark:text-orange-400 mt-1">Retired on {formatDate(currentTyre.retiredDate!)}</p>
-              </div>
-            )}
+          {/* Detail Rows — Two Column Grid */}
+          <div className="rounded-lg border">
+            <div className="grid grid-cols-2">
+              <DetailCell
+                icon={<Tag className="h-3.5 w-3.5" />}
+                label="Serial Number"
+                value={currentTyre.serialNumber}
+                mono
+              />
+              <DetailCell
+                icon={<Tag className="h-3.5 w-3.5" />}
+                label="Brand"
+                value={currentTyre.brand}
+              />
+              <DetailCell
+                icon={<Truck className="h-3.5 w-3.5" />}
+                label="Assigned Truck"
+                value={currentTyre.truck.plateNumber}
+                sub={`${currentTyre.truck.make} ${currentTyre.truck.model}`}
+              />
+              <DetailCell
+                icon={<CalendarDays className="h-3.5 w-3.5" />}
+                label="Purchase Date"
+                value={formatDate(currentTyre.purchaseDate)}
+              />
+              <DetailCell
+                icon={<DollarSign className="h-3.5 w-3.5" />}
+                label="Purchase Price"
+                value={`${currencySymbol}${currentTyre.purchasePrice.toLocaleString()}`}
+              />
+              <DetailCell
+                icon={<ClipboardCheck className="h-3.5 w-3.5" />}
+                label="Last Inspection"
+                value={currentTyre.lastInspection ? formatDate(currentTyre.lastInspection) : 'Not yet inspected'}
+                muted={!currentTyre.lastInspection}
+              />
+              <DetailCell
+                icon={<CircleDot className="h-3.5 w-3.5" />}
+                label="Condition"
+                value={conditionMeta?.label || currentTyre.condition}
+              />
+              {fullTyre?.createdAt && (
+                <DetailCell
+                  icon={<Clock className="h-3.5 w-3.5" />}
+                  label="Created"
+                  value={formatDateTime(fullTyre.createdAt)}
+                />
+              )}
+              {fullTyre?.updatedAt && (
+                <DetailCell
+                  icon={<Clock className="h-3.5 w-3.5" />}
+                  label="Last Updated"
+                  value={formatDateTime(fullTyre.updatedAt)}
+                />
+              )}
+            </div>
+          </div>
 
-            {/* Detail Rows — Two Column Grid */}
-            <div className="mx-5 sm:mx-6 mt-4 rounded-lg border">
-              <div className="grid grid-cols-2">
-                <DetailCell
-                  icon={<Tag className="h-3.5 w-3.5" />}
-                  label="Serial Number"
-                  value={currentTyre.serialNumber}
-                  mono
-                />
-                <DetailCell
-                  icon={<Tag className="h-3.5 w-3.5" />}
-                  label="Brand"
-                  value={currentTyre.brand}
-                />
-                <DetailCell
-                  icon={<Truck className="h-3.5 w-3.5" />}
-                  label="Assigned Truck"
-                  value={currentTyre.truck.plateNumber}
-                  sub={`${currentTyre.truck.make} ${currentTyre.truck.model}`}
-                />
-                <DetailCell
-                  icon={<CalendarDays className="h-3.5 w-3.5" />}
-                  label="Purchase Date"
-                  value={formatDate(currentTyre.purchaseDate)}
-                />
-                <DetailCell
-                  icon={<DollarSign className="h-3.5 w-3.5" />}
-                  label="Purchase Price"
-                  value={`${currencySymbol}${currentTyre.purchasePrice.toLocaleString()}`}
-                />
-                <DetailCell
-                  icon={<ClipboardCheck className="h-3.5 w-3.5" />}
-                  label="Last Inspection"
-                  value={currentTyre.lastInspection ? formatDate(currentTyre.lastInspection) : 'Not yet inspected'}
-                  muted={!currentTyre.lastInspection}
-                />
-                <DetailCell
-                  icon={<CircleDot className="h-3.5 w-3.5" />}
-                  label="Condition"
-                  value={conditionMeta?.label || currentTyre.condition}
-                />
-                {fullTyre?.createdAt && (
-                  <DetailCell
-                    icon={<Clock className="h-3.5 w-3.5" />}
-                    label="Created"
-                    value={formatDateTime(fullTyre.createdAt)}
-                  />
-                )}
-                {fullTyre?.updatedAt && (
-                  <DetailCell
-                    icon={<Clock className="h-3.5 w-3.5" />}
-                    label="Last Updated"
-                    value={formatDateTime(fullTyre.updatedAt)}
-                  />
-                )}
+          {/* Notes */}
+          {currentTyre.notes && (
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1.5">Notes</p>
+              <div className="rounded-lg bg-muted/50 border p-3">
+                <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{currentTyre.notes}</p>
               </div>
             </div>
+          )}
 
-            {/* Notes */}
-            {currentTyre.notes && (
-              <div className="mx-5 sm:mx-6 mt-3">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1.5">Notes</p>
-                <div className="rounded-lg bg-muted/50 border p-3">
-                  <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{currentTyre.notes}</p>
-                </div>
-              </div>
-            )}
+          {/* Condition Lifecycle */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Condition Lifecycle</p>
+              {canWrite && !isRetired && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs gap-1 text-primary hover:text-primary"
+                  onClick={() => setConditionDialogOpen(true)}
+                >
+                  <ArrowRightCircle className="h-3 w-3" />
+                  Update
+                </Button>
+              )}
+            </div>
+            <div className="flex items-center gap-0">
+              {CONDITION_ORDER.map((key, idx) => {
+                const meta = TYRE_CONDITIONS[key as keyof typeof TYRE_CONDITIONS]
+                const isActive = key === currentTyre.condition
+                const currentIdx = CONDITION_ORDER.indexOf(currentTyre.condition as typeof CONDITION_ORDER[number])
+                const thisIdx = CONDITION_ORDER.indexOf(key)
+                const isCompleted = thisIdx < currentIdx
+                const isRetiredState = key === 'replaced' && isRetired
 
-            {/* Condition Lifecycle */}
-            <div className="mx-5 sm:mx-6 mt-4">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Condition Lifecycle</p>
-                {canWrite && !isRetired && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs gap-1 text-primary hover:text-primary"
-                    onClick={() => setConditionDialogOpen(true)}
-                  >
-                    <ArrowRightCircle className="h-3 w-3" />
-                    Update
-                  </Button>
-                )}
-              </div>
-              <div className="flex items-center gap-0">
-                {CONDITION_ORDER.map((key, idx) => {
-                  const meta = TYRE_CONDITIONS[key as keyof typeof TYRE_CONDITIONS]
-                  const isActive = key === currentTyre.condition
-                  const currentIdx = CONDITION_ORDER.indexOf(currentTyre.condition as typeof CONDITION_ORDER[number])
-                  const thisIdx = CONDITION_ORDER.indexOf(key)
-                  const isCompleted = thisIdx < currentIdx
-                  const isRetiredState = key === 'replaced' && isRetired
-
-                  return (
-                    <div key={key} className="flex items-center flex-shrink-0">
-                      <div className="flex flex-col items-center gap-0.5">
-                        <div
-                          className={cn(
-                            'w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold transition-all',
-                            isRetiredState
-                              ? 'bg-orange-500 text-white ring-2 ring-orange-200 dark:ring-orange-800'
-                              : isActive
-                                ? 'bg-amber-500 text-white ring-2 ring-amber-200 dark:ring-amber-800'
-                                : isCompleted
-                                  ? 'bg-emerald-500 text-white'
-                                  : 'bg-muted text-muted-foreground'
-                          )}
-                        >
-                          {isCompleted ? '✓' : ''}
-                        </div>
-                        <span className={cn(
-                          'text-[8px] leading-none',
-                          isActive ? 'font-bold text-foreground' : 'text-muted-foreground'
-                        )}>
-                          {meta?.label || key}
-                        </span>
-                      </div>
-                      {idx < CONDITION_ORDER.length - 1 && (
-                        <div className={cn(
-                          'w-2 sm:w-3 h-0.5 mb-3',
-                          isCompleted
-                            ? 'bg-emerald-500'
+                return (
+                  <div key={key} className="flex items-center flex-shrink-0">
+                    <div className="flex flex-col items-center gap-0.5">
+                      <div
+                        className={cn(
+                          'w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold transition-all',
+                          isRetiredState
+                            ? 'bg-orange-500 text-white ring-2 ring-orange-200 dark:ring-orange-800'
                             : isActive
-                              ? 'bg-amber-300 dark:bg-amber-700'
-                              : 'bg-border'
-                        )} />
-                      )}
+                              ? 'bg-amber-500 text-white ring-2 ring-amber-200 dark:ring-amber-800'
+                              : isCompleted
+                                ? 'bg-emerald-500 text-white'
+                                : 'bg-muted text-muted-foreground'
+                        )}
+                      >
+                        {isCompleted ? '✓' : ''}
+                      </div>
+                      <span className={cn(
+                        'text-[8px] leading-none',
+                        isActive ? 'font-bold text-foreground' : 'text-muted-foreground'
+                      )}>
+                        {meta?.label || key}
+                      </span>
                     </div>
-                  )
-                })}
-              </div>
+                    {idx < CONDITION_ORDER.length - 1 && (
+                      <div className={cn(
+                        'w-2 sm:w-3 h-0.5 mb-3',
+                        isCompleted
+                          ? 'bg-emerald-500'
+                          : isActive
+                            ? 'bg-amber-300 dark:bg-amber-700'
+                            : 'bg-border'
+                      )} />
+                    )}
+                  </div>
+                )
+              })}
             </div>
+          </div>
 
-            {/* Condition History */}
-            {currentTyre.notes && currentTyre.condition !== 'new' && (
-              <div className="mx-5 sm:mx-6 mt-1">
-                <p className="text-[10px] text-muted-foreground">
-                  Current condition since purchase · Tap &quot;Update&quot; to record changes
-                </p>
-              </div>
-            )}
+          {/* Condition History */}
+          {currentTyre.notes && currentTyre.condition !== 'new' && (
+            <div>
+              <p className="text-[10px] text-muted-foreground">
+                Current condition since purchase · Tap &quot;Update&quot; to record changes
+              </p>
+            </div>
+          )}
 
-            {/* Action Buttons */}
-            {canWrite && (
-              <div className="mx-5 sm:mx-6 mt-5 space-y-2">
-                {!isRetired && (
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setConditionDialogOpen(true)}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Change Condition
-                  </Button>
-                )}
+          {/* Action Buttons */}
+          {canWrite && (
+            <div className="space-y-2">
+              {!isRetired && (
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => onEdit?.(currentTyre)}
+                  onClick={() => setConditionDialogOpen(true)}
                 >
-                  <Pencil className="h-4 w-4 mr-2" />
-                  Edit Tyre
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Change Condition
                 </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" className="w-full">
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Tyre
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete this tyre?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will permanently delete the tyre record with serial number{' '}
-                        <span className="font-mono font-semibold">{currentTyre.serialNumber}</span>.
-                        This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleDelete}
-                        disabled={deleting}
-                        className="bg-red-600 hover:bg-red-700"
-                      >
-                        {deleting ? 'Deleting...' : 'Delete Tyre'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            )}
-          </motion.div>
-        )}
+              )}
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => onEdit?.(currentTyre)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit Tyre
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="w-full">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Tyre
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this tyre?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete the tyre record with serial number{' '}
+                      <span className="font-mono font-semibold">{currentTyre.serialNumber}</span>.
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                      disabled={deleting}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      {deleting ? 'Deleting...' : 'Delete Tyre'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
+        </motion.div>
+      )}
 
-        {/* Change Condition Dialog */}
-        <ChangeConditionDialog
-          tyreId={tyre?.id || ''}
-          currentCondition={currentTyre.condition}
-          serialNumber={currentTyre.serialNumber}
-          open={conditionDialogOpen}
-          onOpenChange={setConditionDialogOpen}
-          onChanged={handleConditionChanged}
-        />
-      </SheetContent>
-    </Sheet>
+      {/* Change Condition Dialog */}
+      <ChangeConditionDialog
+        tyreId={tyre?.id || ''}
+        currentCondition={currentTyre.condition}
+        serialNumber={currentTyre.serialNumber}
+        open={conditionDialogOpen}
+        onOpenChange={setConditionDialogOpen}
+        onChanged={handleConditionChanged}
+      />
+    </ResponsiveSheet>
   )
 }
 

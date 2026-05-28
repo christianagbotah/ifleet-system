@@ -2,13 +2,7 @@
 
 import * as React from 'react'
 import { Receipt, Truck, Clock, DollarSign, Calendar, Tag, Hash, CreditCard, FileText } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import { Separator } from '@/components/ui/separator'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Badge } from '@/components/ui/badge'
@@ -33,17 +27,20 @@ export function ExpenseDetailSheet({ expense, open, onOpenChange }: ExpenseDetai
   if (!expense) return null
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-md">
-        <SheetHeader className="shrink-0 px-5 sm:px-6 pt-5 sm:pt-5">
-          <SheetTitle className="flex items-center gap-2">
-            <Receipt className="h-5 w-5 text-amber-500" />
-            Expense Details
-          </SheetTitle>
-          <SheetDescription>{expense.description}</SheetDescription>
-        </SheetHeader>
-
-        <div className="mt-4 sm:mt-6 space-y-5 px-5 sm:px-6 overflow-y-auto flex-1 min-h-0 pb-8 sm:pb-6">
+    <ResponsiveSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={
+        <span className="flex items-center gap-2">
+          <Receipt className="h-5 w-5 text-amber-500" />
+          Expense Details
+        </span>
+      }
+      description={expense.description}
+      width="sm:max-w-md"
+    >
+      {/* ── Body ── */}
+      <div className="space-y-5 p-4 md:p-6">
           {/* Status + Amount */}
           <div className="flex items-center gap-2">
             <StatusBadge status={expense.status} variant="expense" />
@@ -104,9 +101,8 @@ export function ExpenseDetailSheet({ expense, open, onOpenChange }: ExpenseDetai
               </Badge>
             </div>
           )}
-        </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </ResponsiveSheet>
   )
 }
 

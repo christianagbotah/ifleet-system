@@ -314,3 +314,72 @@ Stage Summary:
 - Key fix: `/src/app/api/trips/profitability/route.ts` — summary now uses allTrips (consistent with charts)
 - Minor improvement: YAxis domain and decimals config on both charts in ProfitabilityView.tsx
 - All KPI summary figures and chart visualizations now reflect the same underlying dataset
+
+---
+Task ID: 1
+Agent: Main
+Task: Fix Recharts visual rendering bug, date columns, and page titles on profitability page
+
+Work Log:
+- Diagnosed chart visual rendering issue: bars and line dots rendered above their Y-axis gridline calibration despite correct data values
+- Root cause: YAxis had no explicit `domain` prop, causing Recharts' default "nice" algorithm to create mismatched bar heights vs gridline positions
+- Added `getNiceAxisMax()` helper that computes clean ceiling values with proper headroom (e.g., 5000 → 6000 domain max)
+- Added `getNiceAxisDomain()` helper that handles both positive and negative value ranges
+- Computed `routeDomain`, `truckDomain`, and `trendDomain` via useMemo from actual chart data
+- Applied explicit `domain={routeDomain}` to By Route bar chart YAxis
+- Applied explicit `domain={truckDomain}` to By Truck horizontal bar chart XAxis
+- Applied explicit `domain={trendDomain}` to Monthly Trend line chart YAxis
+- Verified Trip Breakdown table already has Date & Time column with date + light time display
+- Fixed page titles: added `pricing: 'Zone Pricing'` and `driver-tracking: 'Driver Tracking'` to specialTitles
+- All changes pass lint with 0 errors
+
+Stage Summary:
+- Chart visual rendering fix: All 3 charts (By Route, By Truck, Monthly Trend) now use explicitly computed domain values ensuring bars/dots align precisely with their gridline labels
+- Page titles: Fixed 2 missing special titles for pages not in nav groups
+- Date columns: Already present in Trip Breakdown table (added in previous session)
+
+---
+Task ID: 4
+Agent: Main (with 3 parallel subagents)
+Task: Apply ResponsiveSheet to ALL detail/view pages across the app
+
+Work Log:
+- Identified 7 DetailSheet files using standard shadcn Sheet (only InvoiceDetailSheet already migrated)
+- Launched 3 parallel migration agents:
+  - Agent 4-a: DriverDetailSheet, TruckDetailSheet → ResponsiveSheet
+  - Agent 4-b: TripDetailSheet, ExpenseDetailSheet → ResponsiveSheet
+  - Agent 4-c: PayrollDetailSheet, MaintenanceDetailSheet, TyreDetailSheet → ResponsiveSheet
+- Migration pattern: Replace Sheet/SheetContent/SheetHeader/SheetTitle/SheetDescription with ResponsiveSheet props
+- All detail content wrapped in `<div className="space-y-5 p-4 md:p-6">`
+- Footer actions use `<ResponsiveSheet.Footer>` namespace sub-component where needed
+- Lint passes: 0 errors
+
+Stage Summary:
+- All 8 detail sheets now use ResponsiveSheet (desktop=right panel, mobile=full-screen)
+- Files migrated: DriverDetailSheet, TruckDetailSheet, TripDetailSheet, ExpenseDetailSheet, PayrollDetailSheet, MaintenanceDetailSheet, TyreDetailSheet
+- No business logic changes — only UI wrapper migration
+
+---
+Task ID: 5
+Agent: Main
+Task: Fix fuel prices page issues
+
+Work Log:
+- Analyzed FuelPriceTrackerView.tsx (1,164 lines) and live-prices route (351 lines)
+- Found card heights already properly implemented with h-full + flex-1 + mt-auto
+- Found update price button functional (single shared dialog state pattern)
+- Found 3 issues in live-prices API route:
+  1. Brand name mismatches: fallback used 'Total'/'Zen Petroleum' vs frontend 'TotalEnergies'/'Zenith'
+  2. Math.random() brand price fabrication produced inconsistent data between requests
+  3. POST handler used exact brand match (case-sensitive)
+- Fixed fallback brand names to match frontend GHANA_FUEL_BRANDS list (15 brands)
+- Replaced Math.random() with deterministic hash-based price variations
+- Added case-insensitive brand matching in POST handler (mode: 'insensitive')
+- Added missing brands: AvEnergy, Piston, Frimps, Florence, Naft Oil, Gasoil
+- Removed obsolete brands: Benab Oil, FlowEnergy, Malik, CashOil
+
+Stage Summary:
+- All 15 Ghana fuel brands now have consistent naming across frontend, fallback data, and scraper
+- Live price variations are now deterministic (same input always produces same output)
+- POST handler matches brands case-insensitively
+- Lint passes: 0 errors

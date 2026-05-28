@@ -16,14 +16,7 @@ import {
   CheckCircle,
   Trash2,
 } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-} from '@/components/ui/sheet'
+import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Separator } from '@/components/ui/separator'
@@ -95,128 +88,128 @@ export function PayrollDetailSheet({
     : null
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom">
-        <SheetHeader className="px-5 py-4 pb-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <SheetTitle className="text-lg">
-                {record.driver.firstName} {record.driver.lastName}
-              </SheetTitle>
-              <SheetDescription className="text-sm flex items-center gap-1.5 mt-1">
-                <Phone className="h-3.5 w-3.5" />
-                {record.driver.phone}
-              </SheetDescription>
-            </div>
-            <StatusBadge status={record.status} variant="payroll" />
-          </div>
-        </SheetHeader>
+    <ResponsiveSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={
+        <span className="flex items-center gap-2">
+          <Phone className="h-4 w-4 text-amber-500 shrink-0" />
+          {record.driver.firstName} {record.driver.lastName}
+        </span>
+      }
+      description={record.driver.phone}
+    >
+      <div className="space-y-5 p-4 md:p-6">
+        {/* Status badge */}
+        <div className="flex items-center justify-between">
+          <StatusBadge status={record.status} variant="payroll" />
+        </div>
 
-        <div className="px-5 py-4 space-y-4">
-          {/* Pay Period */}
-          <div className="rounded-lg border bg-muted/40 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">
-                {monthLabel} {record.year}
+        {/* Pay Period */}
+        <div className="rounded-lg border bg-muted/40 px-4 py-3">
+          <div className="flex items-center gap-2 text-sm">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <span className="font-medium">
+              {monthLabel} {record.year}
+            </span>
+          </div>
+        </div>
+
+        {/* Payroll Breakdown */}
+        <div>
+          <h4 className="text-sm font-semibold text-muted-foreground mb-1">
+            Payroll Breakdown
+          </h4>
+          <div className="rounded-lg border">
+            <DetailRow
+              icon={DollarSign}
+              label="Base Salary"
+              value={`${CURRENCY_SYMBOL}${record.baseSalary.toLocaleString()}`}
+            />
+            <Separator />
+            <DetailRow
+              icon={TrendingUp}
+              label="Trip Bonus"
+              value={`+${CURRENCY_SYMBOL}${record.tripBonus.toLocaleString()}`}
+              valueClassName="text-emerald-600"
+            />
+            <Separator />
+            <DetailRow
+              icon={Clock}
+              label="Overtime Pay"
+              value={`+${CURRENCY_SYMBOL}${record.overtimePay.toLocaleString()}`}
+              valueClassName="text-emerald-600"
+            />
+            <Separator />
+            <DetailRow
+              icon={MinusCircle}
+              label="Deductions"
+              value={`-${CURRENCY_SYMBOL}${record.deductions.toLocaleString()}`}
+              valueClassName="text-red-600"
+            />
+            <Separator />
+            <div className="flex items-center justify-between py-3 bg-muted/40 px-0">
+              <div className="flex items-center gap-3 font-medium text-sm px-0">
+                <Wallet className="h-4 w-4 text-amber-600 shrink-0" />
+                <span>Net Pay</span>
+              </div>
+              <span className="text-base font-bold text-amber-600">
+                {CURRENCY_SYMBOL}{record.netPay.toLocaleString()}
               </span>
             </div>
           </div>
-
-          {/* Payroll Breakdown */}
-          <div>
-            <h4 className="text-sm font-semibold text-muted-foreground mb-1">
-              Payroll Breakdown
-            </h4>
-            <div className="rounded-lg border">
-              <DetailRow
-                icon={DollarSign}
-                label="Base Salary"
-                value={`${CURRENCY_SYMBOL}${record.baseSalary.toLocaleString()}`}
-              />
-              <Separator />
-              <DetailRow
-                icon={TrendingUp}
-                label="Trip Bonus"
-                value={`+${CURRENCY_SYMBOL}${record.tripBonus.toLocaleString()}`}
-                valueClassName="text-emerald-600"
-              />
-              <Separator />
-              <DetailRow
-                icon={Clock}
-                label="Overtime Pay"
-                value={`+${CURRENCY_SYMBOL}${record.overtimePay.toLocaleString()}`}
-                valueClassName="text-emerald-600"
-              />
-              <Separator />
-              <DetailRow
-                icon={MinusCircle}
-                label="Deductions"
-                value={`-${CURRENCY_SYMBOL}${record.deductions.toLocaleString()}`}
-                valueClassName="text-red-600"
-              />
-              <Separator />
-              <div className="flex items-center justify-between py-3 bg-muted/40 px-0">
-                <div className="flex items-center gap-3 font-medium text-sm px-0">
-                  <Wallet className="h-4 w-4 text-amber-600 shrink-0" />
-                  <span>Net Pay</span>
-                </div>
-                <span className="text-base font-bold text-amber-600">
-                  {CURRENCY_SYMBOL}{record.netPay.toLocaleString()}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Info */}
-          <div>
-            <h4 className="text-sm font-semibold text-muted-foreground mb-1">
-              Details
-            </h4>
-            <div className="rounded-lg border">
-              {record.approvedBy && (
-                <>
-                  <DetailRow
-                    icon={UserCheck}
-                    label="Approved By"
-                    value={record.approvedBy}
-                  />
-                  <Separator />
-                </>
-              )}
-              {paidAtDate && (
-                <>
-                  <DetailRow
-                    icon={CreditCard}
-                    label="Paid At"
-                    value={paidAtDate}
-                    valueClassName="text-emerald-600"
-                  />
-                  <Separator />
-                </>
-              )}
-              <DetailRow
-                icon={FileText}
-                label="Created"
-                value={createdAtDate}
-              />
-            </div>
-          </div>
-
-          {/* Notes */}
-          {record.notes && (
-            <div>
-              <h4 className="text-sm font-semibold text-muted-foreground mb-1">
-                Notes
-              </h4>
-              <div className="rounded-lg border bg-muted/30 px-4 py-3">
-                <p className="text-sm whitespace-pre-wrap">{record.notes}</p>
-              </div>
-            </div>
-          )}
         </div>
 
-        <SheetFooter className="px-5 py-4 pb-8 flex-row gap-2 border-t bg-background">
+        {/* Additional Info */}
+        <div>
+          <h4 className="text-sm font-semibold text-muted-foreground mb-1">
+            Details
+          </h4>
+          <div className="rounded-lg border">
+            {record.approvedBy && (
+              <>
+                <DetailRow
+                  icon={UserCheck}
+                  label="Approved By"
+                  value={record.approvedBy}
+                />
+                <Separator />
+              </>
+            )}
+            {paidAtDate && (
+              <>
+                <DetailRow
+                  icon={CreditCard}
+                  label="Paid At"
+                  value={paidAtDate}
+                  valueClassName="text-emerald-600"
+                />
+                <Separator />
+              </>
+            )}
+            <DetailRow
+              icon={FileText}
+              label="Created"
+              value={createdAtDate}
+            />
+          </div>
+        </div>
+
+        {/* Notes */}
+        {record.notes && (
+          <div>
+            <h4 className="text-sm font-semibold text-muted-foreground mb-1">
+              Notes
+            </h4>
+            <div className="rounded-lg border bg-muted/30 px-4 py-3">
+              <p className="text-sm whitespace-pre-wrap">{record.notes}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <ResponsiveSheet.Footer>
+        <div className="flex flex-row gap-2">
           <Button
             variant="outline"
             className="flex-1"
@@ -257,8 +250,22 @@ export function PayrollDetailSheet({
               Delete
             </Button>
           )}
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        </div>
+      </ResponsiveSheet.Footer>
+    </ResponsiveSheet>
   )
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Namespace sub-component for convenience
+// ────────────────────────────────────────────────────────────────────
+
+ResponsiveSheet.Footer = function ResponsiveSheetFooter({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return <div className={className}>{children}</div>
 }

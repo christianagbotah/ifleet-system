@@ -68,14 +68,19 @@ function getFallbackPrices(): LivePriceResponse {
     brandPrices: [
       { brand: 'GOIL', petrol: 14.99, diesel: 15.42 },
       { brand: 'Shell', petrol: 14.50, diesel: 15.10 },
-      { brand: 'Total', petrol: 14.65, diesel: 15.25 },
+      { brand: 'TotalEnergies', petrol: 14.65, diesel: 15.25 },
       { brand: 'Engen', petrol: 14.55, diesel: 15.15 },
       { brand: 'Star Oil', petrol: 14.40, diesel: 15.00 },
-      { brand: 'Benab Oil', petrol: 14.30, diesel: 14.90 },
+      { brand: 'AvEnergy', petrol: 14.30, diesel: 14.90 },
       { brand: 'Puma Energy', petrol: 14.60, diesel: 15.20 },
-      { brand: 'Zen Petroleum', petrol: 14.45, diesel: 15.05 },
+      { brand: 'Zenith', petrol: 14.45, diesel: 15.05 },
       { brand: 'Allied Oil', petrol: 14.35, diesel: 14.95 },
-      { brand: 'Goodness Oil', petrol: 14.25, diesel: 14.85 },
+      { brand: 'Goodness', petrol: 14.25, diesel: 14.85 },
+      { brand: 'Piston', petrol: 14.48, diesel: 15.08 },
+      { brand: 'Frimps', petrol: 14.38, diesel: 14.98 },
+      { brand: 'Florence', petrol: 14.32, diesel: 14.92 },
+      { brand: 'Naft Oil', petrol: 14.28, diesel: 14.88 },
+      { brand: 'Gasoil', petrol: 14.42, diesel: 15.02 },
     ],
   }
 }
@@ -168,10 +173,11 @@ function extractPricesFromHtml(html: string): LivePriceResponse | null {
   prices['Gas'] = prices['LPG']
 
   // Try to extract brand-level prices from tables
+  // Brand names must match the frontend GHANA_FUEL_BRANDS list exactly
   const knownBrands = [
-    'GOIL', 'Shell', 'Total', 'Engen', 'Star Oil',
-    'Benab Oil', 'Puma', 'Zen', 'Allied', 'Goodness',
-    'FlowEnergy', 'Gasoil', 'Malik', 'CashOil',
+    'GOIL', 'Shell', 'TotalEnergies', 'Engen', 'Star Oil',
+    'Allied Oil', 'AvEnergy', 'Piston', 'Frimps', 'Puma Energy',
+    'Gasoil', 'Florence', 'Goodness', 'Naft Oil', 'Zenith',
   ]
 
   for (const brand of knownBrands) {
@@ -189,14 +195,22 @@ function extractPricesFromHtml(html: string): LivePriceResponse | null {
     }
   }
 
-  // If we couldn't extract brand prices, generate indicative brand variations
+  // If we couldn't extract brand prices, generate deterministic brand variations
+  // Uses a simple string hash for consistency (avoids Math.random() producing different
+  // values on every request which would confuse users)
   if (brandPrices.length === 0) {
-    for (const brand of knownBrands.slice(0, 10)) {
-      const variation = (Math.random() - 0.5) * 1.2 // ±0.6 GHS variation
+    for (const brand of knownBrands) {
+      // Deterministic hash-based variation: ±0.30 GHS per fuel type
+      let hash = 0
+      for (let i = 0; i < brand.length; i++) {
+        hash = ((hash << 5) - hash + brand.charCodeAt(i)) | 0
+      }
+      const petrolVar = ((Math.abs(hash) % 60) - 30) / 100  // -0.30 to +0.30
+      const dieselVar = (((Math.abs(hash * 7) % 60) - 30) / 100) + 0.40  // +0.10 to +0.70
       brandPrices.push({
         brand,
-        petrol: Math.round((prices['Petrol'] + variation) * 100) / 100,
-        diesel: Math.round((prices['Diesel'] + variation + 0.5) * 100) / 100,
+        petrol: Math.round((prices['Petrol'] + petrolVar) * 100) / 100,
+        diesel: Math.round((prices['Diesel'] + dieselVar) * 100) / 100,
       })
     }
   }
@@ -285,7 +299,7 @@ export async function POST(request: NextRequest) {
       // Find all stations matching this brand (case-insensitive)
       const stations = await db.fuelStation.findMany({
         where: {
-          brand: { equals: update.brand },
+          brand: { equals: update.brand, mode: 'insensitive' },
         },
         select: {
           id: true,

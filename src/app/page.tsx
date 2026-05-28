@@ -515,6 +515,8 @@ export default function Home() {
     const specialTitles: Record<string, string> = {
       profile: 'Profile',
       login: 'Login',
+      pricing: 'Zone Pricing',
+      'driver-tracking': 'Driver Tracking',
     }
     const label = specialTitles[currentPage] ?? allItems.find(i => i.id === currentPage)?.label ?? 'Dashboard'
     document.title = `${label} — ${APP_NAME}`
