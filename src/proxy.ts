@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 import { APP_NAME } from '@/lib/constants'
 
-// ${APP_NAME} — API Authentication Middleware
+// ${APP_NAME} — API Authentication Proxy
 //
 // Protects all /api/* routes except login and register.
 // Validates JWT token from Authorization header using `jose`
@@ -43,7 +43,7 @@ const PUBLIC_GET_ONLY_ROUTES = [
 // NextAuth routes are handled by NextAuth itself
 const NEXTAUTH_ROUTE = '/api/auth/'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // ── /driver route protection (page-level) ─────────────────────────────
