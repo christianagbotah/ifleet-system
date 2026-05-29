@@ -250,9 +250,16 @@ export async function POST(request: NextRequest) {
   const auth = requireAuth(request)
   if (auth instanceof NextResponse) return auth
 
+  let reportType = 'unknown'
+  let reportFormat = 'unknown'
+  let reportParams: ReportParams = {}
+
   try {
     const body = await request.json()
     const { type, format, params = {} } = body as { type: string; format: string; params: ReportParams }
+    reportType = type || 'unknown'
+    reportFormat = format || 'unknown'
+    reportParams = params
 
     if (!type || !format) {
       return NextResponse.json({ error: 'Missing required fields: type, format' }, { status: 400 })
@@ -374,7 +381,7 @@ export async function POST(request: NextRequest) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     const errorName = error instanceof Error ? error.constructor.name : 'Error'
     const errorStack = error instanceof Error ? error.stack : ''
-    console.error(`[Reports] Generation failed for type=${body?.type || 'unknown'} format=${body?.format || 'unknown'}:`)
+    console.error(`[Reports] Generation failed for type=${reportType} format=${reportFormat}:`)
     console.error('  Error:', errorName, '-', errorMessage)
     if (errorStack) console.error('  Stack:', errorStack)
 
@@ -382,10 +389,10 @@ export async function POST(request: NextRequest) {
     try {
       await db.reportHistory.create({
         data: {
-          type: body?.type || 'unknown',
-          title: `Failed: ${body?.type || 'unknown'}`,
-          format: body?.format || 'unknown',
-          parameters: JSON.stringify(body?.params || {}),
+          type: reportType,
+          title: `Failed: ${reportType}`,
+          format: reportFormat,
+          parameters: JSON.stringify(reportParams),
           generatedBy: auth.email,
           status: 'failed',
           error: errorMessage,

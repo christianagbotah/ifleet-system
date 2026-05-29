@@ -10,6 +10,10 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { registerFonts, getFontFamily } from './pdf-font'
+
+/** Custom font family name that supports ₵ (U+20B5) */
+const FF = getFontFamily()
 
 // ── Brand Colors ──
 const COLORS = {
@@ -69,6 +73,8 @@ export class PdfReport {
       unit: 'mm',
       compress: true,
     })
+    // Register custom DejaVu Sans font (supports ₵ currency symbol)
+    registerFonts(this.doc)
     this._cursorY = 14 // Start below the header bar
   }
 
@@ -113,13 +119,13 @@ export class PdfReport {
     this.doc.rect(0, 0, pageWidth, 14, 'F')
 
     // Company name — left
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     this.doc.setFontSize(14)
     this.doc.setTextColor(255, 255, 255)
     this.doc.text(APP_NAME, 10, 9.5)
 
     // System name — right
-    this.doc.setFont('helvetica', 'normal')
+    this.doc.setFont(FF, 'normal')
     this.doc.setFontSize(9)
     this.doc.text(APP_TAGLINE, pageWidth - 10, 9.5, { align: 'right' })
 
@@ -137,7 +143,7 @@ export class PdfReport {
   /** Add a bold report title below the header */
   addTitle(title: string): void {
     this._cursorY += 4
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     this.doc.setFontSize(16)
     this.doc.setTextColor(28, 25, 23)
     this.doc.text(title, 10, this._cursorY + 6)
@@ -149,7 +155,7 @@ export class PdfReport {
 
   /** Add a smaller subtitle line (date range, filters, etc.) */
   addSubtitle(text: string): void {
-    this.doc.setFont('helvetica', 'normal')
+    this.doc.setFont(FF, 'normal')
     this.doc.setFontSize(9)
     this.doc.setTextColor(120, 113, 108)
     this._cursorY += 2
@@ -203,13 +209,13 @@ export class PdfReport {
         this.doc.rect(x, currentY, 1.5, cardHeight, 'F')
 
         // Label
-        this.doc.setFont('helvetica', 'normal')
+        this.doc.setFont(FF, 'normal')
         this.doc.setFontSize(7)
         this.doc.setTextColor(120, 113, 108)
         this.doc.text(kpi.label, x + 5, currentY + 6)
 
         // Value
-        this.doc.setFont('helvetica', 'bold')
+        this.doc.setFont(FF, 'bold')
         this.doc.setFontSize(11)
         this.doc.setTextColor(28, 25, 23)
         const displayValue = kpi.trend ? `${kpi.value} ${kpi.trend}` : kpi.value
@@ -317,7 +323,7 @@ export class PdfReport {
       this.doc.line(10, pageHeight - 15, pageWidth - 10, pageHeight - 15)
 
       // Page number — center
-      this.doc.setFont('helvetica', 'normal')
+      this.doc.setFont(FF, 'normal')
       this.doc.setFontSize(8)
       this.doc.setTextColor(120, 113, 108)
       this.doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' })
@@ -377,13 +383,13 @@ export class PdfReport {
     this.doc.rect(10, y, pageWidth - 20, 7, 'F')
 
     // Label
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     this.doc.setFontSize(7)
     this.doc.setTextColor(146, 64, 14)
     this.doc.text(summary.label, 12, y + 5)
 
     // Values
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     summary.values.forEach((val, idx) => {
       if (idx === 0) return
       const x = 10 + idx * colWidth + colWidth / 2

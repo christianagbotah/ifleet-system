@@ -94,3 +94,22 @@ Stage Summary:
 - Backward compatible CSV import (accepts both old and new header formats)
 - ISO codes and API references to GHS preserved (Paystack, exchange rates, currencies API)
 - All lint checks pass
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix ₵ currency symbol rendering in PDFs (showing as µ instead)
+
+Work Log:
+- Identified root cause: jsPDF default fonts (Helvetica) don't support ₵ (U+20B5). UTF-8 bytes E2 82 B5 get interpreted as individual WinAnsiEncoding chars, with last byte B5 = µ
+- Created font subset from DejaVu Sans (supports ₵) using pyftsubset with 35KB regular + 31KB bold variants
+- Created `src/lib/reports/pdf-font.ts` with base64-encoded font data and `registerFonts()` / `getFontFamily()` utilities
+- Updated `pdf-generator.ts` to import and use custom font, replacing all 'helvetica' references
+- Updated `payslip-pdf.ts`, `invoice-pdf.ts`, and `waybill-pdf.ts` to use custom font
+- Fixed `body is not defined` ReferenceError in `/api/reports/generate` catch block by extracting reportType/reportFormat to outer scope
+- All files pass ESLint
+
+Stage Summary:
+- ₵ symbol now renders correctly in all PDF reports using embedded DejaVu Sans font
+- Files changed: pdf-font.ts (new), pdf-generator.ts, payslip-pdf.ts, invoice-pdf.ts, waybill-pdf.ts, api/reports/generate/route.ts
+- The `getCursorPosition` issue was already fixed in a previous session (manual _cursorY tracking)
