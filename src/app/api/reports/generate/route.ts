@@ -311,7 +311,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unsupported format' }, { status: 400 })
     }
 
-    // Save report history
+    // Save report history (non-blocking — don't fail the whole request if history save fails)
     const titleMap: Record<string, string> = {
       trip_summary: 'Trip Summary Report',
       fuel_report: 'Fuel Report',
@@ -343,17 +343,22 @@ export async function POST(request: NextRequest) {
       fleet_profit_loss: 'Fleet Profit & Loss Report',
     }
 
-    await db.reportHistory.create({
-      data: {
-        type,
-        title: titleMap[type] || type,
-        format,
-        parameters: JSON.stringify(params),
-        generatedBy: auth.email,
-        fileSize,
-        status: 'completed',
-      },
-    })
+    try {
+      await db.reportHistory.create({
+        data: {
+          type,
+          title: titleMap[type] || type,
+          format,
+          parameters: JSON.stringify(params),
+          generatedBy: auth.email,
+          fileSize,
+          status: 'completed',
+        },
+      })
+    } catch (historyErr) {
+      console.error('[Reports] Failed to save report history:', historyErr instanceof Error ? historyErr.message : String(historyErr))
+      // Don't fail the request — the report was generated successfully
+    }
 
     const filename = generateReportFilename(type, format)
     const contentType = CONTENT_TYPES[format] || 'application/octet-stream'
@@ -367,9 +372,10 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorName = error instanceof Error ? error.constructor.name : 'Error'
     const errorStack = error instanceof Error ? error.stack : ''
     console.error(`[Reports] Generation failed for type=${body?.type || 'unknown'} format=${body?.format || 'unknown'}:`)
-    console.error('  Message:', errorMessage)
+    console.error('  Error:', errorName, '-', errorMessage)
     if (errorStack) console.error('  Stack:', errorStack)
 
     // Save failed report history
