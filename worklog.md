@@ -140,3 +140,23 @@ Stage Summary:
 - Using `\u20B5` Unicode escape guarantees correct ₵ rendering at runtime regardless of file encoding
 - This eliminates any possibility of encoding corruption during git transfer, build, or deployment
 - All report preview tables, PDFs, CSVs, and UI components now consistently use ₵
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Verify ₵ encoding fix and push latest to GitHub
+
+Work Log:
+- Inspected all report source files (csv-generator.ts, report-data.ts, report-data-new.ts, pdf-generator.ts, ReportPreviewView.tsx)
+- Confirmed all files use `\u20B5` Unicode escape sequence correctly (not literal ₵ characters)
+- Verified byte-level encoding: source files contain the correct `\u20B5` escape, no µ (U+00B5) corruption found
+- Confirmed PDF generator already fixed: uses manual `_cursorY` tracking instead of `getCursorPosition()`
+- Confirmed PDF font system (DejaVu Sans) already in place for ₵ rendering
+- Confirmed `body is not defined` fix already committed
+- Pushed latest commit (c64b81c) to origin/main
+
+Stage Summary:
+- All currency symbol code is correct in the repository
+- Previous fixes for ₵ in PDFs (custom font), getCursorPosition crash, and body reference error are all committed
+- The µ issue on the live site is caused by the VPS not having pulled the latest code
+- User needs to: `cd /home/ifleetpro/app && git stash && git pull && pm2 restart ifleetpro`
