@@ -459,7 +459,7 @@ export default function DashboardPage() {
             <StatCard
               label="Pending Cash Advances"
               value={formatCurrency(data.cashAdvances.pending)}
-              subLabel={`of ₵${data.cashAdvances.total.toLocaleString()} total`}
+              subLabel={`of \u20B5${data.cashAdvances.total.toLocaleString()} total`}
               icon={<Banknote className="size-6" />}
               gradientFrom="from-orange-500"
               gradientTo="to-amber-500"

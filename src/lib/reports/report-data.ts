@@ -325,9 +325,9 @@ export async function fetchDailySummaryData(date?: string): Promise<ReportData> 
     ['Trips Departed Today', trips.length],
     ['Total Revenue (Trips Today)', csvCurrency(totalTripRevenue)],
     ['Expenses Recorded Today', expenses.length],
-    ['Total Expenses (₵)', csvCurrency(totalExpenses)],
+    ['Total Expenses (\u20B5)', csvCurrency(totalExpenses)],
     ['Fuel Logs Today', fuelLogs.length],
-    ['Total Fuel Cost (₵)', csvCurrency(totalFuelCost)],
+    ['Total Fuel Cost (\u20B5)', csvCurrency(totalFuelCost)],
     ['Total Fuel (Liters)', csvNumber(totalFuelLiters, 1)],
   ]
 

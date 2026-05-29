@@ -195,8 +195,8 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   const cargoRows = [
     ['Description', trip.itemName],
     ['Quantity', `${trip.quantity} ${trip.unit}`],
-    ['Unit Price', trip.unitPrice ? `₵${trip.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
-    ['Total Value', trip.totalRevenue ? `₵${trip.totalRevenue.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
+    ['Unit Price', trip.unitPrice ? `\u20B5${trip.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
+    ['Total Value', trip.totalRevenue ? `\u20B5${trip.totalRevenue.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
   ]
 
   cargoRows.forEach((row, idx) => {

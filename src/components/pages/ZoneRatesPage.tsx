@@ -434,21 +434,21 @@ setDeleteOpen(true) }}>
                 )} />
                 <FormField control={form.control} name="ratePerKm" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Rate per Km (₵) *</FormLabel>
+                    <FormLabel>Rate per Km (\u20B5) *</FormLabel>
                     <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="minimumRate" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Minimum Rate (₵) *</FormLabel>
+                    <FormLabel>Minimum Rate (\u20B5) *</FormLabel>
                     <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="waitingRate" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Waiting Rate per Hour (₵)</FormLabel>
+                    <FormLabel>Waiting Rate per Hour (\u20B5)</FormLabel>
                     <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>

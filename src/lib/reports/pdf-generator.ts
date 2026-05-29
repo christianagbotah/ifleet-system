@@ -12,7 +12,7 @@ import autoTable from 'jspdf-autotable'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
 import { registerFonts, getFontFamily } from './pdf-font'
 
-/** Custom font family name that supports ₵ (U+20B5) */
+/** Custom font family name that supports \u20B5 (U+20B5) */
 const FF = getFontFamily()
 
 // ── Brand Colors ──
@@ -73,7 +73,7 @@ export class PdfReport {
       unit: 'mm',
       compress: true,
     })
-    // Register custom DejaVu Sans font (supports ₵ currency symbol)
+    // Register custom DejaVu Sans font (supports \u20B5 currency symbol)
     registerFonts(this.doc)
     this._cursorY = 14 // Start below the header bar
   }
@@ -402,9 +402,9 @@ export class PdfReport {
 
 // ── Shared Formatting Utilities ─────────────────────────────────
 
-/** Format currency in ₵ */
+/** Format currency in \u20B5 */
 export function formatGHS(amount: number): string {
-  return `₵${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `\u20B5${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 /** Format number with locale */

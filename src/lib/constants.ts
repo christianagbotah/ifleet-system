@@ -345,7 +345,7 @@ export const GHANA_LOCATIONS = [
 // ============ CURRENCY ============
 
 export const CURRENCY = "GHS"
-export const CURRENCY_SYMBOL = "₵"
+export const CURRENCY_SYMBOL = "\u20B5"
 
 // ============ PAYMENT METHODS ============
 

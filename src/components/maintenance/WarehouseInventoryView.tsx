@@ -260,7 +260,7 @@ function ItemFormDialog({
             {/* Unit Price & Unit */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-sm font-medium">Unit Price (₵) *</Label>
+                <Label className="text-sm font-medium">Unit Price (\u20B5) *</Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">{CURRENCY_SYMBOL}</span>
                   <Input type="number" placeholder="0.00" step="0.01" className="pl-8" value={form.unitPrice} onChange={e => update('unitPrice', e.target.value)} />

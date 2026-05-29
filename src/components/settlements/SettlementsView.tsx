@@ -601,7 +601,7 @@ function SettlementDetailSheet({
                 <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Notes & Bonus</h4>
                 <div className="space-y-2">
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground">Bonus Amount (₵)</label>
+                    <label className="text-xs font-medium text-muted-foreground">Bonus Amount (\u20B5)</label>
                     <Input
                       type="number"
                       value={bonusAmount}

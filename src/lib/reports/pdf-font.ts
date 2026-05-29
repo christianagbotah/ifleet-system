@@ -2,7 +2,7 @@
 // iFleetPro — Custom PDF Font (DejaVu Sans subset)
 // ════════════════════════════════════════════════════════════════════
 //
-// Subset of DejaVu Sans containing ASCII + Latin Extended + ₵ (U+20B5).
+// Subset of DejaVu Sans containing ASCII + Latin Extended + \u20B5 (U+20B5).
 // Used by jsPDF to render the Ghana Cedi symbol in PDF reports.
 // ────────────────────────────────────────────────────────────────────
 
@@ -26,7 +26,7 @@ export function registerFonts(doc: jsPDF): void {
     doc.setFont(FONT_FAMILY)
   } catch {
     // Fallback: if font registration fails, continue with default font
-    // Currency symbol may render as µ instead of ₵
+    // Currency symbol may render as µ instead of \u20B5
   }
 }
 

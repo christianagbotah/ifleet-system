@@ -321,7 +321,7 @@ function ScannerContent({
             {scannedData.totalAmount != null && (
               <div>
                 <span className="text-muted-foreground text-xs">Amount</span>
-                <p className="font-semibold">₵{scannedData.totalAmount.toLocaleString()}</p>
+                <p className="font-semibold">\u20B5{scannedData.totalAmount.toLocaleString()}</p>
               </div>
             )}
             {isFuel && scannedData.liters != null && (
@@ -333,7 +333,7 @@ function ScannerContent({
             {isFuel && scannedData.pricePerLiter != null && (
               <div>
                 <span className="text-muted-foreground text-xs">Price/Liter</span>
-                <p className="font-semibold">₵{scannedData.pricePerLiter.toFixed(2)}</p>
+                <p className="font-semibold">\u20B5{scannedData.pricePerLiter.toFixed(2)}</p>
               </div>
             )}
             {isFuel && scannedData.fuelType && (

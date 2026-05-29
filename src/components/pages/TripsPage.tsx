@@ -1256,21 +1256,21 @@ export default function TripsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <FormField control={form.control} name="baseRate" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Base Rate (₵)</FormLabel>
+                      <FormLabel>Base Rate (\u20B5)</FormLabel>
                       <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="waitingCharges" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Waiting Charges (₵)</FormLabel>
+                      <FormLabel>Waiting Charges (\u20B5)</FormLabel>
                       <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="otherCharges" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Other Charges (₵)</FormLabel>
+                      <FormLabel>Other Charges (\u20B5)</FormLabel>
                       <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>

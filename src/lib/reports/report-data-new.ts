@@ -482,9 +482,9 @@ export async function fetchDailySummaryData(date?: string): Promise<ReportData> 
     ['Trips Departed Today', trips.length],
     ['Total Revenue (Trips Today)', csvCurrency(totalTripRevenue)],
     ['Expenses Recorded Today', expenses.length],
-    ['Total Expenses (₵)', csvCurrency(totalExpenses)],
+    ['Total Expenses (\u20B5)', csvCurrency(totalExpenses)],
     ['Fuel Logs Today', fuelLogs.length],
-    ['Total Fuel Cost (₵)', csvCurrency(totalFuelCost)],
+    ['Total Fuel Cost (\u20B5)', csvCurrency(totalFuelCost)],
     ['Total Fuel (Liters)', csvNumber(totalFuelLiters, 1)],
   ]
 
@@ -786,8 +786,8 @@ export async function fetchCostAnalyticsData(params: ReportParams): Promise<Repo
   ])
 
   const headers = [
-    'Truck', 'Make', 'Model', 'Fuel Cost (₵)', 'Maintenance (₵)', 'Other Costs (₵)',
-    'Total Cost (₵)', 'Distance (km)', 'Tonnage', 'Cost/km (₵)', 'Cost/Tonne (₵)',
+    'Truck', 'Make', 'Model', 'Fuel Cost (\u20B5)', 'Maintenance (\u20B5)', 'Other Costs (\u20B5)',
+    'Total Cost (\u20B5)', 'Distance (km)', 'Tonnage', 'Cost/km (\u20B5)', 'Cost/Tonne (\u20B5)',
   ]
 
   const rows: (string | number | null | undefined)[][] = []
@@ -867,8 +867,8 @@ export async function fetchTripProfitabilityData(params: ReportParams): Promise<
 
   const headers = [
     'Trip #', 'Date', 'Driver', 'Truck', 'Route', 'Client',
-    'Revenue (₵)', 'Fuel Cost (₵)', 'Expenses (₵)', 'Total Cost (₵)',
-    'Net Profit (₵)', 'Margin (%)',
+    'Revenue (\u20B5)', 'Fuel Cost (\u20B5)', 'Expenses (\u20B5)', 'Total Cost (\u20B5)',
+    'Net Profit (\u20B5)', 'Margin (%)',
   ]
 
   const rows = trips.map(t => {
@@ -928,7 +928,7 @@ export async function fetchFuelAnalyticsData(params: ReportParams): Promise<Repo
   }
 
   const headers = [
-    'Truck', 'Total Liters', 'Total Cost (₵)', 'Avg Cost/Liter', 'Fill-ups',
+    'Truck', 'Total Liters', 'Total Cost (\u20B5)', 'Avg Cost/Liter', 'Fill-ups',
     'Avg Fill (L)', 'L/100km', 'Efficiency Rating',
   ]
 
@@ -1138,9 +1138,9 @@ export async function fetchFleetProfitLossData(params: ReportParams): Promise<Re
   ])
 
   const headers = [
-    'Truck', 'Make', 'Model', 'Driver', 'Trips', 'Revenue (₵)',
-    'Fuel Cost (₵)', 'Maintenance (₵)', 'Tolls (₵)', 'Other Expenses (₵)',
-    'Total Expenses (₵)', 'Net Income/Loss (₵)', 'Margin (%)',
+    'Truck', 'Make', 'Model', 'Driver', 'Trips', 'Revenue (\u20B5)',
+    'Fuel Cost (\u20B5)', 'Maintenance (\u20B5)', 'Tolls (\u20B5)', 'Other Expenses (\u20B5)',
+    'Total Expenses (\u20B5)', 'Net Income/Loss (\u20B5)', 'Margin (%)',
   ]
 
   const rows: (string | number | null | undefined)[][] = []

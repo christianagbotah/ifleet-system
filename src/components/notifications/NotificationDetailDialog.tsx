@@ -157,8 +157,8 @@ function MetadataSection({ metadata, type }: { metadata: Record<string, unknown>
     destination: 'Destination',
     cargo: 'Cargo',
     itemName: 'Cargo',
-    amount: 'Amount (₵)',
-    totalRevenue: 'Revenue (₵)',
+    amount: 'Amount (\u20B5)',
+    totalRevenue: 'Revenue (\u20B5)',
     status: 'Status',
     route: 'Route',
     distance: 'Distance',
@@ -210,13 +210,13 @@ function MetadataSection({ metadata, type }: { metadata: Record<string, unknown>
           }
           if (key === 'destination' && metadata.origin) return null // handled above
 
-          // Render amount / revenue with ₵ symbol
+          // Render amount / revenue with \u20B5 symbol
           if (key === 'amount' || key === 'totalRevenue') {
             return (
               <div key={key} className="bg-muted/50 rounded-md px-3 py-2">
                 <p className="text-[10px] text-muted-foreground mb-0.5">{label}</p>
                 <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
-                  ₵{Number(value).toLocaleString('en-GH', { minimumFractionDigits: 2 })}
+                  \u20B5{Number(value).toLocaleString('en-GH', { minimumFractionDigits: 2 })}
                 </p>
               </div>
             )

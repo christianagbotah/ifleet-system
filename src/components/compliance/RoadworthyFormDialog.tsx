@@ -526,7 +526,7 @@ export function RoadworthyFormDialog({ open, onOpenChange, inspection, onSuccess
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="insp-fee">Inspection Fee (₵)</Label>
+                  <Label htmlFor="insp-fee">Inspection Fee (\u20B5)</Label>
                   <Input
                     id="insp-fee"
                     type="number"

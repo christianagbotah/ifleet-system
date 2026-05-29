@@ -317,7 +317,7 @@ export async function GET(request: NextRequest) {
           truckId: log.truckId,
           plateNumber: log.truck.plateNumber,
           driverName: log.truck.driver ? `${log.truck.driver.firstName} ${log.truck.driver.lastName}` : 'Unassigned',
-          description: `Cost per liter ₵${log.costPerLiter.toFixed(2)} is ${(costDeviation * 100).toFixed(0)}% different from period average ₵${avgCostPerLiter.toFixed(2)}`,
+          description: `Cost per liter \u20B5${log.costPerLiter.toFixed(2)} is ${(costDeviation * 100).toFixed(0)}% different from period average \u20B5${avgCostPerLiter.toFixed(2)}`,
           fuelLogId: log.id,
           details: {
             costPerLiter: log.costPerLiter,
@@ -550,7 +550,7 @@ export async function GET(request: NextRequest) {
 
     // Total estimated loss warning
     if (totalEstimatedLoss >= 5000) {
-      recommendations.push(`Estimated fuel loss of ₵${totalEstimatedLoss.toLocaleString()} detected — immediate investigation recommended`)
+      recommendations.push(`Estimated fuel loss of \u20B5${totalEstimatedLoss.toLocaleString()} detected — immediate investigation recommended`)
     }
 
     return NextResponse.json({

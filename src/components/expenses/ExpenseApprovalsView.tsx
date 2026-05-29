@@ -238,7 +238,7 @@ function ApprovalDialog({
           {/* Partial Approval Amount */}
           {action === 'partial' && (
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Approved Amount (₵) *</Label>
+              <Label className="text-sm font-medium">Approved Amount (\u20B5) *</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">{CURRENCY_SYMBOL}</span>
                 <Input

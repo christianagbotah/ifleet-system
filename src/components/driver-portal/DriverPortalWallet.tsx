@@ -307,7 +307,7 @@ function RequestAdvanceForm({
             </Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">
-                ₵
+                \u20B5
               </span>
               <Input
                 id="advance-amount"

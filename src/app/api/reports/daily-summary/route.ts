@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       ['Fuel', 'Total Liters', fuelData.rows.reduce((sum, r) => sum + (Number(r[4]) || 0), 0).toFixed(1)],
       // Expense summary
       ['Expenses', 'Total Entries', expenseData.rows.length],
-      ['Expenses', 'Total Amount (₵)', expenseData.rows.reduce((sum, r) => sum + (Number(r[6]) || 0), 0).toFixed(2)],
+      ['Expenses', 'Total Amount (\u20B5)', expenseData.rows.reduce((sum, r) => sum + (Number(r[6]) || 0), 0).toFixed(2)],
     ]
 
     const csvContent = buildCsv(allHeaders, allRows)
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
             userId: admin.id,
             type: 'daily_report',
             title: `Daily Summary — ${dateStr}`,
-            message: `${tripCount} trips completed, ₵${totalExpenses.toFixed(2)} in expenses. Report generated and saved.`,
+            message: `${tripCount} trips completed, \u20B5${totalExpenses.toFixed(2)} in expenses. Report generated and saved.`,
             channels: ['in_app'],
           })
         )

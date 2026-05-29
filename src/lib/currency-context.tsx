@@ -8,7 +8,7 @@ import { useAuthStore } from '@/lib/store/auth'
 export interface ExchangeRate {
   code: string        // e.g. "GHS", "USD", "XOF"
   name: string        // e.g. "Ghana Cedi"
-  symbol: string      // e.g. "₵", "$", "CFA"
+  symbol: string      // e.g. "\u20B5", "$", "CFA"
   rateToBase: number  // relative to base currency (base = 1.0)
 }
 
@@ -24,7 +24,7 @@ export interface LiveRateInfo {
 }
 
 export interface CurrencyContextValue {
-  /** Display symbol, e.g. "₵" or "$" */
+  /** Display symbol, e.g. "\u20B5" or "$" */
   currencySymbol: string
   /** ISO 4217 code, e.g. "GHS" or "USD" */
   currencyCode: string
@@ -55,7 +55,7 @@ export interface CurrencyContextValue {
 const SUPPORTED_CURRENCIES = ['GHS', 'USD', 'EUR', 'GBP', 'XOF', 'NGN', 'CNY'] as const
 
 export const DEFAULT_EXCHANGE_RATES: ExchangeRate[] = [
-  { code: 'GHS', name: 'Ghana Cedi',       symbol: '₵',   rateToBase: 1 },
+  { code: 'GHS', name: 'Ghana Cedi',       symbol: '\u20B5',   rateToBase: 1 },
   { code: 'USD', name: 'US Dollar',        symbol: '$',   rateToBase: 1 / 14.5 },
   { code: 'XOF', name: 'West African CFA', symbol: 'CFA', rateToBase: 1 / 41.4 },
 ]
@@ -67,7 +67,7 @@ const LS_LIVE_INFO_KEY = 'ifleet_live_rate_info'
 // ============ SYMBOL MAP ============
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
-  GHS: '₵',
+  GHS: '\u20B5',
   USD: '$',
   EUR: '€',
   GBP: '£',
@@ -115,7 +115,7 @@ const DEFAULT_LIVE_INFO: LiveRateInfo = {
   source: 'manual',
 }
 const FALLBACK: CurrencyContextValue = {
-  currencySymbol: '₵',
+  currencySymbol: '\u20B5',
   currencyCode: 'GHS',
   baseCurrency: DEFAULT_BASE,
   exchangeRates: DEFAULT_EXCHANGE_RATES,
@@ -130,7 +130,7 @@ const FALLBACK: CurrencyContextValue = {
 }
 
 let storeState: StoreState = {
-  currencySymbol: '₵',
+  currencySymbol: '\u20B5',
   currencyCode: 'GHS',
   baseCurrency: DEFAULT_BASE,
   exchangeRates: DEFAULT_EXCHANGE_RATES,
@@ -501,7 +501,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
 /**
  * Returns the full currency context:
- * - `currencySymbol` — display symbol (e.g. "₵")
+ * - `currencySymbol` — display symbol (e.g. "\u20B5")
  * - `currencyCode` — ISO code (e.g. "GHS")
  * - `baseCurrency` — the default base currency code
  * - `exchangeRates` — array of ExchangeRate objects
