@@ -561,20 +561,23 @@ export default function ReportsPage() {
       try {
         const res = await fetch(url, { headers })
         if (!res.ok) return []
-        return await res.json()
+        const json = await res.json()
+        // APIs return paginated response: { data: [...], total, page, limit }
+        const items = Array.isArray(json) ? json : (json.data ?? [])
+        return items as T[]
       } catch {
         return []
       }
     }
 
     Promise.all([
-      safeFetch<{ id: string; plateNumber: string; make: string; model: string }>('/api/trucks').then((data) =>
+      safeFetch<{ id: string; plateNumber: string; make: string; model: string }>('/api/trucks?limit=500').then((data) =>
         setTruckOptions(data.map((t) => ({ value: t.id, label: `${t.plateNumber} — ${t.make} ${t.model}` })))
       ),
-      safeFetch<{ id: string; firstName: string; lastName: string; employeeId: string }>('/api/drivers').then((data) =>
-        setDriverOptions(data.map((d) => ({ value: d.id, label: `${d.firstName} ${d.lastName} (${d.employeeId})` })))
+      safeFetch<{ id: string; firstName: string; lastName: string; employeeId: string }>('/api/drivers?limit=500').then((data) =>
+        setDriverOptions(data.map((d) => ({ value: d.id, label: `${d.firstName} ${d.lastName}${d.employeeId ? ` (${d.employeeId})` : ''}` })))
       ),
-      safeFetch<{ id: string; name: string }>('/api/destination-zones').then((data) =>
+      safeFetch<{ id: string; name: string }>('/api/destination-zones?limit=500').then((data) =>
         setZoneOptions(data.map((z) => ({ value: z.id, label: z.name })))
       ),
     ])
@@ -587,7 +590,7 @@ export default function ReportsPage() {
 
   // Set document title on mount
   useEffect(() => {
-    document.title = 'Reports Hub — iFleet Pro'
+    document.title = 'Reports Hub — iFleetPro'
   }, [])
 
   // ── Build common params from current filters ──

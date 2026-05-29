@@ -102,6 +102,7 @@ async function generateExcelReport(type: string, params: ReportParams): Promise<
     trip_profitability: (p) => buildTripProfitabilityReport(p),
     fuel_analytics: (p) => buildFuelAnalyticsReport(p),
     safety_scoring: (p) => buildSafetyScoringReport(p),
+    fleet_profit_loss: (p) => buildFleetProfitLossFromCsv(p),
   }
 
   const builder = builders[type]
@@ -146,6 +147,7 @@ async function generatePdfReport(type: string, params: ReportParams): Promise<Bu
     trip_profitability: (p) => buildTripProfitabilityReportPdf(p),
     fuel_analytics: (p) => buildFuelAnalyticsReportPdf(p),
     safety_scoring: (p) => buildSafetyScoringReportPdf(p),
+    fleet_profit_loss: (p) => buildFleetProfitLossPdfFromCsv(p),
   }
 
   const builder = builders[type]
@@ -153,6 +155,95 @@ async function generatePdfReport(type: string, params: ReportParams): Promise<Bu
 
   const pdf = await builder(params)
   return Buffer.from(pdf.output('arraybuffer'))
+}
+
+// ─── Generic CSV-to-Excel builder for fleet_profit_loss ─────────────────
+async function buildFleetProfitLossFromCsv(params: ReportParams): Promise<{ toBuffer: () => Promise<Buffer> }> {
+  const ExcelJS = (await import('exceljs')).default
+  const { fetchFleetProfitLossData } = await import('@/lib/reports/report-data-new')
+  const data = await fetchFleetProfitLossData(params)
+
+  const workbook = new ExcelJS.Workbook()
+  workbook.creator = 'iFleet Pro'
+  const sheet = workbook.addWorksheet('Fleet Profit & Loss')
+
+  // Style the header row
+  const headerRow = sheet.addRow(data.headers)
+  headerRow.eachCell((cell) => {
+    cell.font = { bold: true, size: 11 }
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8F5E9' } }
+    cell.alignment = { horizontal: 'center' }
+    cell.border = {
+      bottom: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+    }
+  })
+
+  // Add data rows
+  for (const row of data.rows) {
+    sheet.addRow(row.map((v) => v ?? ''))
+  }
+
+  // Auto-fit columns (approximate)
+  data.headers.forEach((h, i) => {
+    const col = sheet.getColumn(i + 1)
+    col.width = Math.max(h.length + 2, 14)
+  })
+
+  const buffer = await workbook.xlsx.writeBuffer()
+  return { toBuffer: () => Promise.resolve(Buffer.from(buffer)) }
+}
+
+// ─── Generic CSV-to-PDF builder for fleet_profit_loss ──────────────────
+async function buildFleetProfitLossPdfFromCsv(params: ReportParams): Promise<{ output: (type: string) => ArrayBuffer }> {
+  const jsPDF = (await import('jspdf')).default
+  const autoTable = (await import('jspdf-autotable')).default
+  const { fetchFleetProfitLossData } = await import('@/lib/reports/report-data-new')
+  const data = await fetchFleetProfitLossData(params)
+
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+
+  // Title
+  doc.setFontSize(18)
+  doc.setTextColor(30, 30, 30)
+  doc.text('Fleet Profit & Loss Report', 14, 20)
+
+  // Date range subtitle
+  doc.setFontSize(10)
+  doc.setTextColor(100, 100, 100)
+  const dateRange = params.dateFrom && params.dateTo
+    ? `${params.dateFrom} to ${params.dateTo}`
+    : new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  doc.text(`Period: ${dateRange}`, 14, 28)
+
+  // Generated timestamp
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 34)
+
+  // Draw table
+  autoTable(doc, {
+    startY: 40,
+    head: [data.headers],
+    body: data.rows.map((row) => row.map((v) => v ?? '')),
+    styles: { fontSize: 8, cellPadding: 3 },
+    headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
+    margin: { left: 14, right: 14 },
+  })
+
+  // Footer
+  const pageCount = doc.getNumberOfPages()
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.setFontSize(8)
+    doc.setTextColor(150, 150, 150)
+    doc.text(
+      `iFleet Pro — Fleet Management System | Page ${i} of ${pageCount}`,
+      doc.internal.pageSize.getWidth() / 2,
+      doc.internal.pageSize.getHeight() - 10,
+      { align: 'center' }
+    )
+  }
+
+  return { output: (type: string) => doc.output(type) as ArrayBuffer }
 }
 
 export async function POST(request: NextRequest) {
