@@ -279,11 +279,8 @@ export class PdfReport {
       styles: allStyles,
       margin: { left: 10, right: 10 },
       tableWidth: 'auto',
-      didDrawPage: (data: { pageNumber: number }) => {
-        if (data.pageNumber > 1) {
-          this.addHeader()
-        }
-      },
+      // Do NOT repeat table column headers on subsequent pages
+      repeatHeader: false,
     }
 
     if (options?.columnStyles) {

@@ -67,22 +67,27 @@ const REPORT_NAMES: Record<string, string> = {
 /** Ghana Cedi sign U+20B5 — runtime generation avoids encoding issues */
 const CEDI = String.fromCodePoint(0x20B5)
 
+/** Strip any leading currency-like prefix (handles µ→₵ encoding corruption) */
+function extractNumericValue(value: string | number): number {
+  if (typeof value === 'number') return value
+  const cleaned = String(value).replace(/^[^0-9-]*/, '') // strip non-numeric prefix
+  const num = parseFloat(cleaned.replace(/,/g, ''))
+  return isNaN(num) ? 0 : num
+}
+
 function formatCell(value: string | number | null | undefined, header: string): string {
   if (value === null || value === undefined) return '—'
 
   const h = header.toLowerCase()
 
-  // Currency fields
+  // Currency fields — always re-format to guarantee correct ₵ symbol
   if (h.includes('revenue') || h.includes('cost') || h.includes('price') || h.includes('profit') ||
       h.includes('amount') || h.includes('budget') || h.includes('expense') || h.includes('rate') ||
       h.includes('salary') || h.includes('deduction') || h.includes('net pay') || h.includes('gross') ||
       h.includes('total value') || h.includes('unit price')) {
-    if (typeof value === 'number') {
-      const str = String(value)
-      if (str.startsWith(CEDI)) return str
-      return `${CEDI}${value.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    }
-    return String(value)
+    const num = extractNumericValue(value)
+    if (num === 0 && String(value).trim() === '') return '—'
+    return `${CEDI}${num.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   }
 
   // Percentage
