@@ -62,13 +62,11 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
 
+/** Ghana Cedi sign — runtime generation avoids encoding issues */
+const CEDI = String.fromCodePoint(0x20B5)
+
 function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-GH', {
-    style: 'currency',
-    currency: 'GHS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
 }
 
 function getProgressColor(percent: number): string {

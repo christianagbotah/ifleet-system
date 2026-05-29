@@ -63,13 +63,10 @@ function formatDate(dateStr: string) {
   })
 }
 
+const CEDI = String.fromCodePoint(0x20B5)
+
 function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('en-GH', {
-    style: 'currency',
-    currency: 'GHS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(amount)
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
 }
 
 function getUniqueItems(trip: Trip): string {
