@@ -22,9 +22,9 @@ const C = {
   green: [22, 163, 74] as [number, number, number],
 }
 
-/** Format a number as GHS currency string */
+/** Format a number as ₵ currency string */
 function ghs(amount: number): string {
-  return `GHS ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `₵${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 /**

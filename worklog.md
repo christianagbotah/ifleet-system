@@ -54,3 +54,43 @@ Stage Summary:
 - Preview shows data using responsive shadcn Table with status badges and currency formatting
 - Back button navigation from preview to Reports Hub
 - Files created: 2 new files, 2 modified files
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Change all GHS currency display strings to ₵ symbol across reports and entire app
+
+Work Log:
+- Updated core format functions to use ₵ prefix instead of "GHS " prefix:
+  - pdf-generator.ts: formatGHS() → ₵
+  - csv-generator.ts: csvCurrency() → ₵
+  - report-builders.ts: local formatGHS() → ₵
+  - report-builders-new.ts: local formatGHS() → ₵
+  - payslip-pdf.ts: ghs() → ₵
+  - invoice-pdf.ts: ghs() → ₵
+  - waybill-pdf.ts: inline GHS → ₵
+- Changed all column headers from (GHS) to (₵) in:
+  - report-data.ts, report-data-new.ts
+  - report-builders.ts, report-builders-new.ts
+  - pdf-builders-new.ts (13 header arrays)
+  - export route.ts
+  - import-csv-dialog.tsx, import-config.ts
+- Updated ReportPreviewView.tsx currency formatting to ₵
+- Updated 25+ UI form labels across components:
+  - DvlaFormDialog, RoadworthyFormDialog, DvlaDetailSheet
+  - TollTrackerView, CashAdvancesView, ExpenseApprovalsView (x2)
+  - FuelBudgetView, FuelPriceTrackerView, WarehouseInventoryView
+  - SettlementsView, TripsPage, ZoneRatesPage, IncentivesPage, CashAdvancesPage
+- Updated notification/notification display strings:
+  - NotificationDetailDialog.tsx, notifications/check/route.ts
+  - activity-feed/route.ts, scheduler/jobs.ts, daily-summary/route.ts
+- Updated invoice delivery templates (email HTML + WhatsApp + SMS)
+- Updated DriverPortalWallet.tsx currency prefix
+- Added backward compatibility in import route: col() helper supports both (₵) and (GHS) headers
+- Preserved ISO currency codes (GHS) where used by payment APIs (Paystack, exchange rates)
+
+Stage Summary:
+- All user-facing GHS display strings replaced with ₵ symbol
+- Backward compatible CSV import (accepts both old and new header formats)
+- ISO codes and API references to GHS preserved (Paystack, exchange rates, currencies API)
+- All lint checks pass

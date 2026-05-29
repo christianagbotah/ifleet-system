@@ -943,7 +943,7 @@ function AddStationForm({ onSubmit, loading }: { onSubmit: (data: Record<string,
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Corporate Rate (GHS/L)</Label>
+          <Label className="text-xs">Corporate Rate (₵/L)</Label>
           <Input type="number" step="0.01" placeholder="Negotiated rate" value={form.corporateRatePerLiter} onChange={e => setForm(f => ({ ...f, corporateRatePerLiter: e.target.value }))} />
         </div>
         <div className="space-y-1.5">
@@ -1020,7 +1020,7 @@ function UpdatePriceForm({ station, onSubmit, loading }: { station: FuelStation;
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Price per Liter (GHS)</Label>
+            <Label className="text-xs">Price per Liter (₵)</Label>
             <Input type="number" step="0.01" placeholder="0.00" value={price} onChange={e => setPrice(e.target.value)} />
           </div>
         </div>

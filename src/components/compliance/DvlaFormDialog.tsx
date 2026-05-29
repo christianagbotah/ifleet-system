@@ -466,7 +466,7 @@ export function DvlaFormDialog({ open, onOpenChange, registration, onSuccess }: 
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="reg-fee">Registration Fee (GHS)</Label>
+                <Label htmlFor="reg-fee">Registration Fee (₵)</Label>
                 <Input
                   id="reg-fee"
                   type="number"

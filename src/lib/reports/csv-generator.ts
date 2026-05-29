@@ -37,7 +37,7 @@ export function csvDateTime(date: Date | string | null | undefined): string {
 
 export function csvCurrency(amount: number | null | undefined): string {
   if (amount === null || amount === undefined) return ''
-  return `GHS ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `₵${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function csvNumber(value: number | null | undefined, decimals?: number): string {

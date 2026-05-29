@@ -76,8 +76,8 @@ function formatCell(value: string | number | null | undefined, header: string): 
       h.includes('total value') || h.includes('unit price')) {
     if (typeof value === 'number') {
       const str = String(value)
-      if (str.startsWith('GHS')) return str
-      return `GHS ${value.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      if (str.startsWith('₵')) return str
+      return `₵${value.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     }
     return String(value)
   }

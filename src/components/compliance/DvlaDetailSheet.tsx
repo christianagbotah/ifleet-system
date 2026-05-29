@@ -468,13 +468,13 @@ export function DvlaDetailSheet({ registrationId, open, onOpenChange, onEdit, on
                 <DetailCell
                   icon={<CreditCard className="h-3.5 w-3.5" />}
                   label="Registration Fee"
-                  value={registration.registrationFee ? `GHS ${registration.registrationFee.toLocaleString()}` : 'Not recorded'}
+                  value={registration.registrationFee ? `₵${registration.registrationFee.toLocaleString()}` : 'Not recorded'}
                   muted={!registration.registrationFee}
                 />
                 <DetailCell
                   icon={<CreditCard className="h-3.5 w-3.5" />}
                   label="Renewal Fee"
-                  value={registration.renewalFee ? `GHS ${registration.renewalFee.toLocaleString()}` : 'Not recorded'}
+                  value={registration.renewalFee ? `₵${registration.renewalFee.toLocaleString()}` : 'Not recorded'}
                   muted={!registration.renewalFee}
                 />
               </div>

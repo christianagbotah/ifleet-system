@@ -639,7 +639,7 @@ export function FuelBudgetView() {
             </div>
 
             <div className="space-y-2">
-              <Label>Budget Limit (GHS) *</Label>
+              <Label>Budget Limit (₵) *</Label>
               <Input
                 type="number"
                 placeholder="e.g., 5000"
@@ -690,7 +690,7 @@ export function FuelBudgetView() {
           </DialogHeader>
           <DialogBody className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Budget Limit (GHS) *</Label>
+              <Label>Budget Limit (₵) *</Label>
               <Input
                 type="number"
                 value={formBudgetLimit}

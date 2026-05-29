@@ -105,8 +105,8 @@ export async function sendInvoiceNotification(
       <tr>
         <td style="padding: 6px 0; font-size: 13px; color: #374151; border-bottom: 1px solid #f3f4f6;">${item.description}</td>
         <td style="padding: 6px 8px; font-size: 13px; color: #374151; text-align: right; border-bottom: 1px solid #f3f4f6;">${item.quantity.toLocaleString()}</td>
-        <td style="padding: 6px 8px; font-size: 13px; color: #374151; text-align: right; border-bottom: 1px solid #f3f4f6;">GHS ${item.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
-        <td style="padding: 6px 0; font-size: 13px; color: #111827; font-weight: 600; text-align: right; border-bottom: 1px solid #f3f4f6;">GHS ${item.total.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
+        <td style="padding: 6px 8px; font-size: 13px; color: #374151; text-align: right; border-bottom: 1px solid #f3f4f6;">₵${item.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
+        <td style="padding: 6px 0; font-size: 13px; color: #111827; font-weight: 600; text-align: right; border-bottom: 1px solid #f3f4f6;">₵${item.total.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
       </tr>
     `).join('')
 
@@ -395,12 +395,12 @@ function buildInvoiceEmailHtml(params: {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding: 4px 0; font-size: 13px; color: #6b7280; text-align: right;">Subtotal</td>
-                  <td style="padding: 4px 0; font-size: 13px; color: #111827; font-weight: 600; text-align: right; width: 120px;">GHS ${subtotal.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
+                  <td style="padding: 4px 0; font-size: 13px; color: #111827; font-weight: 600; text-align: right; width: 120px;">₵${subtotal.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 ${taxRate > 0 ? `
                 <tr>
                   <td style="padding: 4px 0; font-size: 13px; color: #6b7280; text-align: right;">${taxLabel}</td>
-                  <td style="padding: 4px 0; font-size: 13px; color: #111827; text-align: right; width: 120px;">GHS ${taxAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
+                  <td style="padding: 4px 0; font-size: 13px; color: #111827; text-align: right; width: 120px;">₵${taxAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 ` : ''}
                 <tr>
@@ -408,7 +408,7 @@ function buildInvoiceEmailHtml(params: {
                 </tr>
                 <tr>
                   <td style="padding: 4px 0; font-size: 16px; color: #111827; font-weight: 700; text-align: right;">Total Due</td>
-                  <td style="padding: 4px 0; font-size: 16px; color: #d97706; font-weight: 700; text-align: right; width: 120px;">GHS ${totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
+                  <td style="padding: 4px 0; font-size: 16px; color: #d97706; font-weight: 700; text-align: right; width: 120px;">₵${totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}</td>
                 </tr>
               </table>
             </td>
@@ -486,7 +486,7 @@ function buildInvoiceSmsMessage(params: {
 
   return (
     `${companyName}: Invoice ${invoiceNumber} — ` +
-    `Total: GHS ${totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}. ` +
+    `Total: ₵${totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}. ` +
     `Due: ${dueDate}. ` +
     `View & pay: ${shareLink}`
   )
@@ -511,7 +511,7 @@ function buildInvoiceWhatsappMessage(params: {
   const { companyName, invoiceNumber, issueDate, dueDate, clientName, items, subtotal, taxAmount, totalAmount, shareLink } = params
 
   const itemLines = items
-    .map((item, idx) => `${idx + 1}. ${item.description} — ${item.quantity} x GHS ${item.unitPrice.toFixed(2)} = GHS ${item.total.toFixed(2)}`)
+    .map((item, idx) => `${idx + 1}. ${item.description} — ${item.quantity} x ₵${item.unitPrice.toFixed(2)} = ₵${item.total.toFixed(2)}`)
     .join('\n')
 
   return (
@@ -521,9 +521,9 @@ function buildInvoiceWhatsappMessage(params: {
     `Date: ${issueDate}\n` +
     `Due: ${dueDate}\n\n` +
     `*Items:*\n${itemLines}\n\n` +
-    `Subtotal: GHS ${subtotal.toLocaleString('en-GH', { minimumFractionDigits: 2 })}\n` +
-    `Tax: GHS ${taxAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}\n` +
-    `*Total: GHS ${totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}*\n\n` +
+    `Subtotal: ₵${subtotal.toLocaleString('en-GH', { minimumFractionDigits: 2 })}\n` +
+    `Tax: ₵${taxAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}\n` +
+    `*Total: ₵${totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })}*\n\n` +
     `View invoice online: ${shareLink}\n\n` +
     `Thank you for your business!`
   )

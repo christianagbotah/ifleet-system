@@ -751,7 +751,7 @@ export default function IncentivesPage() {
               )} />
               <FormField control={form.control} name="amount" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount (GHS) *</FormLabel>
+                  <FormLabel>Amount (₵) *</FormLabel>
                   <FormControl><Input type="number" step="0.01" {...field} placeholder="200.00" /></FormControl>
                   <FormMessage />
                 </FormItem>

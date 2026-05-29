@@ -316,7 +316,7 @@ function InspectionDetailDialog({
             {inspection.inspectionFee != null && (
               <div>
                 <p className="text-xs text-muted-foreground">Inspection Fee</p>
-                <p className="text-sm font-medium">GHS {inspection.inspectionFee.toLocaleString()}</p>
+                <p className="text-sm font-medium">₵{inspection.inspectionFee.toLocaleString()}</p>
               </div>
             )}
           </div>

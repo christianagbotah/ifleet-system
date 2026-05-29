@@ -482,9 +482,9 @@ export async function fetchDailySummaryData(date?: string): Promise<ReportData> 
     ['Trips Departed Today', trips.length],
     ['Total Revenue (Trips Today)', csvCurrency(totalTripRevenue)],
     ['Expenses Recorded Today', expenses.length],
-    ['Total Expenses (GHS)', csvCurrency(totalExpenses)],
+    ['Total Expenses (₵)', csvCurrency(totalExpenses)],
     ['Fuel Logs Today', fuelLogs.length],
-    ['Total Fuel Cost (GHS)', csvCurrency(totalFuelCost)],
+    ['Total Fuel Cost (₵)', csvCurrency(totalFuelCost)],
     ['Total Fuel (Liters)', csvNumber(totalFuelLiters, 1)],
   ]
 
@@ -786,8 +786,8 @@ export async function fetchCostAnalyticsData(params: ReportParams): Promise<Repo
   ])
 
   const headers = [
-    'Truck', 'Make', 'Model', 'Fuel Cost (GHS)', 'Maintenance (GHS)', 'Other Costs (GHS)',
-    'Total Cost (GHS)', 'Distance (km)', 'Tonnage', 'Cost/km (GHS)', 'Cost/Tonne (GHS)',
+    'Truck', 'Make', 'Model', 'Fuel Cost (₵)', 'Maintenance (₵)', 'Other Costs (₵)',
+    'Total Cost (₵)', 'Distance (km)', 'Tonnage', 'Cost/km (₵)', 'Cost/Tonne (₵)',
   ]
 
   const rows: (string | number | null | undefined)[][] = []
@@ -867,8 +867,8 @@ export async function fetchTripProfitabilityData(params: ReportParams): Promise<
 
   const headers = [
     'Trip #', 'Date', 'Driver', 'Truck', 'Route', 'Client',
-    'Revenue (GHS)', 'Fuel Cost (GHS)', 'Expenses (GHS)', 'Total Cost (GHS)',
-    'Net Profit (GHS)', 'Margin (%)',
+    'Revenue (₵)', 'Fuel Cost (₵)', 'Expenses (₵)', 'Total Cost (₵)',
+    'Net Profit (₵)', 'Margin (%)',
   ]
 
   const rows = trips.map(t => {
@@ -928,7 +928,7 @@ export async function fetchFuelAnalyticsData(params: ReportParams): Promise<Repo
   }
 
   const headers = [
-    'Truck', 'Total Liters', 'Total Cost (GHS)', 'Avg Cost/Liter', 'Fill-ups',
+    'Truck', 'Total Liters', 'Total Cost (₵)', 'Avg Cost/Liter', 'Fill-ups',
     'Avg Fill (L)', 'L/100km', 'Efficiency Rating',
   ]
 
@@ -1138,9 +1138,9 @@ export async function fetchFleetProfitLossData(params: ReportParams): Promise<Re
   ])
 
   const headers = [
-    'Truck', 'Make', 'Model', 'Driver', 'Trips', 'Revenue (GHS)',
-    'Fuel Cost (GHS)', 'Maintenance (GHS)', 'Tolls (GHS)', 'Other Expenses (GHS)',
-    'Total Expenses (GHS)', 'Net Income/Loss (GHS)', 'Margin (%)',
+    'Truck', 'Make', 'Model', 'Driver', 'Trips', 'Revenue (₵)',
+    'Fuel Cost (₵)', 'Maintenance (₵)', 'Tolls (₵)', 'Other Expenses (₵)',
+    'Total Expenses (₵)', 'Net Income/Loss (₵)', 'Margin (%)',
   ]
 
   const rows: (string | number | null | undefined)[][] = []
