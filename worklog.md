@@ -485,3 +485,22 @@ Stage Summary:
 - Committed as b5b589c and pushed to origin/main
 - Files modified: src/app/layout.tsx, src/components/pages/ReportsPage.tsx, src/app/api/reports/generate/route.ts
 - All 5 issues resolved: page title, favicon, PDF/Print failure, filter population, destination zone filter
+
+---
+Task ID: 2
+Agent: Main
+Task: Add View button with detail sheet to DVLA registrations page
+
+Work Log:
+- Explored existing View button patterns from TrucksView, DriversView, TyreDetailSheet
+- Confirmed API endpoint GET /api/dvla-registrations/[id] already exists
+- Created DvlaDetailSheet.tsx component following existing detail sheet patterns
+- Updated DvlaView.tsx to add Eye icon View button in desktop table and mobile cards
+- Widened Actions column from 80px to 110px to fit View + Edit + Delete
+- Integrated sheet with edit/delete handlers (edit closes sheet, opens form dialog)
+- Confirmed DVLA data is already part of compliance_report — no separate DVLA report needed
+
+Stage Summary:
+- Committed as 393803a and pushed to origin/main
+- New file: src/components/compliance/DvlaDetailSheet.tsx (comprehensive detail view)
+- Modified: src/components/compliance/DvlaView.tsx (added View button + sheet integration)
