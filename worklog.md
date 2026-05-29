@@ -160,3 +160,28 @@ Stage Summary:
 - Previous fixes for ₵ in PDFs (custom font), getCursorPosition crash, and body reference error are all committed
 - The µ issue on the live site is caused by the VPS not having pulled the latest code
 - User needs to: `cd /home/ifleetpro/app && git stash && git pull && pm2 restart ifleetpro`
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Bulletproof ₵ symbol fix + PDF page header duplication fix
+
+Work Log:
+- User confirmed µ still showing after pull — `\u20B5` escape was still being corrupted at runtime
+- Created `CEDI` constant using `String.fromCodePoint(0x20B5)` in csv-generator.ts
+- This generates ₵ at RUNTIME (not parse time), making it immune to encoding/transpilation/git issues
+- Replaced all `\u20B5` with CEDI constant across 14 files:
+  - csv-generator.ts, pdf-generator.ts, report-builders.ts, report-builders-new.ts
+  - report-data.ts, report-data-new.ts, pdf-builders.ts, pdf-builders-new.ts
+  - payslip-pdf.ts, invoice-pdf.ts, waybill-pdf.ts
+  - ReportPreviewView.tsx (inline constant, can't import server module)
+  - constants.ts, currency-context.tsx
+- Fixed PDF page header duplication: modified `didDrawPage` in addTable() to skip page 1
+  (since addHeader() is already called explicitly before addTable())
+- All lint checks pass, pushed as commit 31aeac4
+
+Stage Summary:
+- `String.fromCodePoint(0x20B5)` is the most bulletproof approach — pure numeric literal, no encoding possible
+- 14 files updated, zero lint errors
+- PDF header bar now only draws on page 2+ via didDrawPage (page 1 header drawn explicitly)
+- User needs to pull on VPS: `cd /home/ifleetpro/app && git stash && git pull && pm2 restart ifleetpro`
