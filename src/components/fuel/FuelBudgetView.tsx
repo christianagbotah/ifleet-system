@@ -343,7 +343,7 @@ export function FuelBudgetView() {
                     </div>
                     <div className="rounded-full bg-blue-100 p-3">
                       <span className="text-sm font-semibold text-blue-600">
-                        \u20B5
+                        {CEDI}
                       </span>
                     </div>
                   </div>
@@ -637,7 +637,7 @@ export function FuelBudgetView() {
             </div>
 
             <div className="space-y-2">
-              <Label>Budget Limit (\u20B5) *</Label>
+              <Label>Budget Limit ({CEDI}) *</Label>
               <Input
                 type="number"
                 placeholder="e.g., 5000"
@@ -688,7 +688,7 @@ export function FuelBudgetView() {
           </DialogHeader>
           <DialogBody className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Budget Limit (\u20B5) *</Label>
+              <Label>Budget Limit ({CEDI}) *</Label>
               <Input
                 type="number"
                 value={formBudgetLimit}
