@@ -443,7 +443,9 @@ export const ModelName = {
   VehicleInspection: 'VehicleInspection',
   WarehouseItem: 'WarehouseItem',
   WeightVerification: 'WeightVerification',
-  ZoneRate: 'ZoneRate'
+  ZoneRate: 'ZoneRate',
+  DvlaRenewalHistory: 'DvlaRenewalHistory',
+  InsuranceRenewalHistory: 'InsuranceRenewalHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -459,7 +461,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate"
+    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4423,6 +4425,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DvlaRenewalHistory: {
+      payload: Prisma.$DvlaRenewalHistoryPayload<ExtArgs>
+      fields: Prisma.DvlaRenewalHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DvlaRenewalHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DvlaRenewalHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.DvlaRenewalHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DvlaRenewalHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.DvlaRenewalHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.DvlaRenewalHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.DvlaRenewalHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DvlaRenewalHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>
+        }
+        update: {
+          args: Prisma.DvlaRenewalHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.DvlaRenewalHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DvlaRenewalHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DvlaRenewalHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DvlaRenewalHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.DvlaRenewalHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDvlaRenewalHistory>
+        }
+        groupBy: {
+          args: Prisma.DvlaRenewalHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DvlaRenewalHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DvlaRenewalHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DvlaRenewalHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    InsuranceRenewalHistory: {
+      payload: Prisma.$InsuranceRenewalHistoryPayload<ExtArgs>
+      fields: Prisma.InsuranceRenewalHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InsuranceRenewalHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InsuranceRenewalHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.InsuranceRenewalHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InsuranceRenewalHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.InsuranceRenewalHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.InsuranceRenewalHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.InsuranceRenewalHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.InsuranceRenewalHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>
+        }
+        update: {
+          args: Prisma.InsuranceRenewalHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.InsuranceRenewalHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InsuranceRenewalHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.InsuranceRenewalHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceRenewalHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.InsuranceRenewalHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInsuranceRenewalHistory>
+        }
+        groupBy: {
+          args: Prisma.InsuranceRenewalHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InsuranceRenewalHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InsuranceRenewalHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InsuranceRenewalHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -5765,6 +5899,32 @@ export const ZoneRateScalarFieldEnum = {
 export type ZoneRateScalarFieldEnum = (typeof ZoneRateScalarFieldEnum)[keyof typeof ZoneRateScalarFieldEnum]
 
 
+export const DvlaRenewalHistoryScalarFieldEnum = {
+  id: 'id',
+  dvlaRegistrationId: 'dvlaRegistrationId',
+  previousData: 'previousData',
+  renewalFee: 'renewalFee',
+  renewedByName: 'renewedByName',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type DvlaRenewalHistoryScalarFieldEnum = (typeof DvlaRenewalHistoryScalarFieldEnum)[keyof typeof DvlaRenewalHistoryScalarFieldEnum]
+
+
+export const InsuranceRenewalHistoryScalarFieldEnum = {
+  id: 'id',
+  insuranceId: 'insuranceId',
+  previousData: 'previousData',
+  renewalFee: 'renewalFee',
+  renewedByName: 'renewedByName',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type InsuranceRenewalHistoryScalarFieldEnum = (typeof InsuranceRenewalHistoryScalarFieldEnum)[keyof typeof InsuranceRenewalHistoryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -6668,6 +6828,28 @@ export const ZoneRateOrderByRelevanceFieldEnum = {
 export type ZoneRateOrderByRelevanceFieldEnum = (typeof ZoneRateOrderByRelevanceFieldEnum)[keyof typeof ZoneRateOrderByRelevanceFieldEnum]
 
 
+export const DvlaRenewalHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dvlaRegistrationId: 'dvlaRegistrationId',
+  previousData: 'previousData',
+  renewedByName: 'renewedByName',
+  notes: 'notes'
+} as const
+
+export type DvlaRenewalHistoryOrderByRelevanceFieldEnum = (typeof DvlaRenewalHistoryOrderByRelevanceFieldEnum)[keyof typeof DvlaRenewalHistoryOrderByRelevanceFieldEnum]
+
+
+export const InsuranceRenewalHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  insuranceId: 'insuranceId',
+  previousData: 'previousData',
+  renewedByName: 'renewedByName',
+  notes: 'notes'
+} as const
+
+export type InsuranceRenewalHistoryOrderByRelevanceFieldEnum = (typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum)[keyof typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -6878,6 +7060,8 @@ export type GlobalOmitConfig = {
   warehouseItem?: Prisma.WarehouseItemOmit
   weightVerification?: Prisma.WeightVerificationOmit
   zoneRate?: Prisma.ZoneRateOmit
+  dvlaRenewalHistory?: Prisma.DvlaRenewalHistoryOmit
+  insuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryOmit
 }
 
 /* Types for Logging */

@@ -341,3 +341,13 @@ export type WeightVerification = Prisma.WeightVerificationModel
  * 
  */
 export type ZoneRate = Prisma.ZoneRateModel
+/**
+ * Model DvlaRenewalHistory
+ * 
+ */
+export type DvlaRenewalHistory = Prisma.DvlaRenewalHistoryModel
+/**
+ * Model InsuranceRenewalHistory
+ * 
+ */
+export type InsuranceRenewalHistory = Prisma.InsuranceRenewalHistoryModel

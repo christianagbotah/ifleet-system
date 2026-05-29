@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { motion } from 'framer-motion'
-import { ShieldCheck, Search, AlertCircle, RefreshCw, Clock, Plus, Pencil } from 'lucide-react'
+import { ShieldCheck, Search, AlertCircle, RefreshCw, Clock, Plus, Pencil, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -28,6 +28,7 @@ import { useApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { useEntityHighlight } from '@/lib/hooks/useEntityHighlight'
 import { InsuranceFormDialog } from './InsuranceFormDialog'
+import { InsuranceDetailSheet } from './InsuranceDetailSheet'
 import { useAuthStore } from '@/lib/store/auth'
 
 const containerVariants = {
@@ -95,6 +96,8 @@ export function InsuranceView() {
   const [statusFilter, setStatusFilter] = React.useState('all')
   const [formOpen, setFormOpen] = React.useState(false)
   const [editingPolicy, setEditingPolicy] = React.useState<InsurancePolicy | null>(null)
+  const [selectedInsuranceId, setSelectedInsuranceId] = React.useState<string | null>(null)
+  const [detailOpen, setDetailOpen] = React.useState(false)
   const { data, loading, error, refetch } = useApi<{ data: InsurancePolicy[]; total: number }>(
     () => fetch('/api/insurance?limit=100').then(r => r.json()),
     []
@@ -124,6 +127,26 @@ export function InsuranceView() {
       scrollIntoView(rowRefs.current[highlightEntityId])
     }
   }, [highlightEntityId, filteredPolicies, scrollIntoView])
+
+  function handleView(policy: InsurancePolicy) {
+    setSelectedInsuranceId(policy.id)
+    setDetailOpen(true)
+  }
+
+  function handleEdit(policy: InsurancePolicy) {
+    setEditingPolicy(policy)
+    setFormOpen(true)
+  }
+
+  function handleDetailEdit(policy: Record<string, unknown>) {
+    setDetailOpen(false)
+    setEditingPolicy(policy as InsurancePolicy)
+    setFormOpen(true)
+  }
+
+  function handleDetailDeleted() {
+    refetch()
+  }
 
   return (
     <motion.div
@@ -216,7 +239,7 @@ export function InsuranceView() {
                       <TableHead className="hidden lg:table-cell">End Date</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="hidden sm:table-cell">Expiry</TableHead>
-                      {canWrite && <TableHead className="w-10"></TableHead>}
+                      <TableHead className="w-[110px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -250,13 +273,30 @@ export function InsuranceView() {
                         <TableCell className="hidden sm:table-cell">
                           {policy.status === 'active' && <DaysUntilExpiry endDate={policy.endDate} />}
                         </TableCell>
-                        {canWrite && (
-                          <TableCell>
-                            <Button variant="ghost" size="sm" onClick={() => { setEditingPolicy(policy); setFormOpen(true) }}>
-                              <Pencil className="h-3.5 w-3.5" />
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => handleView(policy)}
+                              title="View details"
+                            >
+                              <Eye className="h-3.5 w-3.5" />
                             </Button>
-                          </TableCell>
-                        )}
+                            {canWrite && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => handleEdit(policy)}
+                                title="Edit"
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -289,8 +329,16 @@ export function InsuranceView() {
                       </Badge>
                       <div className="flex items-center gap-2">
                         {policy.status === 'active' && <DaysUntilExpiry endDate={policy.endDate} />}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-xs"
+                          onClick={() => handleView(policy)}
+                        >
+                          <Eye className="mr-1 h-3 w-3" /> View
+                        </Button>
                         {canWrite && (
-                          <Button variant="ghost" size="sm" onClick={() => { setEditingPolicy(policy); setFormOpen(true) }}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(policy)}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
                         )}
@@ -310,6 +358,15 @@ export function InsuranceView() {
         onOpenChange={setFormOpen}
         insurance={editingPolicy}
         onSuccess={() => { refetch(); setEditingPolicy(null) }}
+      />
+
+      {/* Detail Sheet */}
+      <InsuranceDetailSheet
+        insuranceId={selectedInsuranceId}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        onEdit={handleDetailEdit}
+        onDeleted={handleDetailDeleted}
       />
     </motion.div>
   )

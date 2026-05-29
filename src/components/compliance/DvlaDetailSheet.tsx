@@ -24,6 +24,7 @@ import {
   MapPin,
   Phone,
   FileText,
+  RefreshCw,
 } from 'lucide-react'
 import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import { Button } from '@/components/ui/button'
@@ -45,8 +46,18 @@ import { apiFetch } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { DVLA_REGISTRATION_STATUSES, VEHICLE_BODY_TYPES } from '@/lib/constants'
+import { DvlaRenewalDialog } from './DvlaRenewalDialog'
 
 // ─── Types ──────────────────────────────────────────────────────────
+
+interface RenewalHistoryEntry {
+  id: string
+  previousData: string
+  renewalFee?: number | null
+  renewedByName?: string | null
+  notes?: string | null
+  createdAt: string
+}
 
 interface DvlaDetailSheetProps {
   registrationId: string | null
@@ -162,17 +173,26 @@ export function DvlaDetailSheet({ registrationId, open, onOpenChange, onEdit, on
   const [registration, setRegistration] = React.useState<DvlaRegistrationFull | null>(null)
   const [loading, setLoading] = React.useState(false)
   const [deleting, setDeleting] = React.useState(false)
+  const [renewalOpen, setRenewalOpen] = React.useState(false)
+  const [renewalHistory, setRenewalHistory] = React.useState<RenewalHistoryEntry[]>([])
 
   React.useEffect(() => {
     if (open && registrationId) {
       setLoading(true)
-      apiFetch<DvlaRegistrationFull>(`/api/dvla-registrations/${registrationId}`)
-        .then((data) => setRegistration(data))
+      Promise.all([
+        apiFetch<DvlaRegistrationFull>(`/api/dvla-registrations/${registrationId}`),
+        apiFetch<{ data: RenewalHistoryEntry[] }>(`/api/dvla-registrations/${registrationId}/renewals`).catch(() => ({ data: [] })),
+      ])
+        .then(([data, hist]) => {
+          setRegistration(data)
+          setRenewalHistory(hist.data || [])
+        })
         .catch((err) => console.error('Failed to fetch DVLA details:', err))
         .finally(() => setLoading(false))
     }
     if (!open) {
       setRegistration(null)
+      setRenewalHistory([])
     }
   }, [open, registrationId])
 
@@ -191,11 +211,24 @@ export function DvlaDetailSheet({ registrationId, open, onOpenChange, onEdit, on
     }
   }
 
+  const handleRenewalSuccess = () => {
+    if (registrationId) {
+      Promise.all([
+        apiFetch<DvlaRegistrationFull>(`/api/dvla-registrations/${registrationId}`),
+        apiFetch<{ data: RenewalHistoryEntry[] }>(`/api/dvla-registrations/${registrationId}/renewals`).catch(() => ({ data: [] })),
+      ]).then(([data, hist]) => {
+        setRegistration(data)
+        setRenewalHistory(hist.data || [])
+      })
+    }
+  }
+
   if (!registrationId) return null
 
   const expiry = registration ? getExpiryInfo(registration.expiryDate, registration.status) : null
 
   return (
+    <>
     <ResponsiveSheet
       open={open}
       onOpenChange={onOpenChange}
@@ -477,9 +510,73 @@ export function DvlaDetailSheet({ registrationId, open, onOpenChange, onEdit, on
             </div>
           </div>
 
+          {/* Renewal History */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <History className="h-3.5 w-3.5 text-muted-foreground" />
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                Renewal History ({renewalHistory.length})
+              </p>
+            </div>
+            {renewalHistory.length === 0 ? (
+              <div className="rounded-lg border border-dashed p-4 text-center">
+                <p className="text-xs text-muted-foreground">No renewals recorded yet</p>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {renewalHistory.map((entry) => {
+                  let prevData: Record<string, unknown> | null = null
+                  try { prevData = JSON.parse(entry.previousData) } catch { /* ignore */ }
+                  return (
+                    <div key={entry.id} className="rounded-lg border p-3 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-foreground">
+                          {formatDateTime(entry.createdAt)}
+                        </span>
+                        {entry.renewedByName && (
+                          <span className="text-xs text-muted-foreground">by {entry.renewedByName}</span>
+                        )}
+                      </div>
+                      {prevData && (
+                        <div className="text-xs text-muted-foreground space-y-0.5">
+                          <p>
+                            Previous expiry:{' '}
+                            {prevData.expiryDate ? new Date(String(prevData.expiryDate)).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                          </p>
+                          <p>
+                            Certificate: {String(prevData.certificateNumber || '—')}
+                          </p>
+                          {prevData.renewalFee != null && (
+                            <p>Fee: {Number(prevData.renewalFee).toLocaleString()}</p>
+                          )}
+                        </div>
+                      )}
+                      {entry.renewalFee != null && (
+                        <p className="text-xs font-medium text-emerald-600">
+                          New renewal fee: {entry.renewalFee.toLocaleString()}
+                        </p>
+                      )}
+                      {entry.notes && (
+                        <p className="text-xs text-muted-foreground italic">{entry.notes}</p>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+
           {/* Action Buttons */}
           {canWrite && (
             <div className="space-y-2 pt-2">
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={() => setRenewalOpen(true)}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Renew Registration
+              </Button>
               <Button
                 variant="outline"
                 className="w-full"
@@ -527,6 +624,15 @@ export function DvlaDetailSheet({ registrationId, open, onOpenChange, onEdit, on
         </div>
       )}
     </ResponsiveSheet>
+
+      {/* Renewal Dialog */}
+      <DvlaRenewalDialog
+        open={renewalOpen}
+        onOpenChange={setRenewalOpen}
+        registration={registration}
+        onSuccess={handleRenewalSuccess}
+      />
+    </>
   )
 }
 

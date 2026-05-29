@@ -302,6 +302,7 @@ export type InsuranceWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Insurance"> | Date | string
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
   InsuranceClaim?: Prisma.InsuranceClaimListRelationFilter
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryListRelationFilter
 }
 
 export type InsuranceOrderByWithRelationInput = {
@@ -322,6 +323,7 @@ export type InsuranceOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   truck?: Prisma.TruckOrderByWithRelationInput
   InsuranceClaim?: Prisma.InsuranceClaimOrderByRelationAggregateInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryOrderByRelationAggregateInput
   _relevance?: Prisma.InsuranceOrderByRelevanceInput
 }
 
@@ -346,6 +348,7 @@ export type InsuranceWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Insurance"> | Date | string
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
   InsuranceClaim?: Prisma.InsuranceClaimListRelationFilter
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryListRelationFilter
 }, "id" | "policyNumber">
 
 export type InsuranceOrderByWithAggregationInput = {
@@ -409,6 +412,7 @@ export type InsuranceCreateInput = {
   updatedAt?: Date | string
   truck: Prisma.TruckCreateNestedOneWithoutInsuranceInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutInsuranceInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceUncheckedCreateInput = {
@@ -428,6 +432,7 @@ export type InsuranceUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutInsuranceInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUncheckedCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceUpdateInput = {
@@ -447,6 +452,7 @@ export type InsuranceUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   truck?: Prisma.TruckUpdateOneRequiredWithoutInsuranceNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutInsuranceNestedInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceUncheckedUpdateInput = {
@@ -466,6 +472,7 @@ export type InsuranceUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutInsuranceNestedInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUncheckedUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceCreateManyInput = {
@@ -662,6 +669,20 @@ export type InsuranceUncheckedUpdateManyWithoutTruckNestedInput = {
   deleteMany?: Prisma.InsuranceScalarWhereInput | Prisma.InsuranceScalarWhereInput[]
 }
 
+export type InsuranceCreateNestedOneWithoutInsuranceRenewalHistoryInput = {
+  create?: Prisma.XOR<Prisma.InsuranceCreateWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUncheckedCreateWithoutInsuranceRenewalHistoryInput>
+  connectOrCreate?: Prisma.InsuranceCreateOrConnectWithoutInsuranceRenewalHistoryInput
+  connect?: Prisma.InsuranceWhereUniqueInput
+}
+
+export type InsuranceUpdateOneRequiredWithoutInsuranceRenewalHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.InsuranceCreateWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUncheckedCreateWithoutInsuranceRenewalHistoryInput>
+  connectOrCreate?: Prisma.InsuranceCreateOrConnectWithoutInsuranceRenewalHistoryInput
+  upsert?: Prisma.InsuranceUpsertWithoutInsuranceRenewalHistoryInput
+  connect?: Prisma.InsuranceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InsuranceUpdateToOneWithWhereWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUpdateWithoutInsuranceRenewalHistoryInput>, Prisma.InsuranceUncheckedUpdateWithoutInsuranceRenewalHistoryInput>
+}
+
 export type InsuranceCreateWithoutInsuranceClaimInput = {
   id?: string
   provider: string
@@ -678,6 +699,7 @@ export type InsuranceCreateWithoutInsuranceClaimInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   truck: Prisma.TruckCreateNestedOneWithoutInsuranceInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceUncheckedCreateWithoutInsuranceClaimInput = {
@@ -696,6 +718,7 @@ export type InsuranceUncheckedCreateWithoutInsuranceClaimInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUncheckedCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceCreateOrConnectWithoutInsuranceClaimInput = {
@@ -730,6 +753,7 @@ export type InsuranceUpdateWithoutInsuranceClaimInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   truck?: Prisma.TruckUpdateOneRequiredWithoutInsuranceNestedInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceUncheckedUpdateWithoutInsuranceClaimInput = {
@@ -748,6 +772,7 @@ export type InsuranceUncheckedUpdateWithoutInsuranceClaimInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUncheckedUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceCreateWithoutTruckInput = {
@@ -766,6 +791,7 @@ export type InsuranceCreateWithoutTruckInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutInsuranceInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceUncheckedCreateWithoutTruckInput = {
@@ -784,6 +810,7 @@ export type InsuranceUncheckedCreateWithoutTruckInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutInsuranceInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUncheckedCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceCreateOrConnectWithoutTruckInput = {
@@ -833,6 +860,98 @@ export type InsuranceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Insurance"> | Date | string
 }
 
+export type InsuranceCreateWithoutInsuranceRenewalHistoryInput = {
+  id?: string
+  provider: string
+  policyNumber: string
+  type: string
+  coverAmount?: number | null
+  premium: number
+  startDate: Date | string
+  endDate: Date | string
+  status?: string
+  renewalReminderSent?: boolean
+  documentUrl?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  truck: Prisma.TruckCreateNestedOneWithoutInsuranceInput
+  InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutInsuranceInput
+}
+
+export type InsuranceUncheckedCreateWithoutInsuranceRenewalHistoryInput = {
+  id?: string
+  truckId: string
+  provider: string
+  policyNumber: string
+  type: string
+  coverAmount?: number | null
+  premium: number
+  startDate: Date | string
+  endDate: Date | string
+  status?: string
+  renewalReminderSent?: boolean
+  documentUrl?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutInsuranceInput
+}
+
+export type InsuranceCreateOrConnectWithoutInsuranceRenewalHistoryInput = {
+  where: Prisma.InsuranceWhereUniqueInput
+  create: Prisma.XOR<Prisma.InsuranceCreateWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUncheckedCreateWithoutInsuranceRenewalHistoryInput>
+}
+
+export type InsuranceUpsertWithoutInsuranceRenewalHistoryInput = {
+  update: Prisma.XOR<Prisma.InsuranceUpdateWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUncheckedUpdateWithoutInsuranceRenewalHistoryInput>
+  create: Prisma.XOR<Prisma.InsuranceCreateWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUncheckedCreateWithoutInsuranceRenewalHistoryInput>
+  where?: Prisma.InsuranceWhereInput
+}
+
+export type InsuranceUpdateToOneWithWhereWithoutInsuranceRenewalHistoryInput = {
+  where?: Prisma.InsuranceWhereInput
+  data: Prisma.XOR<Prisma.InsuranceUpdateWithoutInsuranceRenewalHistoryInput, Prisma.InsuranceUncheckedUpdateWithoutInsuranceRenewalHistoryInput>
+}
+
+export type InsuranceUpdateWithoutInsuranceRenewalHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  truck?: Prisma.TruckUpdateOneRequiredWithoutInsuranceNestedInput
+  InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutInsuranceNestedInput
+}
+
+export type InsuranceUncheckedUpdateWithoutInsuranceRenewalHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutInsuranceNestedInput
+}
+
 export type InsuranceCreateManyTruckInput = {
   id?: string
   provider: string
@@ -866,6 +985,7 @@ export type InsuranceUpdateWithoutTruckInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutInsuranceNestedInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceUncheckedUpdateWithoutTruckInput = {
@@ -884,6 +1004,7 @@ export type InsuranceUncheckedUpdateWithoutTruckInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutInsuranceNestedInput
+  InsuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryUncheckedUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceUncheckedUpdateManyWithoutTruckInput = {
@@ -910,10 +1031,12 @@ export type InsuranceUncheckedUpdateManyWithoutTruckInput = {
 
 export type InsuranceCountOutputType = {
   InsuranceClaim: number
+  InsuranceRenewalHistory: number
 }
 
 export type InsuranceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   InsuranceClaim?: boolean | InsuranceCountOutputTypeCountInsuranceClaimArgs
+  InsuranceRenewalHistory?: boolean | InsuranceCountOutputTypeCountInsuranceRenewalHistoryArgs
 }
 
 /**
@@ -931,6 +1054,13 @@ export type InsuranceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
  */
 export type InsuranceCountOutputTypeCountInsuranceClaimArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InsuranceClaimWhereInput
+}
+
+/**
+ * InsuranceCountOutputType without action
+ */
+export type InsuranceCountOutputTypeCountInsuranceRenewalHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InsuranceRenewalHistoryWhereInput
 }
 
 
@@ -952,6 +1082,7 @@ export type InsuranceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   updatedAt?: boolean
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
   InsuranceClaim?: boolean | Prisma.Insurance$InsuranceClaimArgs<ExtArgs>
+  InsuranceRenewalHistory?: boolean | Prisma.Insurance$InsuranceRenewalHistoryArgs<ExtArgs>
   _count?: boolean | Prisma.InsuranceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["insurance"]>
 
@@ -979,6 +1110,7 @@ export type InsuranceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type InsuranceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
   InsuranceClaim?: boolean | Prisma.Insurance$InsuranceClaimArgs<ExtArgs>
+  InsuranceRenewalHistory?: boolean | Prisma.Insurance$InsuranceRenewalHistoryArgs<ExtArgs>
   _count?: boolean | Prisma.InsuranceCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -987,6 +1119,7 @@ export type $InsurancePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     truck: Prisma.$TruckPayload<ExtArgs>
     InsuranceClaim: Prisma.$InsuranceClaimPayload<ExtArgs>[]
+    InsuranceRenewalHistory: Prisma.$InsuranceRenewalHistoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1346,6 +1479,7 @@ export interface Prisma__InsuranceClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   truck<T extends Prisma.TruckDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TruckDefaultArgs<ExtArgs>>): Prisma.Prisma__TruckClient<runtime.Types.Result.GetResult<Prisma.$TruckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   InsuranceClaim<T extends Prisma.Insurance$InsuranceClaimArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Insurance$InsuranceClaimArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceClaimPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  InsuranceRenewalHistory<T extends Prisma.Insurance$InsuranceRenewalHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Insurance$InsuranceRenewalHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceRenewalHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1759,6 +1893,30 @@ export type Insurance$InsuranceClaimArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.InsuranceClaimScalarFieldEnum | Prisma.InsuranceClaimScalarFieldEnum[]
+}
+
+/**
+ * Insurance.InsuranceRenewalHistory
+ */
+export type Insurance$InsuranceRenewalHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InsuranceRenewalHistory
+   */
+  select?: Prisma.InsuranceRenewalHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InsuranceRenewalHistory
+   */
+  omit?: Prisma.InsuranceRenewalHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceRenewalHistoryInclude<ExtArgs> | null
+  where?: Prisma.InsuranceRenewalHistoryWhereInput
+  orderBy?: Prisma.InsuranceRenewalHistoryOrderByWithRelationInput | Prisma.InsuranceRenewalHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.InsuranceRenewalHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InsuranceRenewalHistoryScalarFieldEnum | Prisma.InsuranceRenewalHistoryScalarFieldEnum[]
 }
 
 /**
