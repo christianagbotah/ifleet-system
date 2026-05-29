@@ -402,9 +402,9 @@ export class PdfReport {
 
 // ── Shared Formatting Utilities ─────────────────────────────────
 
-/** Format currency in Ghana Cedi */
+/** Format currency — numbers only, no prefix (header already shows the symbol to avoid font rendering issues) */
 export function formatGHS(amount: number): string {
-  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 /** Format number with locale */
