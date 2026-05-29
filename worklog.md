@@ -460,3 +460,28 @@ Stage Summary:
 - Truck and Driver filter dropdowns now populated with live data from API, searchable via SearchableSelect
 - New Destination Zone filter added with SearchableSelect, wired into report params
 - All 3 bugs resolved, lint clean
+
+---
+Task ID: 1
+Agent: Main
+Task: Fix page title/favicon, report filters, and PDF/Excel generation
+
+Work Log:
+- Updated root layout.tsx metadata from Z.ai scaffold placeholders to iFleet Pro branding
+- Changed title to use template pattern: `"%s — iFleet Pro"` for dynamic page titles
+- Set local /favicon.ico and /favicon.png as app icons (was pointing to external CDN)
+- Updated OpenGraph and Twitter card metadata
+- Fixed ReportsPage.tsx filter dropdowns (Truck/Driver/Zone) not populating:
+  - Root cause: APIs return `{ data: [...], total, page, limit }` but code treated response as array
+  - Updated safeFetch to extract `.data` from paginated response
+  - Added ?limit=500 to fetch all records for dropdowns
+  - Made employeeId display optional to handle null values
+- Added fleet_profit_loss to PDF and Excel builder maps in API generate route
+  - Created buildFleetProfitLossFromCsv() for Excel generation using ExcelJS
+  - Created buildFleetProfitLossPdfFromCsv() for PDF generation using jsPDF + autoTable
+- Verified Destination Zone filter already existed in the code, just needed data extraction fix
+
+Stage Summary:
+- Committed as b5b589c and pushed to origin/main
+- Files modified: src/app/layout.tsx, src/components/pages/ReportsPage.tsx, src/app/api/reports/generate/route.ts
+- All 5 issues resolved: page title, favicon, PDF/Print failure, filter population, destination zone filter
