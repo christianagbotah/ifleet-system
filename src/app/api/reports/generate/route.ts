@@ -120,7 +120,7 @@ async function generatePdfReport(type: string, params: ReportParams): Promise<Bu
     import('@/lib/reports/pdf-builders-new'),
   ])
 
-  const builders: Record<string, (params: ReportParams) => Promise<{ toBuffer: () => Promise<Buffer> }>> = {
+  const builders: Record<string, (params: ReportParams) => Promise<{ output: (type: string) => ArrayBuffer }>> = {
     trip_summary: (p) => buildTripSummaryPdf(p),
     fuel_report: (p) => buildFuelReportPdf(p),
     expense_report: (p) => buildExpenseReportPdf(p),
@@ -151,8 +151,8 @@ async function generatePdfReport(type: string, params: ReportParams): Promise<Bu
   const builder = builders[type]
   if (!builder) throw new Error(`Unsupported report type for PDF: ${type}`)
 
-  const report = await builder(params)
-  return report.toBuffer()
+  const pdf = await builder(params)
+  return Buffer.from(pdf.output('arraybuffer'))
 }
 
 export async function POST(request: NextRequest) {
@@ -187,8 +187,9 @@ export async function POST(request: NextRequest) {
     if (type === 'waybill_report' && format === 'pdf') {
       const { buildWaybillPdf } = await import('@/lib/reports/waybill-pdf')
       const pdf = await buildWaybillPdf(params.tripId!)
-      content = pdf.toBuffer()
-      fileSize = (content as Buffer).length
+      const buffer = Buffer.from(pdf.output('arraybuffer'))
+      content = buffer
+      fileSize = buffer.length
     } else if (format === 'csv') {
       const result = await generateCsvReport(type, params)
       content = result.content

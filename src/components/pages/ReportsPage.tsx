@@ -46,13 +46,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DatePicker } from '@/components/ui/date-picker'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { SearchableSelect } from '@/components/ui/searchable-select'
 import {
   Dialog,
   DialogContent,
@@ -331,12 +325,13 @@ interface ReportCardProps {
   dateTo: string
   truckId: string
   driverId: string
+  zoneId: string
   loadingKey: string
   onGenerate: (type: ReportType, format: ExportFormat, params: ReportParams, loadingKey: string) => void
   onPreview: (report: ReportDefinition) => void
 }
 
-function ReportCard({ report, dateFrom, dateTo, truckId, driverId, loadingKey, onGenerate, onPreview }: ReportCardProps) {
+function ReportCard({ report, dateFrom, dateTo, truckId, driverId, zoneId, loadingKey, onGenerate, onPreview }: ReportCardProps) {
   const Icon = report.icon
   const isLoading = !!loadingKey
   const isPreviewLoading = loadingKey === `${report.type}-preview`
@@ -347,9 +342,10 @@ function ReportCard({ report, dateFrom, dateTo, truckId, driverId, loadingKey, o
     if (dateTo) params.dateTo = dateTo
     if (truckId) params.truckId = truckId
     if (driverId) params.driverId = driverId
+    if (zoneId) params.zoneId = zoneId
     if (report.params) Object.assign(params, report.params)
     return params
-  }, [dateFrom, dateTo, truckId, driverId, report.params])
+  }, [dateFrom, dateTo, truckId, driverId, zoneId, report.params])
 
   return (
     <motion.div variants={cardVariants} className="h-full">
@@ -441,13 +437,14 @@ interface CategorySectionProps {
   dateTo: string
   truckId: string
   driverId: string
+  zoneId: string
   loadingKey: string | null
   onGenerate: (type: ReportType, format: ExportFormat, params: ReportParams, loadingKey: string) => void
   onPreview: (report: ReportDefinition) => void
   searchQuery: string
 }
 
-function CategorySection({ category, dateFrom, dateTo, truckId, driverId, loadingKey, onGenerate, onPreview, searchQuery }: CategorySectionProps) {
+function CategorySection({ category, dateFrom, dateTo, truckId, driverId, zoneId, loadingKey, onGenerate, onPreview, searchQuery }: CategorySectionProps) {
   const filteredReports = category.reports.filter((r) => {
     if (!searchQuery) return true
     const q = searchQuery.toLowerCase()
@@ -489,6 +486,7 @@ function CategorySection({ category, dateFrom, dateTo, truckId, driverId, loadin
             dateTo={dateTo}
             truckId={truckId}
             driverId={driverId}
+            zoneId={zoneId}
             loadingKey={loadingKey ?? ''}
             onGenerate={onGenerate}
             onPreview={onPreview}
@@ -544,10 +542,43 @@ export default function ReportsPage() {
   const [dateTo, setDateTo] = useState('')
   const [truckId, setTruckId] = useState('')
   const [driverId, setDriverId] = useState('')
+  const [zoneId, setZoneId] = useState('')
   const [loadingKey, setLoadingKey] = useState<string | null>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const token = useAuthStore((s) => s.token)
+
+  // ── Fetch filter options on mount ──
+  const [truckOptions, setTruckOptions] = useState<{ value: string; label: string }[]>([])
+  const [driverOptions, setDriverOptions] = useState<{ value: string; label: string }[]>([])
+  const [zoneOptions, setZoneOptions] = useState<{ value: string; label: string }[]>([])
+
+  useEffect(() => {
+    if (!token) return
+    const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+
+    const safeFetch = async <T,>(url: string): Promise<T[]> => {
+      try {
+        const res = await fetch(url, { headers })
+        if (!res.ok) return []
+        return await res.json()
+      } catch {
+        return []
+      }
+    }
+
+    Promise.all([
+      safeFetch<{ id: string; plateNumber: string; make: string; model: string }>('/api/trucks').then((data) =>
+        setTruckOptions(data.map((t) => ({ value: t.id, label: `${t.plateNumber} — ${t.make} ${t.model}` })))
+      ),
+      safeFetch<{ id: string; firstName: string; lastName: string; employeeId: string }>('/api/drivers').then((data) =>
+        setDriverOptions(data.map((d) => ({ value: d.id, label: `${d.firstName} ${d.lastName} (${d.employeeId})` })))
+      ),
+      safeFetch<{ id: string; name: string }>('/api/destination-zones').then((data) =>
+        setZoneOptions(data.map((z) => ({ value: z.id, label: z.name })))
+      ),
+    ])
+  }, [token])
 
   // Preview state
   const [preview, setPreview] = useState<PreviewState | null>(null)
@@ -566,8 +597,9 @@ export default function ReportsPage() {
     if (dateTo) params.dateTo = dateTo
     if (truckId) params.truckId = truckId
     if (driverId) params.driverId = driverId
+    if (zoneId) params.zoneId = zoneId
     return params
-  }, [dateFrom, dateTo, truckId, driverId])
+  }, [dateFrom, dateTo, truckId, driverId, zoneId])
 
   // ── Report generation handler (download/print) ──
   const handleGenerate = useCallback(
@@ -797,6 +829,7 @@ export default function ReportsPage() {
                 setDateTo('')
                 setTruckId('')
                 setDriverId('')
+                setZoneId('')
                 setSearchQuery('')
                 setActiveCategory('all')
                 toast.info('Filters cleared')
@@ -859,9 +892,9 @@ export default function ReportsPage() {
             >
               <Filter className="size-3.5" />
               <span className="hidden sm:inline">Filters</span>
-              {(dateFrom || dateTo || truckId || driverId) && (
+              {(dateFrom || dateTo || truckId || driverId || zoneId) && (
                 <Badge variant="secondary" className="ml-1 h-4 min-w-4 px-1 text-[10px] font-bold">
-                  {[dateFrom, dateTo, truckId, driverId].filter(Boolean).length}
+                  {[dateFrom, dateTo, truckId, driverId, zoneId].filter(Boolean).length}
                 </Badge>
               )}
               <ChevronDown className={`size-3 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
@@ -885,7 +918,7 @@ export default function ReportsPage() {
                     <CalendarDays className="size-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Date Range</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <div className="space-y-1.5">
                       <label className="text-xs text-muted-foreground font-medium">From</label>
                       <DatePicker value={dateFrom} onChange={setDateFrom} placeholder="Start date" />
@@ -896,25 +929,36 @@ export default function ReportsPage() {
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-xs text-muted-foreground font-medium">Truck</label>
-                      <Select value={truckId} onValueChange={setTruckId}>
-                        <SelectTrigger className="h-9">
-                          <SelectValue placeholder="All trucks" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="__all__">All trucks</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <SearchableSelect
+                        placeholder="All trucks"
+                        searchPlaceholder="Search trucks..."
+                        emptyMessage="No trucks found."
+                        value={truckId}
+                        onValueChange={setTruckId}
+                        options={[{ value: '', label: 'All trucks' }, ...truckOptions]}
+                      />
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-xs text-muted-foreground font-medium">Driver</label>
-                      <Select value={driverId} onValueChange={setDriverId}>
-                        <SelectTrigger className="h-9">
-                          <SelectValue placeholder="All drivers" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="__all__">All drivers</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <SearchableSelect
+                        placeholder="All drivers"
+                        searchPlaceholder="Search drivers..."
+                        emptyMessage="No drivers found."
+                        value={driverId}
+                        onValueChange={setDriverId}
+                        options={[{ value: '', label: 'All drivers' }, ...driverOptions]}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-muted-foreground font-medium">Destination Zone</label>
+                      <SearchableSelect
+                        placeholder="All zones"
+                        searchPlaceholder="Search zones..."
+                        emptyMessage="No zones found."
+                        value={zoneId}
+                        onValueChange={setZoneId}
+                        options={[{ value: '', label: 'All zones' }, ...zoneOptions]}
+                      />
                     </div>
                   </div>
 
@@ -978,7 +1022,7 @@ export default function ReportsPage() {
         </AnimatePresence>
 
         {/* Active filters display */}
-        {(dateFrom || dateTo || truckId || driverId) && !showFilters && (
+        {(dateFrom || dateTo || truckId || driverId || zoneId) && !showFilters && (
           <div className="flex flex-wrap gap-2">
             {dateFrom && (
               <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
@@ -998,7 +1042,7 @@ export default function ReportsPage() {
             )}
             {truckId && truckId !== '__all__' && (
               <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                Truck: {truckId}
+                Truck: {truckOptions.find((t) => t.value === truckId)?.label ?? truckId}
                 <button onClick={() => setTruckId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
                   <X className="size-3" />
                 </button>
@@ -1006,8 +1050,16 @@ export default function ReportsPage() {
             )}
             {driverId && driverId !== '__all__' && (
               <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                Driver: {driverId}
+                Driver: {driverOptions.find((d) => d.value === driverId)?.label ?? driverId}
                 <button onClick={() => setDriverId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )}
+            {zoneId && (
+              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
+                Zone: {zoneOptions.find((z) => z.value === zoneId)?.label ?? zoneId}
+                <button onClick={() => setZoneId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
                   <X className="size-3" />
                 </button>
               </Badge>
@@ -1059,6 +1111,7 @@ export default function ReportsPage() {
               dateTo={dateTo}
               truckId={truckId}
               driverId={driverId}
+              zoneId={zoneId}
               loadingKey={loadingKey}
               onGenerate={handleGenerate}
               onPreview={handlePreview}

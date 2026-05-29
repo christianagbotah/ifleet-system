@@ -431,3 +431,32 @@ Stage Summary:
 - Fix: Changed dynamic import in page.tsx from `@/components/reports/ReportsView` to `@/components/pages/ReportsPage`
 - Created missing types file at `src/lib/reports/types.ts`
 - The comprehensive Reports Hub should now display correctly after VPS redeploy
+---
+Task ID: 6
+Agent: Main
+Task: Fix 3 bugs in Reports Hub — PDF generation, empty filter dropdowns, missing Destination Zone filter
+
+Work Log:
+- Bug 1 (PDF/Print generation failure): Fixed `generatePdfReport` in `/api/reports/generate/route.ts`
+  - Changed builders type from `Promise<{ toBuffer: () => Promise<Buffer> }>` to `Promise<{ output: (type: string) => ArrayBuffer }>`
+  - Changed `const report = await builder(params); return report.toBuffer()` to `const pdf = await builder(params); return Buffer.from(pdf.output('arraybuffer'))`
+  - Fixed waybill special case: changed `pdf.toBuffer()` to `Buffer.from(pdf.output('arraybuffer'))` with proper buffer assignment
+- Bug 2 (Empty Truck/Driver filter dropdowns): Replaced placeholder `<Select>` components with `SearchableSelect` in ReportsPage.tsx
+  - Added `truckOptions`, `driverOptions`, `zoneOptions` state arrays
+  - Added useEffect to fetch trucks from `/api/trucks`, drivers from `/api/drivers`, zones from `/api/destination-zones` on mount
+  - Used raw `fetch` with silent error handling (no toast on failure) for background filter loading
+  - Truck labels: `plateNumber — make model`; Driver labels: `firstName lastName (employeeId)`
+  - Each SearchableSelect has "All" option with empty string value at top of options list
+- Bug 3 (Missing Destination Zone filter):
+  - Added `zoneId` state and included it in `buildCommonParams()`
+  - Added Destination Zone SearchableSelect in filter panel (grid changed from `grid-cols-4` to `grid-cols-5`)
+  - Added `zoneId` badge in active filters display with zone name lookup
+  - Added `zoneId` to filter badge count and "Clear All" button
+  - Passed `zoneId` through CategorySection → ReportCard → buildParams
+- Lint passes: 0 errors, 0 warnings
+
+Stage Summary:
+- PDF and Print report generation now works correctly using jsPDF's `.output('arraybuffer')` method
+- Truck and Driver filter dropdowns now populated with live data from API, searchable via SearchableSelect
+- New Destination Zone filter added with SearchableSelect, wired into report params
+- All 3 bugs resolved, lint clean
