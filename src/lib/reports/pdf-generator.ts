@@ -11,8 +11,9 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
 import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
 
-/** Custom font family name that supports \u20B5 (U+20B5) */
+/** Custom font family name that supports U+20B5 (Ghana Cedi sign) */
 const FF = getFontFamily()
 
 // ── Brand Colors ──
@@ -73,7 +74,7 @@ export class PdfReport {
       unit: 'mm',
       compress: true,
     })
-    // Register custom DejaVu Sans font (supports \u20B5 currency symbol)
+    // Register custom DejaVu Sans font (supports U+20B5 Ghana Cedi currency symbol)
     registerFonts(this.doc)
     this._cursorY = 14 // Start below the header bar
   }
@@ -278,8 +279,10 @@ export class PdfReport {
       styles: allStyles,
       margin: { left: 10, right: 10 },
       tableWidth: 'auto',
-      didDrawPage: () => {
-        this.addHeader()
+      didDrawPage: (data: { pageNumber: number }) => {
+        if (data.pageNumber > 1) {
+          this.addHeader()
+        }
       },
     }
 
@@ -402,9 +405,9 @@ export class PdfReport {
 
 // ── Shared Formatting Utilities ─────────────────────────────────
 
-/** Format currency in \u20B5 */
+/** Format currency in Ghana Cedi */
 export function formatGHS(amount: number): string {
-  return `\u20B5${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 /** Format number with locale */

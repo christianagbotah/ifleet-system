@@ -3,11 +3,12 @@ import { ExcelReport } from './excel-generator'
 import type { ColumnDef } from './excel-generator'
 import type { ReportParams } from './types'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { CEDI } from './csv-generator'
 
 // ============ LOCAL HELPER FUNCTIONS ============
 
 function formatGHS(amount: number): string {
-  return `\u20B5${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 function formatNumber(n: number): string {
@@ -218,7 +219,7 @@ export async function buildTyreReport(params: ReportParams): Promise<ExcelReport
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'brand', header: 'Brand', type: 'text' },
     { key: 'purchaseDate', header: 'Purchase Date', type: 'date' },
-    { key: 'purchasePrice', header: 'Purchase Price (\u20B5)', type: 'currency' },
+    { key: 'purchasePrice', header: `Purchase Price (${CEDI})`, type: 'currency' },
     { key: 'condition', header: 'Condition', type: 'text' },
     { key: 'lastInspection', header: 'Last Inspection', type: 'date' },
     { key: 'status', header: 'Status', type: 'text' },
@@ -295,8 +296,8 @@ export async function buildInsuranceClaimsReport(params: ReportParams): Promise<
     { key: 'type', header: 'Type', type: 'text' },
     { key: 'incidentDate', header: 'Incident Date', type: 'date' },
     { key: 'location', header: 'Location', type: 'text' },
-    { key: 'claimedAmount', header: 'Claimed Amount (\u20B5)', type: 'currency' },
-    { key: 'approvedAmount', header: 'Approved Amount (\u20B5)', type: 'currency' },
+    { key: 'claimedAmount', header: `Claimed Amount (${CEDI})`, type: 'currency' },
+    { key: 'approvedAmount', header: `Approved Amount (${CEDI})`, type: 'currency' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'submittedDate', header: 'Submitted Date', type: 'date' },
   ]
@@ -361,8 +362,8 @@ export async function buildWarehouseReport(params: ReportParams): Promise<ExcelR
     { key: 'category', header: 'Category', type: 'text' },
     { key: 'quantity', header: 'Quantity', type: 'number' },
     { key: 'minStock', header: 'Min Stock', type: 'number' },
-    { key: 'unitPrice', header: 'Unit Price (\u20B5)', type: 'currency' },
-    { key: 'totalValue', header: 'Total Value (\u20B5)', type: 'currency' },
+    { key: 'unitPrice', header: `Unit Price (${CEDI})`, type: 'currency' },
+    { key: 'totalValue', header: `Total Value (${CEDI})`, type: 'currency' },
     { key: 'unit', header: 'Unit', type: 'text' },
     { key: 'warehouse', header: 'Warehouse', type: 'text' },
     { key: 'supplier', header: 'Supplier', type: 'text' },
@@ -436,7 +437,7 @@ export async function buildDriverIncentivesReport(params: ReportParams): Promise
     { key: 'type', header: 'Type', type: 'text' },
     { key: 'title', header: 'Title', type: 'text' },
     { key: 'period', header: 'Period', type: 'text' },
-    { key: 'amount', header: 'Amount (\u20B5)', type: 'currency' },
+    { key: 'amount', header: `Amount (${CEDI})`, type: 'currency' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'approvedBy', header: 'Approved By', type: 'text' },
     { key: 'approvedDate', header: 'Approved Date', type: 'date' },
@@ -514,7 +515,7 @@ export async function buildTollReport(params: ReportParams): Promise<ExcelReport
     { key: 'tollPoint', header: 'Toll Point', type: 'text' },
     { key: 'tollType', header: 'Type', type: 'text' },
     { key: 'route', header: 'Route', type: 'text' },
-    { key: 'amount', header: 'Amount (\u20B5)', type: 'currency' },
+    { key: 'amount', header: `Amount (${CEDI})`, type: 'currency' },
     { key: 'payment', header: 'Payment', type: 'text' },
     { key: 'direction', header: 'Direction', type: 'text' },
     { key: 'overloaded', header: 'Overloaded', type: 'text' },
@@ -667,14 +668,14 @@ export async function buildCashAdvancesReport(params: ReportParams): Promise<Exc
     { key: 'employeeId', header: 'Employee ID', type: 'text' },
     { key: 'tripNumber', header: 'Trip #', type: 'text' },
     { key: 'purpose', header: 'Purpose', type: 'text' },
-    { key: 'amount', header: 'Amount (\u20B5)', type: 'currency' },
+    { key: 'amount', header: `Amount (${CEDI})`, type: 'currency' },
     { key: 'paymentMethod', header: 'Payment Method', type: 'text' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'approvedBy', header: 'Approved By', type: 'text' },
     { key: 'approvedAt', header: 'Approved At', type: 'datetime' },
     { key: 'disbursedAt', header: 'Disbursed At', type: 'datetime' },
-    { key: 'totalDeducted', header: 'Total Deducted (\u20B5)', type: 'currency' },
-    { key: 'remaining', header: 'Remaining (\u20B5)', type: 'currency' },
+    { key: 'totalDeducted', header: `Total Deducted (${CEDI})`, type: 'currency' },
+    { key: 'remaining', header: `Remaining (${CEDI})`, type: 'currency' },
   ]
 
   const report = new ExcelReport(`${APP_NAME} \u2014 Cash Advances Report`, buildSubtitle(params))
@@ -772,7 +773,7 @@ export async function buildDailySummaryReport(params: ReportParams): Promise<Exc
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'route', header: 'Route', type: 'text' },
     { key: 'client', header: 'Client', type: 'text' },
-    { key: 'revenue', header: 'Revenue (\u20B5)', type: 'currency' },
+    { key: 'revenue', header: `Revenue (${CEDI})`, type: 'currency' },
     { key: 'status', header: 'Status', type: 'text' },
   ]
   report.addHeadersFromDefs(tripColumns)
@@ -798,7 +799,7 @@ export async function buildDailySummaryReport(params: ReportParams): Promise<Exc
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'category', header: 'Category', type: 'text' },
     { key: 'description', header: 'Description', type: 'text' },
-    { key: 'amount', header: 'Amount (\u20B5)', type: 'currency' },
+    { key: 'amount', header: `Amount (${CEDI})`, type: 'currency' },
     { key: 'status', header: 'Status', type: 'text' },
   ]
   report.addHeadersFromDefs(expenseColumns)
@@ -822,8 +823,8 @@ export async function buildDailySummaryReport(params: ReportParams): Promise<Exc
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'station', header: 'Station', type: 'text' },
     { key: 'liters', header: 'Liters', type: 'number' },
-    { key: 'costPerLiter', header: 'Cost/Liter (\u20B5)', type: 'currency' },
-    { key: 'totalCost', header: 'Total Cost (\u20B5)', type: 'currency' },
+    { key: 'costPerLiter', header: `Cost/Liter (${CEDI})`, type: 'currency' },
+    { key: 'totalCost', header: `Total Cost (${CEDI})`, type: 'currency' },
   ]
   report.addHeadersFromDefs(fuelColumns)
 
@@ -889,7 +890,7 @@ export async function buildBorderCrossingsReport(params: ReportParams): Promise<
     { key: 'queuedAt', header: 'Queued At', type: 'datetime' },
     { key: 'clearedAt', header: 'Cleared At', type: 'datetime' },
     { key: 'waitMinutes', header: 'Wait (min)', type: 'number' },
-    { key: 'fee', header: 'Fee (\u20B5)', type: 'currency' },
+    { key: 'fee', header: `Fee (${CEDI})`, type: 'currency' },
     { key: 'docStatus', header: 'Doc Status', type: 'text' },
   ]
 
@@ -1052,8 +1053,8 @@ export async function buildLoadBoardReport(params: ReportParams): Promise<ExcelR
     { key: 'commodity', header: 'Commodity', type: 'text' },
     { key: 'weight', header: 'Weight', type: 'number' },
     { key: 'truckType', header: 'Truck Type', type: 'text' },
-    { key: 'rate', header: 'Rate (\u20B5)', type: 'currency' },
-    { key: 'budget', header: 'Budget (\u20B5)', type: 'currency' },
+    { key: 'rate', header: `Rate (${CEDI})`, type: 'currency' },
+    { key: 'budget', header: `Budget (${CEDI})`, type: 'currency' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'assignedTruck', header: 'Assigned Truck', type: 'text' },
     { key: 'assignedDriver', header: 'Assigned Driver', type: 'text' },
@@ -1191,10 +1192,10 @@ export async function buildFuelAnomalyReport(params: ReportParams): Promise<Exce
     { key: 'tripNumber', header: 'Trip #', type: 'text' },
     { key: 'odometer', header: 'Odometer', type: 'number' },
     { key: 'liters', header: 'Liters', type: 'number' },
-    { key: 'cost', header: 'Cost (\u20B5)', type: 'currency' },
-    { key: 'costPerLiter', header: 'Cost/Liter (\u20B5)', type: 'currency' },
+    { key: 'cost', header: `Cost (${CEDI})`, type: 'currency' },
+    { key: 'costPerLiter', header: `Cost/Liter (${CEDI})`, type: 'currency' },
     { key: 'litersPer100km', header: 'Liters/100km', type: 'number' },
-    { key: 'costPerKm', header: 'Cost/km (\u20B5)', type: 'currency' },
+    { key: 'costPerKm', header: `Cost/km (${CEDI})`, type: 'currency' },
     { key: 'station', header: 'Station', type: 'text' },
     { key: 'status', header: 'Status', type: 'text' },
   ]
@@ -1299,14 +1300,14 @@ export async function buildCostAnalyticsReport(params: ReportParams): Promise<Ex
   const columns: ColumnDef[] = [
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'make', header: 'Make', type: 'text' },
-    { key: 'fuelCost', header: 'Fuel Cost (\u20B5)', type: 'currency' },
-    { key: 'maintCost', header: 'Maintenance (\u20B5)', type: 'currency' },
-    { key: 'otherCost', header: 'Other Costs (\u20B5)', type: 'currency' },
-    { key: 'totalCost', header: 'Total Cost (\u20B5)', type: 'currency' },
+    { key: 'fuelCost', header: `Fuel Cost (${CEDI})`, type: 'currency' },
+    { key: 'maintCost', header: `Maintenance (${CEDI})`, type: 'currency' },
+    { key: 'otherCost', header: `Other Costs (${CEDI})`, type: 'currency' },
+    { key: 'totalCost', header: `Total Cost (${CEDI})`, type: 'currency' },
     { key: 'distance', header: 'Distance (km)', type: 'number' },
     { key: 'tonnage', header: 'Tonnage', type: 'number' },
-    { key: 'costPerKm', header: 'Cost/km (\u20B5)', type: 'currency' },
-    { key: 'costPerTon', header: 'Cost/Tonne (\u20B5)', type: 'currency' },
+    { key: 'costPerKm', header: `Cost/km (${CEDI})`, type: 'currency' },
+    { key: 'costPerTon', header: `Cost/Tonne (${CEDI})`, type: 'currency' },
   ]
 
   const avgCostPerKm = grandDistance > 0 ? grandTotalCost / grandDistance : 0
@@ -1406,11 +1407,11 @@ export async function buildTripProfitabilityReport(params: ReportParams): Promis
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'route', header: 'Route', type: 'text' },
     { key: 'client', header: 'Client', type: 'text' },
-    { key: 'revenue', header: 'Revenue (\u20B5)', type: 'currency' },
-    { key: 'fuelCost', header: 'Fuel Cost (\u20B5)', type: 'currency' },
-    { key: 'expenses', header: 'Expenses (\u20B5)', type: 'currency' },
-    { key: 'totalCost', header: 'Total Cost (\u20B5)', type: 'currency' },
-    { key: 'netProfit', header: 'Net Profit (\u20B5)', type: 'currency' },
+    { key: 'revenue', header: `Revenue (${CEDI})`, type: 'currency' },
+    { key: 'fuelCost', header: `Fuel Cost (${CEDI})`, type: 'currency' },
+    { key: 'expenses', header: `Expenses (${CEDI})`, type: 'currency' },
+    { key: 'totalCost', header: `Total Cost (${CEDI})`, type: 'currency' },
+    { key: 'netProfit', header: `Net Profit (${CEDI})`, type: 'currency' },
     { key: 'margin', header: 'Margin (%)', type: 'number' },
   ]
 
@@ -1503,8 +1504,8 @@ export async function buildFuelAnalyticsReport(params: ReportParams): Promise<Ex
   const columns: ColumnDef[] = [
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'liters', header: 'Liters', type: 'number' },
-    { key: 'totalCost', header: 'Total Cost (\u20B5)', type: 'currency' },
-    { key: 'avgCostPerLiter', header: 'Avg Cost/Liter (\u20B5)', type: 'currency' },
+    { key: 'totalCost', header: `Total Cost (${CEDI})`, type: 'currency' },
+    { key: 'avgCostPerLiter', header: `Avg Cost/Liter (${CEDI})`, type: 'currency' },
     { key: 'fillups', header: 'Fill-ups', type: 'number' },
     { key: 'avgFill', header: 'Avg Fill (L)', type: 'number' },
     { key: 'efficiency', header: 'L/100km', type: 'number' },

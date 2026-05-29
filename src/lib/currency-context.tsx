@@ -52,10 +52,13 @@ export interface CurrencyContextValue {
 
 // ============ CONSTANTS ============
 
+/** Ghana Cedi sign U+20B5 — runtime generation avoids encoding issues */
+const CEDI = String.fromCodePoint(0x20B5)
+
 const SUPPORTED_CURRENCIES = ['GHS', 'USD', 'EUR', 'GBP', 'XOF', 'NGN', 'CNY'] as const
 
 export const DEFAULT_EXCHANGE_RATES: ExchangeRate[] = [
-  { code: 'GHS', name: 'Ghana Cedi',       symbol: '\u20B5',   rateToBase: 1 },
+  { code: 'GHS', name: 'Ghana Cedi',       symbol: CEDI,   rateToBase: 1 },
   { code: 'USD', name: 'US Dollar',        symbol: '$',   rateToBase: 1 / 14.5 },
   { code: 'XOF', name: 'West African CFA', symbol: 'CFA', rateToBase: 1 / 41.4 },
 ]
@@ -67,7 +70,7 @@ const LS_LIVE_INFO_KEY = 'ifleet_live_rate_info'
 // ============ SYMBOL MAP ============
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
-  GHS: '\u20B5',
+  GHS: CEDI,
   USD: '$',
   EUR: '€',
   GBP: '£',
@@ -115,7 +118,7 @@ const DEFAULT_LIVE_INFO: LiveRateInfo = {
   source: 'manual',
 }
 const FALLBACK: CurrencyContextValue = {
-  currencySymbol: '\u20B5',
+  currencySymbol: CEDI,
   currencyCode: 'GHS',
   baseCurrency: DEFAULT_BASE,
   exchangeRates: DEFAULT_EXCHANGE_RATES,
@@ -130,7 +133,7 @@ const FALLBACK: CurrencyContextValue = {
 }
 
 let storeState: StoreState = {
-  currencySymbol: '\u20B5',
+  currencySymbol: CEDI,
   currencyCode: 'GHS',
   baseCurrency: DEFAULT_BASE,
   exchangeRates: DEFAULT_EXCHANGE_RATES,

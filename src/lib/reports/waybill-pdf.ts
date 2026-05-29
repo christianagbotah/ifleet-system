@@ -13,6 +13,7 @@ import { db } from '@/lib/db'
 import { fmtDate, fmtDateTime } from './pdf-generator'
 import { APP_NAME, APP_COMPANY, APP_TAGLINE } from '@/lib/constants'
 import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
 
 const FF = getFontFamily()
 
@@ -195,8 +196,8 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   const cargoRows = [
     ['Description', trip.itemName],
     ['Quantity', `${trip.quantity} ${trip.unit}`],
-    ['Unit Price', trip.unitPrice ? `\u20B5${trip.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
-    ['Total Value', trip.totalRevenue ? `\u20B5${trip.totalRevenue.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
+    ['Unit Price', trip.unitPrice ? `${CEDI}${trip.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
+    ['Total Value', trip.totalRevenue ? `${CEDI}${trip.totalRevenue.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
   ]
 
   cargoRows.forEach((row, idx) => {

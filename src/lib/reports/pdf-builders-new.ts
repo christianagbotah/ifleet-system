@@ -10,6 +10,7 @@
 import jsPDF from 'jspdf'
 import { db } from '@/lib/db'
 import { PdfReport, formatGHS, formatNumber, fmtDate, fmtDateTime, buildPdfSubtitle } from './pdf-generator'
+import { CEDI } from './csv-generator'
 import type { ReportParams } from './types'
 
 // ════════════════════════════════════════════════════════════════════
@@ -181,7 +182,7 @@ export async function buildTyreReportPdf(params: ReportParams): Promise<jsPDF> {
     { label: 'Avg Value', value: formatGHS(totalTyres > 0 ? totalValue / totalTyres : 0) },
   ])
 
-  const headers = ['Serial #', 'Truck', 'Brand', 'Purchase Date', 'Price (\u20B5)', 'Condition', 'Last Inspection', 'Status']
+  const headers = ['Serial #', 'Truck', 'Brand', 'Purchase Date', `Price (${CEDI})`, 'Condition', 'Last Inspection', 'Status']
   const rows = tyres.map((t) => [
     t.serialNumber,
     `${t.truck.plateNumber} (${t.truck.make})`,
@@ -247,7 +248,7 @@ export async function buildInsuranceClaimsReportPdf(params: ReportParams): Promi
     { label: 'Closed', value: String(closedCount) },
   ])
 
-  const headers = ['Claim #', 'Policy #', 'Provider', 'Truck', 'Type', 'Incident Date', 'Location', 'Claimed (\u20B5)', 'Approved (\u20B5)', 'Status', 'Submitted']
+  const headers = ['Claim #', 'Policy #', 'Provider', 'Truck', 'Type', 'Incident Date', 'Location', `Claimed (${CEDI})`, `Approved (${CEDI})`, 'Status', 'Submitted']
   const rows = claims.map((c) => [
     c.claimNumber,
     c.insurance.policyNumber,
@@ -308,7 +309,7 @@ export async function buildWarehouseReportPdf(params: ReportParams): Promise<jsP
     { label: 'Categories', value: String(categories.size) },
   ])
 
-  const headers = ['SKU', 'Name', 'Category', 'Quantity', 'Min Stock', 'Unit Price (\u20B5)', 'Total Value (\u20B5)', 'Unit', 'Warehouse', 'Supplier', 'Status', 'Last Restocked', 'Expiry Date']
+  const headers = ['SKU', 'Name', 'Category', 'Quantity', 'Min Stock', `Unit Price (${CEDI})`, `Total Value (${CEDI})`, 'Unit', 'Warehouse', 'Supplier', 'Status', 'Last Restocked', 'Expiry Date']
   const rows = items.map((i) => [
     i.sku,
     i.name,
@@ -379,7 +380,7 @@ export async function buildDriverIncentivesReportPdf(params: ReportParams): Prom
     { label: 'Average Amount', value: formatGHS(avgAmount) },
   ])
 
-  const headers = ['Driver', 'Type', 'Title', 'Period', 'Amount (\u20B5)', 'Status', 'Approved By', 'Approved Date', 'Paid Date', 'Metric']
+  const headers = ['Driver', 'Type', 'Title', 'Period', `Amount (${CEDI})`, 'Status', 'Approved By', 'Approved Date', 'Paid Date', 'Metric']
   const rows = incentives.map((i) => [
     `${i.driver.firstName} ${i.driver.lastName}`,
     i.type.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
@@ -454,7 +455,7 @@ export async function buildTollReportPdf(params: ReportParams): Promise<jsPDF> {
     { label: 'Toll Points', value: String(uniqueTollPoints.size) },
   ])
 
-  const headers = ['Date', 'Truck', 'Driver', 'Trip #', 'Toll Point', 'Toll Type', 'Route', 'Amount (\u20B5)', 'Payment', 'Direction', 'Overloaded', 'Status']
+  const headers = ['Date', 'Truck', 'Driver', 'Trip #', 'Toll Point', 'Toll Type', 'Route', `Amount (${CEDI})`, 'Payment', 'Direction', 'Overloaded', 'Status']
   const rows = records.map((r) => [
     fmtDate(r.tollDate),
     r.truck.plateNumber,
@@ -601,7 +602,7 @@ export async function buildCashAdvancesReportPdf(params: ReportParams): Promise<
     { label: 'Outstanding', value: formatGHS(outstandingBalance) },
   ])
 
-  const headers = ['Request Date', 'Driver', 'Employee ID', 'Trip #', 'Purpose', 'Amount (\u20B5)', 'Payment', 'Status', 'Approved By', 'Approved At', 'Disbursed At', 'Deducted', 'Remaining']
+  const headers = ['Request Date', 'Driver', 'Employee ID', 'Trip #', 'Purpose', `Amount (${CEDI})`, 'Payment', 'Status', 'Approved By', 'Approved At', 'Disbursed At', 'Deducted', 'Remaining']
   const rows = advances.map((a) => [
     fmtDate(a.requestDate),
     `${a.driver.firstName} ${a.driver.lastName}`,
@@ -716,7 +717,7 @@ export async function buildDailySummaryPdf(params: ReportParams): Promise<jsPDF>
   })
 
   // Expenses table
-  const expHeaders = ['Date', 'Truck', 'Category', 'Description', 'Amount (\u20B5)', 'Payment', 'Reference']
+  const expHeaders = ['Date', 'Truck', 'Category', 'Description', `Amount (${CEDI})`, 'Payment', 'Reference']
   const expRows = todayExpenses.map((e) => [
     fmtDate(e.date),
     e.truck.plateNumber,
@@ -793,7 +794,7 @@ export async function buildBorderCrossingsReportPdf(params: ReportParams): Promi
     { label: 'Overdue', value: String(overdue) },
   ])
 
-  const headers = ['Truck', 'Driver', 'Trip #', 'Border', 'Country', 'Direction', 'Status', 'Queued At', 'Cleared At', 'Wait (min)', 'Fee (\u20B5)', 'Doc Status', 'Notes']
+  const headers = ['Truck', 'Driver', 'Trip #', 'Border', 'Country', 'Direction', 'Status', 'Queued At', 'Cleared At', 'Wait (min)', `Fee (${CEDI})`, 'Doc Status', 'Notes']
   const rows = crossings.map((c) => [
     c.truck.plateNumber,
     `${c.driver.firstName} ${c.driver.lastName}`,
@@ -947,7 +948,7 @@ export async function buildLoadBoardReportPdf(params: ReportParams): Promise<jsP
     { label: 'Total Value', value: formatGHS(totalValue) },
   ])
 
-  const headers = ['Date', 'Client', 'Pickup', 'Dropoff', 'Commodity', 'Weight', 'Truck Type', 'Rate (\u20B5)', 'Budget', 'Status', 'Assigned Truck', 'Assigned Driver', 'Contact']
+  const headers = ['Date', 'Client', 'Pickup', 'Dropoff', 'Commodity', 'Weight', 'Truck Type', `Rate (${CEDI})`, 'Budget', 'Status', 'Assigned Truck', 'Assigned Driver', 'Contact']
   const rows = loads.map((l) => [
     fmtDate(l.createdAt),
     l.client?.companyName ?? '-',
@@ -1095,7 +1096,7 @@ export async function buildFuelAnomalyReportPdf(params: ReportParams): Promise<j
     filteredLogs = classifiedLogs.filter((l) => l.anomalyStatus === anomalyParam)
   }
 
-  const headers = ['Date', 'Truck', 'Trip #', 'Odometer', 'Liters', 'Cost (\u20B5)', 'Cost/Liter', 'L/100km', 'Cost/km', 'Station', 'Status']
+  const headers = ['Date', 'Truck', 'Trip #', 'Odometer', 'Liters', `Cost (${CEDI})`, 'Cost/Liter', 'L/100km', 'Cost/km', 'Station', 'Status']
   const rows = filteredLogs.map((f) => [
     fmtDate(f.date),
     f.truck.plateNumber,
@@ -1223,7 +1224,7 @@ export async function buildCostAnalyticsReportPdf(params: ReportParams): Promise
     { label: 'Avg Cost/Tonne', value: formatGHS(avgCostPerTonne) },
   ])
 
-  const headers = ['Truck', 'Make', 'Fuel (\u20B5)', 'Maint (\u20B5)', 'Other (\u20B5)', 'Total (\u20B5)', 'Distance (km)', 'Tonnes', 'Cost/km', 'Cost/Ton']
+  const headers = ['Truck', 'Make', `Fuel (${CEDI})`, `Maint (${CEDI})`, `Other (${CEDI})`, `Total (${CEDI})`, 'Distance (km)', 'Tonnes', 'Cost/km', 'Cost/Ton']
 
   pdf.addTable(headers, truckRows, {
     summaryRow: {
@@ -1423,7 +1424,7 @@ export async function buildFuelAnalyticsReportPdf(params: ReportParams): Promise
     { label: 'Unique Trucks', value: String(uniqueTrucks) },
   ])
 
-  const truckHeaders = ['Truck', 'Liters', 'Cost (\u20B5)', 'Avg Cost/L', 'Fill-ups', 'Avg Fill (L)']
+  const truckHeaders = ['Truck', 'Liters', `Cost (${CEDI})`, 'Avg Cost/L', 'Fill-ups', 'Avg Fill (L)']
 
   pdf.addTable(truckHeaders, truckRows, {
     summaryRow: {
@@ -1435,7 +1436,7 @@ export async function buildFuelAnalyticsReportPdf(params: ReportParams): Promise
 
   // Station breakdown table
   if (stationRows.length > 0) {
-    const stationHeaders = ['Station', 'Liters', 'Cost (\u20B5)', 'Avg Cost/L', 'Transactions']
+    const stationHeaders = ['Station', 'Liters', `Cost (${CEDI})`, 'Avg Cost/L', 'Transactions']
     pdf.addTable(stationHeaders, stationRows, {
       summaryRow: {
         label: 'TOTAL',

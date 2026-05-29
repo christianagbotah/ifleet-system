@@ -11,6 +11,7 @@ import { db } from '@/lib/db'
 import { fmtDate } from './pdf-generator'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
 import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
 
 const FF = getFontFamily()
 
@@ -25,9 +26,9 @@ const C = {
   green: [22, 163, 74] as [number, number, number],
 }
 
-/** Format a number as \u20B5 currency string */
+/** Format a number as Ghana Cedi currency string */
 function ghs(amount: number): string {
-  return `\u20B5${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 /**

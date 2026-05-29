@@ -64,6 +64,9 @@ const REPORT_NAMES: Record<string, string> = {
 
 // ─── Format cell value for display ────────────────────────────────────
 
+/** Ghana Cedi sign U+20B5 — runtime generation avoids encoding issues */
+const CEDI = String.fromCodePoint(0x20B5)
+
 function formatCell(value: string | number | null | undefined, header: string): string {
   if (value === null || value === undefined) return '—'
 
@@ -76,8 +79,8 @@ function formatCell(value: string | number | null | undefined, header: string): 
       h.includes('total value') || h.includes('unit price')) {
     if (typeof value === 'number') {
       const str = String(value)
-      if (str.startsWith('\u20B5')) return str
-      return `\u20B5${value.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      if (str.startsWith(CEDI)) return str
+      return `${CEDI}${value.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     }
     return String(value)
   }

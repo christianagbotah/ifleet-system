@@ -3,9 +3,10 @@ import { ExcelReport } from './excel-generator'
 import type { ColumnDef } from './excel-generator'
 import type { ReportParams } from './types'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { CEDI } from './csv-generator'
 
 function formatGHS(amount: number): string {
-  return `\u20B5${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 function formatNumber(n: number): string {
@@ -81,9 +82,9 @@ export async function buildTripSummaryReport(params: ReportParams): Promise<Exce
     { key: 'cargo', header: 'Cargo', type: 'text' },
     { key: 'client', header: 'Client', type: 'text' },
     { key: 'status', header: 'Status', type: 'text' },
-    { key: 'revenue', header: 'Revenue (\u20B5)', type: 'currency' },
-    { key: 'expenses', header: 'Expenses (\u20B5)', type: 'currency' },
-    { key: 'net', header: 'Net (\u20B5)', type: 'currency' },
+    { key: 'revenue', header: `Revenue (${CEDI})`, type: 'currency' },
+    { key: 'expenses', header: `Expenses (${CEDI})`, type: 'currency' },
+    { key: 'net', header: `Net (${CEDI})`, type: 'currency' },
   ]
 
   const report = new ExcelReport(`${APP_NAME} \u2014 Trip Summary Report`, buildSubtitle(params))
@@ -147,8 +148,8 @@ export async function buildFuelReport(params: ReportParams): Promise<ExcelReport
     { key: 'station', header: 'Station', type: 'text' },
     { key: 'odometer', header: 'Odometer (km)', type: 'number' },
     { key: 'liters', header: 'Liters', type: 'number' },
-    { key: 'costPerLiter', header: 'Cost/Liter (\u20B5)', type: 'currency' },
-    { key: 'totalCost', header: 'Total Cost (\u20B5)', type: 'currency' },
+    { key: 'costPerLiter', header: `Cost/Liter (${CEDI})`, type: 'currency' },
+    { key: 'totalCost', header: `Total Cost (${CEDI})`, type: 'currency' },
     { key: 'receiptNumber', header: 'Receipt #', type: 'text' },
   ]
 
@@ -204,7 +205,7 @@ export async function buildExpenseReport(params: ReportParams): Promise<ExcelRep
     { key: 'truck', header: 'Truck', type: 'text' },
     { key: 'category', header: 'Category', type: 'text' },
     { key: 'description', header: 'Description', type: 'text' },
-    { key: 'amount', header: 'Amount (\u20B5)', type: 'currency' },
+    { key: 'amount', header: `Amount (${CEDI})`, type: 'currency' },
     { key: 'paymentMethod', header: 'Payment Method', type: 'text' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'reference', header: 'Reference', type: 'text' },
@@ -262,11 +263,11 @@ export async function buildPayrollReport(params: ReportParams): Promise<ExcelRep
     { key: 'employeeId', header: 'Employee ID', type: 'text' },
     { key: 'driver', header: 'Driver', type: 'text' },
     { key: 'period', header: 'Period', type: 'text' },
-    { key: 'baseSalary', header: 'Base Salary (\u20B5)', type: 'currency' },
-    { key: 'tripBonus', header: 'Trip Bonus (\u20B5)', type: 'currency' },
-    { key: 'overtime', header: 'Overtime (\u20B5)', type: 'currency' },
-    { key: 'deductions', header: 'Deductions (\u20B5)', type: 'currency' },
-    { key: 'netPay', header: 'Net Pay (\u20B5)', type: 'currency' },
+    { key: 'baseSalary', header: `Base Salary (${CEDI})`, type: 'currency' },
+    { key: 'tripBonus', header: `Trip Bonus (${CEDI})`, type: 'currency' },
+    { key: 'overtime', header: `Overtime (${CEDI})`, type: 'currency' },
+    { key: 'deductions', header: `Deductions (${CEDI})`, type: 'currency' },
+    { key: 'netPay', header: `Net Pay (${CEDI})`, type: 'currency' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'paidAt', header: 'Paid At', type: 'date' },
   ]
@@ -380,9 +381,9 @@ export async function buildDriverPerformanceReport(params: ReportParams): Promis
     { key: 'totalTrips', header: 'Total Trips', type: 'number' },
     { key: 'completedTrips', header: 'Completed', type: 'number' },
     { key: 'completionRate', header: 'Completion Rate', type: 'percent' },
-    { key: 'totalRevenue', header: 'Revenue (\u20B5)', type: 'currency' },
-    { key: 'totalExpenses', header: 'Expenses (\u20B5)', type: 'currency' },
-    { key: 'netProfit', header: 'Net Profit (\u20B5)', type: 'currency' },
+    { key: 'totalRevenue', header: `Revenue (${CEDI})`, type: 'currency' },
+    { key: 'totalExpenses', header: `Expenses (${CEDI})`, type: 'currency' },
+    { key: 'netProfit', header: `Net Profit (${CEDI})`, type: 'currency' },
     { key: 'totalMileage', header: 'Mileage (km)', type: 'number' },
     { key: 'rating', header: 'Rating', type: 'number' },
     { key: 'hireDate', header: 'Hire Date', type: 'date' },
@@ -469,7 +470,7 @@ export async function buildMaintenanceReport(params: ReportParams): Promise<Exce
     { key: 'type', header: 'Type', type: 'text' },
     { key: 'title', header: 'Description', type: 'text' },
     { key: 'odometer', header: 'Odometer (km)', type: 'number' },
-    { key: 'cost', header: 'Cost (\u20B5)', type: 'currency' },
+    { key: 'cost', header: `Cost (${CEDI})`, type: 'currency' },
     { key: 'performedBy', header: 'Performed By', type: 'text' },
     { key: 'status', header: 'Status', type: 'text' },
     { key: 'nextDueDate', header: 'Next Due', type: 'date' },
