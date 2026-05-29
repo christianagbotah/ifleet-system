@@ -276,21 +276,37 @@ export async function POST(request: NextRequest) {
 
     // Handle waybill specially — uses dedicated PDF builder
     if (type === 'waybill_report' && format === 'pdf') {
-      const { buildWaybillPdf } = await import('@/lib/reports/waybill-pdf')
-      const pdf = await buildWaybillPdf(params.tripId!)
-      const buffer = Buffer.from(pdf.output('arraybuffer'))
-      content = buffer
-      fileSize = buffer.length
+      try {
+        const { buildWaybillPdf } = await import('@/lib/reports/waybill-pdf')
+        const pdf = await buildWaybillPdf(params.tripId!)
+        const buffer = Buffer.from(pdf.output('arraybuffer'))
+        content = buffer
+        fileSize = buffer.length
+      } catch (err) {
+        throw new Error(`Waybill PDF generation failed: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else if (format === 'csv') {
-      const result = await generateCsvReport(type, params)
-      content = result.content
-      fileSize = Buffer.byteLength(content, 'utf-8')
+      try {
+        const result = await generateCsvReport(type, params)
+        content = result.content
+        fileSize = Buffer.byteLength(content, 'utf-8')
+      } catch (err) {
+        throw new Error(`CSV data fetch failed for ${type}: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else if (format === 'xlsx') {
-      content = await generateExcelReport(type, params)
-      fileSize = (content as Buffer).length
+      try {
+        content = await generateExcelReport(type, params)
+        fileSize = (content as Buffer).length
+      } catch (err) {
+        throw new Error(`Excel generation failed for ${type}: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else if (format === 'pdf') {
-      content = await generatePdfReport(type, params)
-      fileSize = (content as Buffer).length
+      try {
+        content = await generatePdfReport(type, params)
+        fileSize = (content as Buffer).length
+      } catch (err) {
+        throw new Error(`PDF generation failed for ${type}: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else {
       return NextResponse.json({ error: 'Unsupported format' }, { status: 400 })
     }
@@ -350,28 +366,32 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('[Reports] Generation failed:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : ''
+    console.error(`[Reports] Generation failed for type=${body?.type || 'unknown'} format=${body?.format || 'unknown'}:`)
+    console.error('  Message:', errorMessage)
+    if (errorStack) console.error('  Stack:', errorStack)
 
     // Save failed report history
     try {
-      const body = await request.clone().json().catch(() => ({}))
       await db.reportHistory.create({
         data: {
-          type: (body as { type?: string }).type || 'unknown',
-          title: `Failed: ${(body as { type?: string }).type || 'unknown'}`,
-          format: (body as { format?: string }).format || 'unknown',
-          parameters: JSON.stringify((body as { params?: ReportParams }).params || {}),
+          type: body?.type || 'unknown',
+          title: `Failed: ${body?.type || 'unknown'}`,
+          format: body?.format || 'unknown',
+          parameters: JSON.stringify(body?.params || {}),
           generatedBy: auth.email,
           status: 'failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: errorMessage,
         },
       })
     } catch {
       // ignore history save failure
     }
 
+    // Return a descriptive error to help the user understand what went wrong
     return NextResponse.json(
-      { error: 'Failed to generate report. Please try again.' },
+      { error: `Report generation failed: ${errorMessage}` },
       { status: 500 }
     )
   }

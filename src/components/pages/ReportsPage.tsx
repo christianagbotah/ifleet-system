@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   DollarSign,
@@ -26,7 +26,6 @@ import {
   Target,
   Fuel,
   BarChart3,
-  Zap,
   Package,
   Search,
   Download,
@@ -47,15 +46,10 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DatePicker } from '@/components/ui/date-picker'
 import { SearchableSelect } from '@/components/ui/searchable-select'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
 import { triggerDownload } from '@/lib/export'
+import { ReportPreviewView } from '@/components/reports/ReportPreviewView'
 import type { ReportType, ExportFormat, ReportParams } from '@/lib/reports/types'
 
 // ─── Report Category Definitions ─────────────────────────────────────────
@@ -179,12 +173,6 @@ const FORMAT_EXTENSIONS: Record<ExportFormat, string> = {
   csv: 'csv',
 }
 
-const FORMAT_MIME: Record<ExportFormat, string> = {
-  pdf: 'application/pdf',
-  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  csv: 'text/csv',
-}
-
 // ─── Animation helpers ──────────────────────────────────────────────────
 
 const containerVariants = {
@@ -200,121 +188,11 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
 }
 
-// ─── Report Preview Dialog ──────────────────────────────────────────────
+// ─── Report name helper ────────────────────────────────────────────────
 
-interface PreviewState {
-  report: ReportDefinition
-  pdfUrl: string | null
-  blob: Blob | null
-  loading: boolean
-  error: string | null
-}
-
-function ReportPreviewDialog({
-  state,
-  onClose,
-  onDownload,
-  onDownloadExcel,
-  onPrint,
-}: {
-  state: PreviewState
-  onClose: () => void
-  onDownload: () => void
-  onDownloadExcel: () => void
-  onPrint: () => void
-}) {
-  const { report, pdfUrl, loading, error } = state
-  const Icon = report.icon
-
-  return (
-    <Dialog open onOpenChange={(open) => { if (!open) onClose() }}>
-      <DialogContent className="max-w-[95vw] w-full h-[90vh] sm:h-[92vh] flex flex-col p-0 gap-0 overflow-hidden">
-        {/* Header */}
-        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b shrink-0">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="size-9 rounded-xl bg-muted flex items-center justify-center shrink-0">
-                <Icon className="size-5 text-muted-foreground" />
-              </div>
-              <div className="min-w-0">
-                <DialogTitle className="text-base font-semibold truncate">{report.name}</DialogTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">Preview — review before downloading</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-8 text-xs gap-1.5"
-                onClick={onDownloadExcel}
-                disabled={loading}
-              >
-                <FileSpreadsheet className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span className="hidden sm:inline">Excel</span>
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-8 text-xs gap-1.5"
-                onClick={onDownload}
-                disabled={!pdfUrl}
-              >
-                <Download className="size-3.5 text-red-500 dark:text-red-400" />
-                <span className="hidden sm:inline">PDF</span>
-              </Button>
-              <Button
-                size="sm"
-                variant="default"
-                className="h-8 text-xs gap-1.5"
-                onClick={onPrint}
-                disabled={!pdfUrl}
-              >
-                <Printer className="size-3.5" />
-                <span className="hidden sm:inline">Print</span>
-              </Button>
-            </div>
-          </div>
-        </DialogHeader>
-
-        {/* PDF Viewer */}
-        <div className="flex-1 min-h-0 relative bg-muted/30">
-          {loading && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm gap-3">
-              <div className="size-12 rounded-full border-4 border-muted border-t-emerald-500 animate-spin" />
-              <div className="text-center">
-                <p className="text-sm font-medium">Generating Preview</p>
-                <p className="text-xs text-muted-foreground mt-1">Building your {report.name.toLowerCase()}...</p>
-              </div>
-            </div>
-          )}
-
-          {error && (
-            <div className="flex flex-col items-center justify-center h-full gap-3 text-center p-6">
-              <div className="size-12 rounded-full bg-red-100 dark:bg-red-950/50 flex items-center justify-center">
-                <AlertTriangle className="size-6 text-red-500" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Failed to generate preview</p>
-                <p className="text-xs text-muted-foreground mt-1 max-w-sm">{error}</p>
-              </div>
-              <Button size="sm" variant="outline" onClick={onClose}>
-                <X className="size-3.5 mr-1" />
-                Close
-              </Button>
-            </div>
-          )}
-
-          {!loading && !error && pdfUrl && (
-            <iframe
-              src={pdfUrl}
-              className="w-full h-full border-0"
-              title={`${report.name} Preview`}
-            />
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
+function formatReportName(type: string): string {
+  const report = REPORTS.find((r) => r.type === type)
+  return report?.name || type.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 // ─── Report Card Component ──────────────────────────────────────────────
@@ -408,20 +286,19 @@ function ReportCard({ report, dateFrom, dateTo, truckId, driverId, zoneId, loadi
             </Button>
           </div>
 
-          {/* Preview button */}
+          {/* Preview button — opens full page */}
           <Button
             size="sm"
             variant="secondary"
             className="w-full h-8 text-xs gap-1.5 font-medium"
             onClick={() => onPreview(report)}
-            disabled={isLoading}
           >
             {isPreviewLoading ? (
               <Loader2 className="size-3.5 animate-spin" />
             ) : (
               <Eye className="size-3.5" />
             )}
-            {isPreviewLoading ? 'Generating Preview...' : 'Preview'}
+            {isPreviewLoading ? 'Opening...' : 'Preview'}
           </Button>
         </CardContent>
       </Card>
@@ -497,46 +374,13 @@ function CategorySection({ category, dateFrom, dateTo, truckId, driverId, zoneId
   )
 }
 
-// ─── Loading Skeleton ───────────────────────────────────────────────────
-
-function ReportsHubSkeleton() {
-  return (
-    <div className="p-4 md:p-6 space-y-6">
-      {/* Filters skeleton */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1">
-          <Skeleton className="h-9 w-full max-w-md rounded-lg" />
-        </div>
-        <div className="flex gap-3">
-          <Skeleton className="h-9 w-40 rounded-lg" />
-          <Skeleton className="h-9 w-40 rounded-lg" />
-        </div>
-      </div>
-
-      {/* Category sections skeleton */}
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Skeleton className="size-9 rounded-lg" />
-            <div className="space-y-1.5">
-              <Skeleton className="h-4 w-40" />
-              <Skeleton className="h-3 w-64" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((j) => (
-              <Skeleton key={j} className="h-48 rounded-xl" />
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 // ─── Main Reports Hub Page ──────────────────────────────────────────────
 
 export default function ReportsPage() {
+  // ── Preview state: hub vs full-page preview ──
+  const [previewReport, setPreviewReport] = useState<ReportDefinition | null>(null)
+  const [previewParams, setPreviewParams] = useState<ReportParams>({})
+
   const [searchQuery, setSearchQuery] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
@@ -562,7 +406,6 @@ export default function ReportsPage() {
         const res = await fetch(url, { headers })
         if (!res.ok) return []
         const json = await res.json()
-        // APIs return paginated response: { data: [...], total, page, limit }
         const items = Array.isArray(json) ? json : (json.data ?? [])
         return items as T[]
       } catch {
@@ -582,11 +425,6 @@ export default function ReportsPage() {
       ),
     ])
   }, [token])
-
-  // Preview state
-  const [preview, setPreview] = useState<PreviewState | null>(null)
-  const previewBlobRef = useRef<Blob | null>(null)
-  const previewUrlRef = useRef<string | null>(null)
 
   // Set document title on mount
   useEffect(() => {
@@ -629,7 +467,6 @@ export default function ReportsPage() {
           throw new Error(errData.error || `Failed to generate ${type} report`)
         }
 
-        // Determine filename from Content-Disposition or construct one
         const contentDisposition = res.headers.get('Content-Disposition')
         let filename = `${type}-${new Date().toISOString().split('T')[0]}.${FORMAT_EXTENSIONS[format]}`
 
@@ -670,120 +507,24 @@ export default function ReportsPage() {
     [token]
   )
 
-  // ── Preview handler ──
+  // ── Preview handler: navigate to full-page preview ──
   const handlePreview = useCallback(
-    async (report: ReportDefinition) => {
-      if (!token) {
-        toast.error('Authentication required. Please sign in.')
-        return
-      }
-
+    (report: ReportDefinition) => {
       const params: ReportParams = { ...buildCommonParams() }
       if (report.params) Object.assign(params, report.params)
-
-      // Cleanup previous preview
-      if (previewUrlRef.current) {
-        URL.revokeObjectURL(previewUrlRef.current)
-        previewUrlRef.current = null
-      }
-      previewBlobRef.current = null
-
-      setPreview({ report, pdfUrl: null, blob: null, loading: true, error: null })
-      setLoadingKey(`${report.type}-preview`)
-
-      try {
-        const res = await fetch('/api/reports/generate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ type: report.type, format: 'pdf', params }),
-        })
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({ error: 'Generation failed' }))
-          throw new Error(errData.error || `Failed to generate ${report.name}`)
-        }
-
-        const blob = await res.blob()
-        const url = URL.createObjectURL(blob)
-
-        previewBlobRef.current = blob
-        previewUrlRef.current = url
-
-        setPreview({ report, pdfUrl: url, blob, loading: false, error: null })
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'An unexpected error occurred'
-        setPreview((prev) => prev ? { ...prev, loading: false, error: message } : null)
-        toast.error(message)
-      } finally {
-        setLoadingKey(null)
-      }
+      setPreviewParams(params)
+      setPreviewReport(report)
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
-    [token, buildCommonParams]
+    [buildCommonParams]
   )
 
-  // ── Preview close / download / print ──
-  const closePreview = useCallback(() => {
-    if (previewUrlRef.current) {
-      URL.revokeObjectURL(previewUrlRef.current)
-      previewUrlRef.current = null
-    }
-    previewBlobRef.current = null
-    setPreview(null)
-  }, [])
-
-  const downloadPreviewPdf = useCallback(() => {
-    if (!previewBlobRef.current || !preview) return
-    const filename = `${preview.report.type}-${new Date().toISOString().split('T')[0]}.pdf`
-    triggerDownload(previewBlobRef.current, filename)
-    toast.success(`${preview.report.name} (PDF) downloaded`)
-  }, [preview])
-
-  const downloadPreviewExcel = useCallback(async () => {
-    if (!preview || !token) return
-    const params: ReportParams = { ...buildCommonParams() }
-    if (preview.report.params) Object.assign(params, preview.report.params)
-
-    toast.loading('Generating Excel file...')
-    try {
-      const res = await fetch('/api/reports/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ type: preview.report.type, format: 'xlsx', params }),
-      })
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({ error: 'Generation failed' }))
-        throw new Error(errData.error || 'Failed to generate Excel')
-      }
-
-      const blob = await res.blob()
-      const filename = `${preview.report.type}-${new Date().toISOString().split('T')[0]}.xlsx`
-      triggerDownload(blob, filename)
-      toast.dismiss()
-      toast.success(`${preview.report.name} (Excel) downloaded`)
-    } catch (error) {
-      toast.dismiss()
-      const message = error instanceof Error ? error.message : 'Failed to generate Excel'
-      toast.error(message)
-    }
-  }, [preview, token, buildCommonParams])
-
-  const printPreview = useCallback(() => {
-    if (!previewUrlRef.current) return
-    const printWindow = window.open(previewUrlRef.current, '_blank')
-    if (printWindow) {
-      printWindow.addEventListener('load', () => {
-        printWindow.print()
-      })
-    } else {
-      toast.warning('Pop-up blocked. Please allow pop-ups for this site.')
-    }
+  // ── Back from preview ──
+  const handleBackFromPreview = useCallback(() => {
+    setPreviewReport(null)
+    setPreviewParams({})
+    document.title = 'Reports Hub — iFleetPro'
   }, [])
 
   // ── Filtered categories ──
@@ -803,6 +544,21 @@ export default function ReportsPage() {
     }, 0)
   }, [filteredCategories, searchQuery])
 
+  // ─── Full-Page Preview Mode ──────────────────────────────────────────
+  if (previewReport) {
+    return (
+      <div className="p-4 md:p-6 max-w-[1600px] mx-auto">
+        <ReportPreviewView
+          reportType={previewReport.type}
+          reportName={previewReport.name}
+          params={previewParams}
+          onBack={handleBackFromPreview}
+        />
+      </div>
+    )
+  }
+
+  // ─── Reports Hub Grid ────────────────────────────────────────────────
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
       {/* ── Page Header ─────────────────────────────────────────────────── */}
@@ -820,7 +576,7 @@ export default function ReportsPage() {
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Reports Hub</h1>
             </div>
             <p className="text-sm text-muted-foreground">
-              Generate and download {REPORTS.length} report types across {CATEGORIES.length} categories
+              Generate and preview {REPORTS.length} report types across {CATEGORIES.length} categories
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -866,7 +622,7 @@ export default function ReportsPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex gap-1.5 items-center bg-muted/50 rounded-lg p-1">
+            <div className="flex gap-1.5 items-center bg-muted/50 rounded-lg p-1 overflow-x-auto">
               {(['all', ...CATEGORIES.map((c) => c.id)] as const).map((catId) => {
                 const cat = catId === 'all' ? null : CATEGORIES.find((c) => c.id === catId)
                 const label = catId === 'all' ? 'All' : cat?.name.split(' ')[0] ?? catId
@@ -875,7 +631,7 @@ export default function ReportsPage() {
                     key={catId}
                     type="button"
                     onClick={() => setActiveCategory(catId)}
-                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer border-none outline-none ${
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer border-none outline-none whitespace-nowrap ${
                       activeCategory === catId
                         ? 'bg-background shadow-sm text-foreground'
                         : 'text-muted-foreground hover:text-foreground'
@@ -891,7 +647,7 @@ export default function ReportsPage() {
               variant="outline"
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
-              className={`h-9 gap-1.5 text-xs ${showFilters ? 'bg-muted' : ''}`}
+              className={`h-9 gap-1.5 text-xs shrink-0 ${showFilters ? 'bg-muted' : ''}`}
             >
               <Filter className="size-3.5" />
               <span className="hidden sm:inline">Filters</span>
@@ -919,7 +675,7 @@ export default function ReportsPage() {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <CalendarDays className="size-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Date Range</span>
+                    <span className="text-sm font-medium">Date Range & Filters</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <div className="space-y-1.5">
@@ -969,11 +725,11 @@ export default function ReportsPage() {
                   <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-border/50">
                     <span className="text-xs text-muted-foreground self-center mr-1">Quick:</span>
                     {[
-                      { label: 'Today', from: 'today', to: 'today' },
-                      { label: 'This Week', from: 'week', to: 'today' },
-                      { label: 'This Month', from: 'month', to: 'today' },
-                      { label: 'Last 30 Days', from: '30d', to: 'today' },
-                      { label: 'This Year', from: 'year', to: 'today' },
+                      { label: 'Today', from: 'today' },
+                      { label: 'This Week', from: 'week' },
+                      { label: 'This Month', from: 'month' },
+                      { label: 'Last 30 Days', from: '30d' },
+                      { label: 'This Year', from: 'year' },
                     ].map((preset) => (
                       <Button
                         key={preset.label}
@@ -1006,12 +762,8 @@ export default function ReportsPage() {
                               from = now
                           }
 
-                          const fmt = (d: Date) =>
-                            `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-
-                          setDateFrom(fmt(from))
-                          setDateTo(fmt(now))
-                          toast.info(`Date range set to ${preset.label}`)
+                          setDateFrom(from.toISOString().split('T')[0])
+                          setDateTo(now.toISOString().split('T')[0])
                         }}
                       >
                         {preset.label}
@@ -1023,92 +775,28 @@ export default function ReportsPage() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Active filters display */}
-        {(dateFrom || dateTo || truckId || driverId || zoneId) && !showFilters && (
-          <div className="flex flex-wrap gap-2">
-            {dateFrom && (
-              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                From: {dateFrom}
-                <button onClick={() => setDateFrom('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
-                  <X className="size-3" />
-                </button>
-              </Badge>
-            )}
-            {dateTo && (
-              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                To: {dateTo}
-                <button onClick={() => setDateTo('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
-                  <X className="size-3" />
-                </button>
-              </Badge>
-            )}
-            {truckId && truckId !== '__all__' && (
-              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                Truck: {truckOptions.find((t) => t.value === truckId)?.label ?? truckId}
-                <button onClick={() => setTruckId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
-                  <X className="size-3" />
-                </button>
-              </Badge>
-            )}
-            {driverId && driverId !== '__all__' && (
-              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                Driver: {driverOptions.find((d) => d.value === driverId)?.label ?? driverId}
-                <button onClick={() => setDriverId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
-                  <X className="size-3" />
-                </button>
-              </Badge>
-            )}
-            {zoneId && (
-              <Badge variant="secondary" className="text-xs gap-1 px-2.5 py-1">
-                Zone: {zoneOptions.find((z) => z.value === zoneId)?.label ?? zoneId}
-                <button onClick={() => setZoneId('')} className="ml-1 hover:text-destructive cursor-pointer border-none bg-transparent p-0">
-                  <X className="size-3" />
-                </button>
-              </Badge>
-            )}
-          </div>
-        )}
       </motion.div>
 
-      {/* ── Global loading indicator ────────────────────────────────────── */}
-      {loadingKey && !loadingKey.endsWith('-preview') && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2"
-        >
-          <Loader2 className="size-4 animate-spin text-emerald-600" />
-          <span>Generating {formatReportName(loadingKey.split('-').slice(0, -1).join('-'))}...</span>
-        </motion.div>
-      )}
-
-      {/* ── Results count ───────────────────────────────────────────────── */}
-      {searchQuery && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            {totalFilteredCount} report{totalFilteredCount !== 1 ? 's' : ''} found
-            {searchQuery && (
-              <span>
-                {' '}
-                matching &ldquo;<span className="font-medium text-foreground">{searchQuery}</span>&rdquo;
-              </span>
-            )}
+      {/* ── Report Categories ────────────────────────────────────────────── */}
+      {searchQuery && totalFilteredCount === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="size-16 rounded-full bg-muted flex items-center justify-center mb-4">
+            <Search className="size-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-lg font-semibold">No Reports Found</h3>
+          <p className="text-sm text-muted-foreground mt-1 max-w-md">
+            No reports match &quot;{searchQuery}&quot;. Try a different search term.
           </p>
+          <Button variant="outline" size="sm" className="mt-4" onClick={() => setSearchQuery('')}>
+            <X className="size-3.5 mr-1.5" />
+            Clear Search
+          </Button>
         </div>
-      )}
-
-      {/* ── Report Categories ──────────────────────────────────────────── */}
-      <div className="space-y-8">
-        {filteredCategories.map((category, idx) => (
-          <motion.div
-            key={category.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.08 * idx }}
-          >
+      ) : (
+        <div className="space-y-10">
+          {filteredCategories.map((category) => (
             <CategorySection
+              key={category.id}
               category={category}
               dateFrom={dateFrom}
               dateTo={dateTo}
@@ -1120,88 +808,9 @@ export default function ReportsPage() {
               onPreview={handlePreview}
               searchQuery={searchQuery}
             />
-          </motion.div>
-        ))}
-
-        {/* No results */}
-        {searchQuery && totalFilteredCount === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-16 text-center"
-          >
-            <div className="size-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
-              <Search className="size-7 text-muted-foreground/50" />
-            </div>
-            <h3 className="text-sm font-semibold mb-1">No reports found</h3>
-            <p className="text-xs text-muted-foreground max-w-xs">
-              No reports match &ldquo;{searchQuery}&rdquo;. Try a different search term or{' '}
-              <button
-                onClick={() => setSearchQuery('')}
-                className="text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer bg-transparent border-none p-0 font-medium"
-              >
-                clear the search
-              </button>
-              .
-            </p>
-          </motion.div>
-        )}
-      </div>
-
-      {/* ── Preview Dialog ──────────────────────────────────────────────── */}
-      {preview && (
-        <ReportPreviewDialog
-          state={preview}
-          onClose={closePreview}
-          onDownload={downloadPreviewPdf}
-          onDownloadExcel={downloadPreviewExcel}
-          onPrint={printPreview}
-        />
-      )}
-
-      {/* ── Footer info ─────────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="pt-4 border-t border-border/50"
-      >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Eye className="size-3" />
-              Preview (view first)
-            </span>
-            <span className="flex items-center gap-1">
-              <FileText className="size-3" />
-              PDF
-            </span>
-            <span className="flex items-center gap-1">
-              <FileSpreadsheet className="size-3" />
-              Excel
-            </span>
-            <span className="flex items-center gap-1">
-              <Printer className="size-3" />
-              Print
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {REPORTS.length} report types available &middot; Reports apply the date range and filters set above
-          </p>
+          ))}
         </div>
-      </motion.div>
+      )}
     </div>
   )
-}
-
-// ─── Helpers ────────────────────────────────────────────────────────────
-
-function formatReportName(type: string): string {
-  const report = REPORTS.find((r) => r.type === type)
-  if (report) return report.name
-
-  return type
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
 }
