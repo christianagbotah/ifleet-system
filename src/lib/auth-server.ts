@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '@/lib/jwt-secret'
 
 // ============ Types ============
 
@@ -33,11 +34,7 @@ export const ROLES = {
 
 export type RoleName = (typeof ROLES)[keyof typeof ROLES]
 
-const _JWT_SECRET_RAW = process.env.NEXTAUTH_SECRET
-if (!_JWT_SECRET_RAW && process.env.NODE_ENV !== 'development') {
-  console.error('[SECURITY] NEXTAUTH_SECRET environment variable is not set! Using fallback is UNSAFE for production.')
-}
-const JWT_SECRET = _JWT_SECRET_RAW || 'fleetpro-fallback-secret-DO-NOT-USE-IN-PROD'
+// JWT_SECRET is imported from @/lib/jwt-secret (no fallbacks)
 
 // ============ JWT Decoder Cache ============
 // Avoid re-parsing the same JWT on every requireAuth call within one request.

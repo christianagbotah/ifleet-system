@@ -20,15 +20,10 @@ import { jwtVerify } from 'jose'
 import { registerPushListener, type PushEvent } from '@/lib/services/push'
 import { APP_NAME } from '@/lib/constants'
 import { requireAuth } from '@/lib/auth-server'
+import { getJwtSecretKey } from '@/lib/jwt-secret'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-
-const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fleetpro-fallback-secret'
-
-function getSecretKey(): Uint8Array {
-  return new TextEncoder().encode(JWT_SECRET)
-}
 
 async function verifyRequest(request: NextRequest): Promise<{ userId: string } | null> {
   // 1. Try Authorization: Bearer <token>
@@ -36,7 +31,7 @@ async function verifyRequest(request: NextRequest): Promise<{ userId: string } |
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7)
     try {
-      const { payload } = await jwtVerify(token, getSecretKey())
+      const { payload } = await jwtVerify(token, getJwtSecretKey())
       const userId = payload.userId as string | undefined
       if (userId) return { userId }
     } catch {
@@ -52,7 +47,7 @@ async function verifyRequest(request: NextRequest): Promise<{ userId: string } |
 
   if (cookieToken) {
     try {
-      const { payload } = await jwtVerify(cookieToken, getSecretKey())
+      const { payload } = await jwtVerify(cookieToken, getJwtSecretKey())
       const userId = payload.userId as string | undefined
       const sub = payload.sub as string | undefined
       // next-auth JWT stores user ID in `sub` field; our custom JWT uses `userId`

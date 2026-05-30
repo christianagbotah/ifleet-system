@@ -13,6 +13,7 @@ import { useAuthStore, canAccessNav } from '@/lib/store/auth'
 import { useHighlightStore } from '@/lib/store/highlight'
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts'
 import { ErrorBoundary } from '@/components/ui/error-boundary'
+import { AiChatPanel } from '@/components/ai/AiChatPanel'
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 
 // Lazy load ALL view components with ssr: false to prevent SSR hydration crashes
@@ -580,6 +581,8 @@ export default function Home() {
           {/* Command Palette & Quick Actions */}
           <CommandPaletteWrapper currentPage={currentPage} onNavigate={navigateTo} />
           <QuickActionsFab onNavigate={navigateTo} />
+          {/* AI Chat Assistant */}
+          <AiChatPanel />
         </SidebarInset>
       </SidebarProvider>
     </ErrorBoundary>

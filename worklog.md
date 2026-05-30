@@ -207,3 +207,103 @@ Stage Summary:
 - All changes pushed to origin/main
 - Database schema updated and synced
 - Lint passes cleanly
+
+---
+Task ID: 12
+Agent: Validation Schema Agent
+Task: Create comprehensive Zod validation schemas for server-side API input validation
+
+Work Log:
+- Read all 8 API route POST bodies to understand input shapes (trips, trucks, drivers, expenses, fuel-logs, users, invoices, maintenance)
+- Verified zod v4 import via `import { z } from 'zod/v4'` works correctly
+- Created `/src/lib/validations.ts` with:
+  - Common schemas: idSchema, emailSchema, phoneSchema, paginationSchema
+  - Enum schemas: truckStatus, fuelType, expenseCategory, maintenanceType, etc.
+  - 8 entity creation schemas matching API route input shapes
+  - validateBody helper returning discriminated union { success, data/response }
+  - validateQuery helper for URLSearchParams validation
+  - All schemas use zod/v4 coerce for type-safe number/date parsing
+- ESLint passes cleanly with zero errors
+
+Stage Summary:
+- File created: src/lib/validations.ts (~310 lines)
+- 8 entity schemas: trip, truck, driver, expense, fuelLog, user, invoice, maintenance
+- 4 common schemas: id, email, phone, pagination
+- 2 helper functions: validateBody, validateQuery
+- All schemas validated against actual API route POST body destructuring
+
+---
+Task ID: 11
+Agent: Main Agent
+Task: Add centralized API protection — rate limiting + security headers
+
+Work Log:
+- Read proxy.ts (JWT auth for /api/* and /driver/*) and rate-limit.ts (fixed-window limiter with globalThis)
+- Attempted to create src/middleware.ts per request, but Next.js 16 rejects coexistence of middleware.ts + proxy.ts
+  (Error: "Both middleware file and proxy file are detected. Please use ./src/proxy.ts only.")
+- Integrated rate limiting and security headers directly into proxy.ts instead
+- Added Edge Runtime-compatible in-memory rate limiter:
+  - Simple Map-based store (no globalThis/setInterval which are unreliable in Edge)
+  - Fixed-window algorithm: 100 requests/minute, 1-minute block on overflow
+  - Lazy cleanup every 60s or when store exceeds 50K entries
+  - Exempt routes: /api/scheduler/warmup
+  - Injects X-RateLimit-Remaining and X-RateLimit-Reset headers on allowed requests
+  - Returns 429 with Retry-After header when rate limited
+- Added security headers on ALL responses (API + driver redirects):
+  - X-Content-Type-Options: nosniff
+  - X-Frame-Options: DENY
+  - X-XSS-Protection: 1; mode=block
+  - Referrer-Policy: strict-origin-when-cross-origin
+- All existing auth logic preserved unchanged
+- ESLint passes cleanly, dev server compiles without errors
+
+Stage Summary:
+- proxy.ts is the sole middleware in this Next.js 16 project (cannot coexist with middleware.ts)
+- proxy.ts now provides 3 layers of protection: rate limiting → security headers → JWT auth
+- Rate limiting is first-layer defense; route-level limiters (rate-limit.ts) add stricter per-endpoint limits on top
+- Files changed: 1 modified (src/proxy.ts)
+
+---
+Task ID: 17
+Agent: Main Agent
+Task: Create AI-powered driver support chatbot for iFleet Pro fleet management system
+
+Work Log:
+- Read LLM skill instructions for z-ai-web-dev-sdk usage patterns
+- Analyzed existing project structure (constants.ts, notification-service pattern, auth-server.ts)
+- Created mini-service at `/mini-services/ai-service/`:
+  - package.json with socket.io + z-ai-web-dev-sdk dependencies
+  - index.ts with Socket.IO server + HTTP API (port 3007)
+  - HTTP endpoints: POST /api/chat, /api/dispatch-suggest, /api/fuel-anomaly, /api/report-nl
+  - GET /api/health for health checks
+  - Socket.IO events: ai:subscribe, ai:chat, ai:response
+  - API key auth via INTERNAL_API_KEY header
+  - CORS restricted to localhost:3000 and production domain
+  - ZAI SDK pre-initialized on startup with lazy fallback
+  - System prompts for: fleet assistant, dispatch optimization, fuel anomaly detection, report generation
+  - keepalive.sh and start.sh scripts
+- Created 4 API proxy routes forwarding to AI service:
+  - POST /api/ai/chat — requires auth (any role)
+  - POST /api/ai/dispatch-suggest — requires auth + Admin/Manager role
+  - POST /api/ai/fuel-anomaly — requires auth
+  - POST /api/ai/report-nl — requires auth
+- Created floating AI chat panel component:
+  - AiChatPanel.tsx — Intercom/Drift-style widget
+  - Floating amber action button (bottom-right)
+  - Animated open/close with Framer Motion
+  - Message history with scroll, user/AI bubble styling
+  - Quick suggestion chips for common queries
+  - Loading state with spinner, error with retry
+  - Minimize/maximize/close controls
+  - Clear chat button
+  - Only shown for authenticated users
+- Updated page.tsx to include AiChatPanel globally
+- Tested: health endpoint returns OK, chat endpoint responds with AI-generated text
+- All lint checks pass
+
+Stage Summary:
+- AI service running on port 3007 via keepalive.sh
+- z-ai-web-dev-sdk used in backend mini-service only (not client)
+- 4 API proxy routes with proper auth/role guards
+- Floating chat widget available globally to all authenticated users
+- Files created: 7 new (mini-service files + API routes + component), 1 modified (page.tsx)

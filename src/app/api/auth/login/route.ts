@@ -4,12 +4,7 @@ import { comparePassword } from '@/lib/auth-utils'
 import jwt from 'jsonwebtoken'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { rateLimit, RATE_LIMITS, getClientIp as getClientIpFromRateLimit } from '@/lib/rate-limit'
-
-const _JWT_SECRET_RAW = process.env.NEXTAUTH_SECRET
-if (!_JWT_SECRET_RAW && process.env.NODE_ENV !== 'development') {
-  console.error('[SECURITY] NEXTAUTH_SECRET environment variable is not set!')
-}
-const JWT_SECRET = _JWT_SECRET_RAW || 'fleetpro-fallback-secret-DO-NOT-USE-IN-PROD'
+import { JWT_SECRET } from '@/lib/jwt-secret'
 
 const ENDPOINT_KEY = 'auth/login'
 
