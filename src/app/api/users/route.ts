@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/client'
 import { hashPassword } from '@/lib/auth-utils'
 import { requireRole, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { validateBody, userCreateSchema } from '@/lib/validations'
 
 export async function GET(request: NextRequest) {
   try {
@@ -106,6 +107,8 @@ export async function POST(request: NextRequest) {
     const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
     if (auth instanceof NextResponse) return auth
     const body = await request.json()
+    const validation = validateBody(userCreateSchema, body)
+    if (!validation.success) return validation.response
 
     const { name, email, phone, password, roleId, isActive, position, department, employeeNumber, hasSystemAccess } = body
 

@@ -27,18 +27,18 @@ export type AggregateDvlaRenewalHistory = {
 }
 
 export type DvlaRenewalHistoryAvgAggregateOutputType = {
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
 }
 
 export type DvlaRenewalHistorySumAggregateOutputType = {
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
 }
 
 export type DvlaRenewalHistoryMinAggregateOutputType = {
   id: string | null
   dvlaRegistrationId: string | null
   previousData: string | null
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
   renewedByName: string | null
   notes: string | null
   createdAt: Date | null
@@ -48,7 +48,7 @@ export type DvlaRenewalHistoryMaxAggregateOutputType = {
   id: string | null
   dvlaRegistrationId: string | null
   previousData: string | null
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
   renewedByName: string | null
   notes: string | null
   createdAt: Date | null
@@ -195,7 +195,7 @@ export type DvlaRenewalHistoryGroupByOutputType = {
   id: string
   dvlaRegistrationId: string
   previousData: string
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
   renewedByName: string | null
   notes: string | null
   createdAt: Date
@@ -228,7 +228,7 @@ export type DvlaRenewalHistoryWhereInput = {
   id?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
   dvlaRegistrationId?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
   previousData?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableFilter<"DvlaRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableFilter<"DvlaRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableFilter<"DvlaRenewalHistory"> | string | null
   notes?: Prisma.StringNullableFilter<"DvlaRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DvlaRenewalHistory"> | Date | string
@@ -254,7 +254,7 @@ export type DvlaRenewalHistoryWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DvlaRenewalHistoryWhereInput | Prisma.DvlaRenewalHistoryWhereInput[]
   dvlaRegistrationId?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
   previousData?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableFilter<"DvlaRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableFilter<"DvlaRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableFilter<"DvlaRenewalHistory"> | string | null
   notes?: Prisma.StringNullableFilter<"DvlaRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DvlaRenewalHistory"> | Date | string
@@ -283,7 +283,7 @@ export type DvlaRenewalHistoryScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DvlaRenewalHistory"> | string
   dvlaRegistrationId?: Prisma.StringWithAggregatesFilter<"DvlaRenewalHistory"> | string
   previousData?: Prisma.StringWithAggregatesFilter<"DvlaRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableWithAggregatesFilter<"DvlaRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableWithAggregatesFilter<"DvlaRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableWithAggregatesFilter<"DvlaRenewalHistory"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"DvlaRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DvlaRenewalHistory"> | Date | string
@@ -292,7 +292,7 @@ export type DvlaRenewalHistoryScalarWhereWithAggregatesInput = {
 export type DvlaRenewalHistoryCreateInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -303,7 +303,7 @@ export type DvlaRenewalHistoryUncheckedCreateInput = {
   id?: string
   dvlaRegistrationId: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -312,7 +312,7 @@ export type DvlaRenewalHistoryUncheckedCreateInput = {
 export type DvlaRenewalHistoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -323,7 +323,7 @@ export type DvlaRenewalHistoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dvlaRegistrationId?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -333,7 +333,7 @@ export type DvlaRenewalHistoryCreateManyInput = {
   id?: string
   dvlaRegistrationId: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -342,7 +342,7 @@ export type DvlaRenewalHistoryCreateManyInput = {
 export type DvlaRenewalHistoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -352,7 +352,7 @@ export type DvlaRenewalHistoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dvlaRegistrationId?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,7 +457,7 @@ export type DvlaRenewalHistoryUncheckedUpdateManyWithoutDvlaRegistrationNestedIn
 export type DvlaRenewalHistoryCreateWithoutDvlaRegistrationInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -466,7 +466,7 @@ export type DvlaRenewalHistoryCreateWithoutDvlaRegistrationInput = {
 export type DvlaRenewalHistoryUncheckedCreateWithoutDvlaRegistrationInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -505,7 +505,7 @@ export type DvlaRenewalHistoryScalarWhereInput = {
   id?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
   dvlaRegistrationId?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
   previousData?: Prisma.StringFilter<"DvlaRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableFilter<"DvlaRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableFilter<"DvlaRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableFilter<"DvlaRenewalHistory"> | string | null
   notes?: Prisma.StringNullableFilter<"DvlaRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DvlaRenewalHistory"> | Date | string
@@ -514,7 +514,7 @@ export type DvlaRenewalHistoryScalarWhereInput = {
 export type DvlaRenewalHistoryCreateManyDvlaRegistrationInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -523,7 +523,7 @@ export type DvlaRenewalHistoryCreateManyDvlaRegistrationInput = {
 export type DvlaRenewalHistoryUpdateWithoutDvlaRegistrationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -532,7 +532,7 @@ export type DvlaRenewalHistoryUpdateWithoutDvlaRegistrationInput = {
 export type DvlaRenewalHistoryUncheckedUpdateWithoutDvlaRegistrationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -541,7 +541,7 @@ export type DvlaRenewalHistoryUncheckedUpdateWithoutDvlaRegistrationInput = {
 export type DvlaRenewalHistoryUncheckedUpdateManyWithoutDvlaRegistrationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -586,7 +586,7 @@ export type $DvlaRenewalHistoryPayload<ExtArgs extends runtime.Types.Extensions.
     id: string
     dvlaRegistrationId: string
     previousData: string
-    renewalFee: number | null
+    renewalFee: runtime.Decimal | null
     renewedByName: string | null
     notes: string | null
     createdAt: Date
@@ -963,7 +963,7 @@ export interface DvlaRenewalHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"DvlaRenewalHistory", 'String'>
   readonly dvlaRegistrationId: Prisma.FieldRef<"DvlaRenewalHistory", 'String'>
   readonly previousData: Prisma.FieldRef<"DvlaRenewalHistory", 'String'>
-  readonly renewalFee: Prisma.FieldRef<"DvlaRenewalHistory", 'Float'>
+  readonly renewalFee: Prisma.FieldRef<"DvlaRenewalHistory", 'Decimal'>
   readonly renewedByName: Prisma.FieldRef<"DvlaRenewalHistory", 'String'>
   readonly notes: Prisma.FieldRef<"DvlaRenewalHistory", 'String'>
   readonly createdAt: Prisma.FieldRef<"DvlaRenewalHistory", 'DateTime'>

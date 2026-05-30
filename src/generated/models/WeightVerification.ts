@@ -48,7 +48,7 @@ export type WeightVerificationMinAggregateOutputType = {
   declaredWeight: number | null
   variance: number | null
   variancePercent: number | null
-  status: string | null
+  status: $Enums.WeightVerificationStatus | null
   verifiedBy: string | null
   verifiedByName: string | null
   notes: string | null
@@ -65,7 +65,7 @@ export type WeightVerificationMaxAggregateOutputType = {
   declaredWeight: number | null
   variance: number | null
   variancePercent: number | null
-  status: string | null
+  status: $Enums.WeightVerificationStatus | null
   verifiedBy: string | null
   verifiedByName: string | null
   notes: string | null
@@ -253,7 +253,7 @@ export type WeightVerificationGroupByOutputType = {
   declaredWeight: number | null
   variance: number | null
   variancePercent: number | null
-  status: string
+  status: $Enums.WeightVerificationStatus
   verifiedBy: string | null
   verifiedByName: string | null
   notes: string | null
@@ -293,7 +293,7 @@ export type WeightVerificationWhereInput = {
   declaredWeight?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
   variance?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
   variancePercent?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
-  status?: Prisma.StringFilter<"WeightVerification"> | string
+  status?: Prisma.EnumWeightVerificationStatusFilter<"WeightVerification"> | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
   verifiedByName?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
   notes?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
@@ -333,7 +333,7 @@ export type WeightVerificationWhereUniqueInput = Prisma.AtLeast<{
   declaredWeight?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
   variance?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
   variancePercent?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
-  status?: Prisma.StringFilter<"WeightVerification"> | string
+  status?: Prisma.EnumWeightVerificationStatusFilter<"WeightVerification"> | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
   verifiedByName?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
   notes?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
@@ -376,7 +376,7 @@ export type WeightVerificationScalarWhereWithAggregatesInput = {
   declaredWeight?: Prisma.FloatNullableWithAggregatesFilter<"WeightVerification"> | number | null
   variance?: Prisma.FloatNullableWithAggregatesFilter<"WeightVerification"> | number | null
   variancePercent?: Prisma.FloatNullableWithAggregatesFilter<"WeightVerification"> | number | null
-  status?: Prisma.StringWithAggregatesFilter<"WeightVerification"> | string
+  status?: Prisma.EnumWeightVerificationStatusWithAggregatesFilter<"WeightVerification"> | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.StringNullableWithAggregatesFilter<"WeightVerification"> | string | null
   verifiedByName?: Prisma.StringNullableWithAggregatesFilter<"WeightVerification"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"WeightVerification"> | string | null
@@ -392,7 +392,7 @@ export type WeightVerificationCreateInput = {
   declaredWeight?: number | null
   variance?: number | null
   variancePercent?: number | null
-  status?: string
+  status?: $Enums.WeightVerificationStatus
   verifiedBy?: string | null
   verifiedByName?: string | null
   notes?: string | null
@@ -410,7 +410,7 @@ export type WeightVerificationUncheckedCreateInput = {
   declaredWeight?: number | null
   variance?: number | null
   variancePercent?: number | null
-  status?: string
+  status?: $Enums.WeightVerificationStatus
   verifiedBy?: string | null
   verifiedByName?: string | null
   notes?: string | null
@@ -426,7 +426,7 @@ export type WeightVerificationUpdateInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -444,7 +444,7 @@ export type WeightVerificationUncheckedUpdateInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,7 +461,7 @@ export type WeightVerificationCreateManyInput = {
   declaredWeight?: number | null
   variance?: number | null
   variancePercent?: number | null
-  status?: string
+  status?: $Enums.WeightVerificationStatus
   verifiedBy?: string | null
   verifiedByName?: string | null
   notes?: string | null
@@ -477,7 +477,7 @@ export type WeightVerificationUpdateManyMutationInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -494,7 +494,7 @@ export type WeightVerificationUncheckedUpdateManyInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -626,6 +626,10 @@ export type WeightVerificationUncheckedUpdateManyWithoutTripNestedInput = {
   deleteMany?: Prisma.WeightVerificationScalarWhereInput | Prisma.WeightVerificationScalarWhereInput[]
 }
 
+export type EnumWeightVerificationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.WeightVerificationStatus
+}
+
 export type WeightVerificationCreateWithoutTripInput = {
   id?: string
   checkpointType: string
@@ -633,7 +637,7 @@ export type WeightVerificationCreateWithoutTripInput = {
   declaredWeight?: number | null
   variance?: number | null
   variancePercent?: number | null
-  status?: string
+  status?: $Enums.WeightVerificationStatus
   verifiedBy?: string | null
   verifiedByName?: string | null
   notes?: string | null
@@ -649,7 +653,7 @@ export type WeightVerificationUncheckedCreateWithoutTripInput = {
   declaredWeight?: number | null
   variance?: number | null
   variancePercent?: number | null
-  status?: string
+  status?: $Enums.WeightVerificationStatus
   verifiedBy?: string | null
   verifiedByName?: string | null
   notes?: string | null
@@ -695,7 +699,7 @@ export type WeightVerificationScalarWhereInput = {
   declaredWeight?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
   variance?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
   variancePercent?: Prisma.FloatNullableFilter<"WeightVerification"> | number | null
-  status?: Prisma.StringFilter<"WeightVerification"> | string
+  status?: Prisma.EnumWeightVerificationStatusFilter<"WeightVerification"> | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
   verifiedByName?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
   notes?: Prisma.StringNullableFilter<"WeightVerification"> | string | null
@@ -711,7 +715,7 @@ export type WeightVerificationCreateManyTripInput = {
   declaredWeight?: number | null
   variance?: number | null
   variancePercent?: number | null
-  status?: string
+  status?: $Enums.WeightVerificationStatus
   verifiedBy?: string | null
   verifiedByName?: string | null
   notes?: string | null
@@ -727,7 +731,7 @@ export type WeightVerificationUpdateWithoutTripInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -743,7 +747,7 @@ export type WeightVerificationUncheckedUpdateWithoutTripInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -759,7 +763,7 @@ export type WeightVerificationUncheckedUpdateManyWithoutTripInput = {
   declaredWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variance?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   variancePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWeightVerificationStatusFieldUpdateOperationsInput | $Enums.WeightVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -825,7 +829,7 @@ export type $WeightVerificationPayload<ExtArgs extends runtime.Types.Extensions.
     declaredWeight: number | null
     variance: number | null
     variancePercent: number | null
-    status: string
+    status: $Enums.WeightVerificationStatus
     verifiedBy: string | null
     verifiedByName: string | null
     notes: string | null
@@ -1209,7 +1213,7 @@ export interface WeightVerificationFieldRefs {
   readonly declaredWeight: Prisma.FieldRef<"WeightVerification", 'Float'>
   readonly variance: Prisma.FieldRef<"WeightVerification", 'Float'>
   readonly variancePercent: Prisma.FieldRef<"WeightVerification", 'Float'>
-  readonly status: Prisma.FieldRef<"WeightVerification", 'String'>
+  readonly status: Prisma.FieldRef<"WeightVerification", 'WeightVerificationStatus'>
   readonly verifiedBy: Prisma.FieldRef<"WeightVerification", 'String'>
   readonly verifiedByName: Prisma.FieldRef<"WeightVerification", 'String'>
   readonly notes: Prisma.FieldRef<"WeightVerification", 'String'>

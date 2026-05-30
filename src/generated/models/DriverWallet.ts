@@ -27,32 +27,32 @@ export type AggregateDriverWallet = {
 }
 
 export type DriverWalletAvgAggregateOutputType = {
-  availableBalance: number | null
-  totalAdvances: number | null
-  totalDeducted: number | null
-  totalSettled: number | null
-  monthlyAdvanceLimit: number | null
-  monthlyAdvancesThisMonth: number | null
+  availableBalance: runtime.Decimal | null
+  totalAdvances: runtime.Decimal | null
+  totalDeducted: runtime.Decimal | null
+  totalSettled: runtime.Decimal | null
+  monthlyAdvanceLimit: runtime.Decimal | null
+  monthlyAdvancesThisMonth: runtime.Decimal | null
 }
 
 export type DriverWalletSumAggregateOutputType = {
-  availableBalance: number | null
-  totalAdvances: number | null
-  totalDeducted: number | null
-  totalSettled: number | null
-  monthlyAdvanceLimit: number | null
-  monthlyAdvancesThisMonth: number | null
+  availableBalance: runtime.Decimal | null
+  totalAdvances: runtime.Decimal | null
+  totalDeducted: runtime.Decimal | null
+  totalSettled: runtime.Decimal | null
+  monthlyAdvanceLimit: runtime.Decimal | null
+  monthlyAdvancesThisMonth: runtime.Decimal | null
 }
 
 export type DriverWalletMinAggregateOutputType = {
   id: string | null
   driverId: string | null
-  availableBalance: number | null
-  totalAdvances: number | null
-  totalDeducted: number | null
-  totalSettled: number | null
-  monthlyAdvanceLimit: number | null
-  monthlyAdvancesThisMonth: number | null
+  availableBalance: runtime.Decimal | null
+  totalAdvances: runtime.Decimal | null
+  totalDeducted: runtime.Decimal | null
+  totalSettled: runtime.Decimal | null
+  monthlyAdvanceLimit: runtime.Decimal | null
+  monthlyAdvancesThisMonth: runtime.Decimal | null
   lastAdvanceDate: Date | null
   mobileMoneyNumber: string | null
   mobileMoneyNetwork: string | null
@@ -64,12 +64,12 @@ export type DriverWalletMinAggregateOutputType = {
 export type DriverWalletMaxAggregateOutputType = {
   id: string | null
   driverId: string | null
-  availableBalance: number | null
-  totalAdvances: number | null
-  totalDeducted: number | null
-  totalSettled: number | null
-  monthlyAdvanceLimit: number | null
-  monthlyAdvancesThisMonth: number | null
+  availableBalance: runtime.Decimal | null
+  totalAdvances: runtime.Decimal | null
+  totalDeducted: runtime.Decimal | null
+  totalSettled: runtime.Decimal | null
+  monthlyAdvanceLimit: runtime.Decimal | null
+  monthlyAdvancesThisMonth: runtime.Decimal | null
   lastAdvanceDate: Date | null
   mobileMoneyNumber: string | null
   mobileMoneyNetwork: string | null
@@ -256,12 +256,12 @@ export type DriverWalletGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type DriverWalletGroupByOutputType = {
   id: string
   driverId: string
-  availableBalance: number
-  totalAdvances: number
-  totalDeducted: number
-  totalSettled: number
-  monthlyAdvanceLimit: number | null
-  monthlyAdvancesThisMonth: number
+  availableBalance: runtime.Decimal
+  totalAdvances: runtime.Decimal
+  totalDeducted: runtime.Decimal
+  totalSettled: runtime.Decimal
+  monthlyAdvanceLimit: runtime.Decimal | null
+  monthlyAdvancesThisMonth: runtime.Decimal
   lastAdvanceDate: Date | null
   mobileMoneyNumber: string | null
   mobileMoneyNetwork: string | null
@@ -296,12 +296,12 @@ export type DriverWalletWhereInput = {
   NOT?: Prisma.DriverWalletWhereInput | Prisma.DriverWalletWhereInput[]
   id?: Prisma.StringFilter<"DriverWallet"> | string
   driverId?: Prisma.StringFilter<"DriverWallet"> | string
-  availableBalance?: Prisma.FloatFilter<"DriverWallet"> | number
-  totalAdvances?: Prisma.FloatFilter<"DriverWallet"> | number
-  totalDeducted?: Prisma.FloatFilter<"DriverWallet"> | number
-  totalSettled?: Prisma.FloatFilter<"DriverWallet"> | number
-  monthlyAdvanceLimit?: Prisma.FloatNullableFilter<"DriverWallet"> | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFilter<"DriverWallet"> | number
+  availableBalance?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.DecimalNullableFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.DateTimeNullableFilter<"DriverWallet"> | Date | string | null
   mobileMoneyNumber?: Prisma.StringNullableFilter<"DriverWallet"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableFilter<"DriverWallet"> | string | null
@@ -336,12 +336,12 @@ export type DriverWalletWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.DriverWalletWhereInput | Prisma.DriverWalletWhereInput[]
   OR?: Prisma.DriverWalletWhereInput[]
   NOT?: Prisma.DriverWalletWhereInput | Prisma.DriverWalletWhereInput[]
-  availableBalance?: Prisma.FloatFilter<"DriverWallet"> | number
-  totalAdvances?: Prisma.FloatFilter<"DriverWallet"> | number
-  totalDeducted?: Prisma.FloatFilter<"DriverWallet"> | number
-  totalSettled?: Prisma.FloatFilter<"DriverWallet"> | number
-  monthlyAdvanceLimit?: Prisma.FloatNullableFilter<"DriverWallet"> | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFilter<"DriverWallet"> | number
+  availableBalance?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.DecimalNullableFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.DateTimeNullableFilter<"DriverWallet"> | Date | string | null
   mobileMoneyNumber?: Prisma.StringNullableFilter<"DriverWallet"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableFilter<"DriverWallet"> | string | null
@@ -379,12 +379,12 @@ export type DriverWalletScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DriverWalletScalarWhereWithAggregatesInput | Prisma.DriverWalletScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DriverWallet"> | string
   driverId?: Prisma.StringWithAggregatesFilter<"DriverWallet"> | string
-  availableBalance?: Prisma.FloatWithAggregatesFilter<"DriverWallet"> | number
-  totalAdvances?: Prisma.FloatWithAggregatesFilter<"DriverWallet"> | number
-  totalDeducted?: Prisma.FloatWithAggregatesFilter<"DriverWallet"> | number
-  totalSettled?: Prisma.FloatWithAggregatesFilter<"DriverWallet"> | number
-  monthlyAdvanceLimit?: Prisma.FloatNullableWithAggregatesFilter<"DriverWallet"> | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatWithAggregatesFilter<"DriverWallet"> | number
+  availableBalance?: Prisma.DecimalWithAggregatesFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalWithAggregatesFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalWithAggregatesFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalWithAggregatesFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.DecimalNullableWithAggregatesFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalWithAggregatesFilter<"DriverWallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverWallet"> | Date | string | null
   mobileMoneyNumber?: Prisma.StringNullableWithAggregatesFilter<"DriverWallet"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableWithAggregatesFilter<"DriverWallet"> | string | null
@@ -395,12 +395,12 @@ export type DriverWalletScalarWhereWithAggregatesInput = {
 
 export type DriverWalletCreateInput = {
   id?: string
-  availableBalance?: number
-  totalAdvances?: number
-  totalDeducted?: number
-  totalSettled?: number
-  monthlyAdvanceLimit?: number | null
-  monthlyAdvancesThisMonth?: number
+  availableBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Date | string | null
   mobileMoneyNumber?: string | null
   mobileMoneyNetwork?: string | null
@@ -413,12 +413,12 @@ export type DriverWalletCreateInput = {
 export type DriverWalletUncheckedCreateInput = {
   id?: string
   driverId: string
-  availableBalance?: number
-  totalAdvances?: number
-  totalDeducted?: number
-  totalSettled?: number
-  monthlyAdvanceLimit?: number | null
-  monthlyAdvancesThisMonth?: number
+  availableBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Date | string | null
   mobileMoneyNumber?: string | null
   mobileMoneyNetwork?: string | null
@@ -429,12 +429,12 @@ export type DriverWalletUncheckedCreateInput = {
 
 export type DriverWalletUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  availableBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAdvances?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalSettled?: Prisma.FloatFieldUpdateOperationsInput | number
-  monthlyAdvanceLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFieldUpdateOperationsInput | number
+  availableBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mobileMoneyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -447,12 +447,12 @@ export type DriverWalletUpdateInput = {
 export type DriverWalletUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
-  availableBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAdvances?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalSettled?: Prisma.FloatFieldUpdateOperationsInput | number
-  monthlyAdvanceLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFieldUpdateOperationsInput | number
+  availableBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mobileMoneyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -464,12 +464,12 @@ export type DriverWalletUncheckedUpdateInput = {
 export type DriverWalletCreateManyInput = {
   id?: string
   driverId: string
-  availableBalance?: number
-  totalAdvances?: number
-  totalDeducted?: number
-  totalSettled?: number
-  monthlyAdvanceLimit?: number | null
-  monthlyAdvancesThisMonth?: number
+  availableBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Date | string | null
   mobileMoneyNumber?: string | null
   mobileMoneyNetwork?: string | null
@@ -480,12 +480,12 @@ export type DriverWalletCreateManyInput = {
 
 export type DriverWalletUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  availableBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAdvances?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalSettled?: Prisma.FloatFieldUpdateOperationsInput | number
-  monthlyAdvanceLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFieldUpdateOperationsInput | number
+  availableBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mobileMoneyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -497,12 +497,12 @@ export type DriverWalletUpdateManyMutationInput = {
 export type DriverWalletUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
-  availableBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAdvances?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalSettled?: Prisma.FloatFieldUpdateOperationsInput | number
-  monthlyAdvanceLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFieldUpdateOperationsInput | number
+  availableBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mobileMoneyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -625,12 +625,12 @@ export type DriverWalletUncheckedUpdateOneWithoutDriverNestedInput = {
 
 export type DriverWalletCreateWithoutDriverInput = {
   id?: string
-  availableBalance?: number
-  totalAdvances?: number
-  totalDeducted?: number
-  totalSettled?: number
-  monthlyAdvanceLimit?: number | null
-  monthlyAdvancesThisMonth?: number
+  availableBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Date | string | null
   mobileMoneyNumber?: string | null
   mobileMoneyNetwork?: string | null
@@ -641,12 +641,12 @@ export type DriverWalletCreateWithoutDriverInput = {
 
 export type DriverWalletUncheckedCreateWithoutDriverInput = {
   id?: string
-  availableBalance?: number
-  totalAdvances?: number
-  totalDeducted?: number
-  totalSettled?: number
-  monthlyAdvanceLimit?: number | null
-  monthlyAdvancesThisMonth?: number
+  availableBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Date | string | null
   mobileMoneyNumber?: string | null
   mobileMoneyNetwork?: string | null
@@ -673,12 +673,12 @@ export type DriverWalletUpdateToOneWithWhereWithoutDriverInput = {
 
 export type DriverWalletUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  availableBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAdvances?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalSettled?: Prisma.FloatFieldUpdateOperationsInput | number
-  monthlyAdvanceLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFieldUpdateOperationsInput | number
+  availableBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mobileMoneyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -689,12 +689,12 @@ export type DriverWalletUpdateWithoutDriverInput = {
 
 export type DriverWalletUncheckedUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  availableBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAdvances?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalSettled?: Prisma.FloatFieldUpdateOperationsInput | number
-  monthlyAdvanceLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  monthlyAdvancesThisMonth?: Prisma.FloatFieldUpdateOperationsInput | number
+  availableBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalAdvances?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSettled?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  monthlyAdvanceLimit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  monthlyAdvancesThisMonth?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   lastAdvanceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mobileMoneyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -755,12 +755,12 @@ export type $DriverWalletPayload<ExtArgs extends runtime.Types.Extensions.Intern
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     driverId: string
-    availableBalance: number
-    totalAdvances: number
-    totalDeducted: number
-    totalSettled: number
-    monthlyAdvanceLimit: number | null
-    monthlyAdvancesThisMonth: number
+    availableBalance: runtime.Decimal
+    totalAdvances: runtime.Decimal
+    totalDeducted: runtime.Decimal
+    totalSettled: runtime.Decimal
+    monthlyAdvanceLimit: runtime.Decimal | null
+    monthlyAdvancesThisMonth: runtime.Decimal
     lastAdvanceDate: Date | null
     mobileMoneyNumber: string | null
     mobileMoneyNetwork: string | null
@@ -1139,12 +1139,12 @@ export interface Prisma__DriverWalletClient<T, Null = never, ExtArgs extends run
 export interface DriverWalletFieldRefs {
   readonly id: Prisma.FieldRef<"DriverWallet", 'String'>
   readonly driverId: Prisma.FieldRef<"DriverWallet", 'String'>
-  readonly availableBalance: Prisma.FieldRef<"DriverWallet", 'Float'>
-  readonly totalAdvances: Prisma.FieldRef<"DriverWallet", 'Float'>
-  readonly totalDeducted: Prisma.FieldRef<"DriverWallet", 'Float'>
-  readonly totalSettled: Prisma.FieldRef<"DriverWallet", 'Float'>
-  readonly monthlyAdvanceLimit: Prisma.FieldRef<"DriverWallet", 'Float'>
-  readonly monthlyAdvancesThisMonth: Prisma.FieldRef<"DriverWallet", 'Float'>
+  readonly availableBalance: Prisma.FieldRef<"DriverWallet", 'Decimal'>
+  readonly totalAdvances: Prisma.FieldRef<"DriverWallet", 'Decimal'>
+  readonly totalDeducted: Prisma.FieldRef<"DriverWallet", 'Decimal'>
+  readonly totalSettled: Prisma.FieldRef<"DriverWallet", 'Decimal'>
+  readonly monthlyAdvanceLimit: Prisma.FieldRef<"DriverWallet", 'Decimal'>
+  readonly monthlyAdvancesThisMonth: Prisma.FieldRef<"DriverWallet", 'Decimal'>
   readonly lastAdvanceDate: Prisma.FieldRef<"DriverWallet", 'DateTime'>
   readonly mobileMoneyNumber: Prisma.FieldRef<"DriverWallet", 'String'>
   readonly mobileMoneyNetwork: Prisma.FieldRef<"DriverWallet", 'String'>

@@ -31,8 +31,8 @@ export type DvlaRegistrationAvgAggregateOutputType = {
   unladenWeight: number | null
   seatingCapacity: number | null
   yearOfManufacture: number | null
-  registrationFee: number | null
-  renewalFee: number | null
+  registrationFee: runtime.Decimal | null
+  renewalFee: runtime.Decimal | null
 }
 
 export type DvlaRegistrationSumAggregateOutputType = {
@@ -40,8 +40,8 @@ export type DvlaRegistrationSumAggregateOutputType = {
   unladenWeight: number | null
   seatingCapacity: number | null
   yearOfManufacture: number | null
-  registrationFee: number | null
-  renewalFee: number | null
+  registrationFee: runtime.Decimal | null
+  renewalFee: runtime.Decimal | null
 }
 
 export type DvlaRegistrationMinAggregateOutputType = {
@@ -66,9 +66,9 @@ export type DvlaRegistrationMinAggregateOutputType = {
   expiryDate: Date | null
   lastRenewalDate: Date | null
   nextRenewalDue: Date | null
-  registrationFee: number | null
-  renewalFee: number | null
-  status: string | null
+  registrationFee: runtime.Decimal | null
+  renewalFee: runtime.Decimal | null
+  status: $Enums.DvlaRegistrationStatus | null
   documentUrl: string | null
   transferHistory: string | null
   notes: string | null
@@ -99,9 +99,9 @@ export type DvlaRegistrationMaxAggregateOutputType = {
   expiryDate: Date | null
   lastRenewalDate: Date | null
   nextRenewalDue: Date | null
-  registrationFee: number | null
-  renewalFee: number | null
-  status: string | null
+  registrationFee: runtime.Decimal | null
+  renewalFee: runtime.Decimal | null
+  status: $Enums.DvlaRegistrationStatus | null
   documentUrl: string | null
   transferHistory: string | null
   notes: string | null
@@ -371,9 +371,9 @@ export type DvlaRegistrationGroupByOutputType = {
   expiryDate: Date
   lastRenewalDate: Date | null
   nextRenewalDue: Date | null
-  registrationFee: number | null
-  renewalFee: number | null
-  status: string
+  registrationFee: runtime.Decimal | null
+  renewalFee: runtime.Decimal | null
+  status: $Enums.DvlaRegistrationStatus
   documentUrl: string | null
   transferHistory: string | null
   notes: string | null
@@ -427,9 +427,9 @@ export type DvlaRegistrationWhereInput = {
   expiryDate?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   lastRenewalDate?: Prisma.DateTimeNullableFilter<"DvlaRegistration"> | Date | string | null
   nextRenewalDue?: Prisma.DateTimeNullableFilter<"DvlaRegistration"> | Date | string | null
-  registrationFee?: Prisma.FloatNullableFilter<"DvlaRegistration"> | number | null
-  renewalFee?: Prisma.FloatNullableFilter<"DvlaRegistration"> | number | null
-  status?: Prisma.StringFilter<"DvlaRegistration"> | string
+  registrationFee?: Prisma.DecimalNullableFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.DecimalNullableFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFilter<"DvlaRegistration"> | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
   transferHistory?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
   notes?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
@@ -501,9 +501,9 @@ export type DvlaRegistrationWhereUniqueInput = Prisma.AtLeast<{
   expiryDate?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   lastRenewalDate?: Prisma.DateTimeNullableFilter<"DvlaRegistration"> | Date | string | null
   nextRenewalDue?: Prisma.DateTimeNullableFilter<"DvlaRegistration"> | Date | string | null
-  registrationFee?: Prisma.FloatNullableFilter<"DvlaRegistration"> | number | null
-  renewalFee?: Prisma.FloatNullableFilter<"DvlaRegistration"> | number | null
-  status?: Prisma.StringFilter<"DvlaRegistration"> | string
+  registrationFee?: Prisma.DecimalNullableFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.DecimalNullableFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFilter<"DvlaRegistration"> | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
   transferHistory?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
   notes?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
@@ -577,9 +577,9 @@ export type DvlaRegistrationScalarWhereWithAggregatesInput = {
   expiryDate?: Prisma.DateTimeWithAggregatesFilter<"DvlaRegistration"> | Date | string
   lastRenewalDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DvlaRegistration"> | Date | string | null
   nextRenewalDue?: Prisma.DateTimeNullableWithAggregatesFilter<"DvlaRegistration"> | Date | string | null
-  registrationFee?: Prisma.FloatNullableWithAggregatesFilter<"DvlaRegistration"> | number | null
-  renewalFee?: Prisma.FloatNullableWithAggregatesFilter<"DvlaRegistration"> | number | null
-  status?: Prisma.StringWithAggregatesFilter<"DvlaRegistration"> | string
+  registrationFee?: Prisma.DecimalNullableWithAggregatesFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.DecimalNullableWithAggregatesFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusWithAggregatesFilter<"DvlaRegistration"> | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.StringNullableWithAggregatesFilter<"DvlaRegistration"> | string | null
   transferHistory?: Prisma.StringNullableWithAggregatesFilter<"DvlaRegistration"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"DvlaRegistration"> | string | null
@@ -609,9 +609,9 @@ export type DvlaRegistrationCreateInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -644,9 +644,9 @@ export type DvlaRegistrationUncheckedCreateInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -677,9 +677,9 @@ export type DvlaRegistrationUpdateInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -712,9 +712,9 @@ export type DvlaRegistrationUncheckedUpdateInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -746,9 +746,9 @@ export type DvlaRegistrationCreateManyInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -778,9 +778,9 @@ export type DvlaRegistrationUpdateManyMutationInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -811,9 +811,9 @@ export type DvlaRegistrationUncheckedUpdateManyInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -960,6 +960,10 @@ export type DvlaRegistrationScalarRelationFilter = {
   isNot?: Prisma.DvlaRegistrationWhereInput
 }
 
+export type EnumDvlaRegistrationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DvlaRegistrationStatus
+}
+
 export type DvlaRegistrationCreateNestedManyWithoutTruckInput = {
   create?: Prisma.XOR<Prisma.DvlaRegistrationCreateWithoutTruckInput, Prisma.DvlaRegistrationUncheckedCreateWithoutTruckInput> | Prisma.DvlaRegistrationCreateWithoutTruckInput[] | Prisma.DvlaRegistrationUncheckedCreateWithoutTruckInput[]
   connectOrCreate?: Prisma.DvlaRegistrationCreateOrConnectWithoutTruckInput | Prisma.DvlaRegistrationCreateOrConnectWithoutTruckInput[]
@@ -1037,9 +1041,9 @@ export type DvlaRegistrationCreateWithoutTruckInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -1070,9 +1074,9 @@ export type DvlaRegistrationUncheckedCreateWithoutTruckInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -1133,9 +1137,9 @@ export type DvlaRegistrationScalarWhereInput = {
   expiryDate?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   lastRenewalDate?: Prisma.DateTimeNullableFilter<"DvlaRegistration"> | Date | string | null
   nextRenewalDue?: Prisma.DateTimeNullableFilter<"DvlaRegistration"> | Date | string | null
-  registrationFee?: Prisma.FloatNullableFilter<"DvlaRegistration"> | number | null
-  renewalFee?: Prisma.FloatNullableFilter<"DvlaRegistration"> | number | null
-  status?: Prisma.StringFilter<"DvlaRegistration"> | string
+  registrationFee?: Prisma.DecimalNullableFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.DecimalNullableFilter<"DvlaRegistration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFilter<"DvlaRegistration"> | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
   transferHistory?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
   notes?: Prisma.StringNullableFilter<"DvlaRegistration"> | string | null
@@ -1165,9 +1169,9 @@ export type DvlaRegistrationCreateWithoutDvlaRenewalHistoryInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -1199,9 +1203,9 @@ export type DvlaRegistrationUncheckedCreateWithoutDvlaRenewalHistoryInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -1247,9 +1251,9 @@ export type DvlaRegistrationUpdateWithoutDvlaRenewalHistoryInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1281,9 +1285,9 @@ export type DvlaRegistrationUncheckedUpdateWithoutDvlaRenewalHistoryInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1313,9 +1317,9 @@ export type DvlaRegistrationCreateManyTruckInput = {
   expiryDate: Date | string
   lastRenewalDate?: Date | string | null
   nextRenewalDue?: Date | string | null
-  registrationFee?: number | null
-  renewalFee?: number | null
-  status?: string
+  registrationFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.DvlaRegistrationStatus
   documentUrl?: string | null
   transferHistory?: string | null
   notes?: string | null
@@ -1345,9 +1349,9 @@ export type DvlaRegistrationUpdateWithoutTruckInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1378,9 +1382,9 @@ export type DvlaRegistrationUncheckedUpdateWithoutTruckInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1411,9 +1415,9 @@ export type DvlaRegistrationUncheckedUpdateManyWithoutTruckInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumDvlaRegistrationStatusFieldUpdateOperationsInput | $Enums.DvlaRegistrationStatus
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1559,9 +1563,9 @@ export type $DvlaRegistrationPayload<ExtArgs extends runtime.Types.Extensions.In
     expiryDate: Date
     lastRenewalDate: Date | null
     nextRenewalDue: Date | null
-    registrationFee: number | null
-    renewalFee: number | null
-    status: string
+    registrationFee: runtime.Decimal | null
+    renewalFee: runtime.Decimal | null
+    status: $Enums.DvlaRegistrationStatus
     documentUrl: string | null
     transferHistory: string | null
     notes: string | null
@@ -1960,9 +1964,9 @@ export interface DvlaRegistrationFieldRefs {
   readonly expiryDate: Prisma.FieldRef<"DvlaRegistration", 'DateTime'>
   readonly lastRenewalDate: Prisma.FieldRef<"DvlaRegistration", 'DateTime'>
   readonly nextRenewalDue: Prisma.FieldRef<"DvlaRegistration", 'DateTime'>
-  readonly registrationFee: Prisma.FieldRef<"DvlaRegistration", 'Float'>
-  readonly renewalFee: Prisma.FieldRef<"DvlaRegistration", 'Float'>
-  readonly status: Prisma.FieldRef<"DvlaRegistration", 'String'>
+  readonly registrationFee: Prisma.FieldRef<"DvlaRegistration", 'Decimal'>
+  readonly renewalFee: Prisma.FieldRef<"DvlaRegistration", 'Decimal'>
+  readonly status: Prisma.FieldRef<"DvlaRegistration", 'DvlaRegistrationStatus'>
   readonly documentUrl: Prisma.FieldRef<"DvlaRegistration", 'String'>
   readonly transferHistory: Prisma.FieldRef<"DvlaRegistration", 'String'>
   readonly notes: Prisma.FieldRef<"DvlaRegistration", 'String'>

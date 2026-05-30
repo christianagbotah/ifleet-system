@@ -29,13 +29,13 @@ export type AggregateTripDeliveryDestination = {
 export type TripDeliveryDestinationAvgAggregateOutputType = {
   stopOrder: number | null
   actualQty: number | null
-  zoneRate: number | null
+  zoneRate: runtime.Decimal | null
 }
 
 export type TripDeliveryDestinationSumAggregateOutputType = {
   stopOrder: number | null
   actualQty: number | null
-  zoneRate: number | null
+  zoneRate: runtime.Decimal | null
 }
 
 export type TripDeliveryDestinationMinAggregateOutputType = {
@@ -46,13 +46,13 @@ export type TripDeliveryDestinationMinAggregateOutputType = {
   customerName: string | null
   customerPhone: string | null
   stopOrder: number | null
-  status: string | null
+  status: $Enums.TripDeliveryDestinationStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   actualQty: number | null
   address: string | null
   notes: string | null
-  zoneRate: number | null
+  zoneRate: runtime.Decimal | null
 }
 
 export type TripDeliveryDestinationMaxAggregateOutputType = {
@@ -63,13 +63,13 @@ export type TripDeliveryDestinationMaxAggregateOutputType = {
   customerName: string | null
   customerPhone: string | null
   stopOrder: number | null
-  status: string | null
+  status: $Enums.TripDeliveryDestinationStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   actualQty: number | null
   address: string | null
   notes: string | null
-  zoneRate: number | null
+  zoneRate: runtime.Decimal | null
 }
 
 export type TripDeliveryDestinationCountAggregateOutputType = {
@@ -249,13 +249,13 @@ export type TripDeliveryDestinationGroupByOutputType = {
   customerName: string
   customerPhone: string | null
   stopOrder: number
-  status: string
+  status: $Enums.TripDeliveryDestinationStatus
   createdAt: Date
   updatedAt: Date
   actualQty: number | null
   address: string | null
   notes: string | null
-  zoneRate: number | null
+  zoneRate: runtime.Decimal | null
   _count: TripDeliveryDestinationCountAggregateOutputType | null
   _avg: TripDeliveryDestinationAvgAggregateOutputType | null
   _sum: TripDeliveryDestinationSumAggregateOutputType | null
@@ -289,13 +289,13 @@ export type TripDeliveryDestinationWhereInput = {
   customerName?: Prisma.StringFilter<"TripDeliveryDestination"> | string
   customerPhone?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
   stopOrder?: Prisma.IntFilter<"TripDeliveryDestination"> | number
-  status?: Prisma.StringFilter<"TripDeliveryDestination"> | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFilter<"TripDeliveryDestination"> | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFilter<"TripDeliveryDestination"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TripDeliveryDestination"> | Date | string
   actualQty?: Prisma.FloatNullableFilter<"TripDeliveryDestination"> | number | null
   address?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
   notes?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
-  zoneRate?: Prisma.FloatNullableFilter<"TripDeliveryDestination"> | number | null
+  zoneRate?: Prisma.DecimalNullableFilter<"TripDeliveryDestination"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   destinationZone?: Prisma.XOR<Prisma.DestinationZoneNullableScalarRelationFilter, Prisma.DestinationZoneWhereInput> | null
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
@@ -335,13 +335,13 @@ export type TripDeliveryDestinationWhereUniqueInput = Prisma.AtLeast<{
   customerName?: Prisma.StringFilter<"TripDeliveryDestination"> | string
   customerPhone?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
   stopOrder?: Prisma.IntFilter<"TripDeliveryDestination"> | number
-  status?: Prisma.StringFilter<"TripDeliveryDestination"> | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFilter<"TripDeliveryDestination"> | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFilter<"TripDeliveryDestination"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TripDeliveryDestination"> | Date | string
   actualQty?: Prisma.FloatNullableFilter<"TripDeliveryDestination"> | number | null
   address?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
   notes?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
-  zoneRate?: Prisma.FloatNullableFilter<"TripDeliveryDestination"> | number | null
+  zoneRate?: Prisma.DecimalNullableFilter<"TripDeliveryDestination"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   destinationZone?: Prisma.XOR<Prisma.DestinationZoneNullableScalarRelationFilter, Prisma.DestinationZoneWhereInput> | null
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
@@ -381,13 +381,13 @@ export type TripDeliveryDestinationScalarWhereWithAggregatesInput = {
   customerName?: Prisma.StringWithAggregatesFilter<"TripDeliveryDestination"> | string
   customerPhone?: Prisma.StringNullableWithAggregatesFilter<"TripDeliveryDestination"> | string | null
   stopOrder?: Prisma.IntWithAggregatesFilter<"TripDeliveryDestination"> | number
-  status?: Prisma.StringWithAggregatesFilter<"TripDeliveryDestination"> | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusWithAggregatesFilter<"TripDeliveryDestination"> | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TripDeliveryDestination"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TripDeliveryDestination"> | Date | string
   actualQty?: Prisma.FloatNullableWithAggregatesFilter<"TripDeliveryDestination"> | number | null
   address?: Prisma.StringNullableWithAggregatesFilter<"TripDeliveryDestination"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"TripDeliveryDestination"> | string | null
-  zoneRate?: Prisma.FloatNullableWithAggregatesFilter<"TripDeliveryDestination"> | number | null
+  zoneRate?: Prisma.DecimalNullableWithAggregatesFilter<"TripDeliveryDestination"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationCreateInput = {
@@ -395,13 +395,13 @@ export type TripDeliveryDestinationCreateInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientCreateNestedOneWithoutTripDeliveryDestinationInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripDeliveryDestinationInput
   trip: Prisma.TripCreateNestedOneWithoutTripDeliveryDestinationInput
@@ -416,13 +416,13 @@ export type TripDeliveryDestinationUncheckedCreateInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripDeliveryDestinationInput
 }
 
@@ -431,13 +431,13 @@ export type TripDeliveryDestinationUpdateInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientUpdateOneWithoutTripDeliveryDestinationNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripDeliveryDestinationNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripDeliveryDestinationNestedInput
@@ -452,13 +452,13 @@ export type TripDeliveryDestinationUncheckedUpdateInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationNestedInput
 }
 
@@ -470,13 +470,13 @@ export type TripDeliveryDestinationCreateManyInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationUpdateManyMutationInput = {
@@ -484,13 +484,13 @@ export type TripDeliveryDestinationUpdateManyMutationInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationUncheckedUpdateManyInput = {
@@ -501,13 +501,13 @@ export type TripDeliveryDestinationUncheckedUpdateManyInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationListRelationFilter = {
@@ -720,6 +720,10 @@ export type TripDeliveryDestinationUncheckedUpdateManyWithoutTripNestedInput = {
   deleteMany?: Prisma.TripDeliveryDestinationScalarWhereInput | Prisma.TripDeliveryDestinationScalarWhereInput[]
 }
 
+export type EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TripDeliveryDestinationStatus
+}
+
 export type TripDeliveryDestinationCreateNestedOneWithoutTripItemInput = {
   create?: Prisma.XOR<Prisma.TripDeliveryDestinationCreateWithoutTripItemInput, Prisma.TripDeliveryDestinationUncheckedCreateWithoutTripItemInput>
   connectOrCreate?: Prisma.TripDeliveryDestinationCreateOrConnectWithoutTripItemInput
@@ -741,13 +745,13 @@ export type TripDeliveryDestinationCreateWithoutClientInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripDeliveryDestinationInput
   trip: Prisma.TripCreateNestedOneWithoutTripDeliveryDestinationInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutTripDeliveryDestinationInput
@@ -760,13 +764,13 @@ export type TripDeliveryDestinationUncheckedCreateWithoutClientInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripDeliveryDestinationInput
 }
 
@@ -807,13 +811,13 @@ export type TripDeliveryDestinationScalarWhereInput = {
   customerName?: Prisma.StringFilter<"TripDeliveryDestination"> | string
   customerPhone?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
   stopOrder?: Prisma.IntFilter<"TripDeliveryDestination"> | number
-  status?: Prisma.StringFilter<"TripDeliveryDestination"> | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFilter<"TripDeliveryDestination"> | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFilter<"TripDeliveryDestination"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TripDeliveryDestination"> | Date | string
   actualQty?: Prisma.FloatNullableFilter<"TripDeliveryDestination"> | number | null
   address?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
   notes?: Prisma.StringNullableFilter<"TripDeliveryDestination"> | string | null
-  zoneRate?: Prisma.FloatNullableFilter<"TripDeliveryDestination"> | number | null
+  zoneRate?: Prisma.DecimalNullableFilter<"TripDeliveryDestination"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationCreateWithoutDestinationZoneInput = {
@@ -821,13 +825,13 @@ export type TripDeliveryDestinationCreateWithoutDestinationZoneInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientCreateNestedOneWithoutTripDeliveryDestinationInput
   trip: Prisma.TripCreateNestedOneWithoutTripDeliveryDestinationInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutTripDeliveryDestinationInput
@@ -840,13 +844,13 @@ export type TripDeliveryDestinationUncheckedCreateWithoutDestinationZoneInput = 
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripDeliveryDestinationInput
 }
 
@@ -881,13 +885,13 @@ export type TripDeliveryDestinationCreateWithoutTripInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientCreateNestedOneWithoutTripDeliveryDestinationInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripDeliveryDestinationInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutTripDeliveryDestinationInput
@@ -900,13 +904,13 @@ export type TripDeliveryDestinationUncheckedCreateWithoutTripInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripDeliveryDestinationInput
 }
 
@@ -941,13 +945,13 @@ export type TripDeliveryDestinationCreateWithoutTripItemInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientCreateNestedOneWithoutTripDeliveryDestinationInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripDeliveryDestinationInput
   trip: Prisma.TripCreateNestedOneWithoutTripDeliveryDestinationInput
@@ -961,13 +965,13 @@ export type TripDeliveryDestinationUncheckedCreateWithoutTripItemInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationCreateOrConnectWithoutTripItemInput = {
@@ -991,13 +995,13 @@ export type TripDeliveryDestinationUpdateWithoutTripItemInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientUpdateOneWithoutTripDeliveryDestinationNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripDeliveryDestinationNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripDeliveryDestinationNestedInput
@@ -1011,13 +1015,13 @@ export type TripDeliveryDestinationUncheckedUpdateWithoutTripItemInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationCreateManyClientInput = {
@@ -1027,13 +1031,13 @@ export type TripDeliveryDestinationCreateManyClientInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationUpdateWithoutClientInput = {
@@ -1041,13 +1045,13 @@ export type TripDeliveryDestinationUpdateWithoutClientInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripDeliveryDestinationNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripDeliveryDestinationNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutTripDeliveryDestinationNestedInput
@@ -1060,13 +1064,13 @@ export type TripDeliveryDestinationUncheckedUpdateWithoutClientInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationNestedInput
 }
 
@@ -1077,13 +1081,13 @@ export type TripDeliveryDestinationUncheckedUpdateManyWithoutClientInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationCreateManyDestinationZoneInput = {
@@ -1093,13 +1097,13 @@ export type TripDeliveryDestinationCreateManyDestinationZoneInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationUpdateWithoutDestinationZoneInput = {
@@ -1107,13 +1111,13 @@ export type TripDeliveryDestinationUpdateWithoutDestinationZoneInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientUpdateOneWithoutTripDeliveryDestinationNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripDeliveryDestinationNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutTripDeliveryDestinationNestedInput
@@ -1126,13 +1130,13 @@ export type TripDeliveryDestinationUncheckedUpdateWithoutDestinationZoneInput = 
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationNestedInput
 }
 
@@ -1143,13 +1147,13 @@ export type TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneInpu
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationCreateManyTripInput = {
@@ -1159,13 +1163,13 @@ export type TripDeliveryDestinationCreateManyTripInput = {
   customerName: string
   customerPhone?: string | null
   stopOrder: number
-  status?: string
+  status?: $Enums.TripDeliveryDestinationStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   actualQty?: number | null
   address?: string | null
   notes?: string | null
-  zoneRate?: number | null
+  zoneRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TripDeliveryDestinationUpdateWithoutTripInput = {
@@ -1173,13 +1177,13 @@ export type TripDeliveryDestinationUpdateWithoutTripInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   client?: Prisma.ClientUpdateOneWithoutTripDeliveryDestinationNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripDeliveryDestinationNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutTripDeliveryDestinationNestedInput
@@ -1192,13 +1196,13 @@ export type TripDeliveryDestinationUncheckedUpdateWithoutTripInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationNestedInput
 }
 
@@ -1209,13 +1213,13 @@ export type TripDeliveryDestinationUncheckedUpdateManyWithoutTripInput = {
   customerName?: Prisma.StringFieldUpdateOperationsInput | string
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stopOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripDeliveryDestinationStatusFieldUpdateOperationsInput | $Enums.TripDeliveryDestinationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  zoneRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zoneRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 
@@ -1315,13 +1319,13 @@ export type $TripDeliveryDestinationPayload<ExtArgs extends runtime.Types.Extens
     customerName: string
     customerPhone: string | null
     stopOrder: number
-    status: string
+    status: $Enums.TripDeliveryDestinationStatus
     createdAt: Date
     updatedAt: Date
     actualQty: number | null
     address: string | null
     notes: string | null
-    zoneRate: number | null
+    zoneRate: runtime.Decimal | null
   }, ExtArgs["result"]["tripDeliveryDestination"]>
   composites: {}
 }
@@ -1702,13 +1706,13 @@ export interface TripDeliveryDestinationFieldRefs {
   readonly customerName: Prisma.FieldRef<"TripDeliveryDestination", 'String'>
   readonly customerPhone: Prisma.FieldRef<"TripDeliveryDestination", 'String'>
   readonly stopOrder: Prisma.FieldRef<"TripDeliveryDestination", 'Int'>
-  readonly status: Prisma.FieldRef<"TripDeliveryDestination", 'String'>
+  readonly status: Prisma.FieldRef<"TripDeliveryDestination", 'TripDeliveryDestinationStatus'>
   readonly createdAt: Prisma.FieldRef<"TripDeliveryDestination", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TripDeliveryDestination", 'DateTime'>
   readonly actualQty: Prisma.FieldRef<"TripDeliveryDestination", 'Float'>
   readonly address: Prisma.FieldRef<"TripDeliveryDestination", 'String'>
   readonly notes: Prisma.FieldRef<"TripDeliveryDestination", 'String'>
-  readonly zoneRate: Prisma.FieldRef<"TripDeliveryDestination", 'Float'>
+  readonly zoneRate: Prisma.FieldRef<"TripDeliveryDestination", 'Decimal'>
 }
     
 

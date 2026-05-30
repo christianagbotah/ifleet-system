@@ -28,15 +28,15 @@ export type AggregateTripItem = {
 
 export type TripItemAvgAggregateOutputType = {
   quantity: number | null
-  rate: number | null
-  total: number | null
+  rate: runtime.Decimal | null
+  total: runtime.Decimal | null
   sortOrder: number | null
 }
 
 export type TripItemSumAggregateOutputType = {
   quantity: number | null
-  rate: number | null
-  total: number | null
+  rate: runtime.Decimal | null
+  total: runtime.Decimal | null
   sortOrder: number | null
 }
 
@@ -49,8 +49,8 @@ export type TripItemMinAggregateOutputType = {
   itemName: string | null
   unit: string | null
   quantity: number | null
-  rate: number | null
-  total: number | null
+  rate: runtime.Decimal | null
+  total: runtime.Decimal | null
   sortOrder: number | null
   deliveryDestinationId: string | null
   createdAt: Date | null
@@ -66,8 +66,8 @@ export type TripItemMaxAggregateOutputType = {
   itemName: string | null
   unit: string | null
   quantity: number | null
-  rate: number | null
-  total: number | null
+  rate: runtime.Decimal | null
+  total: runtime.Decimal | null
   sortOrder: number | null
   deliveryDestinationId: string | null
   createdAt: Date | null
@@ -254,8 +254,8 @@ export type TripItemGroupByOutputType = {
   itemName: string
   unit: string
   quantity: number
-  rate: number | null
-  total: number | null
+  rate: runtime.Decimal | null
+  total: runtime.Decimal | null
   sortOrder: number
   deliveryDestinationId: string | null
   createdAt: Date
@@ -294,8 +294,8 @@ export type TripItemWhereInput = {
   itemName?: Prisma.StringFilter<"TripItem"> | string
   unit?: Prisma.StringFilter<"TripItem"> | string
   quantity?: Prisma.FloatFilter<"TripItem"> | number
-  rate?: Prisma.FloatNullableFilter<"TripItem"> | number | null
-  total?: Prisma.FloatNullableFilter<"TripItem"> | number | null
+  rate?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
@@ -342,8 +342,8 @@ export type TripItemWhereUniqueInput = Prisma.AtLeast<{
   itemName?: Prisma.StringFilter<"TripItem"> | string
   unit?: Prisma.StringFilter<"TripItem"> | string
   quantity?: Prisma.FloatFilter<"TripItem"> | number
-  rate?: Prisma.FloatNullableFilter<"TripItem"> | number | null
-  total?: Prisma.FloatNullableFilter<"TripItem"> | number | null
+  rate?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
@@ -389,8 +389,8 @@ export type TripItemScalarWhereWithAggregatesInput = {
   itemName?: Prisma.StringWithAggregatesFilter<"TripItem"> | string
   unit?: Prisma.StringWithAggregatesFilter<"TripItem"> | string
   quantity?: Prisma.FloatWithAggregatesFilter<"TripItem"> | number
-  rate?: Prisma.FloatNullableWithAggregatesFilter<"TripItem"> | number | null
-  total?: Prisma.FloatNullableWithAggregatesFilter<"TripItem"> | number | null
+  rate?: Prisma.DecimalNullableWithAggregatesFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.DecimalNullableWithAggregatesFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableWithAggregatesFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TripItem"> | Date | string
@@ -402,8 +402,8 @@ export type TripItemCreateInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -423,8 +423,8 @@ export type TripItemUncheckedCreateInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -436,8 +436,8 @@ export type TripItemUpdateInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,8 +457,8 @@ export type TripItemUncheckedUpdateInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -474,8 +474,8 @@ export type TripItemCreateManyInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -487,8 +487,8 @@ export type TripItemUpdateManyMutationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,8 +503,8 @@ export type TripItemUncheckedUpdateManyInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -807,8 +807,8 @@ export type TripItemCreateWithoutItemInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -826,8 +826,8 @@ export type TripItemUncheckedCreateWithoutItemInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -872,8 +872,8 @@ export type TripItemScalarWhereInput = {
   itemName?: Prisma.StringFilter<"TripItem"> | string
   unit?: Prisma.StringFilter<"TripItem"> | string
   quantity?: Prisma.FloatFilter<"TripItem"> | number
-  rate?: Prisma.FloatNullableFilter<"TripItem"> | number | null
-  total?: Prisma.FloatNullableFilter<"TripItem"> | number | null
+  rate?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
@@ -885,8 +885,8 @@ export type TripItemCreateWithoutLoadingPointInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -904,8 +904,8 @@ export type TripItemUncheckedCreateWithoutLoadingPointInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -943,8 +943,8 @@ export type TripItemCreateWithoutSupplierInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -962,8 +962,8 @@ export type TripItemUncheckedCreateWithoutSupplierInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -1001,8 +1001,8 @@ export type TripItemCreateWithoutTripInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1020,8 +1020,8 @@ export type TripItemUncheckedCreateWithoutTripInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -1059,8 +1059,8 @@ export type TripItemCreateWithoutTripDeliveryDestinationInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1079,8 +1079,8 @@ export type TripItemUncheckedCreateWithoutTripDeliveryDestinationInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1120,8 +1120,8 @@ export type TripItemCreateManyItemInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -1133,8 +1133,8 @@ export type TripItemUpdateWithoutItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1152,8 +1152,8 @@ export type TripItemUncheckedUpdateWithoutItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1168,8 +1168,8 @@ export type TripItemUncheckedUpdateManyWithoutItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1184,8 +1184,8 @@ export type TripItemCreateManyLoadingPointInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -1197,8 +1197,8 @@ export type TripItemUpdateWithoutLoadingPointInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1216,8 +1216,8 @@ export type TripItemUncheckedUpdateWithoutLoadingPointInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1232,8 +1232,8 @@ export type TripItemUncheckedUpdateManyWithoutLoadingPointInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1248,8 +1248,8 @@ export type TripItemCreateManySupplierInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -1261,8 +1261,8 @@ export type TripItemUpdateWithoutSupplierInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1280,8 +1280,8 @@ export type TripItemUncheckedUpdateWithoutSupplierInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1296,8 +1296,8 @@ export type TripItemUncheckedUpdateManyWithoutSupplierInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1312,8 +1312,8 @@ export type TripItemCreateManyTripInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
   createdAt?: Date | string
@@ -1325,8 +1325,8 @@ export type TripItemUpdateWithoutTripInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1344,8 +1344,8 @@ export type TripItemUncheckedUpdateWithoutTripInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1360,8 +1360,8 @@ export type TripItemUncheckedUpdateManyWithoutTripInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1377,8 +1377,8 @@ export type TripItemCreateManyTripDeliveryDestinationInput = {
   itemName: string
   unit?: string
   quantity: number
-  rate?: number | null
-  total?: number | null
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1389,8 +1389,8 @@ export type TripItemUpdateWithoutTripDeliveryDestinationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1409,8 +1409,8 @@ export type TripItemUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1425,8 +1425,8 @@ export type TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
-  rate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  total?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1502,8 +1502,8 @@ export type $TripItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     itemName: string
     unit: string
     quantity: number
-    rate: number | null
-    total: number | null
+    rate: runtime.Decimal | null
+    total: runtime.Decimal | null
     sortOrder: number
     deliveryDestinationId: string | null
     createdAt: Date
@@ -1890,8 +1890,8 @@ export interface TripItemFieldRefs {
   readonly itemName: Prisma.FieldRef<"TripItem", 'String'>
   readonly unit: Prisma.FieldRef<"TripItem", 'String'>
   readonly quantity: Prisma.FieldRef<"TripItem", 'Float'>
-  readonly rate: Prisma.FieldRef<"TripItem", 'Float'>
-  readonly total: Prisma.FieldRef<"TripItem", 'Float'>
+  readonly rate: Prisma.FieldRef<"TripItem", 'Decimal'>
+  readonly total: Prisma.FieldRef<"TripItem", 'Decimal'>
   readonly sortOrder: Prisma.FieldRef<"TripItem", 'Int'>
   readonly deliveryDestinationId: Prisma.FieldRef<"TripItem", 'String'>
   readonly createdAt: Prisma.FieldRef<"TripItem", 'DateTime'>

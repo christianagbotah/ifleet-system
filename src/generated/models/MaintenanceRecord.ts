@@ -28,13 +28,13 @@ export type AggregateMaintenanceRecord = {
 
 export type MaintenanceRecordAvgAggregateOutputType = {
   odometer: number | null
-  cost: number | null
+  cost: runtime.Decimal | null
   nextDueMileage: number | null
 }
 
 export type MaintenanceRecordSumAggregateOutputType = {
   odometer: number | null
-  cost: number | null
+  cost: runtime.Decimal | null
   nextDueMileage: number | null
 }
 
@@ -45,12 +45,12 @@ export type MaintenanceRecordMinAggregateOutputType = {
   title: string | null
   description: string | null
   odometer: number | null
-  cost: number | null
+  cost: runtime.Decimal | null
   performedBy: string | null
   performedAt: Date | null
   nextDueDate: Date | null
   nextDueMileage: number | null
-  status: string | null
+  status: $Enums.MaintenanceStatus | null
   partsUsed: string | null
   invoiceUrl: string | null
   createdAt: Date | null
@@ -64,12 +64,12 @@ export type MaintenanceRecordMaxAggregateOutputType = {
   title: string | null
   description: string | null
   odometer: number | null
-  cost: number | null
+  cost: runtime.Decimal | null
   performedBy: string | null
   performedAt: Date | null
   nextDueDate: Date | null
   nextDueMileage: number | null
-  status: string | null
+  status: $Enums.MaintenanceStatus | null
   partsUsed: string | null
   invoiceUrl: string | null
   createdAt: Date | null
@@ -260,12 +260,12 @@ export type MaintenanceRecordGroupByOutputType = {
   title: string
   description: string | null
   odometer: number | null
-  cost: number | null
+  cost: runtime.Decimal | null
   performedBy: string | null
   performedAt: Date
   nextDueDate: Date | null
   nextDueMileage: number | null
-  status: string
+  status: $Enums.MaintenanceStatus
   partsUsed: string | null
   invoiceUrl: string | null
   createdAt: Date
@@ -302,12 +302,12 @@ export type MaintenanceRecordWhereInput = {
   title?: Prisma.StringFilter<"MaintenanceRecord"> | string
   description?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   odometer?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
-  cost?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
+  cost?: Prisma.DecimalNullableFilter<"MaintenanceRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   performedAt?: Prisma.DateTimeFilter<"MaintenanceRecord"> | Date | string
   nextDueDate?: Prisma.DateTimeNullableFilter<"MaintenanceRecord"> | Date | string | null
   nextDueMileage?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
-  status?: Prisma.StringFilter<"MaintenanceRecord"> | string
+  status?: Prisma.EnumMaintenanceStatusFilter<"MaintenanceRecord"> | $Enums.MaintenanceStatus
   partsUsed?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   invoiceUrl?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"MaintenanceRecord"> | Date | string
@@ -346,12 +346,12 @@ export type MaintenanceRecordWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"MaintenanceRecord"> | string
   description?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   odometer?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
-  cost?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
+  cost?: Prisma.DecimalNullableFilter<"MaintenanceRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   performedAt?: Prisma.DateTimeFilter<"MaintenanceRecord"> | Date | string
   nextDueDate?: Prisma.DateTimeNullableFilter<"MaintenanceRecord"> | Date | string | null
   nextDueMileage?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
-  status?: Prisma.StringFilter<"MaintenanceRecord"> | string
+  status?: Prisma.EnumMaintenanceStatusFilter<"MaintenanceRecord"> | $Enums.MaintenanceStatus
   partsUsed?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   invoiceUrl?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"MaintenanceRecord"> | Date | string
@@ -393,12 +393,12 @@ export type MaintenanceRecordScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"MaintenanceRecord"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"MaintenanceRecord"> | string | null
   odometer?: Prisma.FloatNullableWithAggregatesFilter<"MaintenanceRecord"> | number | null
-  cost?: Prisma.FloatNullableWithAggregatesFilter<"MaintenanceRecord"> | number | null
+  cost?: Prisma.DecimalNullableWithAggregatesFilter<"MaintenanceRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.StringNullableWithAggregatesFilter<"MaintenanceRecord"> | string | null
   performedAt?: Prisma.DateTimeWithAggregatesFilter<"MaintenanceRecord"> | Date | string
   nextDueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"MaintenanceRecord"> | Date | string | null
   nextDueMileage?: Prisma.FloatNullableWithAggregatesFilter<"MaintenanceRecord"> | number | null
-  status?: Prisma.StringWithAggregatesFilter<"MaintenanceRecord"> | string
+  status?: Prisma.EnumMaintenanceStatusWithAggregatesFilter<"MaintenanceRecord"> | $Enums.MaintenanceStatus
   partsUsed?: Prisma.StringNullableWithAggregatesFilter<"MaintenanceRecord"> | string | null
   invoiceUrl?: Prisma.StringNullableWithAggregatesFilter<"MaintenanceRecord"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MaintenanceRecord"> | Date | string
@@ -411,12 +411,12 @@ export type MaintenanceRecordCreateInput = {
   title: string
   description?: string | null
   odometer?: number | null
-  cost?: number | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: string | null
   performedAt?: Date | string
   nextDueDate?: Date | string | null
   nextDueMileage?: number | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   partsUsed?: string | null
   invoiceUrl?: string | null
   createdAt?: Date | string
@@ -431,12 +431,12 @@ export type MaintenanceRecordUncheckedCreateInput = {
   title: string
   description?: string | null
   odometer?: number | null
-  cost?: number | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: string | null
   performedAt?: Date | string
   nextDueDate?: Date | string | null
   nextDueMileage?: number | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   partsUsed?: string | null
   invoiceUrl?: string | null
   createdAt?: Date | string
@@ -449,12 +449,12 @@ export type MaintenanceRecordUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -469,12 +469,12 @@ export type MaintenanceRecordUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,12 +488,12 @@ export type MaintenanceRecordCreateManyInput = {
   title: string
   description?: string | null
   odometer?: number | null
-  cost?: number | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: string | null
   performedAt?: Date | string
   nextDueDate?: Date | string | null
   nextDueMileage?: number | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   partsUsed?: string | null
   invoiceUrl?: string | null
   createdAt?: Date | string
@@ -506,12 +506,12 @@ export type MaintenanceRecordUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -525,12 +525,12 @@ export type MaintenanceRecordUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -622,6 +622,10 @@ export type MaintenanceRecordOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type EnumMaintenanceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.MaintenanceStatus
+}
+
 export type MaintenanceRecordCreateNestedManyWithoutTruckInput = {
   create?: Prisma.XOR<Prisma.MaintenanceRecordCreateWithoutTruckInput, Prisma.MaintenanceRecordUncheckedCreateWithoutTruckInput> | Prisma.MaintenanceRecordCreateWithoutTruckInput[] | Prisma.MaintenanceRecordUncheckedCreateWithoutTruckInput[]
   connectOrCreate?: Prisma.MaintenanceRecordCreateOrConnectWithoutTruckInput | Prisma.MaintenanceRecordCreateOrConnectWithoutTruckInput[]
@@ -670,12 +674,12 @@ export type MaintenanceRecordCreateWithoutTruckInput = {
   title: string
   description?: string | null
   odometer?: number | null
-  cost?: number | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: string | null
   performedAt?: Date | string
   nextDueDate?: Date | string | null
   nextDueMileage?: number | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   partsUsed?: string | null
   invoiceUrl?: string | null
   createdAt?: Date | string
@@ -688,12 +692,12 @@ export type MaintenanceRecordUncheckedCreateWithoutTruckInput = {
   title: string
   description?: string | null
   odometer?: number | null
-  cost?: number | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: string | null
   performedAt?: Date | string
   nextDueDate?: Date | string | null
   nextDueMileage?: number | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   partsUsed?: string | null
   invoiceUrl?: string | null
   createdAt?: Date | string
@@ -736,12 +740,12 @@ export type MaintenanceRecordScalarWhereInput = {
   title?: Prisma.StringFilter<"MaintenanceRecord"> | string
   description?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   odometer?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
-  cost?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
+  cost?: Prisma.DecimalNullableFilter<"MaintenanceRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   performedAt?: Prisma.DateTimeFilter<"MaintenanceRecord"> | Date | string
   nextDueDate?: Prisma.DateTimeNullableFilter<"MaintenanceRecord"> | Date | string | null
   nextDueMileage?: Prisma.FloatNullableFilter<"MaintenanceRecord"> | number | null
-  status?: Prisma.StringFilter<"MaintenanceRecord"> | string
+  status?: Prisma.EnumMaintenanceStatusFilter<"MaintenanceRecord"> | $Enums.MaintenanceStatus
   partsUsed?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   invoiceUrl?: Prisma.StringNullableFilter<"MaintenanceRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"MaintenanceRecord"> | Date | string
@@ -754,12 +758,12 @@ export type MaintenanceRecordCreateManyTruckInput = {
   title: string
   description?: string | null
   odometer?: number | null
-  cost?: number | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: string | null
   performedAt?: Date | string
   nextDueDate?: Date | string | null
   nextDueMileage?: number | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   partsUsed?: string | null
   invoiceUrl?: string | null
   createdAt?: Date | string
@@ -772,12 +776,12 @@ export type MaintenanceRecordUpdateWithoutTruckInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -790,12 +794,12 @@ export type MaintenanceRecordUncheckedUpdateWithoutTruckInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -808,12 +812,12 @@ export type MaintenanceRecordUncheckedUpdateManyWithoutTruckInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  cost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   performedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nextDueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextDueMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   partsUsed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -880,12 +884,12 @@ export type $MaintenanceRecordPayload<ExtArgs extends runtime.Types.Extensions.I
     title: string
     description: string | null
     odometer: number | null
-    cost: number | null
+    cost: runtime.Decimal | null
     performedBy: string | null
     performedAt: Date
     nextDueDate: Date | null
     nextDueMileage: number | null
-    status: string
+    status: $Enums.MaintenanceStatus
     partsUsed: string | null
     invoiceUrl: string | null
     createdAt: Date
@@ -1266,12 +1270,12 @@ export interface MaintenanceRecordFieldRefs {
   readonly title: Prisma.FieldRef<"MaintenanceRecord", 'String'>
   readonly description: Prisma.FieldRef<"MaintenanceRecord", 'String'>
   readonly odometer: Prisma.FieldRef<"MaintenanceRecord", 'Float'>
-  readonly cost: Prisma.FieldRef<"MaintenanceRecord", 'Float'>
+  readonly cost: Prisma.FieldRef<"MaintenanceRecord", 'Decimal'>
   readonly performedBy: Prisma.FieldRef<"MaintenanceRecord", 'String'>
   readonly performedAt: Prisma.FieldRef<"MaintenanceRecord", 'DateTime'>
   readonly nextDueDate: Prisma.FieldRef<"MaintenanceRecord", 'DateTime'>
   readonly nextDueMileage: Prisma.FieldRef<"MaintenanceRecord", 'Float'>
-  readonly status: Prisma.FieldRef<"MaintenanceRecord", 'String'>
+  readonly status: Prisma.FieldRef<"MaintenanceRecord", 'MaintenanceStatus'>
   readonly partsUsed: Prisma.FieldRef<"MaintenanceRecord", 'String'>
   readonly invoiceUrl: Prisma.FieldRef<"MaintenanceRecord", 'String'>
   readonly createdAt: Prisma.FieldRef<"MaintenanceRecord", 'DateTime'>

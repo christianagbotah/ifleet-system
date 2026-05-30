@@ -29,7 +29,7 @@ export type AggregateFuelStation = {
 export type FuelStationAvgAggregateOutputType = {
   latitude: number | null
   longitude: number | null
-  corporateRatePerLiter: number | null
+  corporateRatePerLiter: runtime.Decimal | null
   rating: number | null
   totalRatings: number | null
 }
@@ -37,7 +37,7 @@ export type FuelStationAvgAggregateOutputType = {
 export type FuelStationSumAggregateOutputType = {
   latitude: number | null
   longitude: number | null
-  corporateRatePerLiter: number | null
+  corporateRatePerLiter: runtime.Decimal | null
   rating: number | null
   totalRatings: number | null
 }
@@ -61,7 +61,7 @@ export type FuelStationMinAggregateOutputType = {
   hasHGV: boolean | null
   hasAdBlue: boolean | null
   hasWorkshop: boolean | null
-  corporateRatePerLiter: number | null
+  corporateRatePerLiter: runtime.Decimal | null
   rating: number | null
   totalRatings: number | null
   isActive: boolean | null
@@ -89,7 +89,7 @@ export type FuelStationMaxAggregateOutputType = {
   hasHGV: boolean | null
   hasAdBlue: boolean | null
   hasWorkshop: boolean | null
-  corporateRatePerLiter: number | null
+  corporateRatePerLiter: runtime.Decimal | null
   rating: number | null
   totalRatings: number | null
   isActive: boolean | null
@@ -334,7 +334,7 @@ export type FuelStationGroupByOutputType = {
   hasHGV: boolean
   hasAdBlue: boolean
   hasWorkshop: boolean
-  corporateRatePerLiter: number | null
+  corporateRatePerLiter: runtime.Decimal | null
   rating: number | null
   totalRatings: number
   isActive: boolean
@@ -385,7 +385,7 @@ export type FuelStationWhereInput = {
   hasHGV?: Prisma.BoolFilter<"FuelStation"> | boolean
   hasAdBlue?: Prisma.BoolFilter<"FuelStation"> | boolean
   hasWorkshop?: Prisma.BoolFilter<"FuelStation"> | boolean
-  corporateRatePerLiter?: Prisma.FloatNullableFilter<"FuelStation"> | number | null
+  corporateRatePerLiter?: Prisma.DecimalNullableFilter<"FuelStation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.FloatNullableFilter<"FuelStation"> | number | null
   totalRatings?: Prisma.IntFilter<"FuelStation"> | number
   isActive?: Prisma.BoolFilter<"FuelStation"> | boolean
@@ -447,7 +447,7 @@ export type FuelStationWhereUniqueInput = Prisma.AtLeast<{
   hasHGV?: Prisma.BoolFilter<"FuelStation"> | boolean
   hasAdBlue?: Prisma.BoolFilter<"FuelStation"> | boolean
   hasWorkshop?: Prisma.BoolFilter<"FuelStation"> | boolean
-  corporateRatePerLiter?: Prisma.FloatNullableFilter<"FuelStation"> | number | null
+  corporateRatePerLiter?: Prisma.DecimalNullableFilter<"FuelStation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.FloatNullableFilter<"FuelStation"> | number | null
   totalRatings?: Prisma.IntFilter<"FuelStation"> | number
   isActive?: Prisma.BoolFilter<"FuelStation"> | boolean
@@ -512,7 +512,7 @@ export type FuelStationScalarWhereWithAggregatesInput = {
   hasHGV?: Prisma.BoolWithAggregatesFilter<"FuelStation"> | boolean
   hasAdBlue?: Prisma.BoolWithAggregatesFilter<"FuelStation"> | boolean
   hasWorkshop?: Prisma.BoolWithAggregatesFilter<"FuelStation"> | boolean
-  corporateRatePerLiter?: Prisma.FloatNullableWithAggregatesFilter<"FuelStation"> | number | null
+  corporateRatePerLiter?: Prisma.DecimalNullableWithAggregatesFilter<"FuelStation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.FloatNullableWithAggregatesFilter<"FuelStation"> | number | null
   totalRatings?: Prisma.IntWithAggregatesFilter<"FuelStation"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"FuelStation"> | boolean
@@ -540,7 +540,7 @@ export type FuelStationCreateInput = {
   hasHGV?: boolean
   hasAdBlue?: boolean
   hasWorkshop?: boolean
-  corporateRatePerLiter?: number | null
+  corporateRatePerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: number | null
   totalRatings?: number
   isActive?: boolean
@@ -569,7 +569,7 @@ export type FuelStationUncheckedCreateInput = {
   hasHGV?: boolean
   hasAdBlue?: boolean
   hasWorkshop?: boolean
-  corporateRatePerLiter?: number | null
+  corporateRatePerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: number | null
   totalRatings?: number
   isActive?: boolean
@@ -598,7 +598,7 @@ export type FuelStationUpdateInput = {
   hasHGV?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAdBlue?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasWorkshop?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  corporateRatePerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corporateRatePerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalRatings?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -627,7 +627,7 @@ export type FuelStationUncheckedUpdateInput = {
   hasHGV?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAdBlue?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasWorkshop?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  corporateRatePerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corporateRatePerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalRatings?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -656,7 +656,7 @@ export type FuelStationCreateManyInput = {
   hasHGV?: boolean
   hasAdBlue?: boolean
   hasWorkshop?: boolean
-  corporateRatePerLiter?: number | null
+  corporateRatePerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: number | null
   totalRatings?: number
   isActive?: boolean
@@ -684,7 +684,7 @@ export type FuelStationUpdateManyMutationInput = {
   hasHGV?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAdBlue?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasWorkshop?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  corporateRatePerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corporateRatePerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalRatings?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -712,7 +712,7 @@ export type FuelStationUncheckedUpdateManyInput = {
   hasHGV?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAdBlue?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasWorkshop?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  corporateRatePerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corporateRatePerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalRatings?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -865,7 +865,7 @@ export type FuelStationCreateWithoutFuelPriceInput = {
   hasHGV?: boolean
   hasAdBlue?: boolean
   hasWorkshop?: boolean
-  corporateRatePerLiter?: number | null
+  corporateRatePerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: number | null
   totalRatings?: number
   isActive?: boolean
@@ -893,7 +893,7 @@ export type FuelStationUncheckedCreateWithoutFuelPriceInput = {
   hasHGV?: boolean
   hasAdBlue?: boolean
   hasWorkshop?: boolean
-  corporateRatePerLiter?: number | null
+  corporateRatePerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: number | null
   totalRatings?: number
   isActive?: boolean
@@ -937,7 +937,7 @@ export type FuelStationUpdateWithoutFuelPriceInput = {
   hasHGV?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAdBlue?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasWorkshop?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  corporateRatePerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corporateRatePerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalRatings?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -965,7 +965,7 @@ export type FuelStationUncheckedUpdateWithoutFuelPriceInput = {
   hasHGV?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAdBlue?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasWorkshop?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  corporateRatePerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corporateRatePerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalRatings?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1095,7 +1095,7 @@ export type $FuelStationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     hasHGV: boolean
     hasAdBlue: boolean
     hasWorkshop: boolean
-    corporateRatePerLiter: number | null
+    corporateRatePerLiter: runtime.Decimal | null
     rating: number | null
     totalRatings: number
     isActive: boolean
@@ -1490,7 +1490,7 @@ export interface FuelStationFieldRefs {
   readonly hasHGV: Prisma.FieldRef<"FuelStation", 'Boolean'>
   readonly hasAdBlue: Prisma.FieldRef<"FuelStation", 'Boolean'>
   readonly hasWorkshop: Prisma.FieldRef<"FuelStation", 'Boolean'>
-  readonly corporateRatePerLiter: Prisma.FieldRef<"FuelStation", 'Float'>
+  readonly corporateRatePerLiter: Prisma.FieldRef<"FuelStation", 'Decimal'>
   readonly rating: Prisma.FieldRef<"FuelStation", 'Float'>
   readonly totalRatings: Prisma.FieldRef<"FuelStation", 'Int'>
   readonly isActive: Prisma.FieldRef<"FuelStation", 'Boolean'>

@@ -27,19 +27,19 @@ export type AggregateDriverSettlement = {
 }
 
 export type DriverSettlementAvgAggregateOutputType = {
-  grossEarnings: number | null
-  fuelDeductions: number | null
-  expenseDeductions: number | null
-  bonusAmount: number | null
-  netPay: number | null
+  grossEarnings: runtime.Decimal | null
+  fuelDeductions: runtime.Decimal | null
+  expenseDeductions: runtime.Decimal | null
+  bonusAmount: runtime.Decimal | null
+  netPay: runtime.Decimal | null
 }
 
 export type DriverSettlementSumAggregateOutputType = {
-  grossEarnings: number | null
-  fuelDeductions: number | null
-  expenseDeductions: number | null
-  bonusAmount: number | null
-  netPay: number | null
+  grossEarnings: runtime.Decimal | null
+  fuelDeductions: runtime.Decimal | null
+  expenseDeductions: runtime.Decimal | null
+  bonusAmount: runtime.Decimal | null
+  netPay: runtime.Decimal | null
 }
 
 export type DriverSettlementMinAggregateOutputType = {
@@ -48,12 +48,12 @@ export type DriverSettlementMinAggregateOutputType = {
   period: string | null
   periodStart: Date | null
   periodEnd: Date | null
-  grossEarnings: number | null
-  fuelDeductions: number | null
-  expenseDeductions: number | null
-  bonusAmount: number | null
-  netPay: number | null
-  status: string | null
+  grossEarnings: runtime.Decimal | null
+  fuelDeductions: runtime.Decimal | null
+  expenseDeductions: runtime.Decimal | null
+  bonusAmount: runtime.Decimal | null
+  netPay: runtime.Decimal | null
+  status: $Enums.SettlementStatus | null
   approvedBy: string | null
   approvedAt: Date | null
   paidAt: Date | null
@@ -68,12 +68,12 @@ export type DriverSettlementMaxAggregateOutputType = {
   period: string | null
   periodStart: Date | null
   periodEnd: Date | null
-  grossEarnings: number | null
-  fuelDeductions: number | null
-  expenseDeductions: number | null
-  bonusAmount: number | null
-  netPay: number | null
-  status: string | null
+  grossEarnings: runtime.Decimal | null
+  fuelDeductions: runtime.Decimal | null
+  expenseDeductions: runtime.Decimal | null
+  bonusAmount: runtime.Decimal | null
+  netPay: runtime.Decimal | null
+  status: $Enums.SettlementStatus | null
   approvedBy: string | null
   approvedAt: Date | null
   paidAt: Date | null
@@ -273,12 +273,12 @@ export type DriverSettlementGroupByOutputType = {
   period: string
   periodStart: Date
   periodEnd: Date
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status: string
+  grossEarnings: runtime.Decimal
+  fuelDeductions: runtime.Decimal
+  expenseDeductions: runtime.Decimal
+  bonusAmount: runtime.Decimal
+  netPay: runtime.Decimal
+  status: $Enums.SettlementStatus
   approvedBy: string | null
   approvedAt: Date | null
   paidAt: Date | null
@@ -316,12 +316,12 @@ export type DriverSettlementWhereInput = {
   period?: Prisma.StringFilter<"DriverSettlement"> | string
   periodStart?: Prisma.DateTimeFilter<"DriverSettlement"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"DriverSettlement"> | Date | string
-  grossEarnings?: Prisma.FloatFilter<"DriverSettlement"> | number
-  fuelDeductions?: Prisma.FloatFilter<"DriverSettlement"> | number
-  expenseDeductions?: Prisma.FloatFilter<"DriverSettlement"> | number
-  bonusAmount?: Prisma.FloatFilter<"DriverSettlement"> | number
-  netPay?: Prisma.FloatFilter<"DriverSettlement"> | number
-  status?: Prisma.StringFilter<"DriverSettlement"> | string
+  grossEarnings?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
@@ -364,12 +364,12 @@ export type DriverSettlementWhereUniqueInput = Prisma.AtLeast<{
   period?: Prisma.StringFilter<"DriverSettlement"> | string
   periodStart?: Prisma.DateTimeFilter<"DriverSettlement"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"DriverSettlement"> | Date | string
-  grossEarnings?: Prisma.FloatFilter<"DriverSettlement"> | number
-  fuelDeductions?: Prisma.FloatFilter<"DriverSettlement"> | number
-  expenseDeductions?: Prisma.FloatFilter<"DriverSettlement"> | number
-  bonusAmount?: Prisma.FloatFilter<"DriverSettlement"> | number
-  netPay?: Prisma.FloatFilter<"DriverSettlement"> | number
-  status?: Prisma.StringFilter<"DriverSettlement"> | string
+  grossEarnings?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
@@ -414,12 +414,12 @@ export type DriverSettlementScalarWhereWithAggregatesInput = {
   period?: Prisma.StringWithAggregatesFilter<"DriverSettlement"> | string
   periodStart?: Prisma.DateTimeWithAggregatesFilter<"DriverSettlement"> | Date | string
   periodEnd?: Prisma.DateTimeWithAggregatesFilter<"DriverSettlement"> | Date | string
-  grossEarnings?: Prisma.FloatWithAggregatesFilter<"DriverSettlement"> | number
-  fuelDeductions?: Prisma.FloatWithAggregatesFilter<"DriverSettlement"> | number
-  expenseDeductions?: Prisma.FloatWithAggregatesFilter<"DriverSettlement"> | number
-  bonusAmount?: Prisma.FloatWithAggregatesFilter<"DriverSettlement"> | number
-  netPay?: Prisma.FloatWithAggregatesFilter<"DriverSettlement"> | number
-  status?: Prisma.StringWithAggregatesFilter<"DriverSettlement"> | string
+  grossEarnings?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusWithAggregatesFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverSettlement"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverSettlement"> | Date | string | null
@@ -433,12 +433,12 @@ export type DriverSettlementCreateInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -455,12 +455,12 @@ export type DriverSettlementUncheckedCreateInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -475,12 +475,12 @@ export type DriverSettlementUpdateInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -497,12 +497,12 @@ export type DriverSettlementUncheckedUpdateInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -518,12 +518,12 @@ export type DriverSettlementCreateManyInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -537,12 +537,12 @@ export type DriverSettlementUpdateManyMutationInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -557,12 +557,12 @@ export type DriverSettlementUncheckedUpdateManyInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -710,6 +710,10 @@ export type DriverSettlementUncheckedUpdateManyWithoutDriverNestedInput = {
   deleteMany?: Prisma.DriverSettlementScalarWhereInput | Prisma.DriverSettlementScalarWhereInput[]
 }
 
+export type EnumSettlementStatusFieldUpdateOperationsInput = {
+  set?: $Enums.SettlementStatus
+}
+
 export type DriverSettlementCreateNestedOneWithoutSettlementLineInput = {
   create?: Prisma.XOR<Prisma.DriverSettlementCreateWithoutSettlementLineInput, Prisma.DriverSettlementUncheckedCreateWithoutSettlementLineInput>
   connectOrCreate?: Prisma.DriverSettlementCreateOrConnectWithoutSettlementLineInput
@@ -729,12 +733,12 @@ export type DriverSettlementCreateWithoutDriverInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -749,12 +753,12 @@ export type DriverSettlementUncheckedCreateWithoutDriverInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -799,12 +803,12 @@ export type DriverSettlementScalarWhereInput = {
   period?: Prisma.StringFilter<"DriverSettlement"> | string
   periodStart?: Prisma.DateTimeFilter<"DriverSettlement"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"DriverSettlement"> | Date | string
-  grossEarnings?: Prisma.FloatFilter<"DriverSettlement"> | number
-  fuelDeductions?: Prisma.FloatFilter<"DriverSettlement"> | number
-  expenseDeductions?: Prisma.FloatFilter<"DriverSettlement"> | number
-  bonusAmount?: Prisma.FloatFilter<"DriverSettlement"> | number
-  netPay?: Prisma.FloatFilter<"DriverSettlement"> | number
-  status?: Prisma.StringFilter<"DriverSettlement"> | string
+  grossEarnings?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
@@ -818,12 +822,12 @@ export type DriverSettlementCreateWithoutSettlementLineInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -839,12 +843,12 @@ export type DriverSettlementUncheckedCreateWithoutSettlementLineInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -874,12 +878,12 @@ export type DriverSettlementUpdateWithoutSettlementLineInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -895,12 +899,12 @@ export type DriverSettlementUncheckedUpdateWithoutSettlementLineInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -914,12 +918,12 @@ export type DriverSettlementCreateManyDriverInput = {
   period: string
   periodStart: Date | string
   periodEnd: Date | string
-  grossEarnings: number
-  fuelDeductions: number
-  expenseDeductions: number
-  bonusAmount: number
-  netPay: number
-  status?: string
+  grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -933,12 +937,12 @@ export type DriverSettlementUpdateWithoutDriverInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -953,12 +957,12 @@ export type DriverSettlementUncheckedUpdateWithoutDriverInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -973,12 +977,12 @@ export type DriverSettlementUncheckedUpdateManyWithoutDriverInput = {
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grossEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
-  fuelDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  expenseDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  bonusAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1082,12 +1086,12 @@ export type $DriverSettlementPayload<ExtArgs extends runtime.Types.Extensions.In
     period: string
     periodStart: Date
     periodEnd: Date
-    grossEarnings: number
-    fuelDeductions: number
-    expenseDeductions: number
-    bonusAmount: number
-    netPay: number
-    status: string
+    grossEarnings: runtime.Decimal
+    fuelDeductions: runtime.Decimal
+    expenseDeductions: runtime.Decimal
+    bonusAmount: runtime.Decimal
+    netPay: runtime.Decimal
+    status: $Enums.SettlementStatus
     approvedBy: string | null
     approvedAt: Date | null
     paidAt: Date | null
@@ -1470,12 +1474,12 @@ export interface DriverSettlementFieldRefs {
   readonly period: Prisma.FieldRef<"DriverSettlement", 'String'>
   readonly periodStart: Prisma.FieldRef<"DriverSettlement", 'DateTime'>
   readonly periodEnd: Prisma.FieldRef<"DriverSettlement", 'DateTime'>
-  readonly grossEarnings: Prisma.FieldRef<"DriverSettlement", 'Float'>
-  readonly fuelDeductions: Prisma.FieldRef<"DriverSettlement", 'Float'>
-  readonly expenseDeductions: Prisma.FieldRef<"DriverSettlement", 'Float'>
-  readonly bonusAmount: Prisma.FieldRef<"DriverSettlement", 'Float'>
-  readonly netPay: Prisma.FieldRef<"DriverSettlement", 'Float'>
-  readonly status: Prisma.FieldRef<"DriverSettlement", 'String'>
+  readonly grossEarnings: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly fuelDeductions: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly expenseDeductions: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly bonusAmount: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly netPay: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly status: Prisma.FieldRef<"DriverSettlement", 'SettlementStatus'>
   readonly approvedBy: Prisma.FieldRef<"DriverSettlement", 'String'>
   readonly approvedAt: Prisma.FieldRef<"DriverSettlement", 'DateTime'>
   readonly paidAt: Prisma.FieldRef<"DriverSettlement", 'DateTime'>

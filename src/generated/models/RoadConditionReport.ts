@@ -49,7 +49,7 @@ export type RoadConditionReportMinAggregateOutputType = {
   longitude: number | null
   reportedAt: Date | null
   resolvedAt: Date | null
-  status: string | null
+  status: $Enums.RoadConditionStatus | null
   imageUrl: string | null
   tripId: string | null
   createdAt: Date | null
@@ -69,7 +69,7 @@ export type RoadConditionReportMaxAggregateOutputType = {
   longitude: number | null
   reportedAt: Date | null
   resolvedAt: Date | null
-  status: string | null
+  status: $Enums.RoadConditionStatus | null
   imageUrl: string | null
   tripId: string | null
   createdAt: Date | null
@@ -268,7 +268,7 @@ export type RoadConditionReportGroupByOutputType = {
   longitude: number | null
   reportedAt: Date
   resolvedAt: Date | null
-  status: string
+  status: $Enums.RoadConditionStatus
   imageUrl: string | null
   tripId: string | null
   createdAt: Date
@@ -311,7 +311,7 @@ export type RoadConditionReportWhereInput = {
   longitude?: Prisma.FloatNullableFilter<"RoadConditionReport"> | number | null
   reportedAt?: Prisma.DateTimeFilter<"RoadConditionReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"RoadConditionReport"> | Date | string | null
-  status?: Prisma.StringFilter<"RoadConditionReport"> | string
+  status?: Prisma.EnumRoadConditionStatusFilter<"RoadConditionReport"> | $Enums.RoadConditionStatus
   imageUrl?: Prisma.StringNullableFilter<"RoadConditionReport"> | string | null
   tripId?: Prisma.StringNullableFilter<"RoadConditionReport"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RoadConditionReport"> | Date | string
@@ -359,7 +359,7 @@ export type RoadConditionReportWhereUniqueInput = Prisma.AtLeast<{
   longitude?: Prisma.FloatNullableFilter<"RoadConditionReport"> | number | null
   reportedAt?: Prisma.DateTimeFilter<"RoadConditionReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"RoadConditionReport"> | Date | string | null
-  status?: Prisma.StringFilter<"RoadConditionReport"> | string
+  status?: Prisma.EnumRoadConditionStatusFilter<"RoadConditionReport"> | $Enums.RoadConditionStatus
   imageUrl?: Prisma.StringNullableFilter<"RoadConditionReport"> | string | null
   tripId?: Prisma.StringNullableFilter<"RoadConditionReport"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RoadConditionReport"> | Date | string
@@ -409,7 +409,7 @@ export type RoadConditionReportScalarWhereWithAggregatesInput = {
   longitude?: Prisma.FloatNullableWithAggregatesFilter<"RoadConditionReport"> | number | null
   reportedAt?: Prisma.DateTimeWithAggregatesFilter<"RoadConditionReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RoadConditionReport"> | Date | string | null
-  status?: Prisma.StringWithAggregatesFilter<"RoadConditionReport"> | string
+  status?: Prisma.EnumRoadConditionStatusWithAggregatesFilter<"RoadConditionReport"> | $Enums.RoadConditionStatus
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"RoadConditionReport"> | string | null
   tripId?: Prisma.StringNullableWithAggregatesFilter<"RoadConditionReport"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RoadConditionReport"> | Date | string
@@ -428,7 +428,7 @@ export type RoadConditionReportCreateInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -449,7 +449,7 @@ export type RoadConditionReportUncheckedCreateInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -468,7 +468,7 @@ export type RoadConditionReportUpdateInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -489,7 +489,7 @@ export type RoadConditionReportUncheckedUpdateInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -509,7 +509,7 @@ export type RoadConditionReportCreateManyInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -528,7 +528,7 @@ export type RoadConditionReportUpdateManyMutationInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -547,7 +547,7 @@ export type RoadConditionReportUncheckedUpdateManyInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -682,6 +682,10 @@ export type RoadConditionReportUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.RoadConditionReportScalarWhereInput | Prisma.RoadConditionReportScalarWhereInput[]
 }
 
+export type EnumRoadConditionStatusFieldUpdateOperationsInput = {
+  set?: $Enums.RoadConditionStatus
+}
+
 export type RoadConditionReportCreateNestedManyWithoutTripInput = {
   create?: Prisma.XOR<Prisma.RoadConditionReportCreateWithoutTripInput, Prisma.RoadConditionReportUncheckedCreateWithoutTripInput> | Prisma.RoadConditionReportCreateWithoutTripInput[] | Prisma.RoadConditionReportUncheckedCreateWithoutTripInput[]
   connectOrCreate?: Prisma.RoadConditionReportCreateOrConnectWithoutTripInput | Prisma.RoadConditionReportCreateOrConnectWithoutTripInput[]
@@ -736,7 +740,7 @@ export type RoadConditionReportCreateWithoutUserInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -755,7 +759,7 @@ export type RoadConditionReportUncheckedCreateWithoutUserInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -804,7 +808,7 @@ export type RoadConditionReportScalarWhereInput = {
   longitude?: Prisma.FloatNullableFilter<"RoadConditionReport"> | number | null
   reportedAt?: Prisma.DateTimeFilter<"RoadConditionReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"RoadConditionReport"> | Date | string | null
-  status?: Prisma.StringFilter<"RoadConditionReport"> | string
+  status?: Prisma.EnumRoadConditionStatusFilter<"RoadConditionReport"> | $Enums.RoadConditionStatus
   imageUrl?: Prisma.StringNullableFilter<"RoadConditionReport"> | string | null
   tripId?: Prisma.StringNullableFilter<"RoadConditionReport"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RoadConditionReport"> | Date | string
@@ -823,7 +827,7 @@ export type RoadConditionReportCreateWithoutTripInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -843,7 +847,7 @@ export type RoadConditionReportUncheckedCreateWithoutTripInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -887,7 +891,7 @@ export type RoadConditionReportCreateManyUserInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -906,7 +910,7 @@ export type RoadConditionReportUpdateWithoutUserInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -925,7 +929,7 @@ export type RoadConditionReportUncheckedUpdateWithoutUserInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -944,7 +948,7 @@ export type RoadConditionReportUncheckedUpdateManyWithoutUserInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -964,7 +968,7 @@ export type RoadConditionReportCreateManyTripInput = {
   longitude?: number | null
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
-  status?: string
+  status?: $Enums.RoadConditionStatus
   imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -982,7 +986,7 @@ export type RoadConditionReportUpdateWithoutTripInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1002,7 +1006,7 @@ export type RoadConditionReportUncheckedUpdateWithoutTripInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1021,7 +1025,7 @@ export type RoadConditionReportUncheckedUpdateManyWithoutTripInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRoadConditionStatusFieldUpdateOperationsInput | $Enums.RoadConditionStatus
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1098,7 +1102,7 @@ export type $RoadConditionReportPayload<ExtArgs extends runtime.Types.Extensions
     longitude: number | null
     reportedAt: Date
     resolvedAt: Date | null
-    status: string
+    status: $Enums.RoadConditionStatus
     imageUrl: string | null
     tripId: string | null
     createdAt: Date
@@ -1486,7 +1490,7 @@ export interface RoadConditionReportFieldRefs {
   readonly longitude: Prisma.FieldRef<"RoadConditionReport", 'Float'>
   readonly reportedAt: Prisma.FieldRef<"RoadConditionReport", 'DateTime'>
   readonly resolvedAt: Prisma.FieldRef<"RoadConditionReport", 'DateTime'>
-  readonly status: Prisma.FieldRef<"RoadConditionReport", 'String'>
+  readonly status: Prisma.FieldRef<"RoadConditionReport", 'RoadConditionStatus'>
   readonly imageUrl: Prisma.FieldRef<"RoadConditionReport", 'String'>
   readonly tripId: Prisma.FieldRef<"RoadConditionReport", 'String'>
   readonly createdAt: Prisma.FieldRef<"RoadConditionReport", 'DateTime'>

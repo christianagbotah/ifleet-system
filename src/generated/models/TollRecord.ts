@@ -29,17 +29,17 @@ export type AggregateTollRecord = {
 export type TollRecordAvgAggregateOutputType = {
   latitude: number | null
   longitude: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   vehicleWeight: number | null
-  overloadFine: number | null
+  overloadFine: runtime.Decimal | null
 }
 
 export type TollRecordSumAggregateOutputType = {
   latitude: number | null
   longitude: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   vehicleWeight: number | null
-  overloadFine: number | null
+  overloadFine: runtime.Decimal | null
 }
 
 export type TollRecordMinAggregateOutputType = {
@@ -53,18 +53,18 @@ export type TollRecordMinAggregateOutputType = {
   route: string | null
   latitude: number | null
   longitude: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   paymentMethod: string | null
   referenceNumber: string | null
   tollDate: Date | null
   direction: string | null
-  status: string | null
+  status: $Enums.TollRecordStatus | null
   disputeReason: string | null
   resolvedBy: string | null
   resolvedAt: Date | null
   vehicleWeight: number | null
   overloaded: boolean | null
-  overloadFine: number | null
+  overloadFine: runtime.Decimal | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -81,18 +81,18 @@ export type TollRecordMaxAggregateOutputType = {
   route: string | null
   latitude: number | null
   longitude: number | null
-  amount: number | null
+  amount: runtime.Decimal | null
   paymentMethod: string | null
   referenceNumber: string | null
   tollDate: Date | null
   direction: string | null
-  status: string | null
+  status: $Enums.TollRecordStatus | null
   disputeReason: string | null
   resolvedBy: string | null
   resolvedAt: Date | null
   vehicleWeight: number | null
   overloaded: boolean | null
-  overloadFine: number | null
+  overloadFine: runtime.Decimal | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -326,18 +326,18 @@ export type TollRecordGroupByOutputType = {
   route: string | null
   latitude: number | null
   longitude: number | null
-  amount: number
+  amount: runtime.Decimal
   paymentMethod: string
   referenceNumber: string | null
   tollDate: Date
   direction: string | null
-  status: string
+  status: $Enums.TollRecordStatus
   disputeReason: string | null
   resolvedBy: string | null
   resolvedAt: Date | null
   vehicleWeight: number | null
   overloaded: boolean
-  overloadFine: number | null
+  overloadFine: runtime.Decimal | null
   notes: string | null
   createdAt: Date
   updatedAt: Date
@@ -377,18 +377,18 @@ export type TollRecordWhereInput = {
   route?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   latitude?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
   longitude?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
-  amount?: Prisma.FloatFilter<"TollRecord"> | number
+  amount?: Prisma.DecimalFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFilter<"TollRecord"> | string
   referenceNumber?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   tollDate?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
   direction?: Prisma.StringNullableFilter<"TollRecord"> | string | null
-  status?: Prisma.StringFilter<"TollRecord"> | string
+  status?: Prisma.EnumTollRecordStatusFilter<"TollRecord"> | $Enums.TollRecordStatus
   disputeReason?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   resolvedBy?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   resolvedAt?: Prisma.DateTimeNullableFilter<"TollRecord"> | Date | string | null
   vehicleWeight?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
   overloaded?: Prisma.BoolFilter<"TollRecord"> | boolean
-  overloadFine?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
+  overloadFine?: Prisma.DecimalNullableFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
@@ -443,18 +443,18 @@ export type TollRecordWhereUniqueInput = Prisma.AtLeast<{
   route?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   latitude?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
   longitude?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
-  amount?: Prisma.FloatFilter<"TollRecord"> | number
+  amount?: Prisma.DecimalFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFilter<"TollRecord"> | string
   referenceNumber?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   tollDate?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
   direction?: Prisma.StringNullableFilter<"TollRecord"> | string | null
-  status?: Prisma.StringFilter<"TollRecord"> | string
+  status?: Prisma.EnumTollRecordStatusFilter<"TollRecord"> | $Enums.TollRecordStatus
   disputeReason?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   resolvedBy?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   resolvedAt?: Prisma.DateTimeNullableFilter<"TollRecord"> | Date | string | null
   vehicleWeight?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
   overloaded?: Prisma.BoolFilter<"TollRecord"> | boolean
-  overloadFine?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
+  overloadFine?: Prisma.DecimalNullableFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
@@ -510,18 +510,18 @@ export type TollRecordScalarWhereWithAggregatesInput = {
   route?: Prisma.StringNullableWithAggregatesFilter<"TollRecord"> | string | null
   latitude?: Prisma.FloatNullableWithAggregatesFilter<"TollRecord"> | number | null
   longitude?: Prisma.FloatNullableWithAggregatesFilter<"TollRecord"> | number | null
-  amount?: Prisma.FloatWithAggregatesFilter<"TollRecord"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringWithAggregatesFilter<"TollRecord"> | string
   referenceNumber?: Prisma.StringNullableWithAggregatesFilter<"TollRecord"> | string | null
   tollDate?: Prisma.DateTimeWithAggregatesFilter<"TollRecord"> | Date | string
   direction?: Prisma.StringNullableWithAggregatesFilter<"TollRecord"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"TollRecord"> | string
+  status?: Prisma.EnumTollRecordStatusWithAggregatesFilter<"TollRecord"> | $Enums.TollRecordStatus
   disputeReason?: Prisma.StringNullableWithAggregatesFilter<"TollRecord"> | string | null
   resolvedBy?: Prisma.StringNullableWithAggregatesFilter<"TollRecord"> | string | null
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TollRecord"> | Date | string | null
   vehicleWeight?: Prisma.FloatNullableWithAggregatesFilter<"TollRecord"> | number | null
   overloaded?: Prisma.BoolWithAggregatesFilter<"TollRecord"> | boolean
-  overloadFine?: Prisma.FloatNullableWithAggregatesFilter<"TollRecord"> | number | null
+  overloadFine?: Prisma.DecimalNullableWithAggregatesFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"TollRecord"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TollRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TollRecord"> | Date | string
@@ -535,18 +535,18 @@ export type TollRecordCreateInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -566,18 +566,18 @@ export type TollRecordUncheckedCreateInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -591,18 +591,18 @@ export type TollRecordUpdateInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -622,18 +622,18 @@ export type TollRecordUncheckedUpdateInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -650,18 +650,18 @@ export type TollRecordCreateManyInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -675,18 +675,18 @@ export type TollRecordUpdateManyMutationInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -703,18 +703,18 @@ export type TollRecordUncheckedUpdateManyInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -878,6 +878,10 @@ export type TollRecordUncheckedUpdateManyWithoutDriverNestedInput = {
   deleteMany?: Prisma.TollRecordScalarWhereInput | Prisma.TollRecordScalarWhereInput[]
 }
 
+export type EnumTollRecordStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TollRecordStatus
+}
+
 export type TollRecordCreateNestedManyWithoutTripInput = {
   create?: Prisma.XOR<Prisma.TollRecordCreateWithoutTripInput, Prisma.TollRecordUncheckedCreateWithoutTripInput> | Prisma.TollRecordCreateWithoutTripInput[] | Prisma.TollRecordUncheckedCreateWithoutTripInput[]
   connectOrCreate?: Prisma.TollRecordCreateOrConnectWithoutTripInput | Prisma.TollRecordCreateOrConnectWithoutTripInput[]
@@ -970,18 +974,18 @@ export type TollRecordCreateWithoutDriverInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -999,18 +1003,18 @@ export type TollRecordUncheckedCreateWithoutDriverInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1056,18 +1060,18 @@ export type TollRecordScalarWhereInput = {
   route?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   latitude?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
   longitude?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
-  amount?: Prisma.FloatFilter<"TollRecord"> | number
+  amount?: Prisma.DecimalFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFilter<"TollRecord"> | string
   referenceNumber?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   tollDate?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
   direction?: Prisma.StringNullableFilter<"TollRecord"> | string | null
-  status?: Prisma.StringFilter<"TollRecord"> | string
+  status?: Prisma.EnumTollRecordStatusFilter<"TollRecord"> | $Enums.TollRecordStatus
   disputeReason?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   resolvedBy?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   resolvedAt?: Prisma.DateTimeNullableFilter<"TollRecord"> | Date | string | null
   vehicleWeight?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
   overloaded?: Prisma.BoolFilter<"TollRecord"> | boolean
-  overloadFine?: Prisma.FloatNullableFilter<"TollRecord"> | number | null
+  overloadFine?: Prisma.DecimalNullableFilter<"TollRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableFilter<"TollRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TollRecord"> | Date | string
@@ -1081,18 +1085,18 @@ export type TollRecordCreateWithoutTripInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1110,18 +1114,18 @@ export type TollRecordUncheckedCreateWithoutTripInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1161,18 +1165,18 @@ export type TollRecordCreateWithoutTruckInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1190,18 +1194,18 @@ export type TollRecordUncheckedCreateWithoutTruckInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1243,18 +1247,18 @@ export type TollRecordCreateManyDriverInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1268,18 +1272,18 @@ export type TollRecordUpdateWithoutDriverInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1297,18 +1301,18 @@ export type TollRecordUncheckedUpdateWithoutDriverInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1324,18 +1328,18 @@ export type TollRecordUncheckedUpdateManyWithoutDriverInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1351,18 +1355,18 @@ export type TollRecordCreateManyTripInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1376,18 +1380,18 @@ export type TollRecordUpdateWithoutTripInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1405,18 +1409,18 @@ export type TollRecordUncheckedUpdateWithoutTripInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1432,18 +1436,18 @@ export type TollRecordUncheckedUpdateManyWithoutTripInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1459,18 +1463,18 @@ export type TollRecordCreateManyTruckInput = {
   route?: string | null
   latitude?: number | null
   longitude?: number | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: string
   referenceNumber?: string | null
   tollDate: Date | string
   direction?: string | null
-  status?: string
+  status?: $Enums.TollRecordStatus
   disputeReason?: string | null
   resolvedBy?: string | null
   resolvedAt?: Date | string | null
   vehicleWeight?: number | null
   overloaded?: boolean
-  overloadFine?: number | null
+  overloadFine?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1484,18 +1488,18 @@ export type TollRecordUpdateWithoutTruckInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1513,18 +1517,18 @@ export type TollRecordUncheckedUpdateWithoutTruckInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1540,18 +1544,18 @@ export type TollRecordUncheckedUpdateManyWithoutTruckInput = {
   route?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   referenceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tollDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTollRecordStatusFieldUpdateOperationsInput | $Enums.TollRecordStatus
   disputeReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overloaded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  overloadFine?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overloadFine?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1645,18 +1649,18 @@ export type $TollRecordPayload<ExtArgs extends runtime.Types.Extensions.Internal
     route: string | null
     latitude: number | null
     longitude: number | null
-    amount: number
+    amount: runtime.Decimal
     paymentMethod: string
     referenceNumber: string | null
     tollDate: Date
     direction: string | null
-    status: string
+    status: $Enums.TollRecordStatus
     disputeReason: string | null
     resolvedBy: string | null
     resolvedAt: Date | null
     vehicleWeight: number | null
     overloaded: boolean
-    overloadFine: number | null
+    overloadFine: runtime.Decimal | null
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -2042,18 +2046,18 @@ export interface TollRecordFieldRefs {
   readonly route: Prisma.FieldRef<"TollRecord", 'String'>
   readonly latitude: Prisma.FieldRef<"TollRecord", 'Float'>
   readonly longitude: Prisma.FieldRef<"TollRecord", 'Float'>
-  readonly amount: Prisma.FieldRef<"TollRecord", 'Float'>
+  readonly amount: Prisma.FieldRef<"TollRecord", 'Decimal'>
   readonly paymentMethod: Prisma.FieldRef<"TollRecord", 'String'>
   readonly referenceNumber: Prisma.FieldRef<"TollRecord", 'String'>
   readonly tollDate: Prisma.FieldRef<"TollRecord", 'DateTime'>
   readonly direction: Prisma.FieldRef<"TollRecord", 'String'>
-  readonly status: Prisma.FieldRef<"TollRecord", 'String'>
+  readonly status: Prisma.FieldRef<"TollRecord", 'TollRecordStatus'>
   readonly disputeReason: Prisma.FieldRef<"TollRecord", 'String'>
   readonly resolvedBy: Prisma.FieldRef<"TollRecord", 'String'>
   readonly resolvedAt: Prisma.FieldRef<"TollRecord", 'DateTime'>
   readonly vehicleWeight: Prisma.FieldRef<"TollRecord", 'Float'>
   readonly overloaded: Prisma.FieldRef<"TollRecord", 'Boolean'>
-  readonly overloadFine: Prisma.FieldRef<"TollRecord", 'Float'>
+  readonly overloadFine: Prisma.FieldRef<"TollRecord", 'Decimal'>
   readonly notes: Prisma.FieldRef<"TollRecord", 'String'>
   readonly createdAt: Prisma.FieldRef<"TollRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TollRecord", 'DateTime'>

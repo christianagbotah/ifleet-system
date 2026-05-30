@@ -27,18 +27,18 @@ export type AggregatePricing = {
 }
 
 export type PricingAvgAggregateOutputType = {
-  transportRate: number | null
+  transportRate: runtime.Decimal | null
 }
 
 export type PricingSumAggregateOutputType = {
-  transportRate: number | null
+  transportRate: runtime.Decimal | null
 }
 
 export type PricingMinAggregateOutputType = {
   id: string | null
   itemName: string | null
   destination: string | null
-  transportRate: number | null
+  transportRate: runtime.Decimal | null
   effectiveDate: Date | null
   isActive: boolean | null
   createdAt: Date | null
@@ -49,7 +49,7 @@ export type PricingMaxAggregateOutputType = {
   id: string | null
   itemName: string | null
   destination: string | null
-  transportRate: number | null
+  transportRate: runtime.Decimal | null
   effectiveDate: Date | null
   isActive: boolean | null
   createdAt: Date | null
@@ -201,7 +201,7 @@ export type PricingGroupByOutputType = {
   id: string
   itemName: string
   destination: string
-  transportRate: number
+  transportRate: runtime.Decimal
   effectiveDate: Date
   isActive: boolean
   createdAt: Date
@@ -235,7 +235,7 @@ export type PricingWhereInput = {
   id?: Prisma.StringFilter<"Pricing"> | string
   itemName?: Prisma.StringFilter<"Pricing"> | string
   destination?: Prisma.StringFilter<"Pricing"> | string
-  transportRate?: Prisma.FloatFilter<"Pricing"> | number
+  transportRate?: Prisma.DecimalFilter<"Pricing"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFilter<"Pricing"> | Date | string
   isActive?: Prisma.BoolFilter<"Pricing"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Pricing"> | Date | string
@@ -262,7 +262,7 @@ export type PricingWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PricingWhereInput | Prisma.PricingWhereInput[]
   itemName?: Prisma.StringFilter<"Pricing"> | string
   destination?: Prisma.StringFilter<"Pricing"> | string
-  transportRate?: Prisma.FloatFilter<"Pricing"> | number
+  transportRate?: Prisma.DecimalFilter<"Pricing"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFilter<"Pricing"> | Date | string
   isActive?: Prisma.BoolFilter<"Pricing"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Pricing"> | Date | string
@@ -292,7 +292,7 @@ export type PricingScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Pricing"> | string
   itemName?: Prisma.StringWithAggregatesFilter<"Pricing"> | string
   destination?: Prisma.StringWithAggregatesFilter<"Pricing"> | string
-  transportRate?: Prisma.FloatWithAggregatesFilter<"Pricing"> | number
+  transportRate?: Prisma.DecimalWithAggregatesFilter<"Pricing"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeWithAggregatesFilter<"Pricing"> | Date | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Pricing"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Pricing"> | Date | string
@@ -303,7 +303,7 @@ export type PricingCreateInput = {
   id?: string
   itemName: string
   destination: string
-  transportRate?: number
+  transportRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   isActive?: boolean
   createdAt?: Date | string
@@ -314,7 +314,7 @@ export type PricingUncheckedCreateInput = {
   id?: string
   itemName: string
   destination: string
-  transportRate?: number
+  transportRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   isActive?: boolean
   createdAt?: Date | string
@@ -325,7 +325,7 @@ export type PricingUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   destination?: Prisma.StringFieldUpdateOperationsInput | string
-  transportRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  transportRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -336,7 +336,7 @@ export type PricingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   destination?: Prisma.StringFieldUpdateOperationsInput | string
-  transportRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  transportRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,7 +347,7 @@ export type PricingCreateManyInput = {
   id?: string
   itemName: string
   destination: string
-  transportRate?: number
+  transportRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   isActive?: boolean
   createdAt?: Date | string
@@ -358,7 +358,7 @@ export type PricingUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   destination?: Prisma.StringFieldUpdateOperationsInput | string
-  transportRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  transportRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -369,7 +369,7 @@ export type PricingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   destination?: Prisma.StringFieldUpdateOperationsInput | string
-  transportRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  transportRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -463,7 +463,7 @@ export type $PricingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     itemName: string
     destination: string
-    transportRate: number
+    transportRate: runtime.Decimal
     effectiveDate: Date
     isActive: boolean
     createdAt: Date
@@ -840,7 +840,7 @@ export interface PricingFieldRefs {
   readonly id: Prisma.FieldRef<"Pricing", 'String'>
   readonly itemName: Prisma.FieldRef<"Pricing", 'String'>
   readonly destination: Prisma.FieldRef<"Pricing", 'String'>
-  readonly transportRate: Prisma.FieldRef<"Pricing", 'Float'>
+  readonly transportRate: Prisma.FieldRef<"Pricing", 'Decimal'>
   readonly effectiveDate: Prisma.FieldRef<"Pricing", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"Pricing", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Pricing", 'DateTime'>

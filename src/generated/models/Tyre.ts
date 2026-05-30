@@ -27,11 +27,11 @@ export type AggregateTyre = {
 }
 
 export type TyreAvgAggregateOutputType = {
-  purchasePrice: number | null
+  purchasePrice: runtime.Decimal | null
 }
 
 export type TyreSumAggregateOutputType = {
-  purchasePrice: number | null
+  purchasePrice: runtime.Decimal | null
 }
 
 export type TyreMinAggregateOutputType = {
@@ -40,8 +40,8 @@ export type TyreMinAggregateOutputType = {
   serialNumber: string | null
   brand: string | null
   purchaseDate: Date | null
-  purchasePrice: number | null
-  condition: string | null
+  purchasePrice: runtime.Decimal | null
+  condition: $Enums.TyreCondition | null
   lastInspection: Date | null
   retiredDate: Date | null
   retiredReason: string | null
@@ -56,8 +56,8 @@ export type TyreMaxAggregateOutputType = {
   serialNumber: string | null
   brand: string | null
   purchaseDate: Date | null
-  purchasePrice: number | null
-  condition: string | null
+  purchasePrice: runtime.Decimal | null
+  condition: $Enums.TyreCondition | null
   lastInspection: Date | null
   retiredDate: Date | null
   retiredReason: string | null
@@ -233,8 +233,8 @@ export type TyreGroupByOutputType = {
   serialNumber: string
   brand: string
   purchaseDate: Date
-  purchasePrice: number
-  condition: string
+  purchasePrice: runtime.Decimal
+  condition: $Enums.TyreCondition
   lastInspection: Date | null
   retiredDate: Date | null
   retiredReason: string | null
@@ -272,8 +272,8 @@ export type TyreWhereInput = {
   serialNumber?: Prisma.StringFilter<"Tyre"> | string
   brand?: Prisma.StringFilter<"Tyre"> | string
   purchaseDate?: Prisma.DateTimeFilter<"Tyre"> | Date | string
-  purchasePrice?: Prisma.FloatFilter<"Tyre"> | number
-  condition?: Prisma.StringFilter<"Tyre"> | string
+  purchasePrice?: Prisma.DecimalFilter<"Tyre"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFilter<"Tyre"> | $Enums.TyreCondition
   lastInspection?: Prisma.DateTimeNullableFilter<"Tyre"> | Date | string | null
   retiredDate?: Prisma.DateTimeNullableFilter<"Tyre"> | Date | string | null
   retiredReason?: Prisma.StringNullableFilter<"Tyre"> | string | null
@@ -310,8 +310,8 @@ export type TyreWhereUniqueInput = Prisma.AtLeast<{
   truckId?: Prisma.StringFilter<"Tyre"> | string
   brand?: Prisma.StringFilter<"Tyre"> | string
   purchaseDate?: Prisma.DateTimeFilter<"Tyre"> | Date | string
-  purchasePrice?: Prisma.FloatFilter<"Tyre"> | number
-  condition?: Prisma.StringFilter<"Tyre"> | string
+  purchasePrice?: Prisma.DecimalFilter<"Tyre"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFilter<"Tyre"> | $Enums.TyreCondition
   lastInspection?: Prisma.DateTimeNullableFilter<"Tyre"> | Date | string | null
   retiredDate?: Prisma.DateTimeNullableFilter<"Tyre"> | Date | string | null
   retiredReason?: Prisma.StringNullableFilter<"Tyre"> | string | null
@@ -351,8 +351,8 @@ export type TyreScalarWhereWithAggregatesInput = {
   serialNumber?: Prisma.StringWithAggregatesFilter<"Tyre"> | string
   brand?: Prisma.StringWithAggregatesFilter<"Tyre"> | string
   purchaseDate?: Prisma.DateTimeWithAggregatesFilter<"Tyre"> | Date | string
-  purchasePrice?: Prisma.FloatWithAggregatesFilter<"Tyre"> | number
-  condition?: Prisma.StringWithAggregatesFilter<"Tyre"> | string
+  purchasePrice?: Prisma.DecimalWithAggregatesFilter<"Tyre"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionWithAggregatesFilter<"Tyre"> | $Enums.TyreCondition
   lastInspection?: Prisma.DateTimeNullableWithAggregatesFilter<"Tyre"> | Date | string | null
   retiredDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Tyre"> | Date | string | null
   retiredReason?: Prisma.StringNullableWithAggregatesFilter<"Tyre"> | string | null
@@ -366,8 +366,8 @@ export type TyreCreateInput = {
   serialNumber: string
   brand: string
   purchaseDate: Date | string
-  purchasePrice: number
-  condition?: string
+  purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: $Enums.TyreCondition
   lastInspection?: Date | string | null
   retiredDate?: Date | string | null
   retiredReason?: string | null
@@ -383,8 +383,8 @@ export type TyreUncheckedCreateInput = {
   serialNumber: string
   brand: string
   purchaseDate: Date | string
-  purchasePrice: number
-  condition?: string
+  purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: $Enums.TyreCondition
   lastInspection?: Date | string | null
   retiredDate?: Date | string | null
   retiredReason?: string | null
@@ -398,8 +398,8 @@ export type TyreUpdateInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -415,8 +415,8 @@ export type TyreUncheckedUpdateInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -431,8 +431,8 @@ export type TyreCreateManyInput = {
   serialNumber: string
   brand: string
   purchaseDate: Date | string
-  purchasePrice: number
-  condition?: string
+  purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: $Enums.TyreCondition
   lastInspection?: Date | string | null
   retiredDate?: Date | string | null
   retiredReason?: string | null
@@ -446,8 +446,8 @@ export type TyreUpdateManyMutationInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -462,8 +462,8 @@ export type TyreUncheckedUpdateManyInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -586,13 +586,17 @@ export type TyreUncheckedUpdateManyWithoutTruckNestedInput = {
   deleteMany?: Prisma.TyreScalarWhereInput | Prisma.TyreScalarWhereInput[]
 }
 
+export type EnumTyreConditionFieldUpdateOperationsInput = {
+  set?: $Enums.TyreCondition
+}
+
 export type TyreCreateWithoutTruckInput = {
   id?: string
   serialNumber: string
   brand: string
   purchaseDate: Date | string
-  purchasePrice: number
-  condition?: string
+  purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: $Enums.TyreCondition
   lastInspection?: Date | string | null
   retiredDate?: Date | string | null
   retiredReason?: string | null
@@ -606,8 +610,8 @@ export type TyreUncheckedCreateWithoutTruckInput = {
   serialNumber: string
   brand: string
   purchaseDate: Date | string
-  purchasePrice: number
-  condition?: string
+  purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: $Enums.TyreCondition
   lastInspection?: Date | string | null
   retiredDate?: Date | string | null
   retiredReason?: string | null
@@ -651,8 +655,8 @@ export type TyreScalarWhereInput = {
   serialNumber?: Prisma.StringFilter<"Tyre"> | string
   brand?: Prisma.StringFilter<"Tyre"> | string
   purchaseDate?: Prisma.DateTimeFilter<"Tyre"> | Date | string
-  purchasePrice?: Prisma.FloatFilter<"Tyre"> | number
-  condition?: Prisma.StringFilter<"Tyre"> | string
+  purchasePrice?: Prisma.DecimalFilter<"Tyre"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFilter<"Tyre"> | $Enums.TyreCondition
   lastInspection?: Prisma.DateTimeNullableFilter<"Tyre"> | Date | string | null
   retiredDate?: Prisma.DateTimeNullableFilter<"Tyre"> | Date | string | null
   retiredReason?: Prisma.StringNullableFilter<"Tyre"> | string | null
@@ -666,8 +670,8 @@ export type TyreCreateManyTruckInput = {
   serialNumber: string
   brand: string
   purchaseDate: Date | string
-  purchasePrice: number
-  condition?: string
+  purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: $Enums.TyreCondition
   lastInspection?: Date | string | null
   retiredDate?: Date | string | null
   retiredReason?: string | null
@@ -681,8 +685,8 @@ export type TyreUpdateWithoutTruckInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -696,8 +700,8 @@ export type TyreUncheckedUpdateWithoutTruckInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -711,8 +715,8 @@ export type TyreUncheckedUpdateManyWithoutTruckInput = {
   serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  purchasePrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  condition?: Prisma.StringFieldUpdateOperationsInput | string
+  purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  condition?: Prisma.EnumTyreConditionFieldUpdateOperationsInput | $Enums.TyreCondition
   lastInspection?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -774,8 +778,8 @@ export type $TyrePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     serialNumber: string
     brand: string
     purchaseDate: Date
-    purchasePrice: number
-    condition: string
+    purchasePrice: runtime.Decimal
+    condition: $Enums.TyreCondition
     lastInspection: Date | null
     retiredDate: Date | null
     retiredReason: string | null
@@ -1157,8 +1161,8 @@ export interface TyreFieldRefs {
   readonly serialNumber: Prisma.FieldRef<"Tyre", 'String'>
   readonly brand: Prisma.FieldRef<"Tyre", 'String'>
   readonly purchaseDate: Prisma.FieldRef<"Tyre", 'DateTime'>
-  readonly purchasePrice: Prisma.FieldRef<"Tyre", 'Float'>
-  readonly condition: Prisma.FieldRef<"Tyre", 'String'>
+  readonly purchasePrice: Prisma.FieldRef<"Tyre", 'Decimal'>
+  readonly condition: Prisma.FieldRef<"Tyre", 'TyreCondition'>
   readonly lastInspection: Prisma.FieldRef<"Tyre", 'DateTime'>
   readonly retiredDate: Prisma.FieldRef<"Tyre", 'DateTime'>
   readonly retiredReason: Prisma.FieldRef<"Tyre", 'String'>

@@ -45,7 +45,7 @@ export type DepotQueueMinAggregateOutputType = {
   tripId: string | null
   depotName: string | null
   queueType: string | null
-  status: string | null
+  status: $Enums.DepotQueueStatus | null
   position: number | null
   estimatedWait: number | null
   actualWait: number | null
@@ -65,7 +65,7 @@ export type DepotQueueMaxAggregateOutputType = {
   tripId: string | null
   depotName: string | null
   queueType: string | null
-  status: string | null
+  status: $Enums.DepotQueueStatus | null
   position: number | null
   estimatedWait: number | null
   actualWait: number | null
@@ -266,7 +266,7 @@ export type DepotQueueGroupByOutputType = {
   tripId: string | null
   depotName: string
   queueType: string
-  status: string
+  status: $Enums.DepotQueueStatus
   position: number | null
   estimatedWait: number | null
   actualWait: number | null
@@ -309,7 +309,7 @@ export type DepotQueueWhereInput = {
   tripId?: Prisma.StringNullableFilter<"DepotQueue"> | string | null
   depotName?: Prisma.StringFilter<"DepotQueue"> | string
   queueType?: Prisma.StringFilter<"DepotQueue"> | string
-  status?: Prisma.StringFilter<"DepotQueue"> | string
+  status?: Prisma.EnumDepotQueueStatusFilter<"DepotQueue"> | $Enums.DepotQueueStatus
   position?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
   estimatedWait?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
   actualWait?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
@@ -361,7 +361,7 @@ export type DepotQueueWhereUniqueInput = Prisma.AtLeast<{
   tripId?: Prisma.StringNullableFilter<"DepotQueue"> | string | null
   depotName?: Prisma.StringFilter<"DepotQueue"> | string
   queueType?: Prisma.StringFilter<"DepotQueue"> | string
-  status?: Prisma.StringFilter<"DepotQueue"> | string
+  status?: Prisma.EnumDepotQueueStatusFilter<"DepotQueue"> | $Enums.DepotQueueStatus
   position?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
   estimatedWait?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
   actualWait?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
@@ -413,7 +413,7 @@ export type DepotQueueScalarWhereWithAggregatesInput = {
   tripId?: Prisma.StringNullableWithAggregatesFilter<"DepotQueue"> | string | null
   depotName?: Prisma.StringWithAggregatesFilter<"DepotQueue"> | string
   queueType?: Prisma.StringWithAggregatesFilter<"DepotQueue"> | string
-  status?: Prisma.StringWithAggregatesFilter<"DepotQueue"> | string
+  status?: Prisma.EnumDepotQueueStatusWithAggregatesFilter<"DepotQueue"> | $Enums.DepotQueueStatus
   position?: Prisma.IntNullableWithAggregatesFilter<"DepotQueue"> | number | null
   estimatedWait?: Prisma.IntNullableWithAggregatesFilter<"DepotQueue"> | number | null
   actualWait?: Prisma.IntNullableWithAggregatesFilter<"DepotQueue"> | number | null
@@ -430,7 +430,7 @@ export type DepotQueueCreateInput = {
   id?: string
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -453,7 +453,7 @@ export type DepotQueueUncheckedCreateInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -470,7 +470,7 @@ export type DepotQueueUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -493,7 +493,7 @@ export type DepotQueueUncheckedUpdateInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -513,7 +513,7 @@ export type DepotQueueCreateManyInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -530,7 +530,7 @@ export type DepotQueueUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -549,7 +549,7 @@ export type DepotQueueUncheckedUpdateManyInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -692,6 +692,10 @@ export type DepotQueueUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.DepotQueueScalarWhereInput | Prisma.DepotQueueScalarWhereInput[]
 }
 
+export type EnumDepotQueueStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DepotQueueStatus
+}
+
 export type DepotQueueCreateNestedManyWithoutDriverInput = {
   create?: Prisma.XOR<Prisma.DepotQueueCreateWithoutDriverInput, Prisma.DepotQueueUncheckedCreateWithoutDriverInput> | Prisma.DepotQueueCreateWithoutDriverInput[] | Prisma.DepotQueueUncheckedCreateWithoutDriverInput[]
   connectOrCreate?: Prisma.DepotQueueCreateOrConnectWithoutDriverInput | Prisma.DepotQueueCreateOrConnectWithoutDriverInput[]
@@ -822,7 +826,7 @@ export type DepotQueueCreateWithoutUserInput = {
   id?: string
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -844,7 +848,7 @@ export type DepotQueueUncheckedCreateWithoutUserInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -892,7 +896,7 @@ export type DepotQueueScalarWhereInput = {
   tripId?: Prisma.StringNullableFilter<"DepotQueue"> | string | null
   depotName?: Prisma.StringFilter<"DepotQueue"> | string
   queueType?: Prisma.StringFilter<"DepotQueue"> | string
-  status?: Prisma.StringFilter<"DepotQueue"> | string
+  status?: Prisma.EnumDepotQueueStatusFilter<"DepotQueue"> | $Enums.DepotQueueStatus
   position?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
   estimatedWait?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
   actualWait?: Prisma.IntNullableFilter<"DepotQueue"> | number | null
@@ -909,7 +913,7 @@ export type DepotQueueCreateWithoutDriverInput = {
   id?: string
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -930,7 +934,7 @@ export type DepotQueueUncheckedCreateWithoutDriverInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -973,7 +977,7 @@ export type DepotQueueCreateWithoutTripInput = {
   id?: string
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -994,7 +998,7 @@ export type DepotQueueUncheckedCreateWithoutTripInput = {
   driverId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1037,7 +1041,7 @@ export type DepotQueueCreateWithoutTruckInput = {
   id?: string
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1058,7 +1062,7 @@ export type DepotQueueUncheckedCreateWithoutTruckInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1104,7 +1108,7 @@ export type DepotQueueCreateManyUserInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1120,7 +1124,7 @@ export type DepotQueueUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1142,7 +1146,7 @@ export type DepotQueueUncheckedUpdateWithoutUserInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1161,7 +1165,7 @@ export type DepotQueueUncheckedUpdateManyWithoutUserInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1179,7 +1183,7 @@ export type DepotQueueCreateManyDriverInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1196,7 +1200,7 @@ export type DepotQueueUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1217,7 +1221,7 @@ export type DepotQueueUncheckedUpdateWithoutDriverInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1236,7 +1240,7 @@ export type DepotQueueUncheckedUpdateManyWithoutDriverInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1255,7 +1259,7 @@ export type DepotQueueCreateManyTripInput = {
   driverId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1272,7 +1276,7 @@ export type DepotQueueUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1293,7 +1297,7 @@ export type DepotQueueUncheckedUpdateWithoutTripInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1312,7 +1316,7 @@ export type DepotQueueUncheckedUpdateManyWithoutTripInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1331,7 +1335,7 @@ export type DepotQueueCreateManyTruckInput = {
   tripId?: string | null
   depotName: string
   queueType: string
-  status?: string
+  status?: $Enums.DepotQueueStatus
   position?: number | null
   estimatedWait?: number | null
   actualWait?: number | null
@@ -1348,7 +1352,7 @@ export type DepotQueueUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1369,7 +1373,7 @@ export type DepotQueueUncheckedUpdateWithoutTruckInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1388,7 +1392,7 @@ export type DepotQueueUncheckedUpdateManyWithoutTruckInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   depotName?: Prisma.StringFieldUpdateOperationsInput | string
   queueType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDepotQueueStatusFieldUpdateOperationsInput | $Enums.DepotQueueStatus
   position?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1472,7 +1476,7 @@ export type $DepotQueuePayload<ExtArgs extends runtime.Types.Extensions.Internal
     tripId: string | null
     depotName: string
     queueType: string
-    status: string
+    status: $Enums.DepotQueueStatus
     position: number | null
     estimatedWait: number | null
     actualWait: number | null
@@ -1862,7 +1866,7 @@ export interface DepotQueueFieldRefs {
   readonly tripId: Prisma.FieldRef<"DepotQueue", 'String'>
   readonly depotName: Prisma.FieldRef<"DepotQueue", 'String'>
   readonly queueType: Prisma.FieldRef<"DepotQueue", 'String'>
-  readonly status: Prisma.FieldRef<"DepotQueue", 'String'>
+  readonly status: Prisma.FieldRef<"DepotQueue", 'DepotQueueStatus'>
   readonly position: Prisma.FieldRef<"DepotQueue", 'Int'>
   readonly estimatedWait: Prisma.FieldRef<"DepotQueue", 'Int'>
   readonly actualWait: Prisma.FieldRef<"DepotQueue", 'Int'>

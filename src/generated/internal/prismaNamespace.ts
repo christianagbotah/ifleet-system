@@ -5501,6 +5501,7 @@ export type SupplierScalarFieldEnum = (typeof SupplierScalarFieldEnum)[keyof typ
 
 export const SystemSettingsScalarFieldEnum = {
   id: 'id',
+  isDefault: 'isDefault',
   companyName: 'companyName',
   companyEmail: 'companyEmail',
   companyPhone: 'companyPhone',
@@ -5978,7 +5979,6 @@ export const BorderCrossingOrderByRelevanceFieldEnum = {
   borderName: 'borderName',
   country: 'country',
   direction: 'direction',
-  status: 'status',
   documentStatus: 'documentStatus',
   notes: 'notes',
   createdBy: 'createdBy'
@@ -5995,7 +5995,6 @@ export const CashAdvanceOrderByRelevanceFieldEnum = {
   paymentMethod: 'paymentMethod',
   mobileMoneyRef: 'mobileMoneyRef',
   mobileMoneyNetwork: 'mobileMoneyNetwork',
-  status: 'status',
   approvedBy: 'approvedBy',
   rejectionReason: 'rejectionReason',
   disbursedBy: 'disbursedBy',
@@ -6051,7 +6050,6 @@ export const DeliveryStopOrderByRelevanceFieldEnum = {
   customerName: 'customerName',
   customerPhone: 'customerPhone',
   unit: 'unit',
-  status: 'status',
   notes: 'notes'
 } as const
 
@@ -6065,7 +6063,6 @@ export const DepotQueueOrderByRelevanceFieldEnum = {
   tripId: 'tripId',
   depotName: 'depotName',
   queueType: 'queueType',
-  status: 'status',
   notes: 'notes',
   createdBy: 'createdBy'
 } as const
@@ -6125,10 +6122,8 @@ export const DriverOrderByRelevanceFieldEnum = {
   ghanaCardBackImage: 'ghanaCardBackImage',
   emergencyName: 'emergencyName',
   emergencyPhone: 'emergencyPhone',
-  verificationStatus: 'verificationStatus',
   verifiedBy: 'verifiedBy',
-  verificationNotes: 'verificationNotes',
-  status: 'status'
+  verificationNotes: 'verificationNotes'
 } as const
 
 export type DriverOrderByRelevanceFieldEnum = (typeof DriverOrderByRelevanceFieldEnum)[keyof typeof DriverOrderByRelevanceFieldEnum]
@@ -6141,7 +6136,6 @@ export const DriverIncentiveOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   period: 'period',
-  status: 'status',
   approvedBy: 'approvedBy',
   metrics: 'metrics',
   createdBy: 'createdBy'
@@ -6154,7 +6148,6 @@ export const DriverSettlementOrderByRelevanceFieldEnum = {
   id: 'id',
   driverId: 'driverId',
   period: 'period',
-  status: 'status',
   approvedBy: 'approvedBy',
   notes: 'notes'
 } as const
@@ -6187,7 +6180,6 @@ export const DvlaRegistrationOrderByRelevanceFieldEnum = {
   ownerAddress: 'ownerAddress',
   ownerContact: 'ownerContact',
   dvlaOffice: 'dvlaOffice',
-  status: 'status',
   documentUrl: 'documentUrl',
   transferHistory: 'transferHistory',
   notes: 'notes'
@@ -6204,7 +6196,6 @@ export const ExpenseOrderByRelevanceFieldEnum = {
   paymentMethod: 'paymentMethod',
   reference: 'reference',
   approvedBy: 'approvedBy',
-  status: 'status',
   receiptUrl: 'receiptUrl',
   tripId: 'tripId'
 } as const
@@ -6215,7 +6206,6 @@ export type ExpenseOrderByRelevanceFieldEnum = (typeof ExpenseOrderByRelevanceFi
 export const ExpenseApprovalOrderByRelevanceFieldEnum = {
   id: 'id',
   expenseId: 'expenseId',
-  status: 'status',
   requestedById: 'requestedById',
   approvedById: 'approvedById',
   notes: 'notes',
@@ -6295,7 +6285,6 @@ export const InsuranceOrderByRelevanceFieldEnum = {
   provider: 'provider',
   policyNumber: 'policyNumber',
   type: 'type',
-  status: 'status',
   documentUrl: 'documentUrl',
   notes: 'notes'
 } as const
@@ -6311,7 +6300,6 @@ export const InsuranceClaimOrderByRelevanceFieldEnum = {
   claimType: 'claimType',
   incidentLocation: 'incidentLocation',
   description: 'description',
-  status: 'status',
   assignedAdjuster: 'assignedAdjuster',
   policeReport: 'policeReport',
   thirdPartyDetails: 'thirdPartyDetails',
@@ -6329,7 +6317,6 @@ export const InvoiceOrderByRelevanceFieldEnum = {
   invoiceNumber: 'invoiceNumber',
   clientId: 'clientId',
   tripId: 'tripId',
-  status: 'status',
   notes: 'notes',
   terms: 'terms'
 } as const
@@ -6367,7 +6354,6 @@ export const LoadBoardOrderByRelevanceFieldEnum = {
   dropoffRegion: 'dropoffRegion',
   commodityType: 'commodityType',
   truckType: 'truckType',
-  status: 'status',
   requirements: 'requirements',
   contactName: 'contactName',
   contactPhone: 'contactPhone',
@@ -6408,7 +6394,6 @@ export const MaintenanceRecordOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   performedBy: 'performedBy',
-  status: 'status',
   partsUsed: 'partsUsed',
   invoiceUrl: 'invoiceUrl'
 } as const
@@ -6444,7 +6429,6 @@ export type PasswordResetTokenOrderByRelevanceFieldEnum = (typeof PasswordResetT
 export const PayrollOrderByRelevanceFieldEnum = {
   id: 'id',
   driverId: 'driverId',
-  status: 'status',
   approvedBy: 'approvedBy',
   notes: 'notes'
 } as const
@@ -6476,7 +6460,6 @@ export const ReportHistoryOrderByRelevanceFieldEnum = {
   format: 'format',
   parameters: 'parameters',
   generatedBy: 'generatedBy',
-  status: 'status',
   error: 'error'
 } as const
 
@@ -6492,7 +6475,6 @@ export const RoadConditionReportOrderByRelevanceFieldEnum = {
   hazardType: 'hazardType',
   description: 'description',
   severity: 'severity',
-  status: 'status',
   imageUrl: 'imageUrl',
   tripId: 'tripId'
 } as const
@@ -6522,8 +6504,7 @@ export const RoadworthyInspectionOrderByRelevanceFieldEnum = {
   defectsFound: 'defectsFound',
   advisories: 'advisories',
   recommendations: 'recommendations',
-  certificateUrl: 'certificateUrl',
-  status: 'status'
+  certificateUrl: 'certificateUrl'
 } as const
 
 export type RoadworthyInspectionOrderByRelevanceFieldEnum = (typeof RoadworthyInspectionOrderByRelevanceFieldEnum)[keyof typeof RoadworthyInspectionOrderByRelevanceFieldEnum]
@@ -6611,7 +6592,6 @@ export const TollRecordOrderByRelevanceFieldEnum = {
   paymentMethod: 'paymentMethod',
   referenceNumber: 'referenceNumber',
   direction: 'direction',
-  status: 'status',
   disputeReason: 'disputeReason',
   resolvedBy: 'resolvedBy',
   notes: 'notes'
@@ -6661,7 +6641,6 @@ export const TripOrderByRelevanceFieldEnum = {
   loadingPointId: 'loadingPointId',
   destinationCityId: 'destinationCityId',
   destinationZoneId: 'destinationZoneId',
-  status: 'status',
   waitingReason: 'waitingReason',
   customerName: 'customerName',
   customerPhone: 'customerPhone',
@@ -6690,7 +6669,6 @@ export const TripDeliveryDestinationOrderByRelevanceFieldEnum = {
   clientId: 'clientId',
   customerName: 'customerName',
   customerPhone: 'customerPhone',
-  status: 'status',
   address: 'address',
   notes: 'notes'
 } as const
@@ -6736,10 +6714,8 @@ export const TruckOrderByRelevanceFieldEnum = {
   chassisNumber: 'chassisNumber',
   color: 'color',
   fuelType: 'fuelType',
-  status: 'status',
   driverId: 'driverId',
-  notes: 'notes',
-  insuranceStatus: 'insuranceStatus'
+  notes: 'notes'
 } as const
 
 export type TruckOrderByRelevanceFieldEnum = (typeof TruckOrderByRelevanceFieldEnum)[keyof typeof TruckOrderByRelevanceFieldEnum]
@@ -6760,7 +6736,6 @@ export const TyreOrderByRelevanceFieldEnum = {
   truckId: 'truckId',
   serialNumber: 'serialNumber',
   brand: 'brand',
-  condition: 'condition',
   retiredReason: 'retiredReason',
   notes: 'notes'
 } as const
@@ -6774,7 +6749,6 @@ export const VehicleInspectionOrderByRelevanceFieldEnum = {
   driverId: 'driverId',
   tripId: 'tripId',
   type: 'type',
-  result: 'result',
   overallNotes: 'overallNotes',
   checkItems: 'checkItems',
   defectDetails: 'defectDetails',
@@ -6798,7 +6772,6 @@ export const WarehouseItemOrderByRelevanceFieldEnum = {
   warehouse: 'warehouse',
   location: 'location',
   supplier: 'supplier',
-  status: 'status',
   notes: 'notes',
   createdBy: 'createdBy'
 } as const
@@ -6810,7 +6783,6 @@ export const WeightVerificationOrderByRelevanceFieldEnum = {
   id: 'id',
   tripId: 'tripId',
   checkpointType: 'checkpointType',
-  status: 'status',
   verifiedBy: 'verifiedBy',
   verifiedByName: 'verifiedByName',
   notes: 'notes',
@@ -6878,6 +6850,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
+ * Reference to a field of type 'BorderCrossingStatus'
+ */
+export type EnumBorderCrossingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BorderCrossingStatus'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -6885,9 +6864,205 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 
 
 /**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'CashAdvanceStatus'
+ */
+export type EnumCashAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CashAdvanceStatus'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryStopStatus'
+ */
+export type EnumDeliveryStopStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryStopStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DepotQueueStatus'
+ */
+export type EnumDepotQueueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepotQueueStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DriverVerificationStatus'
+ */
+export type EnumDriverVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverVerificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DriverStatus'
+ */
+export type EnumDriverStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'IncentiveStatus'
+ */
+export type EnumIncentiveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IncentiveStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'SettlementStatus'
+ */
+export type EnumSettlementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DvlaRegistrationStatus'
+ */
+export type EnumDvlaRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DvlaRegistrationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ExpenseStatus'
+ */
+export type EnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ExpenseApprovalStatus'
+ */
+export type EnumExpenseApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseApprovalStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InsuranceStatus'
+ */
+export type EnumInsuranceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsuranceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ClaimStatus'
+ */
+export type EnumClaimStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ClaimStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InvoiceStatus'
+ */
+export type EnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'LoadBoardStatus'
+ */
+export type EnumLoadBoardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoadBoardStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MaintenanceStatus'
+ */
+export type EnumMaintenanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MaintenanceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus'
+ */
+export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ReportHistoryStatus'
+ */
+export type EnumReportHistoryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportHistoryStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'RoadConditionStatus'
+ */
+export type EnumRoadConditionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoadConditionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TollRecordStatus'
+ */
+export type EnumTollRecordStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TollRecordStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TripStatus'
+ */
+export type EnumTripStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TripDeliveryDestinationStatus'
+ */
+export type EnumTripDeliveryDestinationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripDeliveryDestinationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TruckStatus'
+ */
+export type EnumTruckStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TruckStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TruckInsuranceStatus'
+ */
+export type EnumTruckInsuranceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TruckInsuranceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TyreCondition'
+ */
+export type EnumTyreConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TyreCondition'>
+    
+
+
+/**
+ * Reference to a field of type 'VehicleInspectionResult'
+ */
+export type EnumVehicleInspectionResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VehicleInspectionResult'>
+    
+
+
+/**
+ * Reference to a field of type 'WarehouseItemStatus'
+ */
+export type EnumWarehouseItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WarehouseItemStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WeightVerificationStatus'
+ */
+export type EnumWeightVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeightVerificationStatus'>
     
 
 /**

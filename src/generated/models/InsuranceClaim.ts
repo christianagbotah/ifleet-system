@@ -27,17 +27,17 @@ export type AggregateInsuranceClaim = {
 }
 
 export type InsuranceClaimAvgAggregateOutputType = {
-  claimAmount: number | null
-  approvedAmount: number | null
-  deductible: number | null
-  repairEstimate: number | null
+  claimAmount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
+  deductible: runtime.Decimal | null
+  repairEstimate: runtime.Decimal | null
 }
 
 export type InsuranceClaimSumAggregateOutputType = {
-  claimAmount: number | null
-  approvedAmount: number | null
-  deductible: number | null
-  repairEstimate: number | null
+  claimAmount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
+  deductible: runtime.Decimal | null
+  repairEstimate: runtime.Decimal | null
 }
 
 export type InsuranceClaimMinAggregateOutputType = {
@@ -49,15 +49,15 @@ export type InsuranceClaimMinAggregateOutputType = {
   incidentDate: Date | null
   incidentLocation: string | null
   description: string | null
-  status: string | null
-  claimAmount: number | null
-  approvedAmount: number | null
-  deductible: number | null
+  status: $Enums.ClaimStatus | null
+  claimAmount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
+  deductible: runtime.Decimal | null
   assignedAdjuster: string | null
   policeReport: string | null
   thirdPartyDetails: string | null
   damagePhotos: string | null
-  repairEstimate: number | null
+  repairEstimate: runtime.Decimal | null
   submittedAt: Date | null
   reviewedAt: Date | null
   approvedAt: Date | null
@@ -79,15 +79,15 @@ export type InsuranceClaimMaxAggregateOutputType = {
   incidentDate: Date | null
   incidentLocation: string | null
   description: string | null
-  status: string | null
-  claimAmount: number | null
-  approvedAmount: number | null
-  deductible: number | null
+  status: $Enums.ClaimStatus | null
+  claimAmount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
+  deductible: runtime.Decimal | null
   assignedAdjuster: string | null
   policeReport: string | null
   thirdPartyDetails: string | null
   damagePhotos: string | null
-  repairEstimate: number | null
+  repairEstimate: runtime.Decimal | null
   submittedAt: Date | null
   reviewedAt: Date | null
   approvedAt: Date | null
@@ -332,15 +332,15 @@ export type InsuranceClaimGroupByOutputType = {
   incidentDate: Date
   incidentLocation: string
   description: string
-  status: string
-  claimAmount: number
-  approvedAmount: number | null
-  deductible: number | null
+  status: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal
+  approvedAmount: runtime.Decimal | null
+  deductible: runtime.Decimal | null
   assignedAdjuster: string | null
   policeReport: string | null
   thirdPartyDetails: string | null
   damagePhotos: string | null
-  repairEstimate: number | null
+  repairEstimate: runtime.Decimal | null
   submittedAt: Date | null
   reviewedAt: Date | null
   approvedAt: Date | null
@@ -385,15 +385,15 @@ export type InsuranceClaimWhereInput = {
   incidentDate?: Prisma.DateTimeFilter<"InsuranceClaim"> | Date | string
   incidentLocation?: Prisma.StringFilter<"InsuranceClaim"> | string
   description?: Prisma.StringFilter<"InsuranceClaim"> | string
-  status?: Prisma.StringFilter<"InsuranceClaim"> | string
-  claimAmount?: Prisma.FloatFilter<"InsuranceClaim"> | number
-  approvedAmount?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
-  deductible?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
+  status?: Prisma.EnumClaimStatusFilter<"InsuranceClaim"> | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   policeReport?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   thirdPartyDetails?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   damagePhotos?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
-  repairEstimate?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
+  repairEstimate?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
@@ -455,15 +455,15 @@ export type InsuranceClaimWhereUniqueInput = Prisma.AtLeast<{
   incidentDate?: Prisma.DateTimeFilter<"InsuranceClaim"> | Date | string
   incidentLocation?: Prisma.StringFilter<"InsuranceClaim"> | string
   description?: Prisma.StringFilter<"InsuranceClaim"> | string
-  status?: Prisma.StringFilter<"InsuranceClaim"> | string
-  claimAmount?: Prisma.FloatFilter<"InsuranceClaim"> | number
-  approvedAmount?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
-  deductible?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
+  status?: Prisma.EnumClaimStatusFilter<"InsuranceClaim"> | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   policeReport?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   thirdPartyDetails?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   damagePhotos?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
-  repairEstimate?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
+  repairEstimate?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
@@ -526,15 +526,15 @@ export type InsuranceClaimScalarWhereWithAggregatesInput = {
   incidentDate?: Prisma.DateTimeWithAggregatesFilter<"InsuranceClaim"> | Date | string
   incidentLocation?: Prisma.StringWithAggregatesFilter<"InsuranceClaim"> | string
   description?: Prisma.StringWithAggregatesFilter<"InsuranceClaim"> | string
-  status?: Prisma.StringWithAggregatesFilter<"InsuranceClaim"> | string
-  claimAmount?: Prisma.FloatWithAggregatesFilter<"InsuranceClaim"> | number
-  approvedAmount?: Prisma.FloatNullableWithAggregatesFilter<"InsuranceClaim"> | number | null
-  deductible?: Prisma.FloatNullableWithAggregatesFilter<"InsuranceClaim"> | number | null
+  status?: Prisma.EnumClaimStatusWithAggregatesFilter<"InsuranceClaim"> | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalWithAggregatesFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableWithAggregatesFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.DecimalNullableWithAggregatesFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.StringNullableWithAggregatesFilter<"InsuranceClaim"> | string | null
   policeReport?: Prisma.StringNullableWithAggregatesFilter<"InsuranceClaim"> | string | null
   thirdPartyDetails?: Prisma.StringNullableWithAggregatesFilter<"InsuranceClaim"> | string | null
   damagePhotos?: Prisma.StringNullableWithAggregatesFilter<"InsuranceClaim"> | string | null
-  repairEstimate?: Prisma.FloatNullableWithAggregatesFilter<"InsuranceClaim"> | number | null
+  repairEstimate?: Prisma.DecimalNullableWithAggregatesFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InsuranceClaim"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InsuranceClaim"> | Date | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InsuranceClaim"> | Date | string | null
@@ -554,15 +554,15 @@ export type InsuranceClaimCreateInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -586,15 +586,15 @@ export type InsuranceClaimUncheckedCreateInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -614,15 +614,15 @@ export type InsuranceClaimUpdateInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -646,15 +646,15 @@ export type InsuranceClaimUncheckedUpdateInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -676,15 +676,15 @@ export type InsuranceClaimCreateManyInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -704,15 +704,15 @@ export type InsuranceClaimUpdateManyMutationInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -733,15 +733,15 @@ export type InsuranceClaimUncheckedUpdateManyInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -958,6 +958,10 @@ export type InsuranceClaimUncheckedUpdateManyWithoutInsuranceNestedInput = {
   deleteMany?: Prisma.InsuranceClaimScalarWhereInput | Prisma.InsuranceClaimScalarWhereInput[]
 }
 
+export type EnumClaimStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ClaimStatus
+}
+
 export type InsuranceClaimCreateNestedManyWithoutTruckInput = {
   create?: Prisma.XOR<Prisma.InsuranceClaimCreateWithoutTruckInput, Prisma.InsuranceClaimUncheckedCreateWithoutTruckInput> | Prisma.InsuranceClaimCreateWithoutTruckInput[] | Prisma.InsuranceClaimUncheckedCreateWithoutTruckInput[]
   connectOrCreate?: Prisma.InsuranceClaimCreateOrConnectWithoutTruckInput | Prisma.InsuranceClaimCreateOrConnectWithoutTruckInput[]
@@ -1007,15 +1011,15 @@ export type InsuranceClaimCreateWithoutUserInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1038,15 +1042,15 @@ export type InsuranceClaimUncheckedCreateWithoutUserInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1096,15 +1100,15 @@ export type InsuranceClaimScalarWhereInput = {
   incidentDate?: Prisma.DateTimeFilter<"InsuranceClaim"> | Date | string
   incidentLocation?: Prisma.StringFilter<"InsuranceClaim"> | string
   description?: Prisma.StringFilter<"InsuranceClaim"> | string
-  status?: Prisma.StringFilter<"InsuranceClaim"> | string
-  claimAmount?: Prisma.FloatFilter<"InsuranceClaim"> | number
-  approvedAmount?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
-  deductible?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
+  status?: Prisma.EnumClaimStatusFilter<"InsuranceClaim"> | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   policeReport?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   thirdPartyDetails?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
   damagePhotos?: Prisma.StringNullableFilter<"InsuranceClaim"> | string | null
-  repairEstimate?: Prisma.FloatNullableFilter<"InsuranceClaim"> | number | null
+  repairEstimate?: Prisma.DecimalNullableFilter<"InsuranceClaim"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"InsuranceClaim"> | Date | string | null
@@ -1124,15 +1128,15 @@ export type InsuranceClaimCreateWithoutInsuranceInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1154,15 +1158,15 @@ export type InsuranceClaimUncheckedCreateWithoutInsuranceInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1208,15 +1212,15 @@ export type InsuranceClaimCreateWithoutTruckInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1238,15 +1242,15 @@ export type InsuranceClaimUncheckedCreateWithoutTruckInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1294,15 +1298,15 @@ export type InsuranceClaimCreateManyUserInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1321,15 +1325,15 @@ export type InsuranceClaimUpdateWithoutUserInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1352,15 +1356,15 @@ export type InsuranceClaimUncheckedUpdateWithoutUserInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1381,15 +1385,15 @@ export type InsuranceClaimUncheckedUpdateManyWithoutUserInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1409,15 +1413,15 @@ export type InsuranceClaimCreateManyInsuranceInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1437,15 +1441,15 @@ export type InsuranceClaimUpdateWithoutInsuranceInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1467,15 +1471,15 @@ export type InsuranceClaimUncheckedUpdateWithoutInsuranceInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1496,15 +1500,15 @@ export type InsuranceClaimUncheckedUpdateManyWithoutInsuranceInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1525,15 +1529,15 @@ export type InsuranceClaimCreateManyTruckInput = {
   incidentDate: Date | string
   incidentLocation: string
   description: string
-  status?: string
-  claimAmount: number
-  approvedAmount?: number | null
-  deductible?: number | null
+  status?: $Enums.ClaimStatus
+  claimAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: string | null
   policeReport?: string | null
   thirdPartyDetails?: string | null
   damagePhotos?: string | null
-  repairEstimate?: number | null
+  repairEstimate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1553,15 +1557,15 @@ export type InsuranceClaimUpdateWithoutTruckInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1583,15 +1587,15 @@ export type InsuranceClaimUncheckedUpdateWithoutTruckInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1612,15 +1616,15 @@ export type InsuranceClaimUncheckedUpdateManyWithoutTruckInput = {
   incidentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  claimAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  deductible?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumClaimStatusFieldUpdateOperationsInput | $Enums.ClaimStatus
+  claimAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deductible?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   assignedAdjuster?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   policeReport?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thirdPartyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   damagePhotos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  repairEstimate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  repairEstimate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1723,15 +1727,15 @@ export type $InsuranceClaimPayload<ExtArgs extends runtime.Types.Extensions.Inte
     incidentDate: Date
     incidentLocation: string
     description: string
-    status: string
-    claimAmount: number
-    approvedAmount: number | null
-    deductible: number | null
+    status: $Enums.ClaimStatus
+    claimAmount: runtime.Decimal
+    approvedAmount: runtime.Decimal | null
+    deductible: runtime.Decimal | null
     assignedAdjuster: string | null
     policeReport: string | null
     thirdPartyDetails: string | null
     damagePhotos: string | null
-    repairEstimate: number | null
+    repairEstimate: runtime.Decimal | null
     submittedAt: Date | null
     reviewedAt: Date | null
     approvedAt: Date | null
@@ -2122,15 +2126,15 @@ export interface InsuranceClaimFieldRefs {
   readonly incidentDate: Prisma.FieldRef<"InsuranceClaim", 'DateTime'>
   readonly incidentLocation: Prisma.FieldRef<"InsuranceClaim", 'String'>
   readonly description: Prisma.FieldRef<"InsuranceClaim", 'String'>
-  readonly status: Prisma.FieldRef<"InsuranceClaim", 'String'>
-  readonly claimAmount: Prisma.FieldRef<"InsuranceClaim", 'Float'>
-  readonly approvedAmount: Prisma.FieldRef<"InsuranceClaim", 'Float'>
-  readonly deductible: Prisma.FieldRef<"InsuranceClaim", 'Float'>
+  readonly status: Prisma.FieldRef<"InsuranceClaim", 'ClaimStatus'>
+  readonly claimAmount: Prisma.FieldRef<"InsuranceClaim", 'Decimal'>
+  readonly approvedAmount: Prisma.FieldRef<"InsuranceClaim", 'Decimal'>
+  readonly deductible: Prisma.FieldRef<"InsuranceClaim", 'Decimal'>
   readonly assignedAdjuster: Prisma.FieldRef<"InsuranceClaim", 'String'>
   readonly policeReport: Prisma.FieldRef<"InsuranceClaim", 'String'>
   readonly thirdPartyDetails: Prisma.FieldRef<"InsuranceClaim", 'String'>
   readonly damagePhotos: Prisma.FieldRef<"InsuranceClaim", 'String'>
-  readonly repairEstimate: Prisma.FieldRef<"InsuranceClaim", 'Float'>
+  readonly repairEstimate: Prisma.FieldRef<"InsuranceClaim", 'Decimal'>
   readonly submittedAt: Prisma.FieldRef<"InsuranceClaim", 'DateTime'>
   readonly reviewedAt: Prisma.FieldRef<"InsuranceClaim", 'DateTime'>
   readonly approvedAt: Prisma.FieldRef<"InsuranceClaim", 'DateTime'>

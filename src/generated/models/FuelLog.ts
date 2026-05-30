@@ -31,8 +31,8 @@ export type FuelLogAvgAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   litersFilled: number | null
-  costPerLiter: number | null
-  totalCost: number | null
+  costPerLiter: runtime.Decimal | null
+  totalCost: runtime.Decimal | null
   endMileage: number | null
   distanceCovered: number | null
 }
@@ -42,8 +42,8 @@ export type FuelLogSumAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   litersFilled: number | null
-  costPerLiter: number | null
-  totalCost: number | null
+  costPerLiter: runtime.Decimal | null
+  totalCost: runtime.Decimal | null
   endMileage: number | null
   distanceCovered: number | null
 }
@@ -57,8 +57,8 @@ export type FuelLogMinAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   litersFilled: number | null
-  costPerLiter: number | null
-  totalCost: number | null
+  costPerLiter: runtime.Decimal | null
+  totalCost: runtime.Decimal | null
   stationName: string | null
   fuelType: string | null
   receiptNumber: string | null
@@ -80,8 +80,8 @@ export type FuelLogMaxAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   litersFilled: number | null
-  costPerLiter: number | null
-  totalCost: number | null
+  costPerLiter: runtime.Decimal | null
+  totalCost: runtime.Decimal | null
   stationName: string | null
   fuelType: string | null
   receiptNumber: string | null
@@ -306,8 +306,8 @@ export type FuelLogGroupByOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   litersFilled: number
-  costPerLiter: number | null
-  totalCost: number
+  costPerLiter: runtime.Decimal | null
+  totalCost: runtime.Decimal
   stationName: string | null
   fuelType: string
   receiptNumber: string | null
@@ -352,8 +352,8 @@ export type FuelLogWhereInput = {
   fuelLevelBefore?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   litersFilled?: Prisma.FloatFilter<"FuelLog"> | number
-  costPerLiter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  totalCost?: Prisma.FloatFilter<"FuelLog"> | number
+  costPerLiter?: Prisma.DecimalNullableFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   fuelType?: Prisma.StringFilter<"FuelLog"> | string
   receiptNumber?: Prisma.StringNullableFilter<"FuelLog"> | string | null
@@ -406,8 +406,8 @@ export type FuelLogWhereUniqueInput = Prisma.AtLeast<{
   fuelLevelBefore?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   litersFilled?: Prisma.FloatFilter<"FuelLog"> | number
-  costPerLiter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  totalCost?: Prisma.FloatFilter<"FuelLog"> | number
+  costPerLiter?: Prisma.DecimalNullableFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   fuelType?: Prisma.StringFilter<"FuelLog"> | string
   receiptNumber?: Prisma.StringNullableFilter<"FuelLog"> | string | null
@@ -462,8 +462,8 @@ export type FuelLogScalarWhereWithAggregatesInput = {
   fuelLevelBefore?: Prisma.FloatNullableWithAggregatesFilter<"FuelLog"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableWithAggregatesFilter<"FuelLog"> | number | null
   litersFilled?: Prisma.FloatWithAggregatesFilter<"FuelLog"> | number
-  costPerLiter?: Prisma.FloatNullableWithAggregatesFilter<"FuelLog"> | number | null
-  totalCost?: Prisma.FloatWithAggregatesFilter<"FuelLog"> | number
+  costPerLiter?: Prisma.DecimalNullableWithAggregatesFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalWithAggregatesFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
   fuelType?: Prisma.StringWithAggregatesFilter<"FuelLog"> | string
   receiptNumber?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
@@ -483,8 +483,8 @@ export type FuelLogCreateInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -508,8 +508,8 @@ export type FuelLogUncheckedCreateInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -529,8 +529,8 @@ export type FuelLogUpdateInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -554,8 +554,8 @@ export type FuelLogUncheckedUpdateInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -577,8 +577,8 @@ export type FuelLogCreateManyInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -598,8 +598,8 @@ export type FuelLogUpdateManyMutationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -621,8 +621,8 @@ export type FuelLogUncheckedUpdateManyInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -833,8 +833,8 @@ export type FuelLogCreateWithoutTripInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -856,8 +856,8 @@ export type FuelLogUncheckedCreateWithoutTripInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -908,8 +908,8 @@ export type FuelLogScalarWhereInput = {
   fuelLevelBefore?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   litersFilled?: Prisma.FloatFilter<"FuelLog"> | number
-  costPerLiter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  totalCost?: Prisma.FloatFilter<"FuelLog"> | number
+  costPerLiter?: Prisma.DecimalNullableFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   fuelType?: Prisma.StringFilter<"FuelLog"> | string
   receiptNumber?: Prisma.StringNullableFilter<"FuelLog"> | string | null
@@ -929,8 +929,8 @@ export type FuelLogCreateWithoutTruckInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -952,8 +952,8 @@ export type FuelLogUncheckedCreateWithoutTruckInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -1000,8 +1000,8 @@ export type FuelLogCreateManyTripInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -1021,8 +1021,8 @@ export type FuelLogUpdateWithoutTripInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1044,8 +1044,8 @@ export type FuelLogUncheckedUpdateWithoutTripInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1066,8 +1066,8 @@ export type FuelLogUncheckedUpdateManyWithoutTripInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1088,8 +1088,8 @@ export type FuelLogCreateManyTruckInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   litersFilled: number
-  costPerLiter?: number | null
-  totalCost: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: string | null
   fuelType?: string
   receiptNumber?: string | null
@@ -1109,8 +1109,8 @@ export type FuelLogUpdateWithoutTruckInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1132,8 +1132,8 @@ export type FuelLogUncheckedUpdateWithoutTruckInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1154,8 +1154,8 @@ export type FuelLogUncheckedUpdateManyWithoutTruckInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
-  costPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1241,8 +1241,8 @@ export type $FuelLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     fuelLevelBefore: number | null
     fuelLevelAfter: number | null
     litersFilled: number
-    costPerLiter: number | null
-    totalCost: number
+    costPerLiter: runtime.Decimal | null
+    totalCost: runtime.Decimal
     stationName: string | null
     fuelType: string
     receiptNumber: string | null
@@ -1632,8 +1632,8 @@ export interface FuelLogFieldRefs {
   readonly fuelLevelBefore: Prisma.FieldRef<"FuelLog", 'Float'>
   readonly fuelLevelAfter: Prisma.FieldRef<"FuelLog", 'Float'>
   readonly litersFilled: Prisma.FieldRef<"FuelLog", 'Float'>
-  readonly costPerLiter: Prisma.FieldRef<"FuelLog", 'Float'>
-  readonly totalCost: Prisma.FieldRef<"FuelLog", 'Float'>
+  readonly costPerLiter: Prisma.FieldRef<"FuelLog", 'Decimal'>
+  readonly totalCost: Prisma.FieldRef<"FuelLog", 'Decimal'>
   readonly stationName: Prisma.FieldRef<"FuelLog", 'String'>
   readonly fuelType: Prisma.FieldRef<"FuelLog", 'String'>
   readonly receiptNumber: Prisma.FieldRef<"FuelLog", 'String'>

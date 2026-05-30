@@ -50,11 +50,11 @@ export type TruckMinAggregateOutputType = {
   color: string | null
   fuelType: string | null
   tankCapacity: number | null
-  status: string | null
+  status: $Enums.TruckStatus | null
   currentMileage: number | null
   driverId: string | null
   notes: string | null
-  insuranceStatus: string | null
+  insuranceStatus: $Enums.TruckInsuranceStatus | null
   nextServiceDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -72,11 +72,11 @@ export type TruckMaxAggregateOutputType = {
   color: string | null
   fuelType: string | null
   tankCapacity: number | null
-  status: string | null
+  status: $Enums.TruckStatus | null
   currentMileage: number | null
   driverId: string | null
   notes: string | null
-  insuranceStatus: string | null
+  insuranceStatus: $Enums.TruckInsuranceStatus | null
   nextServiceDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -283,11 +283,11 @@ export type TruckGroupByOutputType = {
   color: string | null
   fuelType: string
   tankCapacity: number | null
-  status: string
+  status: $Enums.TruckStatus
   currentMileage: number
   driverId: string | null
   notes: string | null
-  insuranceStatus: string
+  insuranceStatus: $Enums.TruckInsuranceStatus
   nextServiceDate: Date | null
   createdAt: Date
   updatedAt: Date
@@ -328,11 +328,11 @@ export type TruckWhereInput = {
   color?: Prisma.StringNullableFilter<"Truck"> | string | null
   fuelType?: Prisma.StringFilter<"Truck"> | string
   tankCapacity?: Prisma.FloatNullableFilter<"Truck"> | number | null
-  status?: Prisma.StringFilter<"Truck"> | string
+  status?: Prisma.EnumTruckStatusFilter<"Truck"> | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFilter<"Truck"> | number
   driverId?: Prisma.StringNullableFilter<"Truck"> | string | null
   notes?: Prisma.StringNullableFilter<"Truck"> | string | null
-  insuranceStatus?: Prisma.StringFilter<"Truck"> | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFilter<"Truck"> | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.DateTimeNullableFilter<"Truck"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Truck"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Truck"> | Date | string
@@ -414,11 +414,11 @@ export type TruckWhereUniqueInput = Prisma.AtLeast<{
   color?: Prisma.StringNullableFilter<"Truck"> | string | null
   fuelType?: Prisma.StringFilter<"Truck"> | string
   tankCapacity?: Prisma.FloatNullableFilter<"Truck"> | number | null
-  status?: Prisma.StringFilter<"Truck"> | string
+  status?: Prisma.EnumTruckStatusFilter<"Truck"> | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFilter<"Truck"> | number
   driverId?: Prisma.StringNullableFilter<"Truck"> | string | null
   notes?: Prisma.StringNullableFilter<"Truck"> | string | null
-  insuranceStatus?: Prisma.StringFilter<"Truck"> | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFilter<"Truck"> | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.DateTimeNullableFilter<"Truck"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Truck"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Truck"> | Date | string
@@ -485,11 +485,11 @@ export type TruckScalarWhereWithAggregatesInput = {
   color?: Prisma.StringNullableWithAggregatesFilter<"Truck"> | string | null
   fuelType?: Prisma.StringWithAggregatesFilter<"Truck"> | string
   tankCapacity?: Prisma.FloatNullableWithAggregatesFilter<"Truck"> | number | null
-  status?: Prisma.StringWithAggregatesFilter<"Truck"> | string
+  status?: Prisma.EnumTruckStatusWithAggregatesFilter<"Truck"> | $Enums.TruckStatus
   currentMileage?: Prisma.FloatWithAggregatesFilter<"Truck"> | number
   driverId?: Prisma.StringNullableWithAggregatesFilter<"Truck"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Truck"> | string | null
-  insuranceStatus?: Prisma.StringWithAggregatesFilter<"Truck"> | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusWithAggregatesFilter<"Truck"> | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Truck"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Truck"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Truck"> | Date | string
@@ -507,10 +507,10 @@ export type TruckCreateInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -547,11 +547,11 @@ export type TruckUncheckedCreateInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -587,10 +587,10 @@ export type TruckUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -627,11 +627,11 @@ export type TruckUncheckedUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -667,11 +667,11 @@ export type TruckCreateManyInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -689,10 +689,10 @@ export type TruckUpdateManyMutationInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -710,11 +710,11 @@ export type TruckUncheckedUpdateManyInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1080,6 +1080,14 @@ export type TruckUpdateOneRequiredWithoutTripNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TruckUpdateToOneWithWhereWithoutTripInput, Prisma.TruckUpdateWithoutTripInput>, Prisma.TruckUncheckedUpdateWithoutTripInput>
 }
 
+export type EnumTruckStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TruckStatus
+}
+
+export type EnumTruckInsuranceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TruckInsuranceStatus
+}
+
 export type TruckCreateNestedOneWithoutTruckLocationInput = {
   create?: Prisma.XOR<Prisma.TruckCreateWithoutTruckLocationInput, Prisma.TruckUncheckedCreateWithoutTruckLocationInput>
   connectOrCreate?: Prisma.TruckCreateOrConnectWithoutTruckLocationInput
@@ -1134,10 +1142,10 @@ export type TruckCreateWithoutBorderCrossingInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1173,11 +1181,11 @@ export type TruckUncheckedCreateWithoutBorderCrossingInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1228,10 +1236,10 @@ export type TruckUpdateWithoutBorderCrossingInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1267,11 +1275,11 @@ export type TruckUncheckedUpdateWithoutBorderCrossingInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1306,10 +1314,10 @@ export type TruckCreateWithoutDepotQueueInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1345,11 +1353,11 @@ export type TruckUncheckedCreateWithoutDepotQueueInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1400,10 +1408,10 @@ export type TruckUpdateWithoutDepotQueueInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1439,11 +1447,11 @@ export type TruckUncheckedUpdateWithoutDepotQueueInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1478,10 +1486,10 @@ export type TruckCreateWithoutDriverInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1517,10 +1525,10 @@ export type TruckUncheckedCreateWithoutDriverInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1585,11 +1593,11 @@ export type TruckScalarWhereInput = {
   color?: Prisma.StringNullableFilter<"Truck"> | string | null
   fuelType?: Prisma.StringFilter<"Truck"> | string
   tankCapacity?: Prisma.FloatNullableFilter<"Truck"> | number | null
-  status?: Prisma.StringFilter<"Truck"> | string
+  status?: Prisma.EnumTruckStatusFilter<"Truck"> | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFilter<"Truck"> | number
   driverId?: Prisma.StringNullableFilter<"Truck"> | string | null
   notes?: Prisma.StringNullableFilter<"Truck"> | string | null
-  insuranceStatus?: Prisma.StringFilter<"Truck"> | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFilter<"Truck"> | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.DateTimeNullableFilter<"Truck"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Truck"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Truck"> | Date | string
@@ -1607,10 +1615,10 @@ export type TruckCreateWithoutDvlaRegistrationInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1646,11 +1654,11 @@ export type TruckUncheckedCreateWithoutDvlaRegistrationInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1701,10 +1709,10 @@ export type TruckUpdateWithoutDvlaRegistrationInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1740,11 +1748,11 @@ export type TruckUncheckedUpdateWithoutDvlaRegistrationInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1779,10 +1787,10 @@ export type TruckCreateWithoutExpenseInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1818,11 +1826,11 @@ export type TruckUncheckedCreateWithoutExpenseInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1873,10 +1881,10 @@ export type TruckUpdateWithoutExpenseInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1912,11 +1920,11 @@ export type TruckUncheckedUpdateWithoutExpenseInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1951,10 +1959,10 @@ export type TruckCreateWithoutFuelBudgetInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1990,11 +1998,11 @@ export type TruckUncheckedCreateWithoutFuelBudgetInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2045,10 +2053,10 @@ export type TruckUpdateWithoutFuelBudgetInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2084,11 +2092,11 @@ export type TruckUncheckedUpdateWithoutFuelBudgetInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2123,10 +2131,10 @@ export type TruckCreateWithoutFuelLogInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2162,11 +2170,11 @@ export type TruckUncheckedCreateWithoutFuelLogInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2217,10 +2225,10 @@ export type TruckUpdateWithoutFuelLogInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2256,11 +2264,11 @@ export type TruckUncheckedUpdateWithoutFuelLogInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2295,10 +2303,10 @@ export type TruckCreateWithoutInsuranceInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2334,11 +2342,11 @@ export type TruckUncheckedCreateWithoutInsuranceInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2389,10 +2397,10 @@ export type TruckUpdateWithoutInsuranceInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2428,11 +2436,11 @@ export type TruckUncheckedUpdateWithoutInsuranceInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2467,10 +2475,10 @@ export type TruckCreateWithoutInsuranceClaimInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2506,11 +2514,11 @@ export type TruckUncheckedCreateWithoutInsuranceClaimInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2561,10 +2569,10 @@ export type TruckUpdateWithoutInsuranceClaimInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2600,11 +2608,11 @@ export type TruckUncheckedUpdateWithoutInsuranceClaimInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2639,10 +2647,10 @@ export type TruckCreateWithoutLoadBoardInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2678,11 +2686,11 @@ export type TruckUncheckedCreateWithoutLoadBoardInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2733,10 +2741,10 @@ export type TruckUpdateWithoutLoadBoardInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2772,11 +2780,11 @@ export type TruckUncheckedUpdateWithoutLoadBoardInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2811,10 +2819,10 @@ export type TruckCreateWithoutMaintenanceRecordInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2850,11 +2858,11 @@ export type TruckUncheckedCreateWithoutMaintenanceRecordInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2905,10 +2913,10 @@ export type TruckUpdateWithoutMaintenanceRecordInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2944,11 +2952,11 @@ export type TruckUncheckedUpdateWithoutMaintenanceRecordInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2983,10 +2991,10 @@ export type TruckCreateWithoutRoadworthyInspectionInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3022,11 +3030,11 @@ export type TruckUncheckedCreateWithoutRoadworthyInspectionInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3077,10 +3085,10 @@ export type TruckUpdateWithoutRoadworthyInspectionInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3116,11 +3124,11 @@ export type TruckUncheckedUpdateWithoutRoadworthyInspectionInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3155,10 +3163,10 @@ export type TruckCreateWithoutTollRecordInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3194,11 +3202,11 @@ export type TruckUncheckedCreateWithoutTollRecordInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3249,10 +3257,10 @@ export type TruckUpdateWithoutTollRecordInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3288,11 +3296,11 @@ export type TruckUncheckedUpdateWithoutTollRecordInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3327,10 +3335,10 @@ export type TruckCreateWithoutTrackingAlertInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3366,11 +3374,11 @@ export type TruckUncheckedCreateWithoutTrackingAlertInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3421,10 +3429,10 @@ export type TruckUpdateWithoutTrackingAlertInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3460,11 +3468,11 @@ export type TruckUncheckedUpdateWithoutTrackingAlertInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3499,10 +3507,10 @@ export type TruckCreateWithoutTrackingConfigInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3538,11 +3546,11 @@ export type TruckUncheckedCreateWithoutTrackingConfigInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3593,10 +3601,10 @@ export type TruckUpdateWithoutTrackingConfigInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3632,11 +3640,11 @@ export type TruckUncheckedUpdateWithoutTrackingConfigInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3671,10 +3679,10 @@ export type TruckCreateWithoutTripInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3710,11 +3718,11 @@ export type TruckUncheckedCreateWithoutTripInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3765,10 +3773,10 @@ export type TruckUpdateWithoutTripInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3804,11 +3812,11 @@ export type TruckUncheckedUpdateWithoutTripInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3843,10 +3851,10 @@ export type TruckCreateWithoutTruckLocationInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3882,11 +3890,11 @@ export type TruckUncheckedCreateWithoutTruckLocationInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3937,10 +3945,10 @@ export type TruckUpdateWithoutTruckLocationInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3976,11 +3984,11 @@ export type TruckUncheckedUpdateWithoutTruckLocationInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4015,10 +4023,10 @@ export type TruckCreateWithoutTyreInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4054,11 +4062,11 @@ export type TruckUncheckedCreateWithoutTyreInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4109,10 +4117,10 @@ export type TruckUpdateWithoutTyreInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4148,11 +4156,11 @@ export type TruckUncheckedUpdateWithoutTyreInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4187,10 +4195,10 @@ export type TruckCreateWithoutVehicleInspectionInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4226,11 +4234,11 @@ export type TruckUncheckedCreateWithoutVehicleInspectionInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   driverId?: string | null
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4281,10 +4289,10 @@ export type TruckUpdateWithoutVehicleInspectionInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4320,11 +4328,11 @@ export type TruckUncheckedUpdateWithoutVehicleInspectionInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4359,10 +4367,10 @@ export type TruckCreateManyDriverInput = {
   color?: string | null
   fuelType?: string
   tankCapacity?: number | null
-  status?: string
+  status?: $Enums.TruckStatus
   currentMileage?: number
   notes?: string | null
-  insuranceStatus?: string
+  insuranceStatus?: $Enums.TruckInsuranceStatus
   nextServiceDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4380,10 +4388,10 @@ export type TruckUpdateWithoutDriverInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4419,10 +4427,10 @@ export type TruckUncheckedUpdateWithoutDriverInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4458,10 +4466,10 @@ export type TruckUncheckedUpdateManyWithoutDriverInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
   tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
   currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
   nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4767,11 +4775,11 @@ export type $TruckPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     color: string | null
     fuelType: string
     tankCapacity: number | null
-    status: string
+    status: $Enums.TruckStatus
     currentMileage: number
     driverId: string | null
     notes: string | null
-    insuranceStatus: string
+    insuranceStatus: $Enums.TruckInsuranceStatus
     nextServiceDate: Date | null
     createdAt: Date
     updatedAt: Date
@@ -5174,11 +5182,11 @@ export interface TruckFieldRefs {
   readonly color: Prisma.FieldRef<"Truck", 'String'>
   readonly fuelType: Prisma.FieldRef<"Truck", 'String'>
   readonly tankCapacity: Prisma.FieldRef<"Truck", 'Float'>
-  readonly status: Prisma.FieldRef<"Truck", 'String'>
+  readonly status: Prisma.FieldRef<"Truck", 'TruckStatus'>
   readonly currentMileage: Prisma.FieldRef<"Truck", 'Float'>
   readonly driverId: Prisma.FieldRef<"Truck", 'String'>
   readonly notes: Prisma.FieldRef<"Truck", 'String'>
-  readonly insuranceStatus: Prisma.FieldRef<"Truck", 'String'>
+  readonly insuranceStatus: Prisma.FieldRef<"Truck", 'TruckInsuranceStatus'>
   readonly nextServiceDate: Prisma.FieldRef<"Truck", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Truck", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Truck", 'DateTime'>

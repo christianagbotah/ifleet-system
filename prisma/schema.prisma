@@ -7,6 +7,235 @@ datasource db {
   provider = "mysql"
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums — Status, Verification, and Condition types
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum TripStatus {
+  scheduled
+  loading
+  loaded
+  departed_depot
+  in_transit
+  arrived_destination
+  offloading
+  offloaded
+  return_journey
+  arrived_depot
+  completed
+  cancelled
+  delayed
+}
+
+enum TruckStatus {
+  active
+  inactive
+  maintenance
+  out_of_service
+  retired
+  decommissioned
+}
+
+enum TruckInsuranceStatus {
+  none
+  active
+  expired
+  pending
+}
+
+enum DriverStatus {
+  active
+  inactive
+  suspended
+  resigned
+}
+
+enum DriverVerificationStatus {
+  pending
+  verified
+  rejected
+  expired
+}
+
+enum InvoiceStatus {
+  pending
+  draft
+  sent
+  paid
+  partially_paid
+  overdue
+  cancelled
+  void
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum ExpenseStatus {
+  approved
+  pending
+  rejected
+}
+
+enum ExpenseApprovalStatus {
+  pending
+  approved
+  rejected
+}
+
+enum MaintenanceStatus {
+  pending
+  scheduled
+  in_progress
+  completed
+  cancelled
+}
+
+enum InsuranceStatus {
+  active
+  expired
+  cancelled
+  pending
+}
+
+enum ClaimStatus {
+  draft
+  submitted
+  under_review
+  approved
+  rejected
+  paid
+  closed
+}
+
+enum CashAdvanceStatus {
+  pending
+  approved
+  rejected
+  disbursed
+  partially_deducted
+  fully_deducted
+}
+
+enum SettlementStatus {
+  pending
+  approved
+  paid
+}
+
+enum LoadBoardStatus {
+  open
+  assigned
+  in_progress
+  completed
+  cancelled
+}
+
+enum BorderCrossingStatus {
+  queued
+  processing
+  cleared
+  rejected
+}
+
+enum DepotQueueStatus {
+  waiting
+  in_progress
+  loading
+  unloading
+  completed
+  cancelled
+}
+
+enum DeliveryStopStatus {
+  pending
+  arrived
+  offloading
+  completed
+  skipped
+}
+
+enum DvlaRegistrationStatus {
+  active
+  expired
+  cancelled
+  suspended
+}
+
+enum RoadConditionStatus {
+  active
+  resolved
+  dismissed
+}
+
+enum TollRecordStatus {
+  pending
+  verified
+  disputed
+  resolved
+}
+
+enum ReportHistoryStatus {
+  pending
+  completed
+  failed
+  cancelled
+}
+
+enum WarehouseItemStatus {
+  in_stock
+  low_stock
+  out_of_stock
+  expired
+  damaged
+}
+
+enum WeightVerificationStatus {
+  pending
+  verified
+  failed
+  variance_detected
+}
+
+enum TyreCondition {
+  new
+  good
+  fair
+  worn
+  damaged
+  retired
+}
+
+enum VehicleInspectionResult {
+  pass
+  conditional_pass
+  fail
+}
+
+enum TripDeliveryDestinationStatus {
+  pending
+  in_transit
+  arrived
+  offloading
+  completed
+  cancelled
+}
+
+enum IncentiveStatus {
+  pending
+  approved
+  rejected
+  paid
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Models
+// ─────────────────────────────────────────────────────────────────────────────
+
 model User {
   id                                                  String                @id @default(cuid())
   email                                               String?               @unique
@@ -52,7 +281,7 @@ model AuditLog {
   details   String? 
   ipAddress String?
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([createdAt])
   @@index([entity, entityId])
@@ -67,13 +296,13 @@ model BorderCrossing {
   borderName     String
   country        String
   direction      String
-  status         String    @default("queued")
+  status         BorderCrossingStatus    @default(queued)
   queuedAt       DateTime  @default(now())
   processingAt   DateTime?
   clearedAt      DateTime?
   estimatedWait  Int?
   actualWait     Int?
-  clearanceFee   Float?
+  clearanceFee   Decimal?
   documentStatus String?
   notes          String?
   createdBy      String
@@ -99,19 +328,19 @@ model CashAdvance {
   id                      String                    @id @default(cuid())
   driverId           String
   tripId             String?
-  amount             Float
+  amount             Decimal
   purpose            String
   paymentMethod      String    @default("cash")
   mobileMoneyRef     String?
   mobileMoneyNetwork String?
-  status             String    @default("pending")
+  status             CashAdvanceStatus    @default(pending)
   approvedBy         String?
   approvedAt         DateTime?
   rejectionReason    String?
   disbursedBy        String?
   disbursedAt        DateTime?
-  totalDeducted      Float     @default(0)
-  remainingBalance   Float     @default(0)
+  totalDeducted      Decimal     @default(0)
+  remainingBalance   Decimal     @default(0)
   requestDate        DateTime  @default(now())
   notes              String?
   createdAt          DateTime  @default(now())
@@ -190,14 +419,14 @@ model DeliveryStop {
   expectedQty      Float
   actualQty        Float?
   unit             String    @default("bags")
-  status           String    @default("pending")
+  status           DeliveryStopStatus    @default(pending)
   arrivalTime      DateTime?
   offloadStarted   DateTime?
   offloadCompleted DateTime?
   notes            String?
   createdAt        DateTime  @default(now())
   updatedAt DateTime @updatedAt
-  trip             Trip      @relation(fields: [tripId], references: [id])
+  trip             Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@index([tripId, stopOrder])
 }
@@ -209,7 +438,7 @@ model DepotQueue {
   tripId        String?
   depotName     String
   queueType     String
-  status        String    @default("waiting")
+  status        DepotQueueStatus    @default(waiting)
   position      Int?
   estimatedWait Int?
   actualWait    Int?
@@ -308,7 +537,7 @@ model Driver {
   ghanaCardBackImage  String?
   emergencyName       String?
   emergencyPhone      String?
-  verificationStatus  String              @default("pending")
+  verificationStatus  DriverVerificationStatus              @default(pending)
   verifiedBy          String?
   verifiedAt          DateTime?
   verificationNotes   String?
@@ -316,7 +545,7 @@ model Driver {
   notifyEmail         Boolean             @default(true)
   notifyPush          Boolean             @default(true)
   rating              Float               @default(5)
-  status              String              @default("active")
+  status              DriverStatus              @default(active)
   totalTrips          Int                 @default(0)
   totalMileage        Float               @default(0)
   hireDate            DateTime            @default(now())
@@ -343,11 +572,11 @@ model DriverIncentive {
   type                                  String
   title                                 String
   description                           String?  @db.Text
-  amount                                Float
+  amount                                Decimal
   period                                String
   periodStart                           DateTime?
   periodEnd                             DateTime?
-  status                                String    @default("pending")
+  status                                IncentiveStatus    @default(pending)
   approvedBy                            String?
   approvedAt                            DateTime?
   paidAt                                DateTime?
@@ -374,12 +603,12 @@ model DriverSettlement {
   period            String
   periodStart       DateTime
   periodEnd         DateTime
-  grossEarnings     Float
-  fuelDeductions    Float
-  expenseDeductions Float
-  bonusAmount       Float
-  netPay            Float
-  status            String           @default("pending")
+  grossEarnings     Decimal
+  fuelDeductions    Decimal
+  expenseDeductions Decimal
+  bonusAmount       Decimal
+  netPay            Decimal
+  status            SettlementStatus           @default(pending)
   approvedBy        String?
   approvedAt        DateTime?
   paidAt            DateTime?
@@ -398,12 +627,12 @@ model DriverSettlement {
 model DriverWallet {
   id                      String                    @id @default(cuid())
   driverId                 String    @unique
-  availableBalance         Float     @default(0)
-  totalAdvances            Float     @default(0)
-  totalDeducted            Float     @default(0)
-  totalSettled             Float     @default(0)
-  monthlyAdvanceLimit      Float?
-  monthlyAdvancesThisMonth Float     @default(0)
+  availableBalance         Decimal     @default(0)
+  totalAdvances            Decimal     @default(0)
+  totalDeducted            Decimal     @default(0)
+  totalSettled             Decimal     @default(0)
+  monthlyAdvanceLimit      Decimal?
+  monthlyAdvancesThisMonth Decimal     @default(0)
   lastAdvanceDate          DateTime?
   mobileMoneyNumber        String?
   mobileMoneyNetwork       String?
@@ -435,9 +664,9 @@ model DvlaRegistration {
   expiryDate         DateTime
   lastRenewalDate    DateTime?
   nextRenewalDue     DateTime?
-  registrationFee    Float?
-  renewalFee         Float?
-  status             String    @default("active")
+  registrationFee    Decimal?
+  renewalFee         Decimal?
+  status             DvlaRegistrationStatus    @default(active)
   documentUrl        String?
   transferHistory    String?   @db.Text
   notes              String?
@@ -458,12 +687,12 @@ model Expense {
   truckId         String
   category        String
   description     String
-  amount          Float
+  amount          Decimal
   date            DateTime
   paymentMethod   String           @default("cash")
   reference       String?
   approvedBy      String?
-  status          String           @default("approved")
+  status          ExpenseStatus           @default(approved)
   receiptUrl      String?
   tripId          String?
   createdAt       DateTime         @default(now())
@@ -482,12 +711,12 @@ model Expense {
 model ExpenseApproval {
   id                      String                    @id @default(cuid())
   expenseId                                String    @unique
-  status                                   String    @default("pending")
+  status                                   ExpenseApprovalStatus    @default(pending)
   requestedById                            String
   approvedById                             String?
   approvalLevel                            Int       @default(1)
-  amount                                   Float
-  approvedAmount                           Float?
+  amount                                   Decimal
+  approvedAmount                           Decimal?
   notes                                    String?
   rejectionReason                          String?
   reviewedAt                               DateTime?
@@ -509,9 +738,9 @@ model FuelBudget {
   truckId      String?
   month        Int
   year         Int
-  budgetLimit  Float
+  budgetLimit  Decimal
   litersLimit  Float?
-  actualSpend  Float    @default(0)
+  actualSpend  Decimal    @default(0)
   actualLiters Float    @default(0)
   notes        String?
   createdAt    DateTime @default(now())
@@ -534,8 +763,8 @@ model FuelLog {
   fuelLevelBefore Float?
   fuelLevelAfter  Float?
   litersFilled    Float
-  costPerLiter    Float?
-  totalCost       Float
+  costPerLiter    Decimal?
+  totalCost       Decimal
   stationName     String?
   fuelType        String   @default("Diesel")
   receiptNumber   String?
@@ -559,7 +788,7 @@ model FuelPrice {
   id                      String                    @id @default(cuid())
   stationId     String
   fuelType      String
-  pricePerLiter Float
+  pricePerLiter Decimal
   effectiveDate DateTime    @default(now())
   source        String      @default("manual")
   verified      Boolean     @default(false)
@@ -592,7 +821,7 @@ model FuelStation {
   hasHGV                Boolean     @default(true)
   hasAdBlue             Boolean     @default(false)
   hasWorkshop           Boolean     @default(false)
-  corporateRatePerLiter Float?
+  corporateRatePerLiter Decimal?
   rating                Float?
   totalRatings          Int         @default(0)
   isActive              Boolean     @default(true)
@@ -627,11 +856,11 @@ model Insurance {
   provider            String
   policyNumber        String           @unique
   type                String
-  coverAmount         Float?
-  premium             Float
+  coverAmount         Decimal?
+  premium             Decimal
   startDate           DateTime
   endDate             DateTime
-  status              String           @default("active")
+  status              InsuranceStatus           @default(active)
   renewalReminderSent Boolean          @default(false)
   documentUrl         String?
   notes               String?
@@ -654,15 +883,15 @@ model InsuranceClaim {
   incidentDate      DateTime
   incidentLocation  String
   description       String    @db.Text
-  status            String    @default("draft")
-  claimAmount       Float
-  approvedAmount    Float?
-  deductible        Float?
+  status            ClaimStatus    @default(draft)
+  claimAmount       Decimal
+  approvedAmount    Decimal?
+  deductible        Decimal?
   assignedAdjuster  String?
   policeReport      String?   @db.Text
   thirdPartyDetails String?   @db.Text
   damagePhotos      String?   @db.Text
-  repairEstimate    Float?
+  repairEstimate    Decimal?
   submittedAt       DateTime?
   reviewedAt        DateTime?
   approvedAt        DateTime?
@@ -693,12 +922,12 @@ model Invoice {
   tripId        String?       @unique
   issueDate     DateTime      @default(now())
   dueDate       DateTime
-  status        String        @default("draft")
-  subtotal      Float
-  taxAmount     Float         @default(0)
-  taxRate       Float         @default(0)
-  totalAmount   Float
-  paidAmount    Float         @default(0)
+  status        InvoiceStatus        @default(draft)
+  subtotal      Decimal
+  taxAmount     Decimal         @default(0)
+  taxRate       Decimal         @default(0)
+  totalAmount   Decimal
+  paidAmount    Decimal         @default(0)
   notes         String?
   terms         String?
   createdAt     DateTime      @default(now())
@@ -717,9 +946,9 @@ model InvoiceItem {
   id                      String                    @id @default(cuid())
   invoiceId   String
   description String    @db.Text
-  quantity    Float
-  unitPrice   Float
-  total       Float
+  quantity    Decimal
+  unitPrice   Decimal
+  total       Decimal
   order       Int     @default(0)
   invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
@@ -755,12 +984,12 @@ model LoadBoard {
   weight           Float?
   truckType        String?
   truckCount       Int       @default(1)
-  offeredRate      Float?
-  budgetMin        Float?
-  budgetMax        Float?
+  offeredRate      Decimal?
+  budgetMin        Decimal?
+  budgetMax        Decimal?
   pickupDate       DateTime?
   deliveryDate     DateTime?
-  status           String    @default("open")
+  status           LoadBoardStatus    @default(open)
   requirements     String?
   contactName      String?
   contactPhone     String?
@@ -829,12 +1058,12 @@ model MaintenanceRecord {
   title          String
   description    String?   @db.Text
   odometer       Float?
-  cost           Float?
+  cost           Decimal?
   performedBy    String?
   performedAt    DateTime  @default(now())
   nextDueDate    DateTime?
   nextDueMileage Float?
-  status         String    @default("completed")
+  status         MaintenanceStatus    @default(completed)
   partsUsed      String?   @db.Text
   invoiceUrl     String?
   createdAt      DateTime  @default(now())
@@ -864,8 +1093,8 @@ model Notification {
   emailError  String?
   pushSent    Boolean   @default(false)
   pushSentAt  DateTime?
-  createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([createdAt])
   @@index([isRead])
@@ -892,12 +1121,12 @@ model Payroll {
   driverId    String
   month       Int
   year        Int
-  baseSalary  Float
-  tripBonus   Float     @default(0)
-  overtimePay Float     @default(0)
-  deductions  Float     @default(0)
-  netPay      Float
-  status      String    @default("pending")
+  baseSalary  Decimal
+  tripBonus   Decimal     @default(0)
+  overtimePay Decimal     @default(0)
+  deductions  Decimal     @default(0)
+  netPay      Decimal
+  status      PaymentStatus    @default(pending)
   paidAt      DateTime?
   approvedBy  String?
   notes       String?
@@ -932,7 +1161,7 @@ model Pricing {
   id                      String                    @id @default(cuid())
   itemName      String
   destination   String
-  transportRate Float    @default(0)
+  transportRate Decimal    @default(0)
   effectiveDate DateTime @default(now())
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
@@ -949,7 +1178,7 @@ model ReportHistory {
   parameters  String? 
   generatedBy String
   fileSize    Int?
-  status      String   @default("completed")
+  status      ReportHistoryStatus   @default(completed)
   error       String?
   createdAt   DateTime @default(now())
 
@@ -971,7 +1200,7 @@ model RoadConditionReport {
   longitude   Float?
   reportedAt  DateTime  @default(now())
   resolvedAt  DateTime?
-  status      String    @default("active")
+  status      RoadConditionStatus    @default(active)
   imageUrl    String?   @db.Text
   tripId      String?
   createdAt   DateTime  @default(now())
@@ -1016,9 +1245,9 @@ model RoadworthyInspection {
   certificateIssued  Boolean   @default(false)
   certificateExpiry  DateTime?
   certificateUrl     String?
-  inspectionFee      Float?
+  inspectionFee      Decimal?
   nextInspectionDue  DateTime?
-  status             String    @default("completed")
+  status             MaintenanceStatus    @default(completed)
   createdAt          DateTime  @default(now())
   updatedAt DateTime @updatedAt
   truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
@@ -1047,7 +1276,7 @@ model SettlementLine {
   tripId           String?
   description      String
   type             String
-  amount           Float
+  amount           Decimal
   driverSettlement DriverSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
   trip             Trip?            @relation(fields: [tripId], references: [id])
 
@@ -1139,18 +1368,18 @@ model TollRecord {
   route           String?
   latitude        Float?
   longitude       Float?
-  amount          Float
+  amount          Decimal
   paymentMethod   String    @default("cash")
   referenceNumber String?
   tollDate        DateTime
   direction       String?
-  status          String    @default("verified")
+  status          TollRecordStatus    @default(verified)
   disputeReason   String?
   resolvedBy      String?
   resolvedAt      DateTime?
   vehicleWeight   Float?
   overloaded      Boolean   @default(false)
-  overloadFine    Float?
+  overloadFine    Decimal?
   notes           String?
   createdAt       DateTime  @default(now())
   updatedAt DateTime @updatedAt
@@ -1221,8 +1450,8 @@ model Trip {
   itemName                String
   quantity                Float
   unit                    String                    @default("bags")
-  unitPrice               Float?
-  totalRevenue            Float?
+  unitPrice               Decimal?
+  totalRevenue            Decimal?
   departureTime           DateTime
   arrivalTime             DateTime?
   estimatedDuration       Float?
@@ -1233,14 +1462,14 @@ model Trip {
   fuelLevelBefore         Float?
   fuelLevelAfter          Float?
   fuelUsed                Float?
-  fuelCost                Float?
+  fuelCost                Decimal?
   startMileageImage       String?   @db.Text
   deliveryType            String                    @default("SINGLE")
   loadingCityId           String?
   loadingPointId          String?
   destinationCityId       String?
   destinationZoneId       String?
-  status                  String                    @default("scheduled")
+  status                  TripStatus                    @default(scheduled)
   waitingReason           String?
   waitingSince            DateTime?
   loadingStartedAt        DateTime?
@@ -1318,13 +1547,13 @@ model TripDeliveryDestination {
   customerName      String
   customerPhone     String?
   stopOrder         Int
-  status            String           @default("pending")
+  status            TripDeliveryDestinationStatus           @default(pending)
   createdAt         DateTime         @default(now())
   updatedAt DateTime @updatedAt
   actualQty         Float?
   address           String?
   notes             String?
-  zoneRate          Float?
+  zoneRate          Decimal?
   client            Client?          @relation(fields: [clientId], references: [id])
   destinationZone   DestinationZone? @relation(fields: [destinationZoneId], references: [id])
   trip              Trip             @relation(fields: [tripId], references: [id], onDelete: Cascade)
@@ -1361,8 +1590,8 @@ model TripItem {
   itemName                String
   unit                    String                   @default("bags")
   quantity                Float
-  rate                    Float?
-  total                   Float?
+  rate                    Decimal?
+  total                   Decimal?
   sortOrder               Int                      @default(0)
   deliveryDestinationId   String?
   createdAt               DateTime                 @default(now())
@@ -1392,11 +1621,11 @@ model Truck {
   color                String?
   fuelType             String                 @default("Diesel")
   tankCapacity         Float?
-  status               String                 @default("active")
+  status               TruckStatus                 @default(active)
   currentMileage       Float                  @default(0)
   driverId             String?
   notes                String?
-  insuranceStatus      String                 @default("none")
+  insuranceStatus      TruckInsuranceStatus                 @default(none)
   nextServiceDate      DateTime?
   createdAt            DateTime               @default(now())
   updatedAt DateTime @updatedAt
@@ -1448,8 +1677,8 @@ model Tyre {
   serialNumber   String    @unique
   brand          String
   purchaseDate   DateTime
-  purchasePrice  Float
-  condition      String    @default("new")
+  purchasePrice  Decimal
+  condition      TyreCondition    @default(new)
   lastInspection DateTime?
   retiredDate    DateTime?
   retiredReason  String?
@@ -1469,7 +1698,7 @@ model VehicleInspection {
   type                String
   inspectionDate      DateTime  @default(now())
   odometerReading     Float?
-  result              String    @default("pass")
+  result              VehicleInspectionResult    @default(pass)
   overallNotes        String?
   checkItems          String
   totalChecks         Int       @default(0)
@@ -1491,7 +1720,7 @@ model VehicleInspection {
   createdAt           DateTime  @default(now())
   updatedAt DateTime @updatedAt
   driver              Driver?   @relation(fields: [driverId], references: [id])
-  trip                Trip?     @relation(fields: [tripId], references: [id])
+  trip                Trip?     @relation(fields: [tripId], references: [id], onDelete: Cascade)
   truck               Truck     @relation(fields: [truckId], references: [id])
 
   @@index([driverId])
@@ -1508,14 +1737,14 @@ model WarehouseItem {
   sku           String    @unique
   quantity      Int       @default(0)
   minStock      Int       @default(5)
-  unitPrice     Float
+  unitPrice     Decimal
   unit          String    @default("pcs")
   warehouse     String    @default("Main Depot")
   location      String?
   supplier      String?
   lastRestocked DateTime?
   expiryDate    DateTime?
-  status        String    @default("in_stock")
+  status        WarehouseItemStatus    @default(in_stock)
   notes         String?
   createdBy     String
   createdAt     DateTime  @default(now())
@@ -1538,7 +1767,7 @@ model WeightVerification {
   declaredWeight  Float?
   variance        Float?
   variancePercent Float?
-  status          String   @default("verified")
+  status          WeightVerificationStatus   @default(verified)
   verifiedBy      String?
   verifiedByName  String?
   notes           String?
@@ -1556,7 +1785,7 @@ model WeightVerification {
 model ZoneRate {
   id                      String                    @id @default(cuid())
   destinationZoneId       String
-  rateAmount              Float
+  rateAmount              Decimal
   minMileage              Float?
   maxMileage              Float?
   expectedFuelConsumption Float?
@@ -1574,7 +1803,7 @@ model DvlaRenewalHistory {
   id                  String                    @id @default(cuid())
   dvlaRegistrationId  String
   previousData        String                    @db.Text
-  renewalFee          Float?
+  renewalFee          Decimal?
   renewedByName       String?
   notes               String?
   createdAt           DateTime                  @default(now())
@@ -1588,7 +1817,7 @@ model InsuranceRenewalHistory {
   id                  String                    @id @default(cuid())
   insuranceId         String
   previousData        String                    @db.Text
-  renewalFee          Float?
+  renewalFee          Decimal?
   renewedByName       String?
   notes               String?
   createdAt           DateTime                  @default(now())

@@ -54,7 +54,7 @@ export type VehicleInspectionMinAggregateOutputType = {
   type: string | null
   inspectionDate: Date | null
   odometerReading: number | null
-  result: string | null
+  result: $Enums.VehicleInspectionResult | null
   overallNotes: string | null
   checkItems: string | null
   totalChecks: number | null
@@ -85,7 +85,7 @@ export type VehicleInspectionMaxAggregateOutputType = {
   type: string | null
   inspectionDate: Date | null
   odometerReading: number | null
-  result: string | null
+  result: $Enums.VehicleInspectionResult | null
   overallNotes: string | null
   checkItems: string | null
   totalChecks: number | null
@@ -349,7 +349,7 @@ export type VehicleInspectionGroupByOutputType = {
   type: string
   inspectionDate: Date
   odometerReading: number | null
-  result: string
+  result: $Enums.VehicleInspectionResult
   overallNotes: string | null
   checkItems: string
   totalChecks: number
@@ -403,7 +403,7 @@ export type VehicleInspectionWhereInput = {
   type?: Prisma.StringFilter<"VehicleInspection"> | string
   inspectionDate?: Prisma.DateTimeFilter<"VehicleInspection"> | Date | string
   odometerReading?: Prisma.FloatNullableFilter<"VehicleInspection"> | number | null
-  result?: Prisma.StringFilter<"VehicleInspection"> | string
+  result?: Prisma.EnumVehicleInspectionResultFilter<"VehicleInspection"> | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.StringNullableFilter<"VehicleInspection"> | string | null
   checkItems?: Prisma.StringFilter<"VehicleInspection"> | string
   totalChecks?: Prisma.IntFilter<"VehicleInspection"> | number
@@ -475,7 +475,7 @@ export type VehicleInspectionWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"VehicleInspection"> | string
   inspectionDate?: Prisma.DateTimeFilter<"VehicleInspection"> | Date | string
   odometerReading?: Prisma.FloatNullableFilter<"VehicleInspection"> | number | null
-  result?: Prisma.StringFilter<"VehicleInspection"> | string
+  result?: Prisma.EnumVehicleInspectionResultFilter<"VehicleInspection"> | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.StringNullableFilter<"VehicleInspection"> | string | null
   checkItems?: Prisma.StringFilter<"VehicleInspection"> | string
   totalChecks?: Prisma.IntFilter<"VehicleInspection"> | number
@@ -548,7 +548,7 @@ export type VehicleInspectionScalarWhereWithAggregatesInput = {
   type?: Prisma.StringWithAggregatesFilter<"VehicleInspection"> | string
   inspectionDate?: Prisma.DateTimeWithAggregatesFilter<"VehicleInspection"> | Date | string
   odometerReading?: Prisma.FloatNullableWithAggregatesFilter<"VehicleInspection"> | number | null
-  result?: Prisma.StringWithAggregatesFilter<"VehicleInspection"> | string
+  result?: Prisma.EnumVehicleInspectionResultWithAggregatesFilter<"VehicleInspection"> | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.StringNullableWithAggregatesFilter<"VehicleInspection"> | string | null
   checkItems?: Prisma.StringWithAggregatesFilter<"VehicleInspection"> | string
   totalChecks?: Prisma.IntWithAggregatesFilter<"VehicleInspection"> | number
@@ -576,7 +576,7 @@ export type VehicleInspectionCreateInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -610,7 +610,7 @@ export type VehicleInspectionUncheckedCreateInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -638,7 +638,7 @@ export type VehicleInspectionUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -672,7 +672,7 @@ export type VehicleInspectionUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -703,7 +703,7 @@ export type VehicleInspectionCreateManyInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -731,7 +731,7 @@ export type VehicleInspectionUpdateManyMutationInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -762,7 +762,7 @@ export type VehicleInspectionUncheckedUpdateManyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1040,12 +1040,16 @@ export type VehicleInspectionUncheckedUpdateManyWithoutTruckNestedInput = {
   deleteMany?: Prisma.VehicleInspectionScalarWhereInput | Prisma.VehicleInspectionScalarWhereInput[]
 }
 
+export type EnumVehicleInspectionResultFieldUpdateOperationsInput = {
+  set?: $Enums.VehicleInspectionResult
+}
+
 export type VehicleInspectionCreateWithoutDriverInput = {
   id?: string
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1077,7 +1081,7 @@ export type VehicleInspectionUncheckedCreateWithoutDriverInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1137,7 +1141,7 @@ export type VehicleInspectionScalarWhereInput = {
   type?: Prisma.StringFilter<"VehicleInspection"> | string
   inspectionDate?: Prisma.DateTimeFilter<"VehicleInspection"> | Date | string
   odometerReading?: Prisma.FloatNullableFilter<"VehicleInspection"> | number | null
-  result?: Prisma.StringFilter<"VehicleInspection"> | string
+  result?: Prisma.EnumVehicleInspectionResultFilter<"VehicleInspection"> | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.StringNullableFilter<"VehicleInspection"> | string | null
   checkItems?: Prisma.StringFilter<"VehicleInspection"> | string
   totalChecks?: Prisma.IntFilter<"VehicleInspection"> | number
@@ -1165,7 +1169,7 @@ export type VehicleInspectionCreateWithoutTripInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1197,7 +1201,7 @@ export type VehicleInspectionUncheckedCreateWithoutTripInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1251,7 +1255,7 @@ export type VehicleInspectionCreateWithoutTruckInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1283,7 +1287,7 @@ export type VehicleInspectionUncheckedCreateWithoutTruckInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1339,7 +1343,7 @@ export type VehicleInspectionCreateManyDriverInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1367,7 +1371,7 @@ export type VehicleInspectionUpdateWithoutDriverInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1399,7 +1403,7 @@ export type VehicleInspectionUncheckedUpdateWithoutDriverInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1429,7 +1433,7 @@ export type VehicleInspectionUncheckedUpdateManyWithoutDriverInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1459,7 +1463,7 @@ export type VehicleInspectionCreateManyTripInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1487,7 +1491,7 @@ export type VehicleInspectionUpdateWithoutTripInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1519,7 +1523,7 @@ export type VehicleInspectionUncheckedUpdateWithoutTripInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1549,7 +1553,7 @@ export type VehicleInspectionUncheckedUpdateManyWithoutTripInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1579,7 +1583,7 @@ export type VehicleInspectionCreateManyTruckInput = {
   type: string
   inspectionDate?: Date | string
   odometerReading?: number | null
-  result?: string
+  result?: $Enums.VehicleInspectionResult
   overallNotes?: string | null
   checkItems: string
   totalChecks?: number
@@ -1607,7 +1611,7 @@ export type VehicleInspectionUpdateWithoutTruckInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1639,7 +1643,7 @@ export type VehicleInspectionUncheckedUpdateWithoutTruckInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1669,7 +1673,7 @@ export type VehicleInspectionUncheckedUpdateManyWithoutTruckInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   inspectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometerReading?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  result?: Prisma.StringFieldUpdateOperationsInput | string
+  result?: Prisma.EnumVehicleInspectionResultFieldUpdateOperationsInput | $Enums.VehicleInspectionResult
   overallNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkItems?: Prisma.StringFieldUpdateOperationsInput | string
   totalChecks?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1783,7 +1787,7 @@ export type $VehicleInspectionPayload<ExtArgs extends runtime.Types.Extensions.I
     type: string
     inspectionDate: Date
     odometerReading: number | null
-    result: string
+    result: $Enums.VehicleInspectionResult
     overallNotes: string | null
     checkItems: string
     totalChecks: number
@@ -2183,7 +2187,7 @@ export interface VehicleInspectionFieldRefs {
   readonly type: Prisma.FieldRef<"VehicleInspection", 'String'>
   readonly inspectionDate: Prisma.FieldRef<"VehicleInspection", 'DateTime'>
   readonly odometerReading: Prisma.FieldRef<"VehicleInspection", 'Float'>
-  readonly result: Prisma.FieldRef<"VehicleInspection", 'String'>
+  readonly result: Prisma.FieldRef<"VehicleInspection", 'VehicleInspectionResult'>
   readonly overallNotes: Prisma.FieldRef<"VehicleInspection", 'String'>
   readonly checkItems: Prisma.FieldRef<"VehicleInspection", 'String'>
   readonly totalChecks: Prisma.FieldRef<"VehicleInspection", 'Int'>

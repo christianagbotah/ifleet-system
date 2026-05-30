@@ -1036,6 +1036,7 @@ export type SupplierScalarFieldEnum = (typeof SupplierScalarFieldEnum)[keyof typ
 
 export const SystemSettingsScalarFieldEnum = {
   id: 'id',
+  isDefault: 'isDefault',
   companyName: 'companyName',
   companyEmail: 'companyEmail',
   companyPhone: 'companyPhone',
@@ -1513,7 +1514,6 @@ export const BorderCrossingOrderByRelevanceFieldEnum = {
   borderName: 'borderName',
   country: 'country',
   direction: 'direction',
-  status: 'status',
   documentStatus: 'documentStatus',
   notes: 'notes',
   createdBy: 'createdBy'
@@ -1530,7 +1530,6 @@ export const CashAdvanceOrderByRelevanceFieldEnum = {
   paymentMethod: 'paymentMethod',
   mobileMoneyRef: 'mobileMoneyRef',
   mobileMoneyNetwork: 'mobileMoneyNetwork',
-  status: 'status',
   approvedBy: 'approvedBy',
   rejectionReason: 'rejectionReason',
   disbursedBy: 'disbursedBy',
@@ -1586,7 +1585,6 @@ export const DeliveryStopOrderByRelevanceFieldEnum = {
   customerName: 'customerName',
   customerPhone: 'customerPhone',
   unit: 'unit',
-  status: 'status',
   notes: 'notes'
 } as const
 
@@ -1600,7 +1598,6 @@ export const DepotQueueOrderByRelevanceFieldEnum = {
   tripId: 'tripId',
   depotName: 'depotName',
   queueType: 'queueType',
-  status: 'status',
   notes: 'notes',
   createdBy: 'createdBy'
 } as const
@@ -1660,10 +1657,8 @@ export const DriverOrderByRelevanceFieldEnum = {
   ghanaCardBackImage: 'ghanaCardBackImage',
   emergencyName: 'emergencyName',
   emergencyPhone: 'emergencyPhone',
-  verificationStatus: 'verificationStatus',
   verifiedBy: 'verifiedBy',
-  verificationNotes: 'verificationNotes',
-  status: 'status'
+  verificationNotes: 'verificationNotes'
 } as const
 
 export type DriverOrderByRelevanceFieldEnum = (typeof DriverOrderByRelevanceFieldEnum)[keyof typeof DriverOrderByRelevanceFieldEnum]
@@ -1676,7 +1671,6 @@ export const DriverIncentiveOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   period: 'period',
-  status: 'status',
   approvedBy: 'approvedBy',
   metrics: 'metrics',
   createdBy: 'createdBy'
@@ -1689,7 +1683,6 @@ export const DriverSettlementOrderByRelevanceFieldEnum = {
   id: 'id',
   driverId: 'driverId',
   period: 'period',
-  status: 'status',
   approvedBy: 'approvedBy',
   notes: 'notes'
 } as const
@@ -1722,7 +1715,6 @@ export const DvlaRegistrationOrderByRelevanceFieldEnum = {
   ownerAddress: 'ownerAddress',
   ownerContact: 'ownerContact',
   dvlaOffice: 'dvlaOffice',
-  status: 'status',
   documentUrl: 'documentUrl',
   transferHistory: 'transferHistory',
   notes: 'notes'
@@ -1739,7 +1731,6 @@ export const ExpenseOrderByRelevanceFieldEnum = {
   paymentMethod: 'paymentMethod',
   reference: 'reference',
   approvedBy: 'approvedBy',
-  status: 'status',
   receiptUrl: 'receiptUrl',
   tripId: 'tripId'
 } as const
@@ -1750,7 +1741,6 @@ export type ExpenseOrderByRelevanceFieldEnum = (typeof ExpenseOrderByRelevanceFi
 export const ExpenseApprovalOrderByRelevanceFieldEnum = {
   id: 'id',
   expenseId: 'expenseId',
-  status: 'status',
   requestedById: 'requestedById',
   approvedById: 'approvedById',
   notes: 'notes',
@@ -1830,7 +1820,6 @@ export const InsuranceOrderByRelevanceFieldEnum = {
   provider: 'provider',
   policyNumber: 'policyNumber',
   type: 'type',
-  status: 'status',
   documentUrl: 'documentUrl',
   notes: 'notes'
 } as const
@@ -1846,7 +1835,6 @@ export const InsuranceClaimOrderByRelevanceFieldEnum = {
   claimType: 'claimType',
   incidentLocation: 'incidentLocation',
   description: 'description',
-  status: 'status',
   assignedAdjuster: 'assignedAdjuster',
   policeReport: 'policeReport',
   thirdPartyDetails: 'thirdPartyDetails',
@@ -1864,7 +1852,6 @@ export const InvoiceOrderByRelevanceFieldEnum = {
   invoiceNumber: 'invoiceNumber',
   clientId: 'clientId',
   tripId: 'tripId',
-  status: 'status',
   notes: 'notes',
   terms: 'terms'
 } as const
@@ -1902,7 +1889,6 @@ export const LoadBoardOrderByRelevanceFieldEnum = {
   dropoffRegion: 'dropoffRegion',
   commodityType: 'commodityType',
   truckType: 'truckType',
-  status: 'status',
   requirements: 'requirements',
   contactName: 'contactName',
   contactPhone: 'contactPhone',
@@ -1943,7 +1929,6 @@ export const MaintenanceRecordOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   performedBy: 'performedBy',
-  status: 'status',
   partsUsed: 'partsUsed',
   invoiceUrl: 'invoiceUrl'
 } as const
@@ -1979,7 +1964,6 @@ export type PasswordResetTokenOrderByRelevanceFieldEnum = (typeof PasswordResetT
 export const PayrollOrderByRelevanceFieldEnum = {
   id: 'id',
   driverId: 'driverId',
-  status: 'status',
   approvedBy: 'approvedBy',
   notes: 'notes'
 } as const
@@ -2011,7 +1995,6 @@ export const ReportHistoryOrderByRelevanceFieldEnum = {
   format: 'format',
   parameters: 'parameters',
   generatedBy: 'generatedBy',
-  status: 'status',
   error: 'error'
 } as const
 
@@ -2027,7 +2010,6 @@ export const RoadConditionReportOrderByRelevanceFieldEnum = {
   hazardType: 'hazardType',
   description: 'description',
   severity: 'severity',
-  status: 'status',
   imageUrl: 'imageUrl',
   tripId: 'tripId'
 } as const
@@ -2057,8 +2039,7 @@ export const RoadworthyInspectionOrderByRelevanceFieldEnum = {
   defectsFound: 'defectsFound',
   advisories: 'advisories',
   recommendations: 'recommendations',
-  certificateUrl: 'certificateUrl',
-  status: 'status'
+  certificateUrl: 'certificateUrl'
 } as const
 
 export type RoadworthyInspectionOrderByRelevanceFieldEnum = (typeof RoadworthyInspectionOrderByRelevanceFieldEnum)[keyof typeof RoadworthyInspectionOrderByRelevanceFieldEnum]
@@ -2146,7 +2127,6 @@ export const TollRecordOrderByRelevanceFieldEnum = {
   paymentMethod: 'paymentMethod',
   referenceNumber: 'referenceNumber',
   direction: 'direction',
-  status: 'status',
   disputeReason: 'disputeReason',
   resolvedBy: 'resolvedBy',
   notes: 'notes'
@@ -2196,7 +2176,6 @@ export const TripOrderByRelevanceFieldEnum = {
   loadingPointId: 'loadingPointId',
   destinationCityId: 'destinationCityId',
   destinationZoneId: 'destinationZoneId',
-  status: 'status',
   waitingReason: 'waitingReason',
   customerName: 'customerName',
   customerPhone: 'customerPhone',
@@ -2225,7 +2204,6 @@ export const TripDeliveryDestinationOrderByRelevanceFieldEnum = {
   clientId: 'clientId',
   customerName: 'customerName',
   customerPhone: 'customerPhone',
-  status: 'status',
   address: 'address',
   notes: 'notes'
 } as const
@@ -2271,10 +2249,8 @@ export const TruckOrderByRelevanceFieldEnum = {
   chassisNumber: 'chassisNumber',
   color: 'color',
   fuelType: 'fuelType',
-  status: 'status',
   driverId: 'driverId',
-  notes: 'notes',
-  insuranceStatus: 'insuranceStatus'
+  notes: 'notes'
 } as const
 
 export type TruckOrderByRelevanceFieldEnum = (typeof TruckOrderByRelevanceFieldEnum)[keyof typeof TruckOrderByRelevanceFieldEnum]
@@ -2295,7 +2271,6 @@ export const TyreOrderByRelevanceFieldEnum = {
   truckId: 'truckId',
   serialNumber: 'serialNumber',
   brand: 'brand',
-  condition: 'condition',
   retiredReason: 'retiredReason',
   notes: 'notes'
 } as const
@@ -2309,7 +2284,6 @@ export const VehicleInspectionOrderByRelevanceFieldEnum = {
   driverId: 'driverId',
   tripId: 'tripId',
   type: 'type',
-  result: 'result',
   overallNotes: 'overallNotes',
   checkItems: 'checkItems',
   defectDetails: 'defectDetails',
@@ -2333,7 +2307,6 @@ export const WarehouseItemOrderByRelevanceFieldEnum = {
   warehouse: 'warehouse',
   location: 'location',
   supplier: 'supplier',
-  status: 'status',
   notes: 'notes',
   createdBy: 'createdBy'
 } as const
@@ -2345,7 +2318,6 @@ export const WeightVerificationOrderByRelevanceFieldEnum = {
   id: 'id',
   tripId: 'tripId',
   checkpointType: 'checkpointType',
-  status: 'status',
   verifiedBy: 'verifiedBy',
   verifiedByName: 'verifiedByName',
   notes: 'notes',

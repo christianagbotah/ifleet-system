@@ -46,6 +46,7 @@ export type SystemSettingsSumAggregateOutputType = {
 
 export type SystemSettingsMinAggregateOutputType = {
   id: string | null
+  isDefault: boolean | null
   companyName: string | null
   companyEmail: string | null
   companyPhone: string | null
@@ -100,6 +101,7 @@ export type SystemSettingsMinAggregateOutputType = {
 
 export type SystemSettingsMaxAggregateOutputType = {
   id: string | null
+  isDefault: boolean | null
   companyName: string | null
   companyEmail: string | null
   companyPhone: string | null
@@ -154,6 +156,7 @@ export type SystemSettingsMaxAggregateOutputType = {
 
 export type SystemSettingsCountAggregateOutputType = {
   id: number
+  isDefault: number
   companyName: number
   companyEmail: number
   companyPhone: number
@@ -228,6 +231,7 @@ export type SystemSettingsSumAggregateInputType = {
 
 export type SystemSettingsMinAggregateInputType = {
   id?: true
+  isDefault?: true
   companyName?: true
   companyEmail?: true
   companyPhone?: true
@@ -282,6 +286,7 @@ export type SystemSettingsMinAggregateInputType = {
 
 export type SystemSettingsMaxAggregateInputType = {
   id?: true
+  isDefault?: true
   companyName?: true
   companyEmail?: true
   companyPhone?: true
@@ -336,6 +341,7 @@ export type SystemSettingsMaxAggregateInputType = {
 
 export type SystemSettingsCountAggregateInputType = {
   id?: true
+  isDefault?: true
   companyName?: true
   companyEmail?: true
   companyPhone?: true
@@ -477,6 +483,7 @@ export type SystemSettingsGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type SystemSettingsGroupByOutputType = {
   id: string
+  isDefault: boolean
   companyName: string
   companyEmail: string
   companyPhone: string
@@ -554,6 +561,7 @@ export type SystemSettingsWhereInput = {
   OR?: Prisma.SystemSettingsWhereInput[]
   NOT?: Prisma.SystemSettingsWhereInput | Prisma.SystemSettingsWhereInput[]
   id?: Prisma.StringFilter<"SystemSettings"> | string
+  isDefault?: Prisma.BoolFilter<"SystemSettings"> | boolean
   companyName?: Prisma.StringFilter<"SystemSettings"> | string
   companyEmail?: Prisma.StringFilter<"SystemSettings"> | string
   companyPhone?: Prisma.StringFilter<"SystemSettings"> | string
@@ -608,6 +616,7 @@ export type SystemSettingsWhereInput = {
 
 export type SystemSettingsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyEmail?: Prisma.SortOrder
   companyPhone?: Prisma.SortOrder
@@ -663,6 +672,7 @@ export type SystemSettingsOrderByWithRelationInput = {
 
 export type SystemSettingsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  isDefault?: boolean
   AND?: Prisma.SystemSettingsWhereInput | Prisma.SystemSettingsWhereInput[]
   OR?: Prisma.SystemSettingsWhereInput[]
   NOT?: Prisma.SystemSettingsWhereInput | Prisma.SystemSettingsWhereInput[]
@@ -716,10 +726,11 @@ export type SystemSettingsWhereUniqueInput = Prisma.AtLeast<{
   driverIdPadding?: Prisma.IntFilter<"SystemSettings"> | number
   createdAt?: Prisma.DateTimeFilter<"SystemSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SystemSettings"> | Date | string
-}, "id">
+}, "id" | "isDefault">
 
 export type SystemSettingsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyEmail?: Prisma.SortOrder
   companyPhone?: Prisma.SortOrder
@@ -782,6 +793,7 @@ export type SystemSettingsScalarWhereWithAggregatesInput = {
   OR?: Prisma.SystemSettingsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SystemSettingsScalarWhereWithAggregatesInput | Prisma.SystemSettingsScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
+  isDefault?: Prisma.BoolWithAggregatesFilter<"SystemSettings"> | boolean
   companyName?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
   companyEmail?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
   companyPhone?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
@@ -836,6 +848,7 @@ export type SystemSettingsScalarWhereWithAggregatesInput = {
 
 export type SystemSettingsCreateInput = {
   id?: string
+  isDefault?: boolean
   companyName?: string
   companyEmail?: string
   companyPhone?: string
@@ -890,6 +903,7 @@ export type SystemSettingsCreateInput = {
 
 export type SystemSettingsUncheckedCreateInput = {
   id?: string
+  isDefault?: boolean
   companyName?: string
   companyEmail?: string
   companyPhone?: string
@@ -944,6 +958,7 @@ export type SystemSettingsUncheckedCreateInput = {
 
 export type SystemSettingsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyEmail?: Prisma.StringFieldUpdateOperationsInput | string
   companyPhone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -998,6 +1013,7 @@ export type SystemSettingsUpdateInput = {
 
 export type SystemSettingsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyEmail?: Prisma.StringFieldUpdateOperationsInput | string
   companyPhone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1052,6 +1068,7 @@ export type SystemSettingsUncheckedUpdateInput = {
 
 export type SystemSettingsCreateManyInput = {
   id?: string
+  isDefault?: boolean
   companyName?: string
   companyEmail?: string
   companyPhone?: string
@@ -1106,6 +1123,7 @@ export type SystemSettingsCreateManyInput = {
 
 export type SystemSettingsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyEmail?: Prisma.StringFieldUpdateOperationsInput | string
   companyPhone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1160,6 +1178,7 @@ export type SystemSettingsUpdateManyMutationInput = {
 
 export type SystemSettingsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyEmail?: Prisma.StringFieldUpdateOperationsInput | string
   companyPhone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1220,6 +1239,7 @@ export type SystemSettingsOrderByRelevanceInput = {
 
 export type SystemSettingsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyEmail?: Prisma.SortOrder
   companyPhone?: Prisma.SortOrder
@@ -1283,6 +1303,7 @@ export type SystemSettingsAvgOrderByAggregateInput = {
 
 export type SystemSettingsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyEmail?: Prisma.SortOrder
   companyPhone?: Prisma.SortOrder
@@ -1337,6 +1358,7 @@ export type SystemSettingsMaxOrderByAggregateInput = {
 
 export type SystemSettingsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyEmail?: Prisma.SortOrder
   companyPhone?: Prisma.SortOrder
@@ -1402,6 +1424,7 @@ export type SystemSettingsSumOrderByAggregateInput = {
 
 export type SystemSettingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  isDefault?: boolean
   companyName?: boolean
   companyEmail?: boolean
   companyPhone?: boolean
@@ -1458,6 +1481,7 @@ export type SystemSettingsSelect<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type SystemSettingsSelectScalar = {
   id?: boolean
+  isDefault?: boolean
   companyName?: boolean
   companyEmail?: boolean
   companyPhone?: boolean
@@ -1510,13 +1534,14 @@ export type SystemSettingsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SystemSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "companyEmail" | "companyPhone" | "companyAddress" | "companyCity" | "companyCountry" | "companyWebsite" | "registrationNumber" | "notifyTripStarted" | "notifyTripCompleted" | "notifyMaintenanceDue" | "notifyInsuranceExpiring" | "notifySpeedingAlert" | "notifyGeofenceAlert" | "notifyDriverOffline" | "notifyDailyReport" | "smsProvider" | "smsEnabled" | "hubtelClientId" | "hubtelApiSecret" | "arkeselApiKey" | "arkeselSenderId" | "paystackEnabled" | "paystackSecretKey" | "paystackPublicKey" | "paystackMode" | "mobileMoneyProvider" | "paystackWebhookSecret" | "emailEnabled" | "smtpHost" | "smtpPort" | "smtpUser" | "smtpPass" | "smtpFrom" | "smtpSecure" | "defaultUpdateInterval" | "speedThreshold" | "enableGeofence" | "idleTimeout" | "currency" | "distanceUnit" | "fuelUnit" | "dateFormat" | "timezone" | "language" | "driverIdPrefix" | "driverIdCounter" | "driverIdPadding" | "createdAt" | "updatedAt", ExtArgs["result"]["systemSettings"]>
+export type SystemSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isDefault" | "companyName" | "companyEmail" | "companyPhone" | "companyAddress" | "companyCity" | "companyCountry" | "companyWebsite" | "registrationNumber" | "notifyTripStarted" | "notifyTripCompleted" | "notifyMaintenanceDue" | "notifyInsuranceExpiring" | "notifySpeedingAlert" | "notifyGeofenceAlert" | "notifyDriverOffline" | "notifyDailyReport" | "smsProvider" | "smsEnabled" | "hubtelClientId" | "hubtelApiSecret" | "arkeselApiKey" | "arkeselSenderId" | "paystackEnabled" | "paystackSecretKey" | "paystackPublicKey" | "paystackMode" | "mobileMoneyProvider" | "paystackWebhookSecret" | "emailEnabled" | "smtpHost" | "smtpPort" | "smtpUser" | "smtpPass" | "smtpFrom" | "smtpSecure" | "defaultUpdateInterval" | "speedThreshold" | "enableGeofence" | "idleTimeout" | "currency" | "distanceUnit" | "fuelUnit" | "dateFormat" | "timezone" | "language" | "driverIdPrefix" | "driverIdCounter" | "driverIdPadding" | "createdAt" | "updatedAt", ExtArgs["result"]["systemSettings"]>
 
 export type $SystemSettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SystemSettings"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    isDefault: boolean
     companyName: string
     companyEmail: string
     companyPhone: string
@@ -1937,6 +1962,7 @@ export interface Prisma__SystemSettingsClient<T, Null = never, ExtArgs extends r
  */
 export interface SystemSettingsFieldRefs {
   readonly id: Prisma.FieldRef<"SystemSettings", 'String'>
+  readonly isDefault: Prisma.FieldRef<"SystemSettings", 'Boolean'>
   readonly companyName: Prisma.FieldRef<"SystemSettings", 'String'>
   readonly companyEmail: Prisma.FieldRef<"SystemSettings", 'String'>
   readonly companyPhone: Prisma.FieldRef<"SystemSettings", 'String'>

@@ -27,34 +27,34 @@ export type AggregateCashAdvance = {
 }
 
 export type CashAdvanceAvgAggregateOutputType = {
-  amount: number | null
-  totalDeducted: number | null
-  remainingBalance: number | null
+  amount: runtime.Decimal | null
+  totalDeducted: runtime.Decimal | null
+  remainingBalance: runtime.Decimal | null
 }
 
 export type CashAdvanceSumAggregateOutputType = {
-  amount: number | null
-  totalDeducted: number | null
-  remainingBalance: number | null
+  amount: runtime.Decimal | null
+  totalDeducted: runtime.Decimal | null
+  remainingBalance: runtime.Decimal | null
 }
 
 export type CashAdvanceMinAggregateOutputType = {
   id: string | null
   driverId: string | null
   tripId: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   purpose: string | null
   paymentMethod: string | null
   mobileMoneyRef: string | null
   mobileMoneyNetwork: string | null
-  status: string | null
+  status: $Enums.CashAdvanceStatus | null
   approvedBy: string | null
   approvedAt: Date | null
   rejectionReason: string | null
   disbursedBy: string | null
   disbursedAt: Date | null
-  totalDeducted: number | null
-  remainingBalance: number | null
+  totalDeducted: runtime.Decimal | null
+  remainingBalance: runtime.Decimal | null
   requestDate: Date | null
   notes: string | null
   createdAt: Date | null
@@ -65,19 +65,19 @@ export type CashAdvanceMaxAggregateOutputType = {
   id: string | null
   driverId: string | null
   tripId: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   purpose: string | null
   paymentMethod: string | null
   mobileMoneyRef: string | null
   mobileMoneyNetwork: string | null
-  status: string | null
+  status: $Enums.CashAdvanceStatus | null
   approvedBy: string | null
   approvedAt: Date | null
   rejectionReason: string | null
   disbursedBy: string | null
   disbursedAt: Date | null
-  totalDeducted: number | null
-  remainingBalance: number | null
+  totalDeducted: runtime.Decimal | null
+  remainingBalance: runtime.Decimal | null
   requestDate: Date | null
   notes: string | null
   createdAt: Date | null
@@ -281,19 +281,19 @@ export type CashAdvanceGroupByOutputType = {
   id: string
   driverId: string
   tripId: string | null
-  amount: number
+  amount: runtime.Decimal
   purpose: string
   paymentMethod: string
   mobileMoneyRef: string | null
   mobileMoneyNetwork: string | null
-  status: string
+  status: $Enums.CashAdvanceStatus
   approvedBy: string | null
   approvedAt: Date | null
   rejectionReason: string | null
   disbursedBy: string | null
   disbursedAt: Date | null
-  totalDeducted: number
-  remainingBalance: number
+  totalDeducted: runtime.Decimal
+  remainingBalance: runtime.Decimal
   requestDate: Date
   notes: string | null
   createdAt: Date
@@ -327,19 +327,19 @@ export type CashAdvanceWhereInput = {
   id?: Prisma.StringFilter<"CashAdvance"> | string
   driverId?: Prisma.StringFilter<"CashAdvance"> | string
   tripId?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
-  amount?: Prisma.FloatFilter<"CashAdvance"> | number
+  amount?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFilter<"CashAdvance"> | string
   paymentMethod?: Prisma.StringFilter<"CashAdvance"> | string
   mobileMoneyRef?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
-  status?: Prisma.StringFilter<"CashAdvance"> | string
+  status?: Prisma.EnumCashAdvanceStatusFilter<"CashAdvance"> | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"CashAdvance"> | Date | string | null
   rejectionReason?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   disbursedBy?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   disbursedAt?: Prisma.DateTimeNullableFilter<"CashAdvance"> | Date | string | null
-  totalDeducted?: Prisma.FloatFilter<"CashAdvance"> | number
-  remainingBalance?: Prisma.FloatFilter<"CashAdvance"> | number
+  totalDeducted?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFilter<"CashAdvance"> | Date | string
   notes?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CashAdvance"> | Date | string
@@ -381,19 +381,19 @@ export type CashAdvanceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CashAdvanceWhereInput | Prisma.CashAdvanceWhereInput[]
   driverId?: Prisma.StringFilter<"CashAdvance"> | string
   tripId?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
-  amount?: Prisma.FloatFilter<"CashAdvance"> | number
+  amount?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFilter<"CashAdvance"> | string
   paymentMethod?: Prisma.StringFilter<"CashAdvance"> | string
   mobileMoneyRef?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
-  status?: Prisma.StringFilter<"CashAdvance"> | string
+  status?: Prisma.EnumCashAdvanceStatusFilter<"CashAdvance"> | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"CashAdvance"> | Date | string | null
   rejectionReason?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   disbursedBy?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   disbursedAt?: Prisma.DateTimeNullableFilter<"CashAdvance"> | Date | string | null
-  totalDeducted?: Prisma.FloatFilter<"CashAdvance"> | number
-  remainingBalance?: Prisma.FloatFilter<"CashAdvance"> | number
+  totalDeducted?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFilter<"CashAdvance"> | Date | string
   notes?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CashAdvance"> | Date | string
@@ -437,19 +437,19 @@ export type CashAdvanceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"CashAdvance"> | string
   driverId?: Prisma.StringWithAggregatesFilter<"CashAdvance"> | string
   tripId?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
-  amount?: Prisma.FloatWithAggregatesFilter<"CashAdvance"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringWithAggregatesFilter<"CashAdvance"> | string
   paymentMethod?: Prisma.StringWithAggregatesFilter<"CashAdvance"> | string
   mobileMoneyRef?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"CashAdvance"> | string
+  status?: Prisma.EnumCashAdvanceStatusWithAggregatesFilter<"CashAdvance"> | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CashAdvance"> | Date | string | null
   rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
   disbursedBy?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
   disbursedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CashAdvance"> | Date | string | null
-  totalDeducted?: Prisma.FloatWithAggregatesFilter<"CashAdvance"> | number
-  remainingBalance?: Prisma.FloatWithAggregatesFilter<"CashAdvance"> | number
+  totalDeducted?: Prisma.DecimalWithAggregatesFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalWithAggregatesFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeWithAggregatesFilter<"CashAdvance"> | Date | string
   notes?: Prisma.StringNullableWithAggregatesFilter<"CashAdvance"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CashAdvance"> | Date | string
@@ -458,19 +458,19 @@ export type CashAdvanceScalarWhereWithAggregatesInput = {
 
 export type CashAdvanceCreateInput = {
   id?: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -483,19 +483,19 @@ export type CashAdvanceUncheckedCreateInput = {
   id?: string
   driverId: string
   tripId?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -504,19 +504,19 @@ export type CashAdvanceUncheckedCreateInput = {
 
 export type CashAdvanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -529,19 +529,19 @@ export type CashAdvanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -552,19 +552,19 @@ export type CashAdvanceCreateManyInput = {
   id?: string
   driverId: string
   tripId?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -573,19 +573,19 @@ export type CashAdvanceCreateManyInput = {
 
 export type CashAdvanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -596,19 +596,19 @@ export type CashAdvanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -712,12 +712,16 @@ export type CashAdvanceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumCashAdvanceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.CashAdvanceStatus
 }
 
 export type CashAdvanceCreateNestedManyWithoutDriverInput = {
@@ -806,19 +810,19 @@ export type CashAdvanceUncheckedUpdateManyWithoutTripNestedInput = {
 
 export type CashAdvanceCreateWithoutDriverInput = {
   id?: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -829,19 +833,19 @@ export type CashAdvanceCreateWithoutDriverInput = {
 export type CashAdvanceUncheckedCreateWithoutDriverInput = {
   id?: string
   tripId?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -881,19 +885,19 @@ export type CashAdvanceScalarWhereInput = {
   id?: Prisma.StringFilter<"CashAdvance"> | string
   driverId?: Prisma.StringFilter<"CashAdvance"> | string
   tripId?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
-  amount?: Prisma.FloatFilter<"CashAdvance"> | number
+  amount?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFilter<"CashAdvance"> | string
   paymentMethod?: Prisma.StringFilter<"CashAdvance"> | string
   mobileMoneyRef?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   mobileMoneyNetwork?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
-  status?: Prisma.StringFilter<"CashAdvance"> | string
+  status?: Prisma.EnumCashAdvanceStatusFilter<"CashAdvance"> | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"CashAdvance"> | Date | string | null
   rejectionReason?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   disbursedBy?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   disbursedAt?: Prisma.DateTimeNullableFilter<"CashAdvance"> | Date | string | null
-  totalDeducted?: Prisma.FloatFilter<"CashAdvance"> | number
-  remainingBalance?: Prisma.FloatFilter<"CashAdvance"> | number
+  totalDeducted?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFilter<"CashAdvance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFilter<"CashAdvance"> | Date | string
   notes?: Prisma.StringNullableFilter<"CashAdvance"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CashAdvance"> | Date | string
@@ -902,19 +906,19 @@ export type CashAdvanceScalarWhereInput = {
 
 export type CashAdvanceCreateWithoutTripInput = {
   id?: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -925,19 +929,19 @@ export type CashAdvanceCreateWithoutTripInput = {
 export type CashAdvanceUncheckedCreateWithoutTripInput = {
   id?: string
   driverId: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -973,19 +977,19 @@ export type CashAdvanceUpdateManyWithWhereWithoutTripInput = {
 export type CashAdvanceCreateManyDriverInput = {
   id?: string
   tripId?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -994,19 +998,19 @@ export type CashAdvanceCreateManyDriverInput = {
 
 export type CashAdvanceUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1017,19 +1021,19 @@ export type CashAdvanceUpdateWithoutDriverInput = {
 export type CashAdvanceUncheckedUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1039,19 +1043,19 @@ export type CashAdvanceUncheckedUpdateWithoutDriverInput = {
 export type CashAdvanceUncheckedUpdateManyWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1061,19 +1065,19 @@ export type CashAdvanceUncheckedUpdateManyWithoutDriverInput = {
 export type CashAdvanceCreateManyTripInput = {
   id?: string
   driverId: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose: string
   paymentMethod?: string
   mobileMoneyRef?: string | null
   mobileMoneyNetwork?: string | null
-  status?: string
+  status?: $Enums.CashAdvanceStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   rejectionReason?: string | null
   disbursedBy?: string | null
   disbursedAt?: Date | string | null
-  totalDeducted?: number
-  remainingBalance?: number
+  totalDeducted?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Date | string
   notes?: string | null
   createdAt?: Date | string
@@ -1082,19 +1086,19 @@ export type CashAdvanceCreateManyTripInput = {
 
 export type CashAdvanceUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1105,19 +1109,19 @@ export type CashAdvanceUpdateWithoutTripInput = {
 export type CashAdvanceUncheckedUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1127,19 +1131,19 @@ export type CashAdvanceUncheckedUpdateWithoutTripInput = {
 export type CashAdvanceUncheckedUpdateManyWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   mobileMoneyRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobileMoneyNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCashAdvanceStatusFieldUpdateOperationsInput | $Enums.CashAdvanceStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   disbursedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  totalDeducted?: Prisma.FloatFieldUpdateOperationsInput | number
-  remainingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalDeducted?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   requestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1214,19 +1218,19 @@ export type $CashAdvancePayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     driverId: string
     tripId: string | null
-    amount: number
+    amount: runtime.Decimal
     purpose: string
     paymentMethod: string
     mobileMoneyRef: string | null
     mobileMoneyNetwork: string | null
-    status: string
+    status: $Enums.CashAdvanceStatus
     approvedBy: string | null
     approvedAt: Date | null
     rejectionReason: string | null
     disbursedBy: string | null
     disbursedAt: Date | null
-    totalDeducted: number
-    remainingBalance: number
+    totalDeducted: runtime.Decimal
+    remainingBalance: runtime.Decimal
     requestDate: Date
     notes: string | null
     createdAt: Date
@@ -1605,19 +1609,19 @@ export interface CashAdvanceFieldRefs {
   readonly id: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly driverId: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly tripId: Prisma.FieldRef<"CashAdvance", 'String'>
-  readonly amount: Prisma.FieldRef<"CashAdvance", 'Float'>
+  readonly amount: Prisma.FieldRef<"CashAdvance", 'Decimal'>
   readonly purpose: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly paymentMethod: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly mobileMoneyRef: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly mobileMoneyNetwork: Prisma.FieldRef<"CashAdvance", 'String'>
-  readonly status: Prisma.FieldRef<"CashAdvance", 'String'>
+  readonly status: Prisma.FieldRef<"CashAdvance", 'CashAdvanceStatus'>
   readonly approvedBy: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly approvedAt: Prisma.FieldRef<"CashAdvance", 'DateTime'>
   readonly rejectionReason: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly disbursedBy: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly disbursedAt: Prisma.FieldRef<"CashAdvance", 'DateTime'>
-  readonly totalDeducted: Prisma.FieldRef<"CashAdvance", 'Float'>
-  readonly remainingBalance: Prisma.FieldRef<"CashAdvance", 'Float'>
+  readonly totalDeducted: Prisma.FieldRef<"CashAdvance", 'Decimal'>
+  readonly remainingBalance: Prisma.FieldRef<"CashAdvance", 'Decimal'>
   readonly requestDate: Prisma.FieldRef<"CashAdvance", 'DateTime'>
   readonly notes: Prisma.FieldRef<"CashAdvance", 'String'>
   readonly createdAt: Prisma.FieldRef<"CashAdvance", 'DateTime'>

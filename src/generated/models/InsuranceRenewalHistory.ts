@@ -27,18 +27,18 @@ export type AggregateInsuranceRenewalHistory = {
 }
 
 export type InsuranceRenewalHistoryAvgAggregateOutputType = {
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
 }
 
 export type InsuranceRenewalHistorySumAggregateOutputType = {
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
 }
 
 export type InsuranceRenewalHistoryMinAggregateOutputType = {
   id: string | null
   insuranceId: string | null
   previousData: string | null
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
   renewedByName: string | null
   notes: string | null
   createdAt: Date | null
@@ -48,7 +48,7 @@ export type InsuranceRenewalHistoryMaxAggregateOutputType = {
   id: string | null
   insuranceId: string | null
   previousData: string | null
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
   renewedByName: string | null
   notes: string | null
   createdAt: Date | null
@@ -195,7 +195,7 @@ export type InsuranceRenewalHistoryGroupByOutputType = {
   id: string
   insuranceId: string
   previousData: string
-  renewalFee: number | null
+  renewalFee: runtime.Decimal | null
   renewedByName: string | null
   notes: string | null
   createdAt: Date
@@ -228,7 +228,7 @@ export type InsuranceRenewalHistoryWhereInput = {
   id?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
   insuranceId?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
   previousData?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableFilter<"InsuranceRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableFilter<"InsuranceRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableFilter<"InsuranceRenewalHistory"> | string | null
   notes?: Prisma.StringNullableFilter<"InsuranceRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceRenewalHistory"> | Date | string
@@ -254,7 +254,7 @@ export type InsuranceRenewalHistoryWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.InsuranceRenewalHistoryWhereInput | Prisma.InsuranceRenewalHistoryWhereInput[]
   insuranceId?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
   previousData?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableFilter<"InsuranceRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableFilter<"InsuranceRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableFilter<"InsuranceRenewalHistory"> | string | null
   notes?: Prisma.StringNullableFilter<"InsuranceRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceRenewalHistory"> | Date | string
@@ -283,7 +283,7 @@ export type InsuranceRenewalHistoryScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"InsuranceRenewalHistory"> | string
   insuranceId?: Prisma.StringWithAggregatesFilter<"InsuranceRenewalHistory"> | string
   previousData?: Prisma.StringWithAggregatesFilter<"InsuranceRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableWithAggregatesFilter<"InsuranceRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableWithAggregatesFilter<"InsuranceRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableWithAggregatesFilter<"InsuranceRenewalHistory"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"InsuranceRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InsuranceRenewalHistory"> | Date | string
@@ -292,7 +292,7 @@ export type InsuranceRenewalHistoryScalarWhereWithAggregatesInput = {
 export type InsuranceRenewalHistoryCreateInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -303,7 +303,7 @@ export type InsuranceRenewalHistoryUncheckedCreateInput = {
   id?: string
   insuranceId: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -312,7 +312,7 @@ export type InsuranceRenewalHistoryUncheckedCreateInput = {
 export type InsuranceRenewalHistoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -323,7 +323,7 @@ export type InsuranceRenewalHistoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   insuranceId?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -333,7 +333,7 @@ export type InsuranceRenewalHistoryCreateManyInput = {
   id?: string
   insuranceId: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -342,7 +342,7 @@ export type InsuranceRenewalHistoryCreateManyInput = {
 export type InsuranceRenewalHistoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -352,7 +352,7 @@ export type InsuranceRenewalHistoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   insuranceId?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,7 +457,7 @@ export type InsuranceRenewalHistoryUncheckedUpdateManyWithoutInsuranceNestedInpu
 export type InsuranceRenewalHistoryCreateWithoutInsuranceInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -466,7 +466,7 @@ export type InsuranceRenewalHistoryCreateWithoutInsuranceInput = {
 export type InsuranceRenewalHistoryUncheckedCreateWithoutInsuranceInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -505,7 +505,7 @@ export type InsuranceRenewalHistoryScalarWhereInput = {
   id?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
   insuranceId?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
   previousData?: Prisma.StringFilter<"InsuranceRenewalHistory"> | string
-  renewalFee?: Prisma.FloatNullableFilter<"InsuranceRenewalHistory"> | number | null
+  renewalFee?: Prisma.DecimalNullableFilter<"InsuranceRenewalHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.StringNullableFilter<"InsuranceRenewalHistory"> | string | null
   notes?: Prisma.StringNullableFilter<"InsuranceRenewalHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceRenewalHistory"> | Date | string
@@ -514,7 +514,7 @@ export type InsuranceRenewalHistoryScalarWhereInput = {
 export type InsuranceRenewalHistoryCreateManyInsuranceInput = {
   id?: string
   previousData: string
-  renewalFee?: number | null
+  renewalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -523,7 +523,7 @@ export type InsuranceRenewalHistoryCreateManyInsuranceInput = {
 export type InsuranceRenewalHistoryUpdateWithoutInsuranceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -532,7 +532,7 @@ export type InsuranceRenewalHistoryUpdateWithoutInsuranceInput = {
 export type InsuranceRenewalHistoryUncheckedUpdateWithoutInsuranceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -541,7 +541,7 @@ export type InsuranceRenewalHistoryUncheckedUpdateWithoutInsuranceInput = {
 export type InsuranceRenewalHistoryUncheckedUpdateManyWithoutInsuranceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   previousData?: Prisma.StringFieldUpdateOperationsInput | string
-  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   renewedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -586,7 +586,7 @@ export type $InsuranceRenewalHistoryPayload<ExtArgs extends runtime.Types.Extens
     id: string
     insuranceId: string
     previousData: string
-    renewalFee: number | null
+    renewalFee: runtime.Decimal | null
     renewedByName: string | null
     notes: string | null
     createdAt: Date
@@ -963,7 +963,7 @@ export interface InsuranceRenewalHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"InsuranceRenewalHistory", 'String'>
   readonly insuranceId: Prisma.FieldRef<"InsuranceRenewalHistory", 'String'>
   readonly previousData: Prisma.FieldRef<"InsuranceRenewalHistory", 'String'>
-  readonly renewalFee: Prisma.FieldRef<"InsuranceRenewalHistory", 'Float'>
+  readonly renewalFee: Prisma.FieldRef<"InsuranceRenewalHistory", 'Decimal'>
   readonly renewedByName: Prisma.FieldRef<"InsuranceRenewalHistory", 'String'>
   readonly notes: Prisma.FieldRef<"InsuranceRenewalHistory", 'String'>
   readonly createdAt: Prisma.FieldRef<"InsuranceRenewalHistory", 'DateTime'>

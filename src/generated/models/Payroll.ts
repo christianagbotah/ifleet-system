@@ -29,21 +29,21 @@ export type AggregatePayroll = {
 export type PayrollAvgAggregateOutputType = {
   month: number | null
   year: number | null
-  baseSalary: number | null
-  tripBonus: number | null
-  overtimePay: number | null
-  deductions: number | null
-  netPay: number | null
+  baseSalary: runtime.Decimal | null
+  tripBonus: runtime.Decimal | null
+  overtimePay: runtime.Decimal | null
+  deductions: runtime.Decimal | null
+  netPay: runtime.Decimal | null
 }
 
 export type PayrollSumAggregateOutputType = {
   month: number | null
   year: number | null
-  baseSalary: number | null
-  tripBonus: number | null
-  overtimePay: number | null
-  deductions: number | null
-  netPay: number | null
+  baseSalary: runtime.Decimal | null
+  tripBonus: runtime.Decimal | null
+  overtimePay: runtime.Decimal | null
+  deductions: runtime.Decimal | null
+  netPay: runtime.Decimal | null
 }
 
 export type PayrollMinAggregateOutputType = {
@@ -51,12 +51,12 @@ export type PayrollMinAggregateOutputType = {
   driverId: string | null
   month: number | null
   year: number | null
-  baseSalary: number | null
-  tripBonus: number | null
-  overtimePay: number | null
-  deductions: number | null
-  netPay: number | null
-  status: string | null
+  baseSalary: runtime.Decimal | null
+  tripBonus: runtime.Decimal | null
+  overtimePay: runtime.Decimal | null
+  deductions: runtime.Decimal | null
+  netPay: runtime.Decimal | null
+  status: $Enums.PaymentStatus | null
   paidAt: Date | null
   approvedBy: string | null
   notes: string | null
@@ -69,12 +69,12 @@ export type PayrollMaxAggregateOutputType = {
   driverId: string | null
   month: number | null
   year: number | null
-  baseSalary: number | null
-  tripBonus: number | null
-  overtimePay: number | null
-  deductions: number | null
-  netPay: number | null
-  status: string | null
+  baseSalary: runtime.Decimal | null
+  tripBonus: runtime.Decimal | null
+  overtimePay: runtime.Decimal | null
+  deductions: runtime.Decimal | null
+  netPay: runtime.Decimal | null
+  status: $Enums.PaymentStatus | null
   paidAt: Date | null
   approvedBy: string | null
   notes: string | null
@@ -268,12 +268,12 @@ export type PayrollGroupByOutputType = {
   driverId: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus: number
-  overtimePay: number
-  deductions: number
-  netPay: number
-  status: string
+  baseSalary: runtime.Decimal
+  tripBonus: runtime.Decimal
+  overtimePay: runtime.Decimal
+  deductions: runtime.Decimal
+  netPay: runtime.Decimal
+  status: $Enums.PaymentStatus
   paidAt: Date | null
   approvedBy: string | null
   notes: string | null
@@ -309,12 +309,12 @@ export type PayrollWhereInput = {
   driverId?: Prisma.StringFilter<"Payroll"> | string
   month?: Prisma.IntFilter<"Payroll"> | number
   year?: Prisma.IntFilter<"Payroll"> | number
-  baseSalary?: Prisma.FloatFilter<"Payroll"> | number
-  tripBonus?: Prisma.FloatFilter<"Payroll"> | number
-  overtimePay?: Prisma.FloatFilter<"Payroll"> | number
-  deductions?: Prisma.FloatFilter<"Payroll"> | number
-  netPay?: Prisma.FloatFilter<"Payroll"> | number
-  status?: Prisma.StringFilter<"Payroll"> | string
+  baseSalary?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFilter<"Payroll"> | $Enums.PaymentStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Payroll"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"Payroll"> | string | null
   notes?: Prisma.StringNullableFilter<"Payroll"> | string | null
@@ -352,12 +352,12 @@ export type PayrollWhereUniqueInput = Prisma.AtLeast<{
   driverId?: Prisma.StringFilter<"Payroll"> | string
   month?: Prisma.IntFilter<"Payroll"> | number
   year?: Prisma.IntFilter<"Payroll"> | number
-  baseSalary?: Prisma.FloatFilter<"Payroll"> | number
-  tripBonus?: Prisma.FloatFilter<"Payroll"> | number
-  overtimePay?: Prisma.FloatFilter<"Payroll"> | number
-  deductions?: Prisma.FloatFilter<"Payroll"> | number
-  netPay?: Prisma.FloatFilter<"Payroll"> | number
-  status?: Prisma.StringFilter<"Payroll"> | string
+  baseSalary?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFilter<"Payroll"> | $Enums.PaymentStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Payroll"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"Payroll"> | string | null
   notes?: Prisma.StringNullableFilter<"Payroll"> | string | null
@@ -397,12 +397,12 @@ export type PayrollScalarWhereWithAggregatesInput = {
   driverId?: Prisma.StringWithAggregatesFilter<"Payroll"> | string
   month?: Prisma.IntWithAggregatesFilter<"Payroll"> | number
   year?: Prisma.IntWithAggregatesFilter<"Payroll"> | number
-  baseSalary?: Prisma.FloatWithAggregatesFilter<"Payroll"> | number
-  tripBonus?: Prisma.FloatWithAggregatesFilter<"Payroll"> | number
-  overtimePay?: Prisma.FloatWithAggregatesFilter<"Payroll"> | number
-  deductions?: Prisma.FloatWithAggregatesFilter<"Payroll"> | number
-  netPay?: Prisma.FloatWithAggregatesFilter<"Payroll"> | number
-  status?: Prisma.StringWithAggregatesFilter<"Payroll"> | string
+  baseSalary?: Prisma.DecimalWithAggregatesFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalWithAggregatesFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalWithAggregatesFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalWithAggregatesFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalWithAggregatesFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Payroll"> | $Enums.PaymentStatus
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payroll"> | Date | string | null
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"Payroll"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Payroll"> | string | null
@@ -414,12 +414,12 @@ export type PayrollCreateInput = {
   id?: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus?: number
-  overtimePay?: number
-  deductions?: number
-  netPay: number
-  status?: string
+  baseSalary: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.PaymentStatus
   paidAt?: Date | string | null
   approvedBy?: string | null
   notes?: string | null
@@ -433,12 +433,12 @@ export type PayrollUncheckedCreateInput = {
   driverId: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus?: number
-  overtimePay?: number
-  deductions?: number
-  netPay: number
-  status?: string
+  baseSalary: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.PaymentStatus
   paidAt?: Date | string | null
   approvedBy?: string | null
   notes?: string | null
@@ -450,12 +450,12 @@ export type PayrollUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -469,12 +469,12 @@ export type PayrollUncheckedUpdateInput = {
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -487,12 +487,12 @@ export type PayrollCreateManyInput = {
   driverId: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus?: number
-  overtimePay?: number
-  deductions?: number
-  netPay: number
-  status?: string
+  baseSalary: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.PaymentStatus
   paidAt?: Date | string | null
   approvedBy?: string | null
   notes?: string | null
@@ -504,12 +504,12 @@ export type PayrollUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -522,12 +522,12 @@ export type PayrollUncheckedUpdateManyInput = {
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -673,16 +673,20 @@ export type PayrollUncheckedUpdateManyWithoutDriverNestedInput = {
   deleteMany?: Prisma.PayrollScalarWhereInput | Prisma.PayrollScalarWhereInput[]
 }
 
+export type EnumPaymentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentStatus
+}
+
 export type PayrollCreateWithoutDriverInput = {
   id?: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus?: number
-  overtimePay?: number
-  deductions?: number
-  netPay: number
-  status?: string
+  baseSalary: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.PaymentStatus
   paidAt?: Date | string | null
   approvedBy?: string | null
   notes?: string | null
@@ -694,12 +698,12 @@ export type PayrollUncheckedCreateWithoutDriverInput = {
   id?: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus?: number
-  overtimePay?: number
-  deductions?: number
-  netPay: number
-  status?: string
+  baseSalary: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.PaymentStatus
   paidAt?: Date | string | null
   approvedBy?: string | null
   notes?: string | null
@@ -741,12 +745,12 @@ export type PayrollScalarWhereInput = {
   driverId?: Prisma.StringFilter<"Payroll"> | string
   month?: Prisma.IntFilter<"Payroll"> | number
   year?: Prisma.IntFilter<"Payroll"> | number
-  baseSalary?: Prisma.FloatFilter<"Payroll"> | number
-  tripBonus?: Prisma.FloatFilter<"Payroll"> | number
-  overtimePay?: Prisma.FloatFilter<"Payroll"> | number
-  deductions?: Prisma.FloatFilter<"Payroll"> | number
-  netPay?: Prisma.FloatFilter<"Payroll"> | number
-  status?: Prisma.StringFilter<"Payroll"> | string
+  baseSalary?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFilter<"Payroll"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFilter<"Payroll"> | $Enums.PaymentStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Payroll"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"Payroll"> | string | null
   notes?: Prisma.StringNullableFilter<"Payroll"> | string | null
@@ -758,12 +762,12 @@ export type PayrollCreateManyDriverInput = {
   id?: string
   month: number
   year: number
-  baseSalary: number
-  tripBonus?: number
-  overtimePay?: number
-  deductions?: number
-  netPay: number
-  status?: string
+  baseSalary: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.PaymentStatus
   paidAt?: Date | string | null
   approvedBy?: string | null
   notes?: string | null
@@ -775,12 +779,12 @@ export type PayrollUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -792,12 +796,12 @@ export type PayrollUncheckedUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,12 +813,12 @@ export type PayrollUncheckedUpdateManyWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  baseSalary?: Prisma.FloatFieldUpdateOperationsInput | number
-  tripBonus?: Prisma.FloatFieldUpdateOperationsInput | number
-  overtimePay?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductions?: Prisma.FloatFieldUpdateOperationsInput | number
-  netPay?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  baseSalary?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tripBonus?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  overtimePay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -878,12 +882,12 @@ export type $PayrollPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     driverId: string
     month: number
     year: number
-    baseSalary: number
-    tripBonus: number
-    overtimePay: number
-    deductions: number
-    netPay: number
-    status: string
+    baseSalary: runtime.Decimal
+    tripBonus: runtime.Decimal
+    overtimePay: runtime.Decimal
+    deductions: runtime.Decimal
+    netPay: runtime.Decimal
+    status: $Enums.PaymentStatus
     paidAt: Date | null
     approvedBy: string | null
     notes: string | null
@@ -1263,12 +1267,12 @@ export interface PayrollFieldRefs {
   readonly driverId: Prisma.FieldRef<"Payroll", 'String'>
   readonly month: Prisma.FieldRef<"Payroll", 'Int'>
   readonly year: Prisma.FieldRef<"Payroll", 'Int'>
-  readonly baseSalary: Prisma.FieldRef<"Payroll", 'Float'>
-  readonly tripBonus: Prisma.FieldRef<"Payroll", 'Float'>
-  readonly overtimePay: Prisma.FieldRef<"Payroll", 'Float'>
-  readonly deductions: Prisma.FieldRef<"Payroll", 'Float'>
-  readonly netPay: Prisma.FieldRef<"Payroll", 'Float'>
-  readonly status: Prisma.FieldRef<"Payroll", 'String'>
+  readonly baseSalary: Prisma.FieldRef<"Payroll", 'Decimal'>
+  readonly tripBonus: Prisma.FieldRef<"Payroll", 'Decimal'>
+  readonly overtimePay: Prisma.FieldRef<"Payroll", 'Decimal'>
+  readonly deductions: Prisma.FieldRef<"Payroll", 'Decimal'>
+  readonly netPay: Prisma.FieldRef<"Payroll", 'Decimal'>
+  readonly status: Prisma.FieldRef<"Payroll", 'PaymentStatus'>
   readonly paidAt: Prisma.FieldRef<"Payroll", 'DateTime'>
   readonly approvedBy: Prisma.FieldRef<"Payroll", 'String'>
   readonly notes: Prisma.FieldRef<"Payroll", 'String'>

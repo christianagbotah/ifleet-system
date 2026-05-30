@@ -55,7 +55,7 @@ export type DeliveryStopMinAggregateOutputType = {
   expectedQty: number | null
   actualQty: number | null
   unit: string | null
-  status: string | null
+  status: $Enums.DeliveryStopStatus | null
   arrivalTime: Date | null
   offloadStarted: Date | null
   offloadCompleted: Date | null
@@ -77,7 +77,7 @@ export type DeliveryStopMaxAggregateOutputType = {
   expectedQty: number | null
   actualQty: number | null
   unit: string | null
-  status: string | null
+  status: $Enums.DeliveryStopStatus | null
   arrivalTime: Date | null
   offloadStarted: Date | null
   offloadCompleted: Date | null
@@ -292,7 +292,7 @@ export type DeliveryStopGroupByOutputType = {
   expectedQty: number
   actualQty: number | null
   unit: string
-  status: string
+  status: $Enums.DeliveryStopStatus
   arrivalTime: Date | null
   offloadStarted: Date | null
   offloadCompleted: Date | null
@@ -337,7 +337,7 @@ export type DeliveryStopWhereInput = {
   expectedQty?: Prisma.FloatFilter<"DeliveryStop"> | number
   actualQty?: Prisma.FloatNullableFilter<"DeliveryStop"> | number | null
   unit?: Prisma.StringFilter<"DeliveryStop"> | string
-  status?: Prisma.StringFilter<"DeliveryStop"> | string
+  status?: Prisma.EnumDeliveryStopStatusFilter<"DeliveryStop"> | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
   offloadStarted?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
   offloadCompleted?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
@@ -387,7 +387,7 @@ export type DeliveryStopWhereUniqueInput = Prisma.AtLeast<{
   expectedQty?: Prisma.FloatFilter<"DeliveryStop"> | number
   actualQty?: Prisma.FloatNullableFilter<"DeliveryStop"> | number | null
   unit?: Prisma.StringFilter<"DeliveryStop"> | string
-  status?: Prisma.StringFilter<"DeliveryStop"> | string
+  status?: Prisma.EnumDeliveryStopStatusFilter<"DeliveryStop"> | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
   offloadStarted?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
   offloadCompleted?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
@@ -440,7 +440,7 @@ export type DeliveryStopScalarWhereWithAggregatesInput = {
   expectedQty?: Prisma.FloatWithAggregatesFilter<"DeliveryStop"> | number
   actualQty?: Prisma.FloatNullableWithAggregatesFilter<"DeliveryStop"> | number | null
   unit?: Prisma.StringWithAggregatesFilter<"DeliveryStop"> | string
-  status?: Prisma.StringWithAggregatesFilter<"DeliveryStop"> | string
+  status?: Prisma.EnumDeliveryStopStatusWithAggregatesFilter<"DeliveryStop"> | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.DateTimeNullableWithAggregatesFilter<"DeliveryStop"> | Date | string | null
   offloadStarted?: Prisma.DateTimeNullableWithAggregatesFilter<"DeliveryStop"> | Date | string | null
   offloadCompleted?: Prisma.DateTimeNullableWithAggregatesFilter<"DeliveryStop"> | Date | string | null
@@ -461,7 +461,7 @@ export type DeliveryStopCreateInput = {
   expectedQty: number
   actualQty?: number | null
   unit?: string
-  status?: string
+  status?: $Enums.DeliveryStopStatus
   arrivalTime?: Date | string | null
   offloadStarted?: Date | string | null
   offloadCompleted?: Date | string | null
@@ -484,7 +484,7 @@ export type DeliveryStopUncheckedCreateInput = {
   expectedQty: number
   actualQty?: number | null
   unit?: string
-  status?: string
+  status?: $Enums.DeliveryStopStatus
   arrivalTime?: Date | string | null
   offloadStarted?: Date | string | null
   offloadCompleted?: Date | string | null
@@ -505,7 +505,7 @@ export type DeliveryStopUpdateInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -528,7 +528,7 @@ export type DeliveryStopUncheckedUpdateInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -550,7 +550,7 @@ export type DeliveryStopCreateManyInput = {
   expectedQty: number
   actualQty?: number | null
   unit?: string
-  status?: string
+  status?: $Enums.DeliveryStopStatus
   arrivalTime?: Date | string | null
   offloadStarted?: Date | string | null
   offloadCompleted?: Date | string | null
@@ -571,7 +571,7 @@ export type DeliveryStopUpdateManyMutationInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -593,7 +593,7 @@ export type DeliveryStopUncheckedUpdateManyInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -700,6 +700,26 @@ export type DeliveryStopOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type EnumDeliveryStopStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DeliveryStopStatus
+}
+
 export type DeliveryStopCreateNestedManyWithoutTripInput = {
   create?: Prisma.XOR<Prisma.DeliveryStopCreateWithoutTripInput, Prisma.DeliveryStopUncheckedCreateWithoutTripInput> | Prisma.DeliveryStopCreateWithoutTripInput[] | Prisma.DeliveryStopUncheckedCreateWithoutTripInput[]
   connectOrCreate?: Prisma.DeliveryStopCreateOrConnectWithoutTripInput | Prisma.DeliveryStopCreateOrConnectWithoutTripInput[]
@@ -754,7 +774,7 @@ export type DeliveryStopCreateWithoutTripInput = {
   expectedQty: number
   actualQty?: number | null
   unit?: string
-  status?: string
+  status?: $Enums.DeliveryStopStatus
   arrivalTime?: Date | string | null
   offloadStarted?: Date | string | null
   offloadCompleted?: Date | string | null
@@ -775,7 +795,7 @@ export type DeliveryStopUncheckedCreateWithoutTripInput = {
   expectedQty: number
   actualQty?: number | null
   unit?: string
-  status?: string
+  status?: $Enums.DeliveryStopStatus
   arrivalTime?: Date | string | null
   offloadStarted?: Date | string | null
   offloadCompleted?: Date | string | null
@@ -826,7 +846,7 @@ export type DeliveryStopScalarWhereInput = {
   expectedQty?: Prisma.FloatFilter<"DeliveryStop"> | number
   actualQty?: Prisma.FloatNullableFilter<"DeliveryStop"> | number | null
   unit?: Prisma.StringFilter<"DeliveryStop"> | string
-  status?: Prisma.StringFilter<"DeliveryStop"> | string
+  status?: Prisma.EnumDeliveryStopStatusFilter<"DeliveryStop"> | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
   offloadStarted?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
   offloadCompleted?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
@@ -847,7 +867,7 @@ export type DeliveryStopCreateManyTripInput = {
   expectedQty: number
   actualQty?: number | null
   unit?: string
-  status?: string
+  status?: $Enums.DeliveryStopStatus
   arrivalTime?: Date | string | null
   offloadStarted?: Date | string | null
   offloadCompleted?: Date | string | null
@@ -868,7 +888,7 @@ export type DeliveryStopUpdateWithoutTripInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -889,7 +909,7 @@ export type DeliveryStopUncheckedUpdateWithoutTripInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -910,7 +930,7 @@ export type DeliveryStopUncheckedUpdateManyWithoutTripInput = {
   expectedQty?: Prisma.FloatFieldUpdateOperationsInput | number
   actualQty?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDeliveryStopStatusFieldUpdateOperationsInput | $Enums.DeliveryStopStatus
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadStarted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offloadCompleted?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -991,7 +1011,7 @@ export type $DeliveryStopPayload<ExtArgs extends runtime.Types.Extensions.Intern
     expectedQty: number
     actualQty: number | null
     unit: string
-    status: string
+    status: $Enums.DeliveryStopStatus
     arrivalTime: Date | null
     offloadStarted: Date | null
     offloadCompleted: Date | null
@@ -1380,7 +1400,7 @@ export interface DeliveryStopFieldRefs {
   readonly expectedQty: Prisma.FieldRef<"DeliveryStop", 'Float'>
   readonly actualQty: Prisma.FieldRef<"DeliveryStop", 'Float'>
   readonly unit: Prisma.FieldRef<"DeliveryStop", 'String'>
-  readonly status: Prisma.FieldRef<"DeliveryStop", 'String'>
+  readonly status: Prisma.FieldRef<"DeliveryStop", 'DeliveryStopStatus'>
   readonly arrivalTime: Prisma.FieldRef<"DeliveryStop", 'DateTime'>
   readonly offloadStarted: Prisma.FieldRef<"DeliveryStop", 'DateTime'>
   readonly offloadCompleted: Prisma.FieldRef<"DeliveryStop", 'DateTime'>

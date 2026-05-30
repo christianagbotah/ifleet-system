@@ -29,18 +29,18 @@ export type AggregateFuelBudget = {
 export type FuelBudgetAvgAggregateOutputType = {
   month: number | null
   year: number | null
-  budgetLimit: number | null
+  budgetLimit: runtime.Decimal | null
   litersLimit: number | null
-  actualSpend: number | null
+  actualSpend: runtime.Decimal | null
   actualLiters: number | null
 }
 
 export type FuelBudgetSumAggregateOutputType = {
   month: number | null
   year: number | null
-  budgetLimit: number | null
+  budgetLimit: runtime.Decimal | null
   litersLimit: number | null
-  actualSpend: number | null
+  actualSpend: runtime.Decimal | null
   actualLiters: number | null
 }
 
@@ -49,9 +49,9 @@ export type FuelBudgetMinAggregateOutputType = {
   truckId: string | null
   month: number | null
   year: number | null
-  budgetLimit: number | null
+  budgetLimit: runtime.Decimal | null
   litersLimit: number | null
-  actualSpend: number | null
+  actualSpend: runtime.Decimal | null
   actualLiters: number | null
   notes: string | null
   createdAt: Date | null
@@ -64,9 +64,9 @@ export type FuelBudgetMaxAggregateOutputType = {
   truckId: string | null
   month: number | null
   year: number | null
-  budgetLimit: number | null
+  budgetLimit: runtime.Decimal | null
   litersLimit: number | null
-  actualSpend: number | null
+  actualSpend: runtime.Decimal | null
   actualLiters: number | null
   notes: string | null
   createdAt: Date | null
@@ -246,9 +246,9 @@ export type FuelBudgetGroupByOutputType = {
   truckId: string | null
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal
   litersLimit: number | null
-  actualSpend: number
+  actualSpend: runtime.Decimal
   actualLiters: number
   notes: string | null
   createdAt: Date
@@ -284,9 +284,9 @@ export type FuelBudgetWhereInput = {
   truckId?: Prisma.StringNullableFilter<"FuelBudget"> | string | null
   month?: Prisma.IntFilter<"FuelBudget"> | number
   year?: Prisma.IntFilter<"FuelBudget"> | number
-  budgetLimit?: Prisma.FloatFilter<"FuelBudget"> | number
+  budgetLimit?: Prisma.DecimalFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.FloatNullableFilter<"FuelBudget"> | number | null
-  actualSpend?: Prisma.FloatFilter<"FuelBudget"> | number
+  actualSpend?: Prisma.DecimalFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFilter<"FuelBudget"> | number
   notes?: Prisma.StringNullableFilter<"FuelBudget"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FuelBudget"> | Date | string
@@ -321,9 +321,9 @@ export type FuelBudgetWhereUniqueInput = Prisma.AtLeast<{
   truckId?: Prisma.StringNullableFilter<"FuelBudget"> | string | null
   month?: Prisma.IntFilter<"FuelBudget"> | number
   year?: Prisma.IntFilter<"FuelBudget"> | number
-  budgetLimit?: Prisma.FloatFilter<"FuelBudget"> | number
+  budgetLimit?: Prisma.DecimalFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.FloatNullableFilter<"FuelBudget"> | number | null
-  actualSpend?: Prisma.FloatFilter<"FuelBudget"> | number
+  actualSpend?: Prisma.DecimalFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFilter<"FuelBudget"> | number
   notes?: Prisma.StringNullableFilter<"FuelBudget"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FuelBudget"> | Date | string
@@ -360,9 +360,9 @@ export type FuelBudgetScalarWhereWithAggregatesInput = {
   truckId?: Prisma.StringNullableWithAggregatesFilter<"FuelBudget"> | string | null
   month?: Prisma.IntWithAggregatesFilter<"FuelBudget"> | number
   year?: Prisma.IntWithAggregatesFilter<"FuelBudget"> | number
-  budgetLimit?: Prisma.FloatWithAggregatesFilter<"FuelBudget"> | number
+  budgetLimit?: Prisma.DecimalWithAggregatesFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.FloatNullableWithAggregatesFilter<"FuelBudget"> | number | null
-  actualSpend?: Prisma.FloatWithAggregatesFilter<"FuelBudget"> | number
+  actualSpend?: Prisma.DecimalWithAggregatesFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatWithAggregatesFilter<"FuelBudget"> | number
   notes?: Prisma.StringNullableWithAggregatesFilter<"FuelBudget"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FuelBudget"> | Date | string
@@ -374,9 +374,9 @@ export type FuelBudgetCreateInput = {
   id?: string
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: number | null
-  actualSpend?: number
+  actualSpend?: runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: number
   notes?: string | null
   createdAt?: Date | string
@@ -390,9 +390,9 @@ export type FuelBudgetUncheckedCreateInput = {
   truckId?: string | null
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: number | null
-  actualSpend?: number
+  actualSpend?: runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: number
   notes?: string | null
   createdAt?: Date | string
@@ -404,9 +404,9 @@ export type FuelBudgetUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -420,9 +420,9 @@ export type FuelBudgetUncheckedUpdateInput = {
   truckId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,9 +435,9 @@ export type FuelBudgetCreateManyInput = {
   truckId?: string | null
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: number | null
-  actualSpend?: number
+  actualSpend?: runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: number
   notes?: string | null
   createdAt?: Date | string
@@ -449,9 +449,9 @@ export type FuelBudgetUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -464,9 +464,9 @@ export type FuelBudgetUncheckedUpdateManyInput = {
   truckId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -605,9 +605,9 @@ export type FuelBudgetCreateWithoutTruckInput = {
   id?: string
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: number | null
-  actualSpend?: number
+  actualSpend?: runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: number
   notes?: string | null
   createdAt?: Date | string
@@ -619,9 +619,9 @@ export type FuelBudgetUncheckedCreateWithoutTruckInput = {
   id?: string
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: number | null
-  actualSpend?: number
+  actualSpend?: runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: number
   notes?: string | null
   createdAt?: Date | string
@@ -663,9 +663,9 @@ export type FuelBudgetScalarWhereInput = {
   truckId?: Prisma.StringNullableFilter<"FuelBudget"> | string | null
   month?: Prisma.IntFilter<"FuelBudget"> | number
   year?: Prisma.IntFilter<"FuelBudget"> | number
-  budgetLimit?: Prisma.FloatFilter<"FuelBudget"> | number
+  budgetLimit?: Prisma.DecimalFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.FloatNullableFilter<"FuelBudget"> | number | null
-  actualSpend?: Prisma.FloatFilter<"FuelBudget"> | number
+  actualSpend?: Prisma.DecimalFilter<"FuelBudget"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFilter<"FuelBudget"> | number
   notes?: Prisma.StringNullableFilter<"FuelBudget"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FuelBudget"> | Date | string
@@ -677,9 +677,9 @@ export type FuelBudgetCreateManyTruckInput = {
   id?: string
   month: number
   year: number
-  budgetLimit: number
+  budgetLimit: runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: number | null
-  actualSpend?: number
+  actualSpend?: runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: number
   notes?: string | null
   createdAt?: Date | string
@@ -691,9 +691,9 @@ export type FuelBudgetUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -705,9 +705,9 @@ export type FuelBudgetUncheckedUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -719,9 +719,9 @@ export type FuelBudgetUncheckedUpdateManyWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
-  budgetLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetLimit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   litersLimit?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  actualSpend?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualSpend?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   actualLiters?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -779,9 +779,9 @@ export type $FuelBudgetPayload<ExtArgs extends runtime.Types.Extensions.Internal
     truckId: string | null
     month: number
     year: number
-    budgetLimit: number
+    budgetLimit: runtime.Decimal
     litersLimit: number | null
-    actualSpend: number
+    actualSpend: runtime.Decimal
     actualLiters: number
     notes: string | null
     createdAt: Date
@@ -1161,9 +1161,9 @@ export interface FuelBudgetFieldRefs {
   readonly truckId: Prisma.FieldRef<"FuelBudget", 'String'>
   readonly month: Prisma.FieldRef<"FuelBudget", 'Int'>
   readonly year: Prisma.FieldRef<"FuelBudget", 'Int'>
-  readonly budgetLimit: Prisma.FieldRef<"FuelBudget", 'Float'>
+  readonly budgetLimit: Prisma.FieldRef<"FuelBudget", 'Decimal'>
   readonly litersLimit: Prisma.FieldRef<"FuelBudget", 'Float'>
-  readonly actualSpend: Prisma.FieldRef<"FuelBudget", 'Float'>
+  readonly actualSpend: Prisma.FieldRef<"FuelBudget", 'Decimal'>
   readonly actualLiters: Prisma.FieldRef<"FuelBudget", 'Float'>
   readonly notes: Prisma.FieldRef<"FuelBudget", 'String'>
   readonly createdAt: Prisma.FieldRef<"FuelBudget", 'DateTime'>

@@ -42,7 +42,7 @@ export type ReportHistoryMinAggregateOutputType = {
   parameters: string | null
   generatedBy: string | null
   fileSize: number | null
-  status: string | null
+  status: $Enums.ReportHistoryStatus | null
   error: string | null
   createdAt: Date | null
 }
@@ -55,7 +55,7 @@ export type ReportHistoryMaxAggregateOutputType = {
   parameters: string | null
   generatedBy: string | null
   fileSize: number | null
-  status: string | null
+  status: $Enums.ReportHistoryStatus | null
   error: string | null
   createdAt: Date | null
 }
@@ -217,7 +217,7 @@ export type ReportHistoryGroupByOutputType = {
   parameters: string | null
   generatedBy: string
   fileSize: number | null
-  status: string
+  status: $Enums.ReportHistoryStatus
   error: string | null
   createdAt: Date
   _count: ReportHistoryCountAggregateOutputType | null
@@ -253,7 +253,7 @@ export type ReportHistoryWhereInput = {
   parameters?: Prisma.StringNullableFilter<"ReportHistory"> | string | null
   generatedBy?: Prisma.StringFilter<"ReportHistory"> | string
   fileSize?: Prisma.IntNullableFilter<"ReportHistory"> | number | null
-  status?: Prisma.StringFilter<"ReportHistory"> | string
+  status?: Prisma.EnumReportHistoryStatusFilter<"ReportHistory"> | $Enums.ReportHistoryStatus
   error?: Prisma.StringNullableFilter<"ReportHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReportHistory"> | Date | string
 }
@@ -283,7 +283,7 @@ export type ReportHistoryWhereUniqueInput = Prisma.AtLeast<{
   parameters?: Prisma.StringNullableFilter<"ReportHistory"> | string | null
   generatedBy?: Prisma.StringFilter<"ReportHistory"> | string
   fileSize?: Prisma.IntNullableFilter<"ReportHistory"> | number | null
-  status?: Prisma.StringFilter<"ReportHistory"> | string
+  status?: Prisma.EnumReportHistoryStatusFilter<"ReportHistory"> | $Enums.ReportHistoryStatus
   error?: Prisma.StringNullableFilter<"ReportHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReportHistory"> | Date | string
 }, "id">
@@ -317,7 +317,7 @@ export type ReportHistoryScalarWhereWithAggregatesInput = {
   parameters?: Prisma.StringNullableWithAggregatesFilter<"ReportHistory"> | string | null
   generatedBy?: Prisma.StringWithAggregatesFilter<"ReportHistory"> | string
   fileSize?: Prisma.IntNullableWithAggregatesFilter<"ReportHistory"> | number | null
-  status?: Prisma.StringWithAggregatesFilter<"ReportHistory"> | string
+  status?: Prisma.EnumReportHistoryStatusWithAggregatesFilter<"ReportHistory"> | $Enums.ReportHistoryStatus
   error?: Prisma.StringNullableWithAggregatesFilter<"ReportHistory"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ReportHistory"> | Date | string
 }
@@ -330,7 +330,7 @@ export type ReportHistoryCreateInput = {
   parameters?: string | null
   generatedBy: string
   fileSize?: number | null
-  status?: string
+  status?: $Enums.ReportHistoryStatus
   error?: string | null
   createdAt?: Date | string
 }
@@ -343,7 +343,7 @@ export type ReportHistoryUncheckedCreateInput = {
   parameters?: string | null
   generatedBy: string
   fileSize?: number | null
-  status?: string
+  status?: $Enums.ReportHistoryStatus
   error?: string | null
   createdAt?: Date | string
 }
@@ -356,7 +356,7 @@ export type ReportHistoryUpdateInput = {
   parameters?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedBy?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReportHistoryStatusFieldUpdateOperationsInput | $Enums.ReportHistoryStatus
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -369,7 +369,7 @@ export type ReportHistoryUncheckedUpdateInput = {
   parameters?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedBy?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReportHistoryStatusFieldUpdateOperationsInput | $Enums.ReportHistoryStatus
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -382,7 +382,7 @@ export type ReportHistoryCreateManyInput = {
   parameters?: string | null
   generatedBy: string
   fileSize?: number | null
-  status?: string
+  status?: $Enums.ReportHistoryStatus
   error?: string | null
   createdAt?: Date | string
 }
@@ -395,7 +395,7 @@ export type ReportHistoryUpdateManyMutationInput = {
   parameters?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedBy?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReportHistoryStatusFieldUpdateOperationsInput | $Enums.ReportHistoryStatus
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,7 +408,7 @@ export type ReportHistoryUncheckedUpdateManyInput = {
   parameters?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedBy?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReportHistoryStatusFieldUpdateOperationsInput | $Enums.ReportHistoryStatus
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -466,6 +466,10 @@ export type ReportHistorySumOrderByAggregateInput = {
   fileSize?: Prisma.SortOrder
 }
 
+export type EnumReportHistoryStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ReportHistoryStatus
+}
+
 
 
 export type ReportHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -509,7 +513,7 @@ export type $ReportHistoryPayload<ExtArgs extends runtime.Types.Extensions.Inter
     parameters: string | null
     generatedBy: string
     fileSize: number | null
-    status: string
+    status: $Enums.ReportHistoryStatus
     error: string | null
     createdAt: Date
   }, ExtArgs["result"]["reportHistory"]>
@@ -888,7 +892,7 @@ export interface ReportHistoryFieldRefs {
   readonly parameters: Prisma.FieldRef<"ReportHistory", 'String'>
   readonly generatedBy: Prisma.FieldRef<"ReportHistory", 'String'>
   readonly fileSize: Prisma.FieldRef<"ReportHistory", 'Int'>
-  readonly status: Prisma.FieldRef<"ReportHistory", 'String'>
+  readonly status: Prisma.FieldRef<"ReportHistory", 'ReportHistoryStatus'>
   readonly error: Prisma.FieldRef<"ReportHistory", 'String'>
   readonly createdAt: Prisma.FieldRef<"ReportHistory", 'DateTime'>
 }

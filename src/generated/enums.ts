@@ -9,7 +9,306 @@
 * 🟢 You can import this file directly.
 */
 
+export const TripStatus = {
+  scheduled: 'scheduled',
+  loading: 'loading',
+  loaded: 'loaded',
+  departed_depot: 'departed_depot',
+  in_transit: 'in_transit',
+  arrived_destination: 'arrived_destination',
+  offloading: 'offloading',
+  offloaded: 'offloaded',
+  return_journey: 'return_journey',
+  arrived_depot: 'arrived_depot',
+  completed: 'completed',
+  cancelled: 'cancelled',
+  delayed: 'delayed'
+} as const
+
+export type TripStatus = (typeof TripStatus)[keyof typeof TripStatus]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const TruckStatus = {
+  active: 'active',
+  inactive: 'inactive',
+  maintenance: 'maintenance',
+  out_of_service: 'out_of_service',
+  retired: 'retired',
+  decommissioned: 'decommissioned'
+} as const
+
+export type TruckStatus = (typeof TruckStatus)[keyof typeof TruckStatus]
+
+
+export const TruckInsuranceStatus = {
+  none: 'none',
+  active: 'active',
+  expired: 'expired',
+  pending: 'pending'
+} as const
+
+export type TruckInsuranceStatus = (typeof TruckInsuranceStatus)[keyof typeof TruckInsuranceStatus]
+
+
+export const DriverStatus = {
+  active: 'active',
+  inactive: 'inactive',
+  suspended: 'suspended',
+  resigned: 'resigned'
+} as const
+
+export type DriverStatus = (typeof DriverStatus)[keyof typeof DriverStatus]
+
+
+export const DriverVerificationStatus = {
+  pending: 'pending',
+  verified: 'verified',
+  rejected: 'rejected',
+  expired: 'expired'
+} as const
+
+export type DriverVerificationStatus = (typeof DriverVerificationStatus)[keyof typeof DriverVerificationStatus]
+
+
+export const InvoiceStatus = {
+  pending: 'pending',
+  draft: 'draft',
+  sent: 'sent',
+  paid: 'paid',
+  partially_paid: 'partially_paid',
+  overdue: 'overdue',
+  cancelled: 'cancelled',
+  void: 'void'
+} as const
+
+export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]
+
+
+export const PaymentStatus = {
+  pending: 'pending',
+  paid: 'paid',
+  failed: 'failed',
+  refunded: 'refunded'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const ExpenseStatus = {
+  approved: 'approved',
+  pending: 'pending',
+  rejected: 'rejected'
+} as const
+
+export type ExpenseStatus = (typeof ExpenseStatus)[keyof typeof ExpenseStatus]
+
+
+export const ExpenseApprovalStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected'
+} as const
+
+export type ExpenseApprovalStatus = (typeof ExpenseApprovalStatus)[keyof typeof ExpenseApprovalStatus]
+
+
+export const MaintenanceStatus = {
+  pending: 'pending',
+  scheduled: 'scheduled',
+  in_progress: 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type MaintenanceStatus = (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus]
+
+
+export const InsuranceStatus = {
+  active: 'active',
+  expired: 'expired',
+  cancelled: 'cancelled',
+  pending: 'pending'
+} as const
+
+export type InsuranceStatus = (typeof InsuranceStatus)[keyof typeof InsuranceStatus]
+
+
+export const ClaimStatus = {
+  draft: 'draft',
+  submitted: 'submitted',
+  under_review: 'under_review',
+  approved: 'approved',
+  rejected: 'rejected',
+  paid: 'paid',
+  closed: 'closed'
+} as const
+
+export type ClaimStatus = (typeof ClaimStatus)[keyof typeof ClaimStatus]
+
+
+export const CashAdvanceStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+  disbursed: 'disbursed',
+  partially_deducted: 'partially_deducted',
+  fully_deducted: 'fully_deducted'
+} as const
+
+export type CashAdvanceStatus = (typeof CashAdvanceStatus)[keyof typeof CashAdvanceStatus]
+
+
+export const SettlementStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  paid: 'paid'
+} as const
+
+export type SettlementStatus = (typeof SettlementStatus)[keyof typeof SettlementStatus]
+
+
+export const LoadBoardStatus = {
+  open: 'open',
+  assigned: 'assigned',
+  in_progress: 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type LoadBoardStatus = (typeof LoadBoardStatus)[keyof typeof LoadBoardStatus]
+
+
+export const BorderCrossingStatus = {
+  queued: 'queued',
+  processing: 'processing',
+  cleared: 'cleared',
+  rejected: 'rejected'
+} as const
+
+export type BorderCrossingStatus = (typeof BorderCrossingStatus)[keyof typeof BorderCrossingStatus]
+
+
+export const DepotQueueStatus = {
+  waiting: 'waiting',
+  in_progress: 'in_progress',
+  loading: 'loading',
+  unloading: 'unloading',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type DepotQueueStatus = (typeof DepotQueueStatus)[keyof typeof DepotQueueStatus]
+
+
+export const DeliveryStopStatus = {
+  pending: 'pending',
+  arrived: 'arrived',
+  offloading: 'offloading',
+  completed: 'completed',
+  skipped: 'skipped'
+} as const
+
+export type DeliveryStopStatus = (typeof DeliveryStopStatus)[keyof typeof DeliveryStopStatus]
+
+
+export const DvlaRegistrationStatus = {
+  active: 'active',
+  expired: 'expired',
+  cancelled: 'cancelled',
+  suspended: 'suspended'
+} as const
+
+export type DvlaRegistrationStatus = (typeof DvlaRegistrationStatus)[keyof typeof DvlaRegistrationStatus]
+
+
+export const RoadConditionStatus = {
+  active: 'active',
+  resolved: 'resolved',
+  dismissed: 'dismissed'
+} as const
+
+export type RoadConditionStatus = (typeof RoadConditionStatus)[keyof typeof RoadConditionStatus]
+
+
+export const TollRecordStatus = {
+  pending: 'pending',
+  verified: 'verified',
+  disputed: 'disputed',
+  resolved: 'resolved'
+} as const
+
+export type TollRecordStatus = (typeof TollRecordStatus)[keyof typeof TollRecordStatus]
+
+
+export const ReportHistoryStatus = {
+  pending: 'pending',
+  completed: 'completed',
+  failed: 'failed',
+  cancelled: 'cancelled'
+} as const
+
+export type ReportHistoryStatus = (typeof ReportHistoryStatus)[keyof typeof ReportHistoryStatus]
+
+
+export const WarehouseItemStatus = {
+  in_stock: 'in_stock',
+  low_stock: 'low_stock',
+  out_of_stock: 'out_of_stock',
+  expired: 'expired',
+  damaged: 'damaged'
+} as const
+
+export type WarehouseItemStatus = (typeof WarehouseItemStatus)[keyof typeof WarehouseItemStatus]
+
+
+export const WeightVerificationStatus = {
+  pending: 'pending',
+  verified: 'verified',
+  failed: 'failed',
+  variance_detected: 'variance_detected'
+} as const
+
+export type WeightVerificationStatus = (typeof WeightVerificationStatus)[keyof typeof WeightVerificationStatus]
+
+
+export const TyreCondition = {
+  new: 'new',
+  good: 'good',
+  fair: 'fair',
+  worn: 'worn',
+  damaged: 'damaged',
+  retired: 'retired'
+} as const
+
+export type TyreCondition = (typeof TyreCondition)[keyof typeof TyreCondition]
+
+
+export const VehicleInspectionResult = {
+  pass: 'pass',
+  conditional_pass: 'conditional_pass',
+  fail: 'fail'
+} as const
+
+export type VehicleInspectionResult = (typeof VehicleInspectionResult)[keyof typeof VehicleInspectionResult]
+
+
+export const TripDeliveryDestinationStatus = {
+  pending: 'pending',
+  in_transit: 'in_transit',
+  arrived: 'arrived',
+  offloading: 'offloading',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type TripDeliveryDestinationStatus = (typeof TripDeliveryDestinationStatus)[keyof typeof TripDeliveryDestinationStatus]
+
+
+export const IncentiveStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+  paid: 'paid'
+} as const
+
+export type IncentiveStatus = (typeof IncentiveStatus)[keyof typeof IncentiveStatus]

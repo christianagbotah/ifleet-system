@@ -28,12 +28,12 @@ export type AggregateRoadworthyInspection = {
 
 export type RoadworthyInspectionAvgAggregateOutputType = {
   odometerReading: number | null
-  inspectionFee: number | null
+  inspectionFee: runtime.Decimal | null
 }
 
 export type RoadworthyInspectionSumAggregateOutputType = {
   odometerReading: number | null
-  inspectionFee: number | null
+  inspectionFee: runtime.Decimal | null
 }
 
 export type RoadworthyInspectionMinAggregateOutputType = {
@@ -63,9 +63,9 @@ export type RoadworthyInspectionMinAggregateOutputType = {
   certificateIssued: boolean | null
   certificateExpiry: Date | null
   certificateUrl: string | null
-  inspectionFee: number | null
+  inspectionFee: runtime.Decimal | null
   nextInspectionDue: Date | null
-  status: string | null
+  status: $Enums.MaintenanceStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -97,9 +97,9 @@ export type RoadworthyInspectionMaxAggregateOutputType = {
   certificateIssued: boolean | null
   certificateExpiry: Date | null
   certificateUrl: string | null
-  inspectionFee: number | null
+  inspectionFee: runtime.Decimal | null
   nextInspectionDue: Date | null
-  status: string | null
+  status: $Enums.MaintenanceStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -366,9 +366,9 @@ export type RoadworthyInspectionGroupByOutputType = {
   certificateIssued: boolean
   certificateExpiry: Date | null
   certificateUrl: string | null
-  inspectionFee: number | null
+  inspectionFee: runtime.Decimal | null
   nextInspectionDue: Date | null
-  status: string
+  status: $Enums.MaintenanceStatus
   createdAt: Date
   updatedAt: Date
   _count: RoadworthyInspectionCountAggregateOutputType | null
@@ -423,9 +423,9 @@ export type RoadworthyInspectionWhereInput = {
   certificateIssued?: Prisma.BoolFilter<"RoadworthyInspection"> | boolean
   certificateExpiry?: Prisma.DateTimeNullableFilter<"RoadworthyInspection"> | Date | string | null
   certificateUrl?: Prisma.StringNullableFilter<"RoadworthyInspection"> | string | null
-  inspectionFee?: Prisma.FloatNullableFilter<"RoadworthyInspection"> | number | null
+  inspectionFee?: Prisma.DecimalNullableFilter<"RoadworthyInspection"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.DateTimeNullableFilter<"RoadworthyInspection"> | Date | string | null
-  status?: Prisma.StringFilter<"RoadworthyInspection"> | string
+  status?: Prisma.EnumMaintenanceStatusFilter<"RoadworthyInspection"> | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFilter<"RoadworthyInspection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RoadworthyInspection"> | Date | string
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
@@ -497,9 +497,9 @@ export type RoadworthyInspectionWhereUniqueInput = Prisma.AtLeast<{
   certificateIssued?: Prisma.BoolFilter<"RoadworthyInspection"> | boolean
   certificateExpiry?: Prisma.DateTimeNullableFilter<"RoadworthyInspection"> | Date | string | null
   certificateUrl?: Prisma.StringNullableFilter<"RoadworthyInspection"> | string | null
-  inspectionFee?: Prisma.FloatNullableFilter<"RoadworthyInspection"> | number | null
+  inspectionFee?: Prisma.DecimalNullableFilter<"RoadworthyInspection"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.DateTimeNullableFilter<"RoadworthyInspection"> | Date | string | null
-  status?: Prisma.StringFilter<"RoadworthyInspection"> | string
+  status?: Prisma.EnumMaintenanceStatusFilter<"RoadworthyInspection"> | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFilter<"RoadworthyInspection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RoadworthyInspection"> | Date | string
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
@@ -574,9 +574,9 @@ export type RoadworthyInspectionScalarWhereWithAggregatesInput = {
   certificateIssued?: Prisma.BoolWithAggregatesFilter<"RoadworthyInspection"> | boolean
   certificateExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"RoadworthyInspection"> | Date | string | null
   certificateUrl?: Prisma.StringNullableWithAggregatesFilter<"RoadworthyInspection"> | string | null
-  inspectionFee?: Prisma.FloatNullableWithAggregatesFilter<"RoadworthyInspection"> | number | null
+  inspectionFee?: Prisma.DecimalNullableWithAggregatesFilter<"RoadworthyInspection"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.DateTimeNullableWithAggregatesFilter<"RoadworthyInspection"> | Date | string | null
-  status?: Prisma.StringWithAggregatesFilter<"RoadworthyInspection"> | string
+  status?: Prisma.EnumMaintenanceStatusWithAggregatesFilter<"RoadworthyInspection"> | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RoadworthyInspection"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RoadworthyInspection"> | Date | string
 }
@@ -607,9 +607,9 @@ export type RoadworthyInspectionCreateInput = {
   certificateIssued?: boolean
   certificateExpiry?: Date | string | null
   certificateUrl?: string | null
-  inspectionFee?: number | null
+  inspectionFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Date | string | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   truck: Prisma.TruckCreateNestedOneWithoutRoadworthyInspectionInput
@@ -642,9 +642,9 @@ export type RoadworthyInspectionUncheckedCreateInput = {
   certificateIssued?: boolean
   certificateExpiry?: Date | string | null
   certificateUrl?: string | null
-  inspectionFee?: number | null
+  inspectionFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Date | string | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -675,9 +675,9 @@ export type RoadworthyInspectionUpdateInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   truck?: Prisma.TruckUpdateOneRequiredWithoutRoadworthyInspectionNestedInput
@@ -710,9 +710,9 @@ export type RoadworthyInspectionUncheckedUpdateInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -744,9 +744,9 @@ export type RoadworthyInspectionCreateManyInput = {
   certificateIssued?: boolean
   certificateExpiry?: Date | string | null
   certificateUrl?: string | null
-  inspectionFee?: number | null
+  inspectionFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Date | string | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -777,9 +777,9 @@ export type RoadworthyInspectionUpdateManyMutationInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -811,9 +811,9 @@ export type RoadworthyInspectionUncheckedUpdateManyInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1014,9 +1014,9 @@ export type RoadworthyInspectionCreateWithoutTruckInput = {
   certificateIssued?: boolean
   certificateExpiry?: Date | string | null
   certificateUrl?: string | null
-  inspectionFee?: number | null
+  inspectionFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Date | string | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1047,9 +1047,9 @@ export type RoadworthyInspectionUncheckedCreateWithoutTruckInput = {
   certificateIssued?: boolean
   certificateExpiry?: Date | string | null
   certificateUrl?: string | null
-  inspectionFee?: number | null
+  inspectionFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Date | string | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1110,9 +1110,9 @@ export type RoadworthyInspectionScalarWhereInput = {
   certificateIssued?: Prisma.BoolFilter<"RoadworthyInspection"> | boolean
   certificateExpiry?: Prisma.DateTimeNullableFilter<"RoadworthyInspection"> | Date | string | null
   certificateUrl?: Prisma.StringNullableFilter<"RoadworthyInspection"> | string | null
-  inspectionFee?: Prisma.FloatNullableFilter<"RoadworthyInspection"> | number | null
+  inspectionFee?: Prisma.DecimalNullableFilter<"RoadworthyInspection"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.DateTimeNullableFilter<"RoadworthyInspection"> | Date | string | null
-  status?: Prisma.StringFilter<"RoadworthyInspection"> | string
+  status?: Prisma.EnumMaintenanceStatusFilter<"RoadworthyInspection"> | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFilter<"RoadworthyInspection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RoadworthyInspection"> | Date | string
 }
@@ -1143,9 +1143,9 @@ export type RoadworthyInspectionCreateManyTruckInput = {
   certificateIssued?: boolean
   certificateExpiry?: Date | string | null
   certificateUrl?: string | null
-  inspectionFee?: number | null
+  inspectionFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Date | string | null
-  status?: string
+  status?: $Enums.MaintenanceStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1176,9 +1176,9 @@ export type RoadworthyInspectionUpdateWithoutTruckInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1209,9 +1209,9 @@ export type RoadworthyInspectionUncheckedUpdateWithoutTruckInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1242,9 +1242,9 @@ export type RoadworthyInspectionUncheckedUpdateManyWithoutTruckInput = {
   certificateIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   certificateExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectionFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inspectionFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nextInspectionDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMaintenanceStatusFieldUpdateOperationsInput | $Enums.MaintenanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1359,9 +1359,9 @@ export type $RoadworthyInspectionPayload<ExtArgs extends runtime.Types.Extension
     certificateIssued: boolean
     certificateExpiry: Date | null
     certificateUrl: string | null
-    inspectionFee: number | null
+    inspectionFee: runtime.Decimal | null
     nextInspectionDue: Date | null
-    status: string
+    status: $Enums.MaintenanceStatus
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["roadworthyInspection"]>
@@ -1760,9 +1760,9 @@ export interface RoadworthyInspectionFieldRefs {
   readonly certificateIssued: Prisma.FieldRef<"RoadworthyInspection", 'Boolean'>
   readonly certificateExpiry: Prisma.FieldRef<"RoadworthyInspection", 'DateTime'>
   readonly certificateUrl: Prisma.FieldRef<"RoadworthyInspection", 'String'>
-  readonly inspectionFee: Prisma.FieldRef<"RoadworthyInspection", 'Float'>
+  readonly inspectionFee: Prisma.FieldRef<"RoadworthyInspection", 'Decimal'>
   readonly nextInspectionDue: Prisma.FieldRef<"RoadworthyInspection", 'DateTime'>
-  readonly status: Prisma.FieldRef<"RoadworthyInspection", 'String'>
+  readonly status: Prisma.FieldRef<"RoadworthyInspection", 'MaintenanceStatus'>
   readonly createdAt: Prisma.FieldRef<"RoadworthyInspection", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"RoadworthyInspection", 'DateTime'>
 }

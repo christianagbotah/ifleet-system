@@ -27,18 +27,18 @@ export type AggregateFuelPrice = {
 }
 
 export type FuelPriceAvgAggregateOutputType = {
-  pricePerLiter: number | null
+  pricePerLiter: runtime.Decimal | null
 }
 
 export type FuelPriceSumAggregateOutputType = {
-  pricePerLiter: number | null
+  pricePerLiter: runtime.Decimal | null
 }
 
 export type FuelPriceMinAggregateOutputType = {
   id: string | null
   stationId: string | null
   fuelType: string | null
-  pricePerLiter: number | null
+  pricePerLiter: runtime.Decimal | null
   effectiveDate: Date | null
   source: string | null
   verified: boolean | null
@@ -51,7 +51,7 @@ export type FuelPriceMaxAggregateOutputType = {
   id: string | null
   stationId: string | null
   fuelType: string | null
-  pricePerLiter: number | null
+  pricePerLiter: runtime.Decimal | null
   effectiveDate: Date | null
   source: string | null
   verified: boolean | null
@@ -213,7 +213,7 @@ export type FuelPriceGroupByOutputType = {
   id: string
   stationId: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal
   effectiveDate: Date
   source: string
   verified: boolean
@@ -249,7 +249,7 @@ export type FuelPriceWhereInput = {
   id?: Prisma.StringFilter<"FuelPrice"> | string
   stationId?: Prisma.StringFilter<"FuelPrice"> | string
   fuelType?: Prisma.StringFilter<"FuelPrice"> | string
-  pricePerLiter?: Prisma.FloatFilter<"FuelPrice"> | number
+  pricePerLiter?: Prisma.DecimalFilter<"FuelPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFilter<"FuelPrice"> | Date | string
   source?: Prisma.StringFilter<"FuelPrice"> | string
   verified?: Prisma.BoolFilter<"FuelPrice"> | boolean
@@ -282,7 +282,7 @@ export type FuelPriceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FuelPriceWhereInput | Prisma.FuelPriceWhereInput[]
   stationId?: Prisma.StringFilter<"FuelPrice"> | string
   fuelType?: Prisma.StringFilter<"FuelPrice"> | string
-  pricePerLiter?: Prisma.FloatFilter<"FuelPrice"> | number
+  pricePerLiter?: Prisma.DecimalFilter<"FuelPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFilter<"FuelPrice"> | Date | string
   source?: Prisma.StringFilter<"FuelPrice"> | string
   verified?: Prisma.BoolFilter<"FuelPrice"> | boolean
@@ -317,7 +317,7 @@ export type FuelPriceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FuelPrice"> | string
   stationId?: Prisma.StringWithAggregatesFilter<"FuelPrice"> | string
   fuelType?: Prisma.StringWithAggregatesFilter<"FuelPrice"> | string
-  pricePerLiter?: Prisma.FloatWithAggregatesFilter<"FuelPrice"> | number
+  pricePerLiter?: Prisma.DecimalWithAggregatesFilter<"FuelPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeWithAggregatesFilter<"FuelPrice"> | Date | string
   source?: Prisma.StringWithAggregatesFilter<"FuelPrice"> | string
   verified?: Prisma.BoolWithAggregatesFilter<"FuelPrice"> | boolean
@@ -329,7 +329,7 @@ export type FuelPriceScalarWhereWithAggregatesInput = {
 export type FuelPriceCreateInput = {
   id?: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   source?: string
   verified?: boolean
@@ -343,7 +343,7 @@ export type FuelPriceUncheckedCreateInput = {
   id?: string
   stationId: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   source?: string
   verified?: boolean
@@ -355,7 +355,7 @@ export type FuelPriceUncheckedCreateInput = {
 export type FuelPriceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -369,7 +369,7 @@ export type FuelPriceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stationId?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -382,7 +382,7 @@ export type FuelPriceCreateManyInput = {
   id?: string
   stationId: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   source?: string
   verified?: boolean
@@ -394,7 +394,7 @@ export type FuelPriceCreateManyInput = {
 export type FuelPriceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -407,7 +407,7 @@ export type FuelPriceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stationId?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -530,7 +530,7 @@ export type FuelPriceUncheckedUpdateManyWithoutFuelStationNestedInput = {
 export type FuelPriceCreateWithoutFuelStationInput = {
   id?: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   source?: string
   verified?: boolean
@@ -542,7 +542,7 @@ export type FuelPriceCreateWithoutFuelStationInput = {
 export type FuelPriceUncheckedCreateWithoutFuelStationInput = {
   id?: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   source?: string
   verified?: boolean
@@ -584,7 +584,7 @@ export type FuelPriceScalarWhereInput = {
   id?: Prisma.StringFilter<"FuelPrice"> | string
   stationId?: Prisma.StringFilter<"FuelPrice"> | string
   fuelType?: Prisma.StringFilter<"FuelPrice"> | string
-  pricePerLiter?: Prisma.FloatFilter<"FuelPrice"> | number
+  pricePerLiter?: Prisma.DecimalFilter<"FuelPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFilter<"FuelPrice"> | Date | string
   source?: Prisma.StringFilter<"FuelPrice"> | string
   verified?: Prisma.BoolFilter<"FuelPrice"> | boolean
@@ -596,7 +596,7 @@ export type FuelPriceScalarWhereInput = {
 export type FuelPriceCreateManyFuelStationInput = {
   id?: string
   fuelType: string
-  pricePerLiter: number
+  pricePerLiter: runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Date | string
   source?: string
   verified?: boolean
@@ -608,7 +608,7 @@ export type FuelPriceCreateManyFuelStationInput = {
 export type FuelPriceUpdateWithoutFuelStationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -620,7 +620,7 @@ export type FuelPriceUpdateWithoutFuelStationInput = {
 export type FuelPriceUncheckedUpdateWithoutFuelStationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -632,7 +632,7 @@ export type FuelPriceUncheckedUpdateWithoutFuelStationInput = {
 export type FuelPriceUncheckedUpdateManyWithoutFuelStationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fuelType?: Prisma.StringFieldUpdateOperationsInput | string
-  pricePerLiter?: Prisma.FloatFieldUpdateOperationsInput | number
+  pricePerLiter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -686,7 +686,7 @@ export type $FuelPricePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     stationId: string
     fuelType: string
-    pricePerLiter: number
+    pricePerLiter: runtime.Decimal
     effectiveDate: Date
     source: string
     verified: boolean
@@ -1066,7 +1066,7 @@ export interface FuelPriceFieldRefs {
   readonly id: Prisma.FieldRef<"FuelPrice", 'String'>
   readonly stationId: Prisma.FieldRef<"FuelPrice", 'String'>
   readonly fuelType: Prisma.FieldRef<"FuelPrice", 'String'>
-  readonly pricePerLiter: Prisma.FieldRef<"FuelPrice", 'Float'>
+  readonly pricePerLiter: Prisma.FieldRef<"FuelPrice", 'Decimal'>
   readonly effectiveDate: Prisma.FieldRef<"FuelPrice", 'DateTime'>
   readonly source: Prisma.FieldRef<"FuelPrice", 'String'>
   readonly verified: Prisma.FieldRef<"FuelPrice", 'Boolean'>

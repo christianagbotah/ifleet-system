@@ -27,11 +27,11 @@ export type AggregateSettlementLine = {
 }
 
 export type SettlementLineAvgAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type SettlementLineSumAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type SettlementLineMinAggregateOutputType = {
@@ -40,7 +40,7 @@ export type SettlementLineMinAggregateOutputType = {
   tripId: string | null
   description: string | null
   type: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type SettlementLineMaxAggregateOutputType = {
@@ -49,7 +49,7 @@ export type SettlementLineMaxAggregateOutputType = {
   tripId: string | null
   description: string | null
   type: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type SettlementLineCountAggregateOutputType = {
@@ -191,7 +191,7 @@ export type SettlementLineGroupByOutputType = {
   tripId: string | null
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal
   _count: SettlementLineCountAggregateOutputType | null
   _avg: SettlementLineAvgAggregateOutputType | null
   _sum: SettlementLineSumAggregateOutputType | null
@@ -223,7 +223,7 @@ export type SettlementLineWhereInput = {
   tripId?: Prisma.StringNullableFilter<"SettlementLine"> | string | null
   description?: Prisma.StringFilter<"SettlementLine"> | string
   type?: Prisma.StringFilter<"SettlementLine"> | string
-  amount?: Prisma.FloatFilter<"SettlementLine"> | number
+  amount?: Prisma.DecimalFilter<"SettlementLine"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   driverSettlement?: Prisma.XOR<Prisma.DriverSettlementScalarRelationFilter, Prisma.DriverSettlementWhereInput>
   trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
 }
@@ -249,7 +249,7 @@ export type SettlementLineWhereUniqueInput = Prisma.AtLeast<{
   tripId?: Prisma.StringNullableFilter<"SettlementLine"> | string | null
   description?: Prisma.StringFilter<"SettlementLine"> | string
   type?: Prisma.StringFilter<"SettlementLine"> | string
-  amount?: Prisma.FloatFilter<"SettlementLine"> | number
+  amount?: Prisma.DecimalFilter<"SettlementLine"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   driverSettlement?: Prisma.XOR<Prisma.DriverSettlementScalarRelationFilter, Prisma.DriverSettlementWhereInput>
   trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
 }, "id">
@@ -277,14 +277,14 @@ export type SettlementLineScalarWhereWithAggregatesInput = {
   tripId?: Prisma.StringNullableWithAggregatesFilter<"SettlementLine"> | string | null
   description?: Prisma.StringWithAggregatesFilter<"SettlementLine"> | string
   type?: Prisma.StringWithAggregatesFilter<"SettlementLine"> | string
-  amount?: Prisma.FloatWithAggregatesFilter<"SettlementLine"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"SettlementLine"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineCreateInput = {
   id?: string
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   driverSettlement: Prisma.DriverSettlementCreateNestedOneWithoutSettlementLineInput
   trip?: Prisma.TripCreateNestedOneWithoutSettlementLineInput
 }
@@ -295,14 +295,14 @@ export type SettlementLineUncheckedCreateInput = {
   tripId?: string | null
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   driverSettlement?: Prisma.DriverSettlementUpdateOneRequiredWithoutSettlementLineNestedInput
   trip?: Prisma.TripUpdateOneWithoutSettlementLineNestedInput
 }
@@ -313,7 +313,7 @@ export type SettlementLineUncheckedUpdateInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineCreateManyInput = {
@@ -322,14 +322,14 @@ export type SettlementLineCreateManyInput = {
   tripId?: string | null
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUncheckedUpdateManyInput = {
@@ -338,7 +338,7 @@ export type SettlementLineUncheckedUpdateManyInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineListRelationFilter = {
@@ -480,7 +480,7 @@ export type SettlementLineCreateWithoutDriverSettlementInput = {
   id?: string
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   trip?: Prisma.TripCreateNestedOneWithoutSettlementLineInput
 }
 
@@ -489,7 +489,7 @@ export type SettlementLineUncheckedCreateWithoutDriverSettlementInput = {
   tripId?: string | null
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineCreateOrConnectWithoutDriverSettlementInput = {
@@ -527,14 +527,14 @@ export type SettlementLineScalarWhereInput = {
   tripId?: Prisma.StringNullableFilter<"SettlementLine"> | string | null
   description?: Prisma.StringFilter<"SettlementLine"> | string
   type?: Prisma.StringFilter<"SettlementLine"> | string
-  amount?: Prisma.FloatFilter<"SettlementLine"> | number
+  amount?: Prisma.DecimalFilter<"SettlementLine"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineCreateWithoutTripInput = {
   id?: string
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   driverSettlement: Prisma.DriverSettlementCreateNestedOneWithoutSettlementLineInput
 }
 
@@ -543,7 +543,7 @@ export type SettlementLineUncheckedCreateWithoutTripInput = {
   settlementId: string
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineCreateOrConnectWithoutTripInput = {
@@ -577,14 +577,14 @@ export type SettlementLineCreateManyDriverSettlementInput = {
   tripId?: string | null
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUpdateWithoutDriverSettlementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   trip?: Prisma.TripUpdateOneWithoutSettlementLineNestedInput
 }
 
@@ -593,7 +593,7 @@ export type SettlementLineUncheckedUpdateWithoutDriverSettlementInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUncheckedUpdateManyWithoutDriverSettlementInput = {
@@ -601,7 +601,7 @@ export type SettlementLineUncheckedUpdateManyWithoutDriverSettlementInput = {
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineCreateManyTripInput = {
@@ -609,14 +609,14 @@ export type SettlementLineCreateManyTripInput = {
   settlementId: string
   description: string
   type: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   driverSettlement?: Prisma.DriverSettlementUpdateOneRequiredWithoutSettlementLineNestedInput
 }
 
@@ -625,7 +625,7 @@ export type SettlementLineUncheckedUpdateWithoutTripInput = {
   settlementId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type SettlementLineUncheckedUpdateManyWithoutTripInput = {
@@ -633,7 +633,7 @@ export type SettlementLineUncheckedUpdateManyWithoutTripInput = {
   settlementId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 
@@ -678,7 +678,7 @@ export type $SettlementLinePayload<ExtArgs extends runtime.Types.Extensions.Inte
     tripId: string | null
     description: string
     type: string
-    amount: number
+    amount: runtime.Decimal
   }, ExtArgs["result"]["settlementLine"]>
   composites: {}
 }
@@ -1055,7 +1055,7 @@ export interface SettlementLineFieldRefs {
   readonly tripId: Prisma.FieldRef<"SettlementLine", 'String'>
   readonly description: Prisma.FieldRef<"SettlementLine", 'String'>
   readonly type: Prisma.FieldRef<"SettlementLine", 'String'>
-  readonly amount: Prisma.FieldRef<"SettlementLine", 'Float'>
+  readonly amount: Prisma.FieldRef<"SettlementLine", 'Decimal'>
 }
     
 

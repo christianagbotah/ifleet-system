@@ -32,8 +32,8 @@ export type TripAvgAggregateOutputType = {
   destLat: number | null
   destLng: number | null
   quantity: number | null
-  unitPrice: number | null
-  totalRevenue: number | null
+  unitPrice: runtime.Decimal | null
+  totalRevenue: runtime.Decimal | null
   estimatedDuration: number | null
   actualDuration: number | null
   startMileage: number | null
@@ -42,7 +42,7 @@ export type TripAvgAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   fuelUsed: number | null
-  fuelCost: number | null
+  fuelCost: runtime.Decimal | null
   totalOffloaded: number | null
 }
 
@@ -52,8 +52,8 @@ export type TripSumAggregateOutputType = {
   destLat: number | null
   destLng: number | null
   quantity: number | null
-  unitPrice: number | null
-  totalRevenue: number | null
+  unitPrice: runtime.Decimal | null
+  totalRevenue: runtime.Decimal | null
   estimatedDuration: number | null
   actualDuration: number | null
   startMileage: number | null
@@ -62,7 +62,7 @@ export type TripSumAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   fuelUsed: number | null
-  fuelCost: number | null
+  fuelCost: runtime.Decimal | null
   totalOffloaded: number | null
 }
 
@@ -85,8 +85,8 @@ export type TripMinAggregateOutputType = {
   itemName: string | null
   quantity: number | null
   unit: string | null
-  unitPrice: number | null
-  totalRevenue: number | null
+  unitPrice: runtime.Decimal | null
+  totalRevenue: runtime.Decimal | null
   departureTime: Date | null
   arrivalTime: Date | null
   estimatedDuration: number | null
@@ -97,14 +97,14 @@ export type TripMinAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   fuelUsed: number | null
-  fuelCost: number | null
+  fuelCost: runtime.Decimal | null
   startMileageImage: string | null
   deliveryType: string | null
   loadingCityId: string | null
   loadingPointId: string | null
   destinationCityId: string | null
   destinationZoneId: string | null
-  status: string | null
+  status: $Enums.TripStatus | null
   waitingReason: string | null
   waitingSince: Date | null
   loadingStartedAt: Date | null
@@ -140,8 +140,8 @@ export type TripMaxAggregateOutputType = {
   itemName: string | null
   quantity: number | null
   unit: string | null
-  unitPrice: number | null
-  totalRevenue: number | null
+  unitPrice: runtime.Decimal | null
+  totalRevenue: runtime.Decimal | null
   departureTime: Date | null
   arrivalTime: Date | null
   estimatedDuration: number | null
@@ -152,14 +152,14 @@ export type TripMaxAggregateOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   fuelUsed: number | null
-  fuelCost: number | null
+  fuelCost: runtime.Decimal | null
   startMileageImage: string | null
   deliveryType: string | null
   loadingCityId: string | null
   loadingPointId: string | null
   destinationCityId: string | null
   destinationZoneId: string | null
-  status: string | null
+  status: $Enums.TripStatus | null
   waitingReason: string | null
   waitingSince: Date | null
   loadingStartedAt: Date | null
@@ -544,8 +544,8 @@ export type TripGroupByOutputType = {
   itemName: string
   quantity: number
   unit: string
-  unitPrice: number | null
-  totalRevenue: number | null
+  unitPrice: runtime.Decimal | null
+  totalRevenue: runtime.Decimal | null
   departureTime: Date
   arrivalTime: Date | null
   estimatedDuration: number | null
@@ -556,14 +556,14 @@ export type TripGroupByOutputType = {
   fuelLevelBefore: number | null
   fuelLevelAfter: number | null
   fuelUsed: number | null
-  fuelCost: number | null
+  fuelCost: runtime.Decimal | null
   startMileageImage: string | null
   deliveryType: string
   loadingCityId: string | null
   loadingPointId: string | null
   destinationCityId: string | null
   destinationZoneId: string | null
-  status: string
+  status: $Enums.TripStatus
   waitingReason: string | null
   waitingSince: Date | null
   loadingStartedAt: Date | null
@@ -622,8 +622,8 @@ export type TripWhereInput = {
   itemName?: Prisma.StringFilter<"Trip"> | string
   quantity?: Prisma.FloatFilter<"Trip"> | number
   unit?: Prisma.StringFilter<"Trip"> | string
-  unitPrice?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  totalRevenue?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  unitPrice?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFilter<"Trip"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   estimatedDuration?: Prisma.FloatNullableFilter<"Trip"> | number | null
@@ -634,14 +634,14 @@ export type TripWhereInput = {
   fuelLevelBefore?: Prisma.FloatNullableFilter<"Trip"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableFilter<"Trip"> | number | null
   fuelUsed?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  fuelCost?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  fuelCost?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.StringNullableFilter<"Trip"> | string | null
   deliveryType?: Prisma.StringFilter<"Trip"> | string
   loadingCityId?: Prisma.StringNullableFilter<"Trip"> | string | null
   loadingPointId?: Prisma.StringNullableFilter<"Trip"> | string | null
   destinationCityId?: Prisma.StringNullableFilter<"Trip"> | string | null
   destinationZoneId?: Prisma.StringNullableFilter<"Trip"> | string | null
-  status?: Prisma.StringFilter<"Trip"> | string
+  status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
   waitingReason?: Prisma.StringNullableFilter<"Trip"> | string | null
   waitingSince?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   loadingStartedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
@@ -788,8 +788,8 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   itemName?: Prisma.StringFilter<"Trip"> | string
   quantity?: Prisma.FloatFilter<"Trip"> | number
   unit?: Prisma.StringFilter<"Trip"> | string
-  unitPrice?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  totalRevenue?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  unitPrice?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFilter<"Trip"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   estimatedDuration?: Prisma.FloatNullableFilter<"Trip"> | number | null
@@ -800,14 +800,14 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   fuelLevelBefore?: Prisma.FloatNullableFilter<"Trip"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableFilter<"Trip"> | number | null
   fuelUsed?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  fuelCost?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  fuelCost?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.StringNullableFilter<"Trip"> | string | null
   deliveryType?: Prisma.StringFilter<"Trip"> | string
   loadingCityId?: Prisma.StringNullableFilter<"Trip"> | string | null
   loadingPointId?: Prisma.StringNullableFilter<"Trip"> | string | null
   destinationCityId?: Prisma.StringNullableFilter<"Trip"> | string | null
   destinationZoneId?: Prisma.StringNullableFilter<"Trip"> | string | null
-  status?: Prisma.StringFilter<"Trip"> | string
+  status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
   waitingReason?: Prisma.StringNullableFilter<"Trip"> | string | null
   waitingSince?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   loadingStartedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
@@ -932,8 +932,8 @@ export type TripScalarWhereWithAggregatesInput = {
   itemName?: Prisma.StringWithAggregatesFilter<"Trip"> | string
   quantity?: Prisma.FloatWithAggregatesFilter<"Trip"> | number
   unit?: Prisma.StringWithAggregatesFilter<"Trip"> | string
-  unitPrice?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
-  totalRevenue?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
+  unitPrice?: Prisma.DecimalNullableWithAggregatesFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.DecimalNullableWithAggregatesFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
   estimatedDuration?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
@@ -944,14 +944,14 @@ export type TripScalarWhereWithAggregatesInput = {
   fuelLevelBefore?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
   fuelUsed?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
-  fuelCost?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
+  fuelCost?: Prisma.DecimalNullableWithAggregatesFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   deliveryType?: Prisma.StringWithAggregatesFilter<"Trip"> | string
   loadingCityId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   loadingPointId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   destinationCityId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   destinationZoneId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"Trip"> | string
+  status?: Prisma.EnumTripStatusWithAggregatesFilter<"Trip"> | $Enums.TripStatus
   waitingReason?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   waitingSince?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
   loadingStartedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
@@ -984,8 +984,8 @@ export type TripCreateInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -996,10 +996,10 @@ export type TripCreateInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -1060,8 +1060,8 @@ export type TripUncheckedCreateInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -1072,14 +1072,14 @@ export type TripUncheckedCreateInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -1130,8 +1130,8 @@ export type TripUpdateInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1142,10 +1142,10 @@ export type TripUpdateInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1206,8 +1206,8 @@ export type TripUncheckedUpdateInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1218,14 +1218,14 @@ export type TripUncheckedUpdateInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1279,8 +1279,8 @@ export type TripCreateManyInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -1291,14 +1291,14 @@ export type TripCreateManyInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -1331,8 +1331,8 @@ export type TripUpdateManyMutationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1343,10 +1343,10 @@ export type TripUpdateManyMutationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1381,8 +1381,8 @@ export type TripUncheckedUpdateManyInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1393,14 +1393,14 @@ export type TripUncheckedUpdateManyInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2112,6 +2112,10 @@ export type TripUpdateOneWithoutTrackingAlertNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutTrackingAlertInput, Prisma.TripUpdateWithoutTrackingAlertInput>, Prisma.TripUncheckedUpdateWithoutTrackingAlertInput>
 }
 
+export type EnumTripStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TripStatus
+}
+
 export type TripCreateNestedOneWithoutTripCommentInput = {
   create?: Prisma.XOR<Prisma.TripCreateWithoutTripCommentInput, Prisma.TripUncheckedCreateWithoutTripCommentInput>
   connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripCommentInput
@@ -2272,8 +2276,8 @@ export type TripCreateWithoutBorderCrossingInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -2284,10 +2288,10 @@ export type TripCreateWithoutBorderCrossingInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -2347,8 +2351,8 @@ export type TripUncheckedCreateWithoutBorderCrossingInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -2359,14 +2363,14 @@ export type TripUncheckedCreateWithoutBorderCrossingInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -2432,8 +2436,8 @@ export type TripUpdateWithoutBorderCrossingInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2444,10 +2448,10 @@ export type TripUpdateWithoutBorderCrossingInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2507,8 +2511,8 @@ export type TripUncheckedUpdateWithoutBorderCrossingInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2519,14 +2523,14 @@ export type TripUncheckedUpdateWithoutBorderCrossingInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2576,8 +2580,8 @@ export type TripCreateWithoutCashAdvanceInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -2588,10 +2592,10 @@ export type TripCreateWithoutCashAdvanceInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -2651,8 +2655,8 @@ export type TripUncheckedCreateWithoutCashAdvanceInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -2663,14 +2667,14 @@ export type TripUncheckedCreateWithoutCashAdvanceInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -2736,8 +2740,8 @@ export type TripUpdateWithoutCashAdvanceInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2748,10 +2752,10 @@ export type TripUpdateWithoutCashAdvanceInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2811,8 +2815,8 @@ export type TripUncheckedUpdateWithoutCashAdvanceInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2823,14 +2827,14 @@ export type TripUncheckedUpdateWithoutCashAdvanceInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2880,8 +2884,8 @@ export type TripCreateWithoutClientInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -2892,10 +2896,10 @@ export type TripCreateWithoutClientInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -2955,8 +2959,8 @@ export type TripUncheckedCreateWithoutClientInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -2967,14 +2971,14 @@ export type TripUncheckedCreateWithoutClientInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3056,8 +3060,8 @@ export type TripScalarWhereInput = {
   itemName?: Prisma.StringFilter<"Trip"> | string
   quantity?: Prisma.FloatFilter<"Trip"> | number
   unit?: Prisma.StringFilter<"Trip"> | string
-  unitPrice?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  totalRevenue?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  unitPrice?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFilter<"Trip"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   estimatedDuration?: Prisma.FloatNullableFilter<"Trip"> | number | null
@@ -3068,14 +3072,14 @@ export type TripScalarWhereInput = {
   fuelLevelBefore?: Prisma.FloatNullableFilter<"Trip"> | number | null
   fuelLevelAfter?: Prisma.FloatNullableFilter<"Trip"> | number | null
   fuelUsed?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  fuelCost?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  fuelCost?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.StringNullableFilter<"Trip"> | string | null
   deliveryType?: Prisma.StringFilter<"Trip"> | string
   loadingCityId?: Prisma.StringNullableFilter<"Trip"> | string | null
   loadingPointId?: Prisma.StringNullableFilter<"Trip"> | string | null
   destinationCityId?: Prisma.StringNullableFilter<"Trip"> | string | null
   destinationZoneId?: Prisma.StringNullableFilter<"Trip"> | string | null
-  status?: Prisma.StringFilter<"Trip"> | string
+  status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
   waitingReason?: Prisma.StringNullableFilter<"Trip"> | string | null
   waitingSince?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   loadingStartedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
@@ -3108,8 +3112,8 @@ export type TripCreateWithoutDeliveryStopsInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3120,10 +3124,10 @@ export type TripCreateWithoutDeliveryStopsInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3183,8 +3187,8 @@ export type TripUncheckedCreateWithoutDeliveryStopsInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3195,14 +3199,14 @@ export type TripUncheckedCreateWithoutDeliveryStopsInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3268,8 +3272,8 @@ export type TripUpdateWithoutDeliveryStopsInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3280,10 +3284,10 @@ export type TripUpdateWithoutDeliveryStopsInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3343,8 +3347,8 @@ export type TripUncheckedUpdateWithoutDeliveryStopsInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3355,14 +3359,14 @@ export type TripUncheckedUpdateWithoutDeliveryStopsInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3412,8 +3416,8 @@ export type TripCreateWithoutDepotQueueInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3424,10 +3428,10 @@ export type TripCreateWithoutDepotQueueInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3487,8 +3491,8 @@ export type TripUncheckedCreateWithoutDepotQueueInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3499,14 +3503,14 @@ export type TripUncheckedCreateWithoutDepotQueueInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3572,8 +3576,8 @@ export type TripUpdateWithoutDepotQueueInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3584,10 +3588,10 @@ export type TripUpdateWithoutDepotQueueInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3647,8 +3651,8 @@ export type TripUncheckedUpdateWithoutDepotQueueInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3659,14 +3663,14 @@ export type TripUncheckedUpdateWithoutDepotQueueInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3716,8 +3720,8 @@ export type TripCreateWithoutDestinationCityInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3728,10 +3732,10 @@ export type TripCreateWithoutDestinationCityInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3791,8 +3795,8 @@ export type TripUncheckedCreateWithoutDestinationCityInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3803,13 +3807,13 @@ export type TripUncheckedCreateWithoutDestinationCityInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3886,8 +3890,8 @@ export type TripCreateWithoutDestinationZoneInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3898,10 +3902,10 @@ export type TripCreateWithoutDestinationZoneInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -3961,8 +3965,8 @@ export type TripUncheckedCreateWithoutDestinationZoneInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -3973,13 +3977,13 @@ export type TripUncheckedCreateWithoutDestinationZoneInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4056,8 +4060,8 @@ export type TripCreateWithoutDriverInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4068,10 +4072,10 @@ export type TripCreateWithoutDriverInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4130,8 +4134,8 @@ export type TripUncheckedCreateWithoutDriverInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4142,14 +4146,14 @@ export type TripUncheckedCreateWithoutDriverInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4226,8 +4230,8 @@ export type TripCreateWithoutExpenseInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4238,10 +4242,10 @@ export type TripCreateWithoutExpenseInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4301,8 +4305,8 @@ export type TripUncheckedCreateWithoutExpenseInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4313,14 +4317,14 @@ export type TripUncheckedCreateWithoutExpenseInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4386,8 +4390,8 @@ export type TripUpdateWithoutExpenseInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4398,10 +4402,10 @@ export type TripUpdateWithoutExpenseInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4461,8 +4465,8 @@ export type TripUncheckedUpdateWithoutExpenseInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4473,14 +4477,14 @@ export type TripUncheckedUpdateWithoutExpenseInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4530,8 +4534,8 @@ export type TripCreateWithoutFuelLogInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4542,10 +4546,10 @@ export type TripCreateWithoutFuelLogInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4605,8 +4609,8 @@ export type TripUncheckedCreateWithoutFuelLogInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4617,14 +4621,14 @@ export type TripUncheckedCreateWithoutFuelLogInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4690,8 +4694,8 @@ export type TripUpdateWithoutFuelLogInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4702,10 +4706,10 @@ export type TripUpdateWithoutFuelLogInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4765,8 +4769,8 @@ export type TripUncheckedUpdateWithoutFuelLogInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4777,14 +4781,14 @@ export type TripUncheckedUpdateWithoutFuelLogInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4834,8 +4838,8 @@ export type TripCreateWithoutInvoiceInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4846,10 +4850,10 @@ export type TripCreateWithoutInvoiceInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4909,8 +4913,8 @@ export type TripUncheckedCreateWithoutInvoiceInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -4921,14 +4925,14 @@ export type TripUncheckedCreateWithoutInvoiceInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -4994,8 +4998,8 @@ export type TripUpdateWithoutInvoiceInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5006,10 +5010,10 @@ export type TripUpdateWithoutInvoiceInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5069,8 +5073,8 @@ export type TripUncheckedUpdateWithoutInvoiceInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5081,14 +5085,14 @@ export type TripUncheckedUpdateWithoutInvoiceInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5138,8 +5142,8 @@ export type TripCreateWithoutItemInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5150,10 +5154,10 @@ export type TripCreateWithoutItemInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5212,8 +5216,8 @@ export type TripUncheckedCreateWithoutItemInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5224,14 +5228,14 @@ export type TripUncheckedCreateWithoutItemInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5308,8 +5312,8 @@ export type TripCreateWithoutLoadingCityInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5320,10 +5324,10 @@ export type TripCreateWithoutLoadingCityInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5383,8 +5387,8 @@ export type TripUncheckedCreateWithoutLoadingCityInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5395,13 +5399,13 @@ export type TripUncheckedCreateWithoutLoadingCityInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5478,8 +5482,8 @@ export type TripCreateWithoutLoadingPointInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5490,10 +5494,10 @@ export type TripCreateWithoutLoadingPointInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5553,8 +5557,8 @@ export type TripUncheckedCreateWithoutLoadingPointInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5565,13 +5569,13 @@ export type TripUncheckedCreateWithoutLoadingPointInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5648,8 +5652,8 @@ export type TripCreateWithoutRoadConditionReportInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5660,10 +5664,10 @@ export type TripCreateWithoutRoadConditionReportInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5723,8 +5727,8 @@ export type TripUncheckedCreateWithoutRoadConditionReportInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5735,14 +5739,14 @@ export type TripUncheckedCreateWithoutRoadConditionReportInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -5808,8 +5812,8 @@ export type TripUpdateWithoutRoadConditionReportInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5820,10 +5824,10 @@ export type TripUpdateWithoutRoadConditionReportInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5883,8 +5887,8 @@ export type TripUncheckedUpdateWithoutRoadConditionReportInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5895,14 +5899,14 @@ export type TripUncheckedUpdateWithoutRoadConditionReportInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5952,8 +5956,8 @@ export type TripCreateWithoutSettlementLineInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -5964,10 +5968,10 @@ export type TripCreateWithoutSettlementLineInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6027,8 +6031,8 @@ export type TripUncheckedCreateWithoutSettlementLineInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6039,14 +6043,14 @@ export type TripUncheckedCreateWithoutSettlementLineInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6112,8 +6116,8 @@ export type TripUpdateWithoutSettlementLineInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6124,10 +6128,10 @@ export type TripUpdateWithoutSettlementLineInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6187,8 +6191,8 @@ export type TripUncheckedUpdateWithoutSettlementLineInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6199,14 +6203,14 @@ export type TripUncheckedUpdateWithoutSettlementLineInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6256,8 +6260,8 @@ export type TripCreateWithoutTollRecordInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6268,10 +6272,10 @@ export type TripCreateWithoutTollRecordInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6331,8 +6335,8 @@ export type TripUncheckedCreateWithoutTollRecordInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6343,14 +6347,14 @@ export type TripUncheckedCreateWithoutTollRecordInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6416,8 +6420,8 @@ export type TripUpdateWithoutTollRecordInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6428,10 +6432,10 @@ export type TripUpdateWithoutTollRecordInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6491,8 +6495,8 @@ export type TripUncheckedUpdateWithoutTollRecordInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6503,14 +6507,14 @@ export type TripUncheckedUpdateWithoutTollRecordInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6560,8 +6564,8 @@ export type TripCreateWithoutTrackingAlertInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6572,10 +6576,10 @@ export type TripCreateWithoutTrackingAlertInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6635,8 +6639,8 @@ export type TripUncheckedCreateWithoutTrackingAlertInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6647,14 +6651,14 @@ export type TripUncheckedCreateWithoutTrackingAlertInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6720,8 +6724,8 @@ export type TripUpdateWithoutTrackingAlertInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6732,10 +6736,10 @@ export type TripUpdateWithoutTrackingAlertInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6795,8 +6799,8 @@ export type TripUncheckedUpdateWithoutTrackingAlertInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6807,14 +6811,14 @@ export type TripUncheckedUpdateWithoutTrackingAlertInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6864,8 +6868,8 @@ export type TripCreateWithoutTripCommentInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6876,10 +6880,10 @@ export type TripCreateWithoutTripCommentInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -6939,8 +6943,8 @@ export type TripUncheckedCreateWithoutTripCommentInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -6951,14 +6955,14 @@ export type TripUncheckedCreateWithoutTripCommentInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7024,8 +7028,8 @@ export type TripUpdateWithoutTripCommentInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7036,10 +7040,10 @@ export type TripUpdateWithoutTripCommentInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7099,8 +7103,8 @@ export type TripUncheckedUpdateWithoutTripCommentInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7111,14 +7115,14 @@ export type TripUncheckedUpdateWithoutTripCommentInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7168,8 +7172,8 @@ export type TripCreateWithoutTripDeliveryDestinationInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -7180,10 +7184,10 @@ export type TripCreateWithoutTripDeliveryDestinationInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7243,8 +7247,8 @@ export type TripUncheckedCreateWithoutTripDeliveryDestinationInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -7255,14 +7259,14 @@ export type TripUncheckedCreateWithoutTripDeliveryDestinationInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7328,8 +7332,8 @@ export type TripUpdateWithoutTripDeliveryDestinationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7340,10 +7344,10 @@ export type TripUpdateWithoutTripDeliveryDestinationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7403,8 +7407,8 @@ export type TripUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7415,14 +7419,14 @@ export type TripUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7472,8 +7476,8 @@ export type TripCreateWithoutTripEventInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -7484,10 +7488,10 @@ export type TripCreateWithoutTripEventInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7547,8 +7551,8 @@ export type TripUncheckedCreateWithoutTripEventInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -7559,14 +7563,14 @@ export type TripUncheckedCreateWithoutTripEventInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7632,8 +7636,8 @@ export type TripUpdateWithoutTripEventInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7644,10 +7648,10 @@ export type TripUpdateWithoutTripEventInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7707,8 +7711,8 @@ export type TripUncheckedUpdateWithoutTripEventInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7719,14 +7723,14 @@ export type TripUncheckedUpdateWithoutTripEventInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7776,8 +7780,8 @@ export type TripCreateWithoutTripItemInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -7788,10 +7792,10 @@ export type TripCreateWithoutTripItemInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7851,8 +7855,8 @@ export type TripUncheckedCreateWithoutTripItemInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -7863,14 +7867,14 @@ export type TripUncheckedCreateWithoutTripItemInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -7936,8 +7940,8 @@ export type TripUpdateWithoutTripItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -7948,10 +7952,10 @@ export type TripUpdateWithoutTripItemInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8011,8 +8015,8 @@ export type TripUncheckedUpdateWithoutTripItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -8023,14 +8027,14 @@ export type TripUncheckedUpdateWithoutTripItemInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8080,8 +8084,8 @@ export type TripCreateWithoutTruckInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8092,10 +8096,10 @@ export type TripCreateWithoutTruckInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8154,8 +8158,8 @@ export type TripUncheckedCreateWithoutTruckInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8166,14 +8170,14 @@ export type TripUncheckedCreateWithoutTruckInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8250,8 +8254,8 @@ export type TripCreateWithoutTruckLocationInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8262,10 +8266,10 @@ export type TripCreateWithoutTruckLocationInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8325,8 +8329,8 @@ export type TripUncheckedCreateWithoutTruckLocationInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8337,14 +8341,14 @@ export type TripUncheckedCreateWithoutTruckLocationInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8410,8 +8414,8 @@ export type TripUpdateWithoutTruckLocationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -8422,10 +8426,10 @@ export type TripUpdateWithoutTruckLocationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8485,8 +8489,8 @@ export type TripUncheckedUpdateWithoutTruckLocationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -8497,14 +8501,14 @@ export type TripUncheckedUpdateWithoutTruckLocationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8554,8 +8558,8 @@ export type TripCreateWithoutVehicleInspectionInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8566,10 +8570,10 @@ export type TripCreateWithoutVehicleInspectionInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8629,8 +8633,8 @@ export type TripUncheckedCreateWithoutVehicleInspectionInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8641,14 +8645,14 @@ export type TripUncheckedCreateWithoutVehicleInspectionInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8714,8 +8718,8 @@ export type TripUpdateWithoutVehicleInspectionInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -8726,10 +8730,10 @@ export type TripUpdateWithoutVehicleInspectionInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8789,8 +8793,8 @@ export type TripUncheckedUpdateWithoutVehicleInspectionInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -8801,14 +8805,14 @@ export type TripUncheckedUpdateWithoutVehicleInspectionInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8858,8 +8862,8 @@ export type TripCreateWithoutWeightVerificationInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8870,10 +8874,10 @@ export type TripCreateWithoutWeightVerificationInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -8933,8 +8937,8 @@ export type TripUncheckedCreateWithoutWeightVerificationInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -8945,14 +8949,14 @@ export type TripUncheckedCreateWithoutWeightVerificationInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -9018,8 +9022,8 @@ export type TripUpdateWithoutWeightVerificationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9030,10 +9034,10 @@ export type TripUpdateWithoutWeightVerificationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9093,8 +9097,8 @@ export type TripUncheckedUpdateWithoutWeightVerificationInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9105,14 +9109,14 @@ export type TripUncheckedUpdateWithoutWeightVerificationInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9165,8 +9169,8 @@ export type TripCreateManyClientInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -9177,14 +9181,14 @@ export type TripCreateManyClientInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -9216,8 +9220,8 @@ export type TripUpdateWithoutClientInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9228,10 +9232,10 @@ export type TripUpdateWithoutClientInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9291,8 +9295,8 @@ export type TripUncheckedUpdateWithoutClientInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9303,14 +9307,14 @@ export type TripUncheckedUpdateWithoutClientInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9363,8 +9367,8 @@ export type TripUncheckedUpdateManyWithoutClientInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9375,14 +9379,14 @@ export type TripUncheckedUpdateManyWithoutClientInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9417,8 +9421,8 @@ export type TripCreateManyDestinationCityInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -9429,13 +9433,13 @@ export type TripCreateManyDestinationCityInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -9468,8 +9472,8 @@ export type TripUpdateWithoutDestinationCityInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9480,10 +9484,10 @@ export type TripUpdateWithoutDestinationCityInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9543,8 +9547,8 @@ export type TripUncheckedUpdateWithoutDestinationCityInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9555,13 +9559,13 @@ export type TripUncheckedUpdateWithoutDestinationCityInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9615,8 +9619,8 @@ export type TripUncheckedUpdateManyWithoutDestinationCityInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9627,13 +9631,13 @@ export type TripUncheckedUpdateManyWithoutDestinationCityInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9669,8 +9673,8 @@ export type TripCreateManyDestinationZoneInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -9681,13 +9685,13 @@ export type TripCreateManyDestinationZoneInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -9720,8 +9724,8 @@ export type TripUpdateWithoutDestinationZoneInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9732,10 +9736,10 @@ export type TripUpdateWithoutDestinationZoneInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9795,8 +9799,8 @@ export type TripUncheckedUpdateWithoutDestinationZoneInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9807,13 +9811,13 @@ export type TripUncheckedUpdateWithoutDestinationZoneInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9867,8 +9871,8 @@ export type TripUncheckedUpdateManyWithoutDestinationZoneInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9879,13 +9883,13 @@ export type TripUncheckedUpdateManyWithoutDestinationZoneInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9920,8 +9924,8 @@ export type TripCreateManyDriverInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -9932,14 +9936,14 @@ export type TripCreateManyDriverInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -9972,8 +9976,8 @@ export type TripUpdateWithoutDriverInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -9984,10 +9988,10 @@ export type TripUpdateWithoutDriverInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10046,8 +10050,8 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10058,14 +10062,14 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10118,8 +10122,8 @@ export type TripUncheckedUpdateManyWithoutDriverInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10130,14 +10134,14 @@ export type TripUncheckedUpdateManyWithoutDriverInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10172,8 +10176,8 @@ export type TripCreateManyItemInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -10184,14 +10188,14 @@ export type TripCreateManyItemInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -10224,8 +10228,8 @@ export type TripUpdateWithoutItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10236,10 +10240,10 @@ export type TripUpdateWithoutItemInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10298,8 +10302,8 @@ export type TripUncheckedUpdateWithoutItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10310,14 +10314,14 @@ export type TripUncheckedUpdateWithoutItemInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10370,8 +10374,8 @@ export type TripUncheckedUpdateManyWithoutItemInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10382,14 +10386,14 @@ export type TripUncheckedUpdateManyWithoutItemInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10425,8 +10429,8 @@ export type TripCreateManyLoadingCityInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -10437,13 +10441,13 @@ export type TripCreateManyLoadingCityInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -10476,8 +10480,8 @@ export type TripUpdateWithoutLoadingCityInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10488,10 +10492,10 @@ export type TripUpdateWithoutLoadingCityInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10551,8 +10555,8 @@ export type TripUncheckedUpdateWithoutLoadingCityInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10563,13 +10567,13 @@ export type TripUncheckedUpdateWithoutLoadingCityInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10623,8 +10627,8 @@ export type TripUncheckedUpdateManyWithoutLoadingCityInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10635,13 +10639,13 @@ export type TripUncheckedUpdateManyWithoutLoadingCityInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10677,8 +10681,8 @@ export type TripCreateManyLoadingPointInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -10689,13 +10693,13 @@ export type TripCreateManyLoadingPointInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -10728,8 +10732,8 @@ export type TripUpdateWithoutLoadingPointInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10740,10 +10744,10 @@ export type TripUpdateWithoutLoadingPointInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10803,8 +10807,8 @@ export type TripUncheckedUpdateWithoutLoadingPointInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10815,13 +10819,13 @@ export type TripUncheckedUpdateWithoutLoadingPointInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10875,8 +10879,8 @@ export type TripUncheckedUpdateManyWithoutLoadingPointInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10887,13 +10891,13 @@ export type TripUncheckedUpdateManyWithoutLoadingPointInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10928,8 +10932,8 @@ export type TripCreateManyTruckInput = {
   itemName: string
   quantity: number
   unit?: string
-  unitPrice?: number | null
-  totalRevenue?: number | null
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime: Date | string
   arrivalTime?: Date | string | null
   estimatedDuration?: number | null
@@ -10940,14 +10944,14 @@ export type TripCreateManyTruckInput = {
   fuelLevelBefore?: number | null
   fuelLevelAfter?: number | null
   fuelUsed?: number | null
-  fuelCost?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: string | null
   deliveryType?: string
   loadingCityId?: string | null
   loadingPointId?: string | null
   destinationCityId?: string | null
   destinationZoneId?: string | null
-  status?: string
+  status?: $Enums.TripStatus
   waitingReason?: string | null
   waitingSince?: Date | string | null
   loadingStartedAt?: Date | string | null
@@ -10980,8 +10984,8 @@ export type TripUpdateWithoutTruckInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -10992,10 +10996,10 @@ export type TripUpdateWithoutTruckInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11054,8 +11058,8 @@ export type TripUncheckedUpdateWithoutTruckInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -11066,14 +11070,14 @@ export type TripUncheckedUpdateWithoutTruckInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11126,8 +11130,8 @@ export type TripUncheckedUpdateManyWithoutTruckInput = {
   itemName?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  unitPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalRevenue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -11138,14 +11142,14 @@ export type TripUncheckedUpdateManyWithoutTruckInput = {
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fuelCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
   loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11556,8 +11560,8 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     itemName: string
     quantity: number
     unit: string
-    unitPrice: number | null
-    totalRevenue: number | null
+    unitPrice: runtime.Decimal | null
+    totalRevenue: runtime.Decimal | null
     departureTime: Date
     arrivalTime: Date | null
     estimatedDuration: number | null
@@ -11568,14 +11572,14 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     fuelLevelBefore: number | null
     fuelLevelAfter: number | null
     fuelUsed: number | null
-    fuelCost: number | null
+    fuelCost: runtime.Decimal | null
     startMileageImage: string | null
     deliveryType: string
     loadingCityId: string | null
     loadingPointId: string | null
     destinationCityId: string | null
     destinationZoneId: string | null
-    status: string
+    status: $Enums.TripStatus
     waitingReason: string | null
     waitingSince: Date | null
     loadingStartedAt: Date | null
@@ -12003,8 +12007,8 @@ export interface TripFieldRefs {
   readonly itemName: Prisma.FieldRef<"Trip", 'String'>
   readonly quantity: Prisma.FieldRef<"Trip", 'Float'>
   readonly unit: Prisma.FieldRef<"Trip", 'String'>
-  readonly unitPrice: Prisma.FieldRef<"Trip", 'Float'>
-  readonly totalRevenue: Prisma.FieldRef<"Trip", 'Float'>
+  readonly unitPrice: Prisma.FieldRef<"Trip", 'Decimal'>
+  readonly totalRevenue: Prisma.FieldRef<"Trip", 'Decimal'>
   readonly departureTime: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly arrivalTime: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly estimatedDuration: Prisma.FieldRef<"Trip", 'Float'>
@@ -12015,14 +12019,14 @@ export interface TripFieldRefs {
   readonly fuelLevelBefore: Prisma.FieldRef<"Trip", 'Float'>
   readonly fuelLevelAfter: Prisma.FieldRef<"Trip", 'Float'>
   readonly fuelUsed: Prisma.FieldRef<"Trip", 'Float'>
-  readonly fuelCost: Prisma.FieldRef<"Trip", 'Float'>
+  readonly fuelCost: Prisma.FieldRef<"Trip", 'Decimal'>
   readonly startMileageImage: Prisma.FieldRef<"Trip", 'String'>
   readonly deliveryType: Prisma.FieldRef<"Trip", 'String'>
   readonly loadingCityId: Prisma.FieldRef<"Trip", 'String'>
   readonly loadingPointId: Prisma.FieldRef<"Trip", 'String'>
   readonly destinationCityId: Prisma.FieldRef<"Trip", 'String'>
   readonly destinationZoneId: Prisma.FieldRef<"Trip", 'String'>
-  readonly status: Prisma.FieldRef<"Trip", 'String'>
+  readonly status: Prisma.FieldRef<"Trip", 'TripStatus'>
   readonly waitingReason: Prisma.FieldRef<"Trip", 'String'>
   readonly waitingSince: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly loadingStartedAt: Prisma.FieldRef<"Trip", 'DateTime'>

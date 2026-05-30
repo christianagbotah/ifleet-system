@@ -27,14 +27,14 @@ export type AggregateZoneRate = {
 }
 
 export type ZoneRateAvgAggregateOutputType = {
-  rateAmount: number | null
+  rateAmount: runtime.Decimal | null
   minMileage: number | null
   maxMileage: number | null
   expectedFuelConsumption: number | null
 }
 
 export type ZoneRateSumAggregateOutputType = {
-  rateAmount: number | null
+  rateAmount: runtime.Decimal | null
   minMileage: number | null
   maxMileage: number | null
   expectedFuelConsumption: number | null
@@ -43,7 +43,7 @@ export type ZoneRateSumAggregateOutputType = {
 export type ZoneRateMinAggregateOutputType = {
   id: string | null
   destinationZoneId: string | null
-  rateAmount: number | null
+  rateAmount: runtime.Decimal | null
   minMileage: number | null
   maxMileage: number | null
   expectedFuelConsumption: number | null
@@ -56,7 +56,7 @@ export type ZoneRateMinAggregateOutputType = {
 export type ZoneRateMaxAggregateOutputType = {
   id: string | null
   destinationZoneId: string | null
-  rateAmount: number | null
+  rateAmount: runtime.Decimal | null
   minMileage: number | null
   maxMileage: number | null
   expectedFuelConsumption: number | null
@@ -224,7 +224,7 @@ export type ZoneRateGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type ZoneRateGroupByOutputType = {
   id: string
   destinationZoneId: string
-  rateAmount: number
+  rateAmount: runtime.Decimal
   minMileage: number | null
   maxMileage: number | null
   expectedFuelConsumption: number | null
@@ -260,7 +260,7 @@ export type ZoneRateWhereInput = {
   NOT?: Prisma.ZoneRateWhereInput | Prisma.ZoneRateWhereInput[]
   id?: Prisma.StringFilter<"ZoneRate"> | string
   destinationZoneId?: Prisma.StringFilter<"ZoneRate"> | string
-  rateAmount?: Prisma.FloatFilter<"ZoneRate"> | number
+  rateAmount?: Prisma.DecimalFilter<"ZoneRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
   maxMileage?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
   expectedFuelConsumption?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
@@ -292,7 +292,7 @@ export type ZoneRateWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ZoneRateWhereInput[]
   NOT?: Prisma.ZoneRateWhereInput | Prisma.ZoneRateWhereInput[]
   destinationZoneId?: Prisma.StringFilter<"ZoneRate"> | string
-  rateAmount?: Prisma.FloatFilter<"ZoneRate"> | number
+  rateAmount?: Prisma.DecimalFilter<"ZoneRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
   maxMileage?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
   expectedFuelConsumption?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
@@ -327,7 +327,7 @@ export type ZoneRateScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ZoneRateScalarWhereWithAggregatesInput | Prisma.ZoneRateScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ZoneRate"> | string
   destinationZoneId?: Prisma.StringWithAggregatesFilter<"ZoneRate"> | string
-  rateAmount?: Prisma.FloatWithAggregatesFilter<"ZoneRate"> | number
+  rateAmount?: Prisma.DecimalWithAggregatesFilter<"ZoneRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.FloatNullableWithAggregatesFilter<"ZoneRate"> | number | null
   maxMileage?: Prisma.FloatNullableWithAggregatesFilter<"ZoneRate"> | number | null
   expectedFuelConsumption?: Prisma.FloatNullableWithAggregatesFilter<"ZoneRate"> | number | null
@@ -339,7 +339,7 @@ export type ZoneRateScalarWhereWithAggregatesInput = {
 
 export type ZoneRateCreateInput = {
   id?: string
-  rateAmount: number
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: number | null
   maxMileage?: number | null
   expectedFuelConsumption?: number | null
@@ -353,7 +353,7 @@ export type ZoneRateCreateInput = {
 export type ZoneRateUncheckedCreateInput = {
   id?: string
   destinationZoneId: string
-  rateAmount: number
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: number | null
   maxMileage?: number | null
   expectedFuelConsumption?: number | null
@@ -365,7 +365,7 @@ export type ZoneRateUncheckedCreateInput = {
 
 export type ZoneRateUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -379,7 +379,7 @@ export type ZoneRateUpdateInput = {
 export type ZoneRateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   destinationZoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -392,7 +392,7 @@ export type ZoneRateUncheckedUpdateInput = {
 export type ZoneRateCreateManyInput = {
   id?: string
   destinationZoneId: string
-  rateAmount: number
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: number | null
   maxMileage?: number | null
   expectedFuelConsumption?: number | null
@@ -404,7 +404,7 @@ export type ZoneRateCreateManyInput = {
 
 export type ZoneRateUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -417,7 +417,7 @@ export type ZoneRateUpdateManyMutationInput = {
 export type ZoneRateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   destinationZoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -540,7 +540,7 @@ export type ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput = {
 
 export type ZoneRateCreateWithoutDestinationZoneInput = {
   id?: string
-  rateAmount: number
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: number | null
   maxMileage?: number | null
   expectedFuelConsumption?: number | null
@@ -552,7 +552,7 @@ export type ZoneRateCreateWithoutDestinationZoneInput = {
 
 export type ZoneRateUncheckedCreateWithoutDestinationZoneInput = {
   id?: string
-  rateAmount: number
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: number | null
   maxMileage?: number | null
   expectedFuelConsumption?: number | null
@@ -594,7 +594,7 @@ export type ZoneRateScalarWhereInput = {
   NOT?: Prisma.ZoneRateScalarWhereInput | Prisma.ZoneRateScalarWhereInput[]
   id?: Prisma.StringFilter<"ZoneRate"> | string
   destinationZoneId?: Prisma.StringFilter<"ZoneRate"> | string
-  rateAmount?: Prisma.FloatFilter<"ZoneRate"> | number
+  rateAmount?: Prisma.DecimalFilter<"ZoneRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
   maxMileage?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
   expectedFuelConsumption?: Prisma.FloatNullableFilter<"ZoneRate"> | number | null
@@ -606,7 +606,7 @@ export type ZoneRateScalarWhereInput = {
 
 export type ZoneRateCreateManyDestinationZoneInput = {
   id?: string
-  rateAmount: number
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: number | null
   maxMileage?: number | null
   expectedFuelConsumption?: number | null
@@ -618,7 +618,7 @@ export type ZoneRateCreateManyDestinationZoneInput = {
 
 export type ZoneRateUpdateWithoutDestinationZoneInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -630,7 +630,7 @@ export type ZoneRateUpdateWithoutDestinationZoneInput = {
 
 export type ZoneRateUncheckedUpdateWithoutDestinationZoneInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -642,7 +642,7 @@ export type ZoneRateUncheckedUpdateWithoutDestinationZoneInput = {
 
 export type ZoneRateUncheckedUpdateManyWithoutDestinationZoneInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  rateAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   minMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   expectedFuelConsumption?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -696,7 +696,7 @@ export type $ZoneRatePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     destinationZoneId: string
-    rateAmount: number
+    rateAmount: runtime.Decimal
     minMileage: number | null
     maxMileage: number | null
     expectedFuelConsumption: number | null
@@ -1076,7 +1076,7 @@ export interface Prisma__ZoneRateClient<T, Null = never, ExtArgs extends runtime
 export interface ZoneRateFieldRefs {
   readonly id: Prisma.FieldRef<"ZoneRate", 'String'>
   readonly destinationZoneId: Prisma.FieldRef<"ZoneRate", 'String'>
-  readonly rateAmount: Prisma.FieldRef<"ZoneRate", 'Float'>
+  readonly rateAmount: Prisma.FieldRef<"ZoneRate", 'Decimal'>
   readonly minMileage: Prisma.FieldRef<"ZoneRate", 'Float'>
   readonly maxMileage: Prisma.FieldRef<"ZoneRate", 'Float'>
   readonly expectedFuelConsumption: Prisma.FieldRef<"ZoneRate", 'Float'>

@@ -27,13 +27,13 @@ export type AggregateInsurance = {
 }
 
 export type InsuranceAvgAggregateOutputType = {
-  coverAmount: number | null
-  premium: number | null
+  coverAmount: runtime.Decimal | null
+  premium: runtime.Decimal | null
 }
 
 export type InsuranceSumAggregateOutputType = {
-  coverAmount: number | null
-  premium: number | null
+  coverAmount: runtime.Decimal | null
+  premium: runtime.Decimal | null
 }
 
 export type InsuranceMinAggregateOutputType = {
@@ -42,11 +42,11 @@ export type InsuranceMinAggregateOutputType = {
   provider: string | null
   policyNumber: string | null
   type: string | null
-  coverAmount: number | null
-  premium: number | null
+  coverAmount: runtime.Decimal | null
+  premium: runtime.Decimal | null
   startDate: Date | null
   endDate: Date | null
-  status: string | null
+  status: $Enums.InsuranceStatus | null
   renewalReminderSent: boolean | null
   documentUrl: string | null
   notes: string | null
@@ -60,11 +60,11 @@ export type InsuranceMaxAggregateOutputType = {
   provider: string | null
   policyNumber: string | null
   type: string | null
-  coverAmount: number | null
-  premium: number | null
+  coverAmount: runtime.Decimal | null
+  premium: runtime.Decimal | null
   startDate: Date | null
   endDate: Date | null
-  status: string | null
+  status: $Enums.InsuranceStatus | null
   renewalReminderSent: boolean | null
   documentUrl: string | null
   notes: string | null
@@ -249,11 +249,11 @@ export type InsuranceGroupByOutputType = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount: number | null
-  premium: number
+  coverAmount: runtime.Decimal | null
+  premium: runtime.Decimal
   startDate: Date
   endDate: Date
-  status: string
+  status: $Enums.InsuranceStatus
   renewalReminderSent: boolean
   documentUrl: string | null
   notes: string | null
@@ -290,11 +290,11 @@ export type InsuranceWhereInput = {
   provider?: Prisma.StringFilter<"Insurance"> | string
   policyNumber?: Prisma.StringFilter<"Insurance"> | string
   type?: Prisma.StringFilter<"Insurance"> | string
-  coverAmount?: Prisma.FloatNullableFilter<"Insurance"> | number | null
-  premium?: Prisma.FloatFilter<"Insurance"> | number
+  coverAmount?: Prisma.DecimalNullableFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFilter<"Insurance"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Insurance"> | Date | string
-  status?: Prisma.StringFilter<"Insurance"> | string
+  status?: Prisma.EnumInsuranceStatusFilter<"Insurance"> | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFilter<"Insurance"> | boolean
   documentUrl?: Prisma.StringNullableFilter<"Insurance"> | string | null
   notes?: Prisma.StringNullableFilter<"Insurance"> | string | null
@@ -336,11 +336,11 @@ export type InsuranceWhereUniqueInput = Prisma.AtLeast<{
   truckId?: Prisma.StringFilter<"Insurance"> | string
   provider?: Prisma.StringFilter<"Insurance"> | string
   type?: Prisma.StringFilter<"Insurance"> | string
-  coverAmount?: Prisma.FloatNullableFilter<"Insurance"> | number | null
-  premium?: Prisma.FloatFilter<"Insurance"> | number
+  coverAmount?: Prisma.DecimalNullableFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFilter<"Insurance"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Insurance"> | Date | string
-  status?: Prisma.StringFilter<"Insurance"> | string
+  status?: Prisma.EnumInsuranceStatusFilter<"Insurance"> | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFilter<"Insurance"> | boolean
   documentUrl?: Prisma.StringNullableFilter<"Insurance"> | string | null
   notes?: Prisma.StringNullableFilter<"Insurance"> | string | null
@@ -383,11 +383,11 @@ export type InsuranceScalarWhereWithAggregatesInput = {
   provider?: Prisma.StringWithAggregatesFilter<"Insurance"> | string
   policyNumber?: Prisma.StringWithAggregatesFilter<"Insurance"> | string
   type?: Prisma.StringWithAggregatesFilter<"Insurance"> | string
-  coverAmount?: Prisma.FloatNullableWithAggregatesFilter<"Insurance"> | number | null
-  premium?: Prisma.FloatWithAggregatesFilter<"Insurance"> | number
+  coverAmount?: Prisma.DecimalNullableWithAggregatesFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalWithAggregatesFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Insurance"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Insurance"> | Date | string
-  status?: Prisma.StringWithAggregatesFilter<"Insurance"> | string
+  status?: Prisma.EnumInsuranceStatusWithAggregatesFilter<"Insurance"> | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolWithAggregatesFilter<"Insurance"> | boolean
   documentUrl?: Prisma.StringNullableWithAggregatesFilter<"Insurance"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Insurance"> | string | null
@@ -400,11 +400,11 @@ export type InsuranceCreateInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -421,11 +421,11 @@ export type InsuranceUncheckedCreateInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -440,11 +440,11 @@ export type InsuranceUpdateInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,11 +461,11 @@ export type InsuranceUncheckedUpdateInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -481,11 +481,11 @@ export type InsuranceCreateManyInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -498,11 +498,11 @@ export type InsuranceUpdateManyMutationInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -516,11 +516,11 @@ export type InsuranceUncheckedUpdateManyInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -613,6 +613,10 @@ export type InsuranceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type EnumInsuranceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InsuranceStatus
+}
+
 export type InsuranceCreateNestedOneWithoutInsuranceClaimInput = {
   create?: Prisma.XOR<Prisma.InsuranceCreateWithoutInsuranceClaimInput, Prisma.InsuranceUncheckedCreateWithoutInsuranceClaimInput>
   connectOrCreate?: Prisma.InsuranceCreateOrConnectWithoutInsuranceClaimInput
@@ -688,11 +692,11 @@ export type InsuranceCreateWithoutInsuranceClaimInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -708,11 +712,11 @@ export type InsuranceUncheckedCreateWithoutInsuranceClaimInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -742,11 +746,11 @@ export type InsuranceUpdateWithoutInsuranceClaimInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -762,11 +766,11 @@ export type InsuranceUncheckedUpdateWithoutInsuranceClaimInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -780,11 +784,11 @@ export type InsuranceCreateWithoutTruckInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -799,11 +803,11 @@ export type InsuranceUncheckedCreateWithoutTruckInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -848,11 +852,11 @@ export type InsuranceScalarWhereInput = {
   provider?: Prisma.StringFilter<"Insurance"> | string
   policyNumber?: Prisma.StringFilter<"Insurance"> | string
   type?: Prisma.StringFilter<"Insurance"> | string
-  coverAmount?: Prisma.FloatNullableFilter<"Insurance"> | number | null
-  premium?: Prisma.FloatFilter<"Insurance"> | number
+  coverAmount?: Prisma.DecimalNullableFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFilter<"Insurance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFilter<"Insurance"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Insurance"> | Date | string
-  status?: Prisma.StringFilter<"Insurance"> | string
+  status?: Prisma.EnumInsuranceStatusFilter<"Insurance"> | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFilter<"Insurance"> | boolean
   documentUrl?: Prisma.StringNullableFilter<"Insurance"> | string | null
   notes?: Prisma.StringNullableFilter<"Insurance"> | string | null
@@ -865,11 +869,11 @@ export type InsuranceCreateWithoutInsuranceRenewalHistoryInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -885,11 +889,11 @@ export type InsuranceUncheckedCreateWithoutInsuranceRenewalHistoryInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -919,11 +923,11 @@ export type InsuranceUpdateWithoutInsuranceRenewalHistoryInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -939,11 +943,11 @@ export type InsuranceUncheckedUpdateWithoutInsuranceRenewalHistoryInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -957,11 +961,11 @@ export type InsuranceCreateManyTruckInput = {
   provider: string
   policyNumber: string
   type: string
-  coverAmount?: number | null
-  premium: number
+  coverAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium: runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate: Date | string
   endDate: Date | string
-  status?: string
+  status?: $Enums.InsuranceStatus
   renewalReminderSent?: boolean
   documentUrl?: string | null
   notes?: string | null
@@ -974,11 +978,11 @@ export type InsuranceUpdateWithoutTruckInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -993,11 +997,11 @@ export type InsuranceUncheckedUpdateWithoutTruckInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1012,11 +1016,11 @@ export type InsuranceUncheckedUpdateManyWithoutTruckInput = {
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   policyNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
-  coverAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  premium?: Prisma.FloatFieldUpdateOperationsInput | number
+  coverAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInsuranceStatusFieldUpdateOperationsInput | $Enums.InsuranceStatus
   renewalReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1127,11 +1131,11 @@ export type $InsurancePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     provider: string
     policyNumber: string
     type: string
-    coverAmount: number | null
-    premium: number
+    coverAmount: runtime.Decimal | null
+    premium: runtime.Decimal
     startDate: Date
     endDate: Date
-    status: string
+    status: $Enums.InsuranceStatus
     renewalReminderSent: boolean
     documentUrl: string | null
     notes: string | null
@@ -1514,11 +1518,11 @@ export interface InsuranceFieldRefs {
   readonly provider: Prisma.FieldRef<"Insurance", 'String'>
   readonly policyNumber: Prisma.FieldRef<"Insurance", 'String'>
   readonly type: Prisma.FieldRef<"Insurance", 'String'>
-  readonly coverAmount: Prisma.FieldRef<"Insurance", 'Float'>
-  readonly premium: Prisma.FieldRef<"Insurance", 'Float'>
+  readonly coverAmount: Prisma.FieldRef<"Insurance", 'Decimal'>
+  readonly premium: Prisma.FieldRef<"Insurance", 'Decimal'>
   readonly startDate: Prisma.FieldRef<"Insurance", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Insurance", 'DateTime'>
-  readonly status: Prisma.FieldRef<"Insurance", 'String'>
+  readonly status: Prisma.FieldRef<"Insurance", 'InsuranceStatus'>
   readonly renewalReminderSent: Prisma.FieldRef<"Insurance", 'Boolean'>
   readonly documentUrl: Prisma.FieldRef<"Insurance", 'String'>
   readonly notes: Prisma.FieldRef<"Insurance", 'String'>

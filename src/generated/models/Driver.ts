@@ -59,7 +59,7 @@ export type DriverMinAggregateOutputType = {
   ghanaCardBackImage: string | null
   emergencyName: string | null
   emergencyPhone: string | null
-  verificationStatus: string | null
+  verificationStatus: $Enums.DriverVerificationStatus | null
   verifiedBy: string | null
   verifiedAt: Date | null
   verificationNotes: string | null
@@ -67,7 +67,7 @@ export type DriverMinAggregateOutputType = {
   notifyEmail: boolean | null
   notifyPush: boolean | null
   rating: number | null
-  status: string | null
+  status: $Enums.DriverStatus | null
   totalTrips: number | null
   totalMileage: number | null
   hireDate: Date | null
@@ -96,7 +96,7 @@ export type DriverMaxAggregateOutputType = {
   ghanaCardBackImage: string | null
   emergencyName: string | null
   emergencyPhone: string | null
-  verificationStatus: string | null
+  verificationStatus: $Enums.DriverVerificationStatus | null
   verifiedBy: string | null
   verifiedAt: Date | null
   verificationNotes: string | null
@@ -104,7 +104,7 @@ export type DriverMaxAggregateOutputType = {
   notifyEmail: boolean | null
   notifyPush: boolean | null
   rating: number | null
-  status: string | null
+  status: $Enums.DriverStatus | null
   totalTrips: number | null
   totalMileage: number | null
   hireDate: Date | null
@@ -382,7 +382,7 @@ export type DriverGroupByOutputType = {
   ghanaCardBackImage: string | null
   emergencyName: string | null
   emergencyPhone: string | null
-  verificationStatus: string
+  verificationStatus: $Enums.DriverVerificationStatus
   verifiedBy: string | null
   verifiedAt: Date | null
   verificationNotes: string | null
@@ -390,7 +390,7 @@ export type DriverGroupByOutputType = {
   notifyEmail: boolean
   notifyPush: boolean
   rating: number
-  status: string
+  status: $Enums.DriverStatus
   totalTrips: number
   totalMileage: number
   hireDate: Date
@@ -442,7 +442,7 @@ export type DriverWhereInput = {
   ghanaCardBackImage?: Prisma.StringNullableFilter<"Driver"> | string | null
   emergencyName?: Prisma.StringNullableFilter<"Driver"> | string | null
   emergencyPhone?: Prisma.StringNullableFilter<"Driver"> | string | null
-  verificationStatus?: Prisma.StringFilter<"Driver"> | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFilter<"Driver"> | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.StringNullableFilter<"Driver"> | string | null
   verifiedAt?: Prisma.DateTimeNullableFilter<"Driver"> | Date | string | null
   verificationNotes?: Prisma.StringNullableFilter<"Driver"> | string | null
@@ -450,7 +450,7 @@ export type DriverWhereInput = {
   notifyEmail?: Prisma.BoolFilter<"Driver"> | boolean
   notifyPush?: Prisma.BoolFilter<"Driver"> | boolean
   rating?: Prisma.FloatFilter<"Driver"> | number
-  status?: Prisma.StringFilter<"Driver"> | string
+  status?: Prisma.EnumDriverStatusFilter<"Driver"> | $Enums.DriverStatus
   totalTrips?: Prisma.IntFilter<"Driver"> | number
   totalMileage?: Prisma.FloatFilter<"Driver"> | number
   hireDate?: Prisma.DateTimeFilter<"Driver"> | Date | string
@@ -546,7 +546,7 @@ export type DriverWhereUniqueInput = Prisma.AtLeast<{
   ghanaCardBackImage?: Prisma.StringNullableFilter<"Driver"> | string | null
   emergencyName?: Prisma.StringNullableFilter<"Driver"> | string | null
   emergencyPhone?: Prisma.StringNullableFilter<"Driver"> | string | null
-  verificationStatus?: Prisma.StringFilter<"Driver"> | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFilter<"Driver"> | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.StringNullableFilter<"Driver"> | string | null
   verifiedAt?: Prisma.DateTimeNullableFilter<"Driver"> | Date | string | null
   verificationNotes?: Prisma.StringNullableFilter<"Driver"> | string | null
@@ -554,7 +554,7 @@ export type DriverWhereUniqueInput = Prisma.AtLeast<{
   notifyEmail?: Prisma.BoolFilter<"Driver"> | boolean
   notifyPush?: Prisma.BoolFilter<"Driver"> | boolean
   rating?: Prisma.FloatFilter<"Driver"> | number
-  status?: Prisma.StringFilter<"Driver"> | string
+  status?: Prisma.EnumDriverStatusFilter<"Driver"> | $Enums.DriverStatus
   totalTrips?: Prisma.IntFilter<"Driver"> | number
   totalMileage?: Prisma.FloatFilter<"Driver"> | number
   hireDate?: Prisma.DateTimeFilter<"Driver"> | Date | string
@@ -641,7 +641,7 @@ export type DriverScalarWhereWithAggregatesInput = {
   ghanaCardBackImage?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
   emergencyName?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
   emergencyPhone?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
-  verificationStatus?: Prisma.StringWithAggregatesFilter<"Driver"> | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusWithAggregatesFilter<"Driver"> | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
   verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Driver"> | Date | string | null
   verificationNotes?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
@@ -649,7 +649,7 @@ export type DriverScalarWhereWithAggregatesInput = {
   notifyEmail?: Prisma.BoolWithAggregatesFilter<"Driver"> | boolean
   notifyPush?: Prisma.BoolWithAggregatesFilter<"Driver"> | boolean
   rating?: Prisma.FloatWithAggregatesFilter<"Driver"> | number
-  status?: Prisma.StringWithAggregatesFilter<"Driver"> | string
+  status?: Prisma.EnumDriverStatusWithAggregatesFilter<"Driver"> | $Enums.DriverStatus
   totalTrips?: Prisma.IntWithAggregatesFilter<"Driver"> | number
   totalMileage?: Prisma.FloatWithAggregatesFilter<"Driver"> | number
   hireDate?: Prisma.DateTimeWithAggregatesFilter<"Driver"> | Date | string
@@ -677,7 +677,7 @@ export type DriverCreateInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -685,7 +685,7 @@ export type DriverCreateInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -727,7 +727,7 @@ export type DriverUncheckedCreateInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -735,7 +735,7 @@ export type DriverUncheckedCreateInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -775,7 +775,7 @@ export type DriverUpdateInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -783,7 +783,7 @@ export type DriverUpdateInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -825,7 +825,7 @@ export type DriverUncheckedUpdateInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -833,7 +833,7 @@ export type DriverUncheckedUpdateInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -874,7 +874,7 @@ export type DriverCreateManyInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -882,7 +882,7 @@ export type DriverCreateManyInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -910,7 +910,7 @@ export type DriverUpdateManyMutationInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -918,7 +918,7 @@ export type DriverUpdateManyMutationInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -947,7 +947,7 @@ export type DriverUncheckedUpdateManyInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -955,7 +955,7 @@ export type DriverUncheckedUpdateManyInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1178,6 +1178,14 @@ export type DriverUpdateOneWithoutDepotQueueNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DriverUpdateToOneWithWhereWithoutDepotQueueInput, Prisma.DriverUpdateWithoutDepotQueueInput>, Prisma.DriverUncheckedUpdateWithoutDepotQueueInput>
 }
 
+export type EnumDriverVerificationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DriverVerificationStatus
+}
+
+export type EnumDriverStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DriverStatus
+}
+
 export type DriverCreateNestedOneWithoutDriverIncentiveInput = {
   create?: Prisma.XOR<Prisma.DriverCreateWithoutDriverIncentiveInput, Prisma.DriverUncheckedCreateWithoutDriverIncentiveInput>
   connectOrCreate?: Prisma.DriverCreateOrConnectWithoutDriverIncentiveInput
@@ -1332,7 +1340,7 @@ export type DriverCreateWithoutUserInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1340,7 +1348,7 @@ export type DriverCreateWithoutUserInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -1380,7 +1388,7 @@ export type DriverUncheckedCreateWithoutUserInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1388,7 +1396,7 @@ export type DriverUncheckedCreateWithoutUserInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -1444,7 +1452,7 @@ export type DriverUpdateWithoutUserInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1452,7 +1460,7 @@ export type DriverUpdateWithoutUserInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1492,7 +1500,7 @@ export type DriverUncheckedUpdateWithoutUserInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1500,7 +1508,7 @@ export type DriverUncheckedUpdateWithoutUserInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1540,7 +1548,7 @@ export type DriverCreateWithoutBorderCrossingInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1548,7 +1556,7 @@ export type DriverCreateWithoutBorderCrossingInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -1589,7 +1597,7 @@ export type DriverUncheckedCreateWithoutBorderCrossingInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1597,7 +1605,7 @@ export type DriverUncheckedCreateWithoutBorderCrossingInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -1652,7 +1660,7 @@ export type DriverUpdateWithoutBorderCrossingInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1660,7 +1668,7 @@ export type DriverUpdateWithoutBorderCrossingInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1701,7 +1709,7 @@ export type DriverUncheckedUpdateWithoutBorderCrossingInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1709,7 +1717,7 @@ export type DriverUncheckedUpdateWithoutBorderCrossingInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1748,7 +1756,7 @@ export type DriverCreateWithoutCashAdvanceInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1756,7 +1764,7 @@ export type DriverCreateWithoutCashAdvanceInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -1797,7 +1805,7 @@ export type DriverUncheckedCreateWithoutCashAdvanceInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1805,7 +1813,7 @@ export type DriverUncheckedCreateWithoutCashAdvanceInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -1860,7 +1868,7 @@ export type DriverUpdateWithoutCashAdvanceInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1868,7 +1876,7 @@ export type DriverUpdateWithoutCashAdvanceInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1909,7 +1917,7 @@ export type DriverUncheckedUpdateWithoutCashAdvanceInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1917,7 +1925,7 @@ export type DriverUncheckedUpdateWithoutCashAdvanceInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1956,7 +1964,7 @@ export type DriverCreateWithoutDepotQueueInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -1964,7 +1972,7 @@ export type DriverCreateWithoutDepotQueueInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2005,7 +2013,7 @@ export type DriverUncheckedCreateWithoutDepotQueueInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2013,7 +2021,7 @@ export type DriverUncheckedCreateWithoutDepotQueueInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2068,7 +2076,7 @@ export type DriverUpdateWithoutDepotQueueInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2076,7 +2084,7 @@ export type DriverUpdateWithoutDepotQueueInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2117,7 +2125,7 @@ export type DriverUncheckedUpdateWithoutDepotQueueInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2125,7 +2133,7 @@ export type DriverUncheckedUpdateWithoutDepotQueueInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2164,7 +2172,7 @@ export type DriverCreateWithoutDriverIncentiveInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2172,7 +2180,7 @@ export type DriverCreateWithoutDriverIncentiveInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2213,7 +2221,7 @@ export type DriverUncheckedCreateWithoutDriverIncentiveInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2221,7 +2229,7 @@ export type DriverUncheckedCreateWithoutDriverIncentiveInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2276,7 +2284,7 @@ export type DriverUpdateWithoutDriverIncentiveInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2284,7 +2292,7 @@ export type DriverUpdateWithoutDriverIncentiveInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2325,7 +2333,7 @@ export type DriverUncheckedUpdateWithoutDriverIncentiveInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2333,7 +2341,7 @@ export type DriverUncheckedUpdateWithoutDriverIncentiveInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2372,7 +2380,7 @@ export type DriverCreateWithoutDriverSettlementInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2380,7 +2388,7 @@ export type DriverCreateWithoutDriverSettlementInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2421,7 +2429,7 @@ export type DriverUncheckedCreateWithoutDriverSettlementInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2429,7 +2437,7 @@ export type DriverUncheckedCreateWithoutDriverSettlementInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2484,7 +2492,7 @@ export type DriverUpdateWithoutDriverSettlementInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2492,7 +2500,7 @@ export type DriverUpdateWithoutDriverSettlementInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2533,7 +2541,7 @@ export type DriverUncheckedUpdateWithoutDriverSettlementInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2541,7 +2549,7 @@ export type DriverUncheckedUpdateWithoutDriverSettlementInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2580,7 +2588,7 @@ export type DriverCreateWithoutDriverWalletInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2588,7 +2596,7 @@ export type DriverCreateWithoutDriverWalletInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2629,7 +2637,7 @@ export type DriverUncheckedCreateWithoutDriverWalletInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2637,7 +2645,7 @@ export type DriverUncheckedCreateWithoutDriverWalletInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2692,7 +2700,7 @@ export type DriverUpdateWithoutDriverWalletInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2700,7 +2708,7 @@ export type DriverUpdateWithoutDriverWalletInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2741,7 +2749,7 @@ export type DriverUncheckedUpdateWithoutDriverWalletInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2749,7 +2757,7 @@ export type DriverUncheckedUpdateWithoutDriverWalletInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2788,7 +2796,7 @@ export type DriverCreateWithoutLoadBoardInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2796,7 +2804,7 @@ export type DriverCreateWithoutLoadBoardInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2837,7 +2845,7 @@ export type DriverUncheckedCreateWithoutLoadBoardInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -2845,7 +2853,7 @@ export type DriverUncheckedCreateWithoutLoadBoardInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -2900,7 +2908,7 @@ export type DriverUpdateWithoutLoadBoardInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2908,7 +2916,7 @@ export type DriverUpdateWithoutLoadBoardInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2949,7 +2957,7 @@ export type DriverUncheckedUpdateWithoutLoadBoardInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2957,7 +2965,7 @@ export type DriverUncheckedUpdateWithoutLoadBoardInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2996,7 +3004,7 @@ export type DriverCreateWithoutPayrollInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3004,7 +3012,7 @@ export type DriverCreateWithoutPayrollInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3045,7 +3053,7 @@ export type DriverUncheckedCreateWithoutPayrollInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3053,7 +3061,7 @@ export type DriverUncheckedCreateWithoutPayrollInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3108,7 +3116,7 @@ export type DriverUpdateWithoutPayrollInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3116,7 +3124,7 @@ export type DriverUpdateWithoutPayrollInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3157,7 +3165,7 @@ export type DriverUncheckedUpdateWithoutPayrollInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3165,7 +3173,7 @@ export type DriverUncheckedUpdateWithoutPayrollInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3204,7 +3212,7 @@ export type DriverCreateWithoutTollRecordInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3212,7 +3220,7 @@ export type DriverCreateWithoutTollRecordInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3253,7 +3261,7 @@ export type DriverUncheckedCreateWithoutTollRecordInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3261,7 +3269,7 @@ export type DriverUncheckedCreateWithoutTollRecordInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3316,7 +3324,7 @@ export type DriverUpdateWithoutTollRecordInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3324,7 +3332,7 @@ export type DriverUpdateWithoutTollRecordInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3365,7 +3373,7 @@ export type DriverUncheckedUpdateWithoutTollRecordInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3373,7 +3381,7 @@ export type DriverUncheckedUpdateWithoutTollRecordInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3412,7 +3420,7 @@ export type DriverCreateWithoutTripInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3420,7 +3428,7 @@ export type DriverCreateWithoutTripInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3461,7 +3469,7 @@ export type DriverUncheckedCreateWithoutTripInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3469,7 +3477,7 @@ export type DriverUncheckedCreateWithoutTripInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3524,7 +3532,7 @@ export type DriverUpdateWithoutTripInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3532,7 +3540,7 @@ export type DriverUpdateWithoutTripInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3573,7 +3581,7 @@ export type DriverUncheckedUpdateWithoutTripInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3581,7 +3589,7 @@ export type DriverUncheckedUpdateWithoutTripInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3620,7 +3628,7 @@ export type DriverCreateWithoutTruckInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3628,7 +3636,7 @@ export type DriverCreateWithoutTruckInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3669,7 +3677,7 @@ export type DriverUncheckedCreateWithoutTruckInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3677,7 +3685,7 @@ export type DriverUncheckedCreateWithoutTruckInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3732,7 +3740,7 @@ export type DriverUpdateWithoutTruckInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3740,7 +3748,7 @@ export type DriverUpdateWithoutTruckInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3781,7 +3789,7 @@ export type DriverUncheckedUpdateWithoutTruckInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3789,7 +3797,7 @@ export type DriverUncheckedUpdateWithoutTruckInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3828,7 +3836,7 @@ export type DriverCreateWithoutVehicleInspectionInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3836,7 +3844,7 @@ export type DriverCreateWithoutVehicleInspectionInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3877,7 +3885,7 @@ export type DriverUncheckedCreateWithoutVehicleInspectionInput = {
   ghanaCardBackImage?: string | null
   emergencyName?: string | null
   emergencyPhone?: string | null
-  verificationStatus?: string
+  verificationStatus?: $Enums.DriverVerificationStatus
   verifiedBy?: string | null
   verifiedAt?: Date | string | null
   verificationNotes?: string | null
@@ -3885,7 +3893,7 @@ export type DriverUncheckedCreateWithoutVehicleInspectionInput = {
   notifyEmail?: boolean
   notifyPush?: boolean
   rating?: number
-  status?: string
+  status?: $Enums.DriverStatus
   totalTrips?: number
   totalMileage?: number
   hireDate?: Date | string
@@ -3940,7 +3948,7 @@ export type DriverUpdateWithoutVehicleInspectionInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3948,7 +3956,7 @@ export type DriverUpdateWithoutVehicleInspectionInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3989,7 +3997,7 @@ export type DriverUncheckedUpdateWithoutVehicleInspectionInput = {
   ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3997,7 +4005,7 @@ export type DriverUncheckedUpdateWithoutVehicleInspectionInput = {
   notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4283,7 +4291,7 @@ export type $DriverPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     ghanaCardBackImage: string | null
     emergencyName: string | null
     emergencyPhone: string | null
-    verificationStatus: string
+    verificationStatus: $Enums.DriverVerificationStatus
     verifiedBy: string | null
     verifiedAt: Date | null
     verificationNotes: string | null
@@ -4291,7 +4299,7 @@ export type $DriverPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     notifyEmail: boolean
     notifyPush: boolean
     rating: number
-    status: string
+    status: $Enums.DriverStatus
     totalTrips: number
     totalMileage: number
     hireDate: Date
@@ -4699,7 +4707,7 @@ export interface DriverFieldRefs {
   readonly ghanaCardBackImage: Prisma.FieldRef<"Driver", 'String'>
   readonly emergencyName: Prisma.FieldRef<"Driver", 'String'>
   readonly emergencyPhone: Prisma.FieldRef<"Driver", 'String'>
-  readonly verificationStatus: Prisma.FieldRef<"Driver", 'String'>
+  readonly verificationStatus: Prisma.FieldRef<"Driver", 'DriverVerificationStatus'>
   readonly verifiedBy: Prisma.FieldRef<"Driver", 'String'>
   readonly verifiedAt: Prisma.FieldRef<"Driver", 'DateTime'>
   readonly verificationNotes: Prisma.FieldRef<"Driver", 'String'>
@@ -4707,7 +4715,7 @@ export interface DriverFieldRefs {
   readonly notifyEmail: Prisma.FieldRef<"Driver", 'Boolean'>
   readonly notifyPush: Prisma.FieldRef<"Driver", 'Boolean'>
   readonly rating: Prisma.FieldRef<"Driver", 'Float'>
-  readonly status: Prisma.FieldRef<"Driver", 'String'>
+  readonly status: Prisma.FieldRef<"Driver", 'DriverStatus'>
   readonly totalTrips: Prisma.FieldRef<"Driver", 'Int'>
   readonly totalMileage: Prisma.FieldRef<"Driver", 'Float'>
   readonly hireDate: Prisma.FieldRef<"Driver", 'DateTime'>

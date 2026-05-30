@@ -29,13 +29,13 @@ export type AggregateBorderCrossing = {
 export type BorderCrossingAvgAggregateOutputType = {
   estimatedWait: number | null
   actualWait: number | null
-  clearanceFee: number | null
+  clearanceFee: runtime.Decimal | null
 }
 
 export type BorderCrossingSumAggregateOutputType = {
   estimatedWait: number | null
   actualWait: number | null
-  clearanceFee: number | null
+  clearanceFee: runtime.Decimal | null
 }
 
 export type BorderCrossingMinAggregateOutputType = {
@@ -46,13 +46,13 @@ export type BorderCrossingMinAggregateOutputType = {
   borderName: string | null
   country: string | null
   direction: string | null
-  status: string | null
+  status: $Enums.BorderCrossingStatus | null
   queuedAt: Date | null
   processingAt: Date | null
   clearedAt: Date | null
   estimatedWait: number | null
   actualWait: number | null
-  clearanceFee: number | null
+  clearanceFee: runtime.Decimal | null
   documentStatus: string | null
   notes: string | null
   createdBy: string | null
@@ -68,13 +68,13 @@ export type BorderCrossingMaxAggregateOutputType = {
   borderName: string | null
   country: string | null
   direction: string | null
-  status: string | null
+  status: $Enums.BorderCrossingStatus | null
   queuedAt: Date | null
   processingAt: Date | null
   clearedAt: Date | null
   estimatedWait: number | null
   actualWait: number | null
-  clearanceFee: number | null
+  clearanceFee: runtime.Decimal | null
   documentStatus: string | null
   notes: string | null
   createdBy: string | null
@@ -279,13 +279,13 @@ export type BorderCrossingGroupByOutputType = {
   borderName: string
   country: string
   direction: string
-  status: string
+  status: $Enums.BorderCrossingStatus
   queuedAt: Date
   processingAt: Date | null
   clearedAt: Date | null
   estimatedWait: number | null
   actualWait: number | null
-  clearanceFee: number | null
+  clearanceFee: runtime.Decimal | null
   documentStatus: string | null
   notes: string | null
   createdBy: string
@@ -324,13 +324,13 @@ export type BorderCrossingWhereInput = {
   borderName?: Prisma.StringFilter<"BorderCrossing"> | string
   country?: Prisma.StringFilter<"BorderCrossing"> | string
   direction?: Prisma.StringFilter<"BorderCrossing"> | string
-  status?: Prisma.StringFilter<"BorderCrossing"> | string
+  status?: Prisma.EnumBorderCrossingStatusFilter<"BorderCrossing"> | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFilter<"BorderCrossing"> | Date | string
   processingAt?: Prisma.DateTimeNullableFilter<"BorderCrossing"> | Date | string | null
   clearedAt?: Prisma.DateTimeNullableFilter<"BorderCrossing"> | Date | string | null
   estimatedWait?: Prisma.IntNullableFilter<"BorderCrossing"> | number | null
   actualWait?: Prisma.IntNullableFilter<"BorderCrossing"> | number | null
-  clearanceFee?: Prisma.FloatNullableFilter<"BorderCrossing"> | number | null
+  clearanceFee?: Prisma.DecimalNullableFilter<"BorderCrossing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.StringNullableFilter<"BorderCrossing"> | string | null
   notes?: Prisma.StringNullableFilter<"BorderCrossing"> | string | null
   createdBy?: Prisma.StringFilter<"BorderCrossing"> | string
@@ -380,13 +380,13 @@ export type BorderCrossingWhereUniqueInput = Prisma.AtLeast<{
   borderName?: Prisma.StringFilter<"BorderCrossing"> | string
   country?: Prisma.StringFilter<"BorderCrossing"> | string
   direction?: Prisma.StringFilter<"BorderCrossing"> | string
-  status?: Prisma.StringFilter<"BorderCrossing"> | string
+  status?: Prisma.EnumBorderCrossingStatusFilter<"BorderCrossing"> | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFilter<"BorderCrossing"> | Date | string
   processingAt?: Prisma.DateTimeNullableFilter<"BorderCrossing"> | Date | string | null
   clearedAt?: Prisma.DateTimeNullableFilter<"BorderCrossing"> | Date | string | null
   estimatedWait?: Prisma.IntNullableFilter<"BorderCrossing"> | number | null
   actualWait?: Prisma.IntNullableFilter<"BorderCrossing"> | number | null
-  clearanceFee?: Prisma.FloatNullableFilter<"BorderCrossing"> | number | null
+  clearanceFee?: Prisma.DecimalNullableFilter<"BorderCrossing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.StringNullableFilter<"BorderCrossing"> | string | null
   notes?: Prisma.StringNullableFilter<"BorderCrossing"> | string | null
   createdBy?: Prisma.StringFilter<"BorderCrossing"> | string
@@ -436,13 +436,13 @@ export type BorderCrossingScalarWhereWithAggregatesInput = {
   borderName?: Prisma.StringWithAggregatesFilter<"BorderCrossing"> | string
   country?: Prisma.StringWithAggregatesFilter<"BorderCrossing"> | string
   direction?: Prisma.StringWithAggregatesFilter<"BorderCrossing"> | string
-  status?: Prisma.StringWithAggregatesFilter<"BorderCrossing"> | string
+  status?: Prisma.EnumBorderCrossingStatusWithAggregatesFilter<"BorderCrossing"> | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeWithAggregatesFilter<"BorderCrossing"> | Date | string
   processingAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BorderCrossing"> | Date | string | null
   clearedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BorderCrossing"> | Date | string | null
   estimatedWait?: Prisma.IntNullableWithAggregatesFilter<"BorderCrossing"> | number | null
   actualWait?: Prisma.IntNullableWithAggregatesFilter<"BorderCrossing"> | number | null
-  clearanceFee?: Prisma.FloatNullableWithAggregatesFilter<"BorderCrossing"> | number | null
+  clearanceFee?: Prisma.DecimalNullableWithAggregatesFilter<"BorderCrossing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.StringNullableWithAggregatesFilter<"BorderCrossing"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"BorderCrossing"> | string | null
   createdBy?: Prisma.StringWithAggregatesFilter<"BorderCrossing"> | string
@@ -455,13 +455,13 @@ export type BorderCrossingCreateInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -480,13 +480,13 @@ export type BorderCrossingUncheckedCreateInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -499,13 +499,13 @@ export type BorderCrossingUpdateInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -524,13 +524,13 @@ export type BorderCrossingUncheckedUpdateInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -546,13 +546,13 @@ export type BorderCrossingCreateManyInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -565,13 +565,13 @@ export type BorderCrossingUpdateManyMutationInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -586,13 +586,13 @@ export type BorderCrossingUncheckedUpdateManyInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -736,6 +736,10 @@ export type BorderCrossingUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.BorderCrossingScalarWhereInput | Prisma.BorderCrossingScalarWhereInput[]
 }
 
+export type EnumBorderCrossingStatusFieldUpdateOperationsInput = {
+  set?: $Enums.BorderCrossingStatus
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -744,12 +748,12 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type BorderCrossingCreateNestedManyWithoutDriverInput = {
@@ -883,13 +887,13 @@ export type BorderCrossingCreateWithoutUserInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -907,13 +911,13 @@ export type BorderCrossingUncheckedCreateWithoutUserInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -957,13 +961,13 @@ export type BorderCrossingScalarWhereInput = {
   borderName?: Prisma.StringFilter<"BorderCrossing"> | string
   country?: Prisma.StringFilter<"BorderCrossing"> | string
   direction?: Prisma.StringFilter<"BorderCrossing"> | string
-  status?: Prisma.StringFilter<"BorderCrossing"> | string
+  status?: Prisma.EnumBorderCrossingStatusFilter<"BorderCrossing"> | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFilter<"BorderCrossing"> | Date | string
   processingAt?: Prisma.DateTimeNullableFilter<"BorderCrossing"> | Date | string | null
   clearedAt?: Prisma.DateTimeNullableFilter<"BorderCrossing"> | Date | string | null
   estimatedWait?: Prisma.IntNullableFilter<"BorderCrossing"> | number | null
   actualWait?: Prisma.IntNullableFilter<"BorderCrossing"> | number | null
-  clearanceFee?: Prisma.FloatNullableFilter<"BorderCrossing"> | number | null
+  clearanceFee?: Prisma.DecimalNullableFilter<"BorderCrossing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.StringNullableFilter<"BorderCrossing"> | string | null
   notes?: Prisma.StringNullableFilter<"BorderCrossing"> | string | null
   createdBy?: Prisma.StringFilter<"BorderCrossing"> | string
@@ -976,13 +980,13 @@ export type BorderCrossingCreateWithoutDriverInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -999,13 +1003,13 @@ export type BorderCrossingUncheckedCreateWithoutDriverInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -1044,13 +1048,13 @@ export type BorderCrossingCreateWithoutTripInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -1067,13 +1071,13 @@ export type BorderCrossingUncheckedCreateWithoutTripInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -1112,13 +1116,13 @@ export type BorderCrossingCreateWithoutTruckInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -1135,13 +1139,13 @@ export type BorderCrossingUncheckedCreateWithoutTruckInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -1183,13 +1187,13 @@ export type BorderCrossingCreateManyUserInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdAt?: Date | string
@@ -1201,13 +1205,13 @@ export type BorderCrossingUpdateWithoutUserInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1225,13 +1229,13 @@ export type BorderCrossingUncheckedUpdateWithoutUserInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1246,13 +1250,13 @@ export type BorderCrossingUncheckedUpdateManyWithoutUserInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1266,13 +1270,13 @@ export type BorderCrossingCreateManyDriverInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -1285,13 +1289,13 @@ export type BorderCrossingUpdateWithoutDriverInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1308,13 +1312,13 @@ export type BorderCrossingUncheckedUpdateWithoutDriverInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1329,13 +1333,13 @@ export type BorderCrossingUncheckedUpdateManyWithoutDriverInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1350,13 +1354,13 @@ export type BorderCrossingCreateManyTripInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -1369,13 +1373,13 @@ export type BorderCrossingUpdateWithoutTripInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1392,13 +1396,13 @@ export type BorderCrossingUncheckedUpdateWithoutTripInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1413,13 +1417,13 @@ export type BorderCrossingUncheckedUpdateManyWithoutTripInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1434,13 +1438,13 @@ export type BorderCrossingCreateManyTruckInput = {
   borderName: string
   country: string
   direction: string
-  status?: string
+  status?: $Enums.BorderCrossingStatus
   queuedAt?: Date | string
   processingAt?: Date | string | null
   clearedAt?: Date | string | null
   estimatedWait?: number | null
   actualWait?: number | null
-  clearanceFee?: number | null
+  clearanceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: string | null
   notes?: string | null
   createdBy: string
@@ -1453,13 +1457,13 @@ export type BorderCrossingUpdateWithoutTruckInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1476,13 +1480,13 @@ export type BorderCrossingUncheckedUpdateWithoutTruckInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1497,13 +1501,13 @@ export type BorderCrossingUncheckedUpdateManyWithoutTruckInput = {
   borderName?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBorderCrossingStatusFieldUpdateOperationsInput | $Enums.BorderCrossingStatus
   queuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processingAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualWait?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  clearanceFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  clearanceFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   documentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1587,13 +1591,13 @@ export type $BorderCrossingPayload<ExtArgs extends runtime.Types.Extensions.Inte
     borderName: string
     country: string
     direction: string
-    status: string
+    status: $Enums.BorderCrossingStatus
     queuedAt: Date
     processingAt: Date | null
     clearedAt: Date | null
     estimatedWait: number | null
     actualWait: number | null
-    clearanceFee: number | null
+    clearanceFee: runtime.Decimal | null
     documentStatus: string | null
     notes: string | null
     createdBy: string
@@ -1979,13 +1983,13 @@ export interface BorderCrossingFieldRefs {
   readonly borderName: Prisma.FieldRef<"BorderCrossing", 'String'>
   readonly country: Prisma.FieldRef<"BorderCrossing", 'String'>
   readonly direction: Prisma.FieldRef<"BorderCrossing", 'String'>
-  readonly status: Prisma.FieldRef<"BorderCrossing", 'String'>
+  readonly status: Prisma.FieldRef<"BorderCrossing", 'BorderCrossingStatus'>
   readonly queuedAt: Prisma.FieldRef<"BorderCrossing", 'DateTime'>
   readonly processingAt: Prisma.FieldRef<"BorderCrossing", 'DateTime'>
   readonly clearedAt: Prisma.FieldRef<"BorderCrossing", 'DateTime'>
   readonly estimatedWait: Prisma.FieldRef<"BorderCrossing", 'Int'>
   readonly actualWait: Prisma.FieldRef<"BorderCrossing", 'Int'>
-  readonly clearanceFee: Prisma.FieldRef<"BorderCrossing", 'Float'>
+  readonly clearanceFee: Prisma.FieldRef<"BorderCrossing", 'Decimal'>
   readonly documentStatus: Prisma.FieldRef<"BorderCrossing", 'String'>
   readonly notes: Prisma.FieldRef<"BorderCrossing", 'String'>
   readonly createdBy: Prisma.FieldRef<"BorderCrossing", 'String'>

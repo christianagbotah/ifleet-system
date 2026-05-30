@@ -29,17 +29,17 @@ export type AggregateLoadBoard = {
 export type LoadBoardAvgAggregateOutputType = {
   weight: number | null
   truckCount: number | null
-  offeredRate: number | null
-  budgetMin: number | null
-  budgetMax: number | null
+  offeredRate: runtime.Decimal | null
+  budgetMin: runtime.Decimal | null
+  budgetMax: runtime.Decimal | null
 }
 
 export type LoadBoardSumAggregateOutputType = {
   weight: number | null
   truckCount: number | null
-  offeredRate: number | null
-  budgetMin: number | null
-  budgetMax: number | null
+  offeredRate: runtime.Decimal | null
+  budgetMin: runtime.Decimal | null
+  budgetMax: runtime.Decimal | null
 }
 
 export type LoadBoardMinAggregateOutputType = {
@@ -54,12 +54,12 @@ export type LoadBoardMinAggregateOutputType = {
   weight: number | null
   truckType: string | null
   truckCount: number | null
-  offeredRate: number | null
-  budgetMin: number | null
-  budgetMax: number | null
+  offeredRate: runtime.Decimal | null
+  budgetMin: runtime.Decimal | null
+  budgetMax: runtime.Decimal | null
   pickupDate: Date | null
   deliveryDate: Date | null
-  status: string | null
+  status: $Enums.LoadBoardStatus | null
   requirements: string | null
   contactName: string | null
   contactPhone: string | null
@@ -82,12 +82,12 @@ export type LoadBoardMaxAggregateOutputType = {
   weight: number | null
   truckType: string | null
   truckCount: number | null
-  offeredRate: number | null
-  budgetMin: number | null
-  budgetMax: number | null
+  offeredRate: runtime.Decimal | null
+  budgetMin: runtime.Decimal | null
+  budgetMax: runtime.Decimal | null
   pickupDate: Date | null
   deliveryDate: Date | null
-  status: string | null
+  status: $Enums.LoadBoardStatus | null
   requirements: string | null
   contactName: string | null
   contactPhone: string | null
@@ -327,12 +327,12 @@ export type LoadBoardGroupByOutputType = {
   weight: number | null
   truckType: string | null
   truckCount: number
-  offeredRate: number | null
-  budgetMin: number | null
-  budgetMax: number | null
+  offeredRate: runtime.Decimal | null
+  budgetMin: runtime.Decimal | null
+  budgetMax: runtime.Decimal | null
   pickupDate: Date | null
   deliveryDate: Date | null
-  status: string
+  status: $Enums.LoadBoardStatus
   requirements: string | null
   contactName: string | null
   contactPhone: string | null
@@ -378,12 +378,12 @@ export type LoadBoardWhereInput = {
   weight?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
   truckType?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   truckCount?: Prisma.IntFilter<"LoadBoard"> | number
-  offeredRate?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
-  budgetMin?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
-  budgetMax?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
+  offeredRate?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.DateTimeNullableFilter<"LoadBoard"> | Date | string | null
   deliveryDate?: Prisma.DateTimeNullableFilter<"LoadBoard"> | Date | string | null
-  status?: Prisma.StringFilter<"LoadBoard"> | string
+  status?: Prisma.EnumLoadBoardStatusFilter<"LoadBoard"> | $Enums.LoadBoardStatus
   requirements?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   contactName?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   contactPhone?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
@@ -446,12 +446,12 @@ export type LoadBoardWhereUniqueInput = Prisma.AtLeast<{
   weight?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
   truckType?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   truckCount?: Prisma.IntFilter<"LoadBoard"> | number
-  offeredRate?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
-  budgetMin?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
-  budgetMax?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
+  offeredRate?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.DateTimeNullableFilter<"LoadBoard"> | Date | string | null
   deliveryDate?: Prisma.DateTimeNullableFilter<"LoadBoard"> | Date | string | null
-  status?: Prisma.StringFilter<"LoadBoard"> | string
+  status?: Prisma.EnumLoadBoardStatusFilter<"LoadBoard"> | $Enums.LoadBoardStatus
   requirements?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   contactName?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   contactPhone?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
@@ -514,12 +514,12 @@ export type LoadBoardScalarWhereWithAggregatesInput = {
   weight?: Prisma.FloatNullableWithAggregatesFilter<"LoadBoard"> | number | null
   truckType?: Prisma.StringNullableWithAggregatesFilter<"LoadBoard"> | string | null
   truckCount?: Prisma.IntWithAggregatesFilter<"LoadBoard"> | number
-  offeredRate?: Prisma.FloatNullableWithAggregatesFilter<"LoadBoard"> | number | null
-  budgetMin?: Prisma.FloatNullableWithAggregatesFilter<"LoadBoard"> | number | null
-  budgetMax?: Prisma.FloatNullableWithAggregatesFilter<"LoadBoard"> | number | null
+  offeredRate?: Prisma.DecimalNullableWithAggregatesFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.DecimalNullableWithAggregatesFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.DecimalNullableWithAggregatesFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.DateTimeNullableWithAggregatesFilter<"LoadBoard"> | Date | string | null
   deliveryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"LoadBoard"> | Date | string | null
-  status?: Prisma.StringWithAggregatesFilter<"LoadBoard"> | string
+  status?: Prisma.EnumLoadBoardStatusWithAggregatesFilter<"LoadBoard"> | $Enums.LoadBoardStatus
   requirements?: Prisma.StringNullableWithAggregatesFilter<"LoadBoard"> | string | null
   contactName?: Prisma.StringNullableWithAggregatesFilter<"LoadBoard"> | string | null
   contactPhone?: Prisma.StringNullableWithAggregatesFilter<"LoadBoard"> | string | null
@@ -541,12 +541,12 @@ export type LoadBoardCreateInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -570,12 +570,12 @@ export type LoadBoardUncheckedCreateInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -597,12 +597,12 @@ export type LoadBoardUpdateInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -626,12 +626,12 @@ export type LoadBoardUncheckedUpdateInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -654,12 +654,12 @@ export type LoadBoardCreateManyInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -681,12 +681,12 @@ export type LoadBoardUpdateManyMutationInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -706,12 +706,12 @@ export type LoadBoardUncheckedUpdateManyInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -964,6 +964,10 @@ export type LoadBoardUncheckedUpdateManyWithoutDriverNestedInput = {
   deleteMany?: Prisma.LoadBoardScalarWhereInput | Prisma.LoadBoardScalarWhereInput[]
 }
 
+export type EnumLoadBoardStatusFieldUpdateOperationsInput = {
+  set?: $Enums.LoadBoardStatus
+}
+
 export type LoadBoardCreateNestedManyWithoutTruckInput = {
   create?: Prisma.XOR<Prisma.LoadBoardCreateWithoutTruckInput, Prisma.LoadBoardUncheckedCreateWithoutTruckInput> | Prisma.LoadBoardCreateWithoutTruckInput[] | Prisma.LoadBoardUncheckedCreateWithoutTruckInput[]
   connectOrCreate?: Prisma.LoadBoardCreateOrConnectWithoutTruckInput | Prisma.LoadBoardCreateOrConnectWithoutTruckInput[]
@@ -1017,12 +1021,12 @@ export type LoadBoardCreateWithoutUserInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1045,12 +1049,12 @@ export type LoadBoardUncheckedCreateWithoutUserInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1101,12 +1105,12 @@ export type LoadBoardScalarWhereInput = {
   weight?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
   truckType?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   truckCount?: Prisma.IntFilter<"LoadBoard"> | number
-  offeredRate?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
-  budgetMin?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
-  budgetMax?: Prisma.FloatNullableFilter<"LoadBoard"> | number | null
+  offeredRate?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.DecimalNullableFilter<"LoadBoard"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.DateTimeNullableFilter<"LoadBoard"> | Date | string | null
   deliveryDate?: Prisma.DateTimeNullableFilter<"LoadBoard"> | Date | string | null
-  status?: Prisma.StringFilter<"LoadBoard"> | string
+  status?: Prisma.EnumLoadBoardStatusFilter<"LoadBoard"> | $Enums.LoadBoardStatus
   requirements?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   contactName?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
   contactPhone?: Prisma.StringNullableFilter<"LoadBoard"> | string | null
@@ -1128,12 +1132,12 @@ export type LoadBoardCreateWithoutClientInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1155,12 +1159,12 @@ export type LoadBoardUncheckedCreateWithoutClientInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1208,12 +1212,12 @@ export type LoadBoardCreateWithoutDriverInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1236,12 +1240,12 @@ export type LoadBoardUncheckedCreateWithoutDriverInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1288,12 +1292,12 @@ export type LoadBoardCreateWithoutTruckInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1316,12 +1320,12 @@ export type LoadBoardUncheckedCreateWithoutTruckInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1369,12 +1373,12 @@ export type LoadBoardCreateManyUserInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1395,12 +1399,12 @@ export type LoadBoardUpdateWithoutUserInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1423,12 +1427,12 @@ export type LoadBoardUncheckedUpdateWithoutUserInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1450,12 +1454,12 @@ export type LoadBoardUncheckedUpdateManyWithoutUserInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1476,12 +1480,12 @@ export type LoadBoardCreateManyClientInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1503,12 +1507,12 @@ export type LoadBoardUpdateWithoutClientInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1530,12 +1534,12 @@ export type LoadBoardUncheckedUpdateWithoutClientInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1557,12 +1561,12 @@ export type LoadBoardUncheckedUpdateManyWithoutClientInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1585,12 +1589,12 @@ export type LoadBoardCreateManyDriverInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1611,12 +1615,12 @@ export type LoadBoardUpdateWithoutDriverInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1639,12 +1643,12 @@ export type LoadBoardUncheckedUpdateWithoutDriverInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1666,12 +1670,12 @@ export type LoadBoardUncheckedUpdateManyWithoutDriverInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1693,12 +1697,12 @@ export type LoadBoardCreateManyTruckInput = {
   weight?: number | null
   truckType?: string | null
   truckCount?: number
-  offeredRate?: number | null
-  budgetMin?: number | null
-  budgetMax?: number | null
+  offeredRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Date | string | null
   deliveryDate?: Date | string | null
-  status?: string
+  status?: $Enums.LoadBoardStatus
   requirements?: string | null
   contactName?: string | null
   contactPhone?: string | null
@@ -1719,12 +1723,12 @@ export type LoadBoardUpdateWithoutTruckInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1747,12 +1751,12 @@ export type LoadBoardUncheckedUpdateWithoutTruckInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1774,12 +1778,12 @@ export type LoadBoardUncheckedUpdateManyWithoutTruckInput = {
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   truckType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckCount?: Prisma.IntFieldUpdateOperationsInput | number
-  offeredRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMin?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  budgetMax?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  offeredRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pickupDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLoadBoardStatusFieldUpdateOperationsInput | $Enums.LoadBoardStatus
   requirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1881,12 +1885,12 @@ export type $LoadBoardPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     weight: number | null
     truckType: string | null
     truckCount: number
-    offeredRate: number | null
-    budgetMin: number | null
-    budgetMax: number | null
+    offeredRate: runtime.Decimal | null
+    budgetMin: runtime.Decimal | null
+    budgetMax: runtime.Decimal | null
     pickupDate: Date | null
     deliveryDate: Date | null
-    status: string
+    status: $Enums.LoadBoardStatus
     requirements: string | null
     contactName: string | null
     contactPhone: string | null
@@ -2279,12 +2283,12 @@ export interface LoadBoardFieldRefs {
   readonly weight: Prisma.FieldRef<"LoadBoard", 'Float'>
   readonly truckType: Prisma.FieldRef<"LoadBoard", 'String'>
   readonly truckCount: Prisma.FieldRef<"LoadBoard", 'Int'>
-  readonly offeredRate: Prisma.FieldRef<"LoadBoard", 'Float'>
-  readonly budgetMin: Prisma.FieldRef<"LoadBoard", 'Float'>
-  readonly budgetMax: Prisma.FieldRef<"LoadBoard", 'Float'>
+  readonly offeredRate: Prisma.FieldRef<"LoadBoard", 'Decimal'>
+  readonly budgetMin: Prisma.FieldRef<"LoadBoard", 'Decimal'>
+  readonly budgetMax: Prisma.FieldRef<"LoadBoard", 'Decimal'>
   readonly pickupDate: Prisma.FieldRef<"LoadBoard", 'DateTime'>
   readonly deliveryDate: Prisma.FieldRef<"LoadBoard", 'DateTime'>
-  readonly status: Prisma.FieldRef<"LoadBoard", 'String'>
+  readonly status: Prisma.FieldRef<"LoadBoard", 'LoadBoardStatus'>
   readonly requirements: Prisma.FieldRef<"LoadBoard", 'String'>
   readonly contactName: Prisma.FieldRef<"LoadBoard", 'String'>
   readonly contactPhone: Prisma.FieldRef<"LoadBoard", 'String'>

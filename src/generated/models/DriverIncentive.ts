@@ -27,11 +27,11 @@ export type AggregateDriverIncentive = {
 }
 
 export type DriverIncentiveAvgAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type DriverIncentiveSumAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type DriverIncentiveMinAggregateOutputType = {
@@ -40,11 +40,11 @@ export type DriverIncentiveMinAggregateOutputType = {
   type: string | null
   title: string | null
   description: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   period: string | null
   periodStart: Date | null
   periodEnd: Date | null
-  status: string | null
+  status: $Enums.IncentiveStatus | null
   approvedBy: string | null
   approvedAt: Date | null
   paidAt: Date | null
@@ -60,11 +60,11 @@ export type DriverIncentiveMaxAggregateOutputType = {
   type: string | null
   title: string | null
   description: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   period: string | null
   periodStart: Date | null
   periodEnd: Date | null
-  status: string | null
+  status: $Enums.IncentiveStatus | null
   approvedBy: string | null
   approvedAt: Date | null
   paidAt: Date | null
@@ -257,11 +257,11 @@ export type DriverIncentiveGroupByOutputType = {
   type: string
   title: string
   description: string | null
-  amount: number
+  amount: runtime.Decimal
   period: string
   periodStart: Date | null
   periodEnd: Date | null
-  status: string
+  status: $Enums.IncentiveStatus
   approvedBy: string | null
   approvedAt: Date | null
   paidAt: Date | null
@@ -300,11 +300,11 @@ export type DriverIncentiveWhereInput = {
   type?: Prisma.StringFilter<"DriverIncentive"> | string
   title?: Prisma.StringFilter<"DriverIncentive"> | string
   description?: Prisma.StringNullableFilter<"DriverIncentive"> | string | null
-  amount?: Prisma.FloatFilter<"DriverIncentive"> | number
+  amount?: Prisma.DecimalFilter<"DriverIncentive"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFilter<"DriverIncentive"> | string
   periodStart?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
-  status?: Prisma.StringFilter<"DriverIncentive"> | string
+  status?: Prisma.EnumIncentiveStatusFilter<"DriverIncentive"> | $Enums.IncentiveStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverIncentive"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
@@ -350,11 +350,11 @@ export type DriverIncentiveWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"DriverIncentive"> | string
   title?: Prisma.StringFilter<"DriverIncentive"> | string
   description?: Prisma.StringNullableFilter<"DriverIncentive"> | string | null
-  amount?: Prisma.FloatFilter<"DriverIncentive"> | number
+  amount?: Prisma.DecimalFilter<"DriverIncentive"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFilter<"DriverIncentive"> | string
   periodStart?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
-  status?: Prisma.StringFilter<"DriverIncentive"> | string
+  status?: Prisma.EnumIncentiveStatusFilter<"DriverIncentive"> | $Enums.IncentiveStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverIncentive"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
@@ -401,11 +401,11 @@ export type DriverIncentiveScalarWhereWithAggregatesInput = {
   type?: Prisma.StringWithAggregatesFilter<"DriverIncentive"> | string
   title?: Prisma.StringWithAggregatesFilter<"DriverIncentive"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"DriverIncentive"> | string | null
-  amount?: Prisma.FloatWithAggregatesFilter<"DriverIncentive"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"DriverIncentive"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringWithAggregatesFilter<"DriverIncentive"> | string
   periodStart?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverIncentive"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverIncentive"> | Date | string | null
-  status?: Prisma.StringWithAggregatesFilter<"DriverIncentive"> | string
+  status?: Prisma.EnumIncentiveStatusWithAggregatesFilter<"DriverIncentive"> | $Enums.IncentiveStatus
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"DriverIncentive"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverIncentive"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverIncentive"> | Date | string | null
@@ -420,11 +420,11 @@ export type DriverIncentiveCreateInput = {
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
   metrics?: string | null
@@ -441,11 +441,11 @@ export type DriverIncentiveUncheckedCreateInput = {
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -460,11 +460,11 @@ export type DriverIncentiveUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -481,11 +481,11 @@ export type DriverIncentiveUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -501,11 +501,11 @@ export type DriverIncentiveCreateManyInput = {
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -520,11 +520,11 @@ export type DriverIncentiveUpdateManyMutationInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -538,11 +538,11 @@ export type DriverIncentiveUncheckedUpdateManyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -762,16 +762,20 @@ export type DriverIncentiveUncheckedUpdateManyWithoutDriverNestedInput = {
   deleteMany?: Prisma.DriverIncentiveScalarWhereInput | Prisma.DriverIncentiveScalarWhereInput[]
 }
 
+export type EnumIncentiveStatusFieldUpdateOperationsInput = {
+  set?: $Enums.IncentiveStatus
+}
+
 export type DriverIncentiveCreateWithoutUser_DriverIncentive_approvedByToUserInput = {
   id?: string
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
   metrics?: string | null
@@ -787,11 +791,11 @@ export type DriverIncentiveUncheckedCreateWithoutUser_DriverIncentive_approvedBy
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
   metrics?: string | null
@@ -815,11 +819,11 @@ export type DriverIncentiveCreateWithoutUser_DriverIncentive_createdByToUserInpu
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
   metrics?: string | null
@@ -835,11 +839,11 @@ export type DriverIncentiveUncheckedCreateWithoutUser_DriverIncentive_createdByT
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -883,11 +887,11 @@ export type DriverIncentiveScalarWhereInput = {
   type?: Prisma.StringFilter<"DriverIncentive"> | string
   title?: Prisma.StringFilter<"DriverIncentive"> | string
   description?: Prisma.StringNullableFilter<"DriverIncentive"> | string | null
-  amount?: Prisma.FloatFilter<"DriverIncentive"> | number
+  amount?: Prisma.DecimalFilter<"DriverIncentive"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFilter<"DriverIncentive"> | string
   periodStart?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
-  status?: Prisma.StringFilter<"DriverIncentive"> | string
+  status?: Prisma.EnumIncentiveStatusFilter<"DriverIncentive"> | $Enums.IncentiveStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverIncentive"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"DriverIncentive"> | Date | string | null
@@ -918,11 +922,11 @@ export type DriverIncentiveCreateWithoutDriverInput = {
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
   metrics?: string | null
@@ -937,11 +941,11 @@ export type DriverIncentiveUncheckedCreateWithoutDriverInput = {
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -983,11 +987,11 @@ export type DriverIncentiveCreateManyUser_DriverIncentive_approvedByToUserInput 
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
   metrics?: string | null
@@ -1002,11 +1006,11 @@ export type DriverIncentiveCreateManyUser_DriverIncentive_createdByToUserInput =
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -1020,11 +1024,11 @@ export type DriverIncentiveUpdateWithoutUser_DriverIncentive_approvedByToUserInp
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1040,11 +1044,11 @@ export type DriverIncentiveUncheckedUpdateWithoutUser_DriverIncentive_approvedBy
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1059,11 +1063,11 @@ export type DriverIncentiveUncheckedUpdateManyWithoutUser_DriverIncentive_approv
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1077,11 +1081,11 @@ export type DriverIncentiveUpdateWithoutUser_DriverIncentive_createdByToUserInpu
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1097,11 +1101,11 @@ export type DriverIncentiveUncheckedUpdateWithoutUser_DriverIncentive_createdByT
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1116,11 +1120,11 @@ export type DriverIncentiveUncheckedUpdateManyWithoutUser_DriverIncentive_create
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1134,11 +1138,11 @@ export type DriverIncentiveCreateManyDriverInput = {
   type: string
   title: string
   description?: string | null
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   period: string
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
-  status?: string
+  status?: $Enums.IncentiveStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
   paidAt?: Date | string | null
@@ -1153,11 +1157,11 @@ export type DriverIncentiveUpdateWithoutDriverInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metrics?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1172,11 +1176,11 @@ export type DriverIncentiveUncheckedUpdateWithoutDriverInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1191,11 +1195,11 @@ export type DriverIncentiveUncheckedUpdateManyWithoutDriverInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncentiveStatusFieldUpdateOperationsInput | $Enums.IncentiveStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1272,11 +1276,11 @@ export type $DriverIncentivePayload<ExtArgs extends runtime.Types.Extensions.Int
     type: string
     title: string
     description: string | null
-    amount: number
+    amount: runtime.Decimal
     period: string
     periodStart: Date | null
     periodEnd: Date | null
-    status: string
+    status: $Enums.IncentiveStatus
     approvedBy: string | null
     approvedAt: Date | null
     paidAt: Date | null
@@ -1661,11 +1665,11 @@ export interface DriverIncentiveFieldRefs {
   readonly type: Prisma.FieldRef<"DriverIncentive", 'String'>
   readonly title: Prisma.FieldRef<"DriverIncentive", 'String'>
   readonly description: Prisma.FieldRef<"DriverIncentive", 'String'>
-  readonly amount: Prisma.FieldRef<"DriverIncentive", 'Float'>
+  readonly amount: Prisma.FieldRef<"DriverIncentive", 'Decimal'>
   readonly period: Prisma.FieldRef<"DriverIncentive", 'String'>
   readonly periodStart: Prisma.FieldRef<"DriverIncentive", 'DateTime'>
   readonly periodEnd: Prisma.FieldRef<"DriverIncentive", 'DateTime'>
-  readonly status: Prisma.FieldRef<"DriverIncentive", 'String'>
+  readonly status: Prisma.FieldRef<"DriverIncentive", 'IncentiveStatus'>
   readonly approvedBy: Prisma.FieldRef<"DriverIncentive", 'String'>
   readonly approvedAt: Prisma.FieldRef<"DriverIncentive", 'DateTime'>
   readonly paidAt: Prisma.FieldRef<"DriverIncentive", 'DateTime'>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { validateBody, expenseCreateSchema } from '@/lib/validations'
 
 export async function GET(request: NextRequest) {
   try {
@@ -64,6 +65,8 @@ export async function POST(request: NextRequest) {
     if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
+    const validation = validateBody(expenseCreateSchema, body)
+    if (!validation.success) return validation.response
 
     const {
       truckId,

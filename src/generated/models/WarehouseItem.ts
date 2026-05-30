@@ -29,13 +29,13 @@ export type AggregateWarehouseItem = {
 export type WarehouseItemAvgAggregateOutputType = {
   quantity: number | null
   minStock: number | null
-  unitPrice: number | null
+  unitPrice: runtime.Decimal | null
 }
 
 export type WarehouseItemSumAggregateOutputType = {
   quantity: number | null
   minStock: number | null
-  unitPrice: number | null
+  unitPrice: runtime.Decimal | null
 }
 
 export type WarehouseItemMinAggregateOutputType = {
@@ -45,14 +45,14 @@ export type WarehouseItemMinAggregateOutputType = {
   sku: string | null
   quantity: number | null
   minStock: number | null
-  unitPrice: number | null
+  unitPrice: runtime.Decimal | null
   unit: string | null
   warehouse: string | null
   location: string | null
   supplier: string | null
   lastRestocked: Date | null
   expiryDate: Date | null
-  status: string | null
+  status: $Enums.WarehouseItemStatus | null
   notes: string | null
   createdBy: string | null
   createdAt: Date | null
@@ -66,14 +66,14 @@ export type WarehouseItemMaxAggregateOutputType = {
   sku: string | null
   quantity: number | null
   minStock: number | null
-  unitPrice: number | null
+  unitPrice: runtime.Decimal | null
   unit: string | null
   warehouse: string | null
   location: string | null
   supplier: string | null
   lastRestocked: Date | null
   expiryDate: Date | null
-  status: string | null
+  status: $Enums.WarehouseItemStatus | null
   notes: string | null
   createdBy: string | null
   createdAt: Date | null
@@ -272,14 +272,14 @@ export type WarehouseItemGroupByOutputType = {
   sku: string
   quantity: number
   minStock: number
-  unitPrice: number
+  unitPrice: runtime.Decimal
   unit: string
   warehouse: string
   location: string | null
   supplier: string | null
   lastRestocked: Date | null
   expiryDate: Date | null
-  status: string
+  status: $Enums.WarehouseItemStatus
   notes: string | null
   createdBy: string
   createdAt: Date
@@ -316,14 +316,14 @@ export type WarehouseItemWhereInput = {
   sku?: Prisma.StringFilter<"WarehouseItem"> | string
   quantity?: Prisma.IntFilter<"WarehouseItem"> | number
   minStock?: Prisma.IntFilter<"WarehouseItem"> | number
-  unitPrice?: Prisma.FloatFilter<"WarehouseItem"> | number
+  unitPrice?: Prisma.DecimalFilter<"WarehouseItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFilter<"WarehouseItem"> | string
   warehouse?: Prisma.StringFilter<"WarehouseItem"> | string
   location?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   supplier?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableFilter<"WarehouseItem"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"WarehouseItem"> | Date | string | null
-  status?: Prisma.StringFilter<"WarehouseItem"> | string
+  status?: Prisma.EnumWarehouseItemStatusFilter<"WarehouseItem"> | $Enums.WarehouseItemStatus
   notes?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   createdBy?: Prisma.StringFilter<"WarehouseItem"> | string
   createdAt?: Prisma.DateTimeFilter<"WarehouseItem"> | Date | string
@@ -364,14 +364,14 @@ export type WarehouseItemWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.StringFilter<"WarehouseItem"> | string
   quantity?: Prisma.IntFilter<"WarehouseItem"> | number
   minStock?: Prisma.IntFilter<"WarehouseItem"> | number
-  unitPrice?: Prisma.FloatFilter<"WarehouseItem"> | number
+  unitPrice?: Prisma.DecimalFilter<"WarehouseItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFilter<"WarehouseItem"> | string
   warehouse?: Prisma.StringFilter<"WarehouseItem"> | string
   location?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   supplier?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableFilter<"WarehouseItem"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"WarehouseItem"> | Date | string | null
-  status?: Prisma.StringFilter<"WarehouseItem"> | string
+  status?: Prisma.EnumWarehouseItemStatusFilter<"WarehouseItem"> | $Enums.WarehouseItemStatus
   notes?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   createdBy?: Prisma.StringFilter<"WarehouseItem"> | string
   createdAt?: Prisma.DateTimeFilter<"WarehouseItem"> | Date | string
@@ -415,14 +415,14 @@ export type WarehouseItemScalarWhereWithAggregatesInput = {
   sku?: Prisma.StringWithAggregatesFilter<"WarehouseItem"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"WarehouseItem"> | number
   minStock?: Prisma.IntWithAggregatesFilter<"WarehouseItem"> | number
-  unitPrice?: Prisma.FloatWithAggregatesFilter<"WarehouseItem"> | number
+  unitPrice?: Prisma.DecimalWithAggregatesFilter<"WarehouseItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringWithAggregatesFilter<"WarehouseItem"> | string
   warehouse?: Prisma.StringWithAggregatesFilter<"WarehouseItem"> | string
   location?: Prisma.StringNullableWithAggregatesFilter<"WarehouseItem"> | string | null
   supplier?: Prisma.StringNullableWithAggregatesFilter<"WarehouseItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableWithAggregatesFilter<"WarehouseItem"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"WarehouseItem"> | Date | string | null
-  status?: Prisma.StringWithAggregatesFilter<"WarehouseItem"> | string
+  status?: Prisma.EnumWarehouseItemStatusWithAggregatesFilter<"WarehouseItem"> | $Enums.WarehouseItemStatus
   notes?: Prisma.StringNullableWithAggregatesFilter<"WarehouseItem"> | string | null
   createdBy?: Prisma.StringWithAggregatesFilter<"WarehouseItem"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WarehouseItem"> | Date | string
@@ -436,14 +436,14 @@ export type WarehouseItemCreateInput = {
   sku: string
   quantity?: number
   minStock?: number
-  unitPrice: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   warehouse?: string
   location?: string | null
   supplier?: string | null
   lastRestocked?: Date | string | null
   expiryDate?: Date | string | null
-  status?: string
+  status?: $Enums.WarehouseItemStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -457,14 +457,14 @@ export type WarehouseItemUncheckedCreateInput = {
   sku: string
   quantity?: number
   minStock?: number
-  unitPrice: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   warehouse?: string
   location?: string | null
   supplier?: string | null
   lastRestocked?: Date | string | null
   expiryDate?: Date | string | null
-  status?: string
+  status?: $Enums.WarehouseItemStatus
   notes?: string | null
   createdBy: string
   createdAt?: Date | string
@@ -478,14 +478,14 @@ export type WarehouseItemUpdateInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -499,14 +499,14 @@ export type WarehouseItemUncheckedUpdateInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -520,14 +520,14 @@ export type WarehouseItemCreateManyInput = {
   sku: string
   quantity?: number
   minStock?: number
-  unitPrice: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   warehouse?: string
   location?: string | null
   supplier?: string | null
   lastRestocked?: Date | string | null
   expiryDate?: Date | string | null
-  status?: string
+  status?: $Enums.WarehouseItemStatus
   notes?: string | null
   createdBy: string
   createdAt?: Date | string
@@ -541,14 +541,14 @@ export type WarehouseItemUpdateManyMutationInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -561,14 +561,14 @@ export type WarehouseItemUncheckedUpdateManyInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -708,6 +708,10 @@ export type WarehouseItemUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.WarehouseItemScalarWhereInput | Prisma.WarehouseItemScalarWhereInput[]
 }
 
+export type EnumWarehouseItemStatusFieldUpdateOperationsInput = {
+  set?: $Enums.WarehouseItemStatus
+}
+
 export type WarehouseItemCreateWithoutUserInput = {
   id?: string
   name: string
@@ -715,14 +719,14 @@ export type WarehouseItemCreateWithoutUserInput = {
   sku: string
   quantity?: number
   minStock?: number
-  unitPrice: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   warehouse?: string
   location?: string | null
   supplier?: string | null
   lastRestocked?: Date | string | null
   expiryDate?: Date | string | null
-  status?: string
+  status?: $Enums.WarehouseItemStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -735,14 +739,14 @@ export type WarehouseItemUncheckedCreateWithoutUserInput = {
   sku: string
   quantity?: number
   minStock?: number
-  unitPrice: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   warehouse?: string
   location?: string | null
   supplier?: string | null
   lastRestocked?: Date | string | null
   expiryDate?: Date | string | null
-  status?: string
+  status?: $Enums.WarehouseItemStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -784,14 +788,14 @@ export type WarehouseItemScalarWhereInput = {
   sku?: Prisma.StringFilter<"WarehouseItem"> | string
   quantity?: Prisma.IntFilter<"WarehouseItem"> | number
   minStock?: Prisma.IntFilter<"WarehouseItem"> | number
-  unitPrice?: Prisma.FloatFilter<"WarehouseItem"> | number
+  unitPrice?: Prisma.DecimalFilter<"WarehouseItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFilter<"WarehouseItem"> | string
   warehouse?: Prisma.StringFilter<"WarehouseItem"> | string
   location?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   supplier?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableFilter<"WarehouseItem"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"WarehouseItem"> | Date | string | null
-  status?: Prisma.StringFilter<"WarehouseItem"> | string
+  status?: Prisma.EnumWarehouseItemStatusFilter<"WarehouseItem"> | $Enums.WarehouseItemStatus
   notes?: Prisma.StringNullableFilter<"WarehouseItem"> | string | null
   createdBy?: Prisma.StringFilter<"WarehouseItem"> | string
   createdAt?: Prisma.DateTimeFilter<"WarehouseItem"> | Date | string
@@ -805,14 +809,14 @@ export type WarehouseItemCreateManyUserInput = {
   sku: string
   quantity?: number
   minStock?: number
-  unitPrice: number
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: string
   warehouse?: string
   location?: string | null
   supplier?: string | null
   lastRestocked?: Date | string | null
   expiryDate?: Date | string | null
-  status?: string
+  status?: $Enums.WarehouseItemStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -825,14 +829,14 @@ export type WarehouseItemUpdateWithoutUserInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -845,14 +849,14 @@ export type WarehouseItemUncheckedUpdateWithoutUserInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -865,14 +869,14 @@ export type WarehouseItemUncheckedUpdateManyWithoutUserInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
-  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   warehouse?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumWarehouseItemStatusFieldUpdateOperationsInput | $Enums.WarehouseItemStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -942,14 +946,14 @@ export type $WarehouseItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     sku: string
     quantity: number
     minStock: number
-    unitPrice: number
+    unitPrice: runtime.Decimal
     unit: string
     warehouse: string
     location: string | null
     supplier: string | null
     lastRestocked: Date | null
     expiryDate: Date | null
-    status: string
+    status: $Enums.WarehouseItemStatus
     notes: string | null
     createdBy: string
     createdAt: Date
@@ -1330,14 +1334,14 @@ export interface WarehouseItemFieldRefs {
   readonly sku: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly quantity: Prisma.FieldRef<"WarehouseItem", 'Int'>
   readonly minStock: Prisma.FieldRef<"WarehouseItem", 'Int'>
-  readonly unitPrice: Prisma.FieldRef<"WarehouseItem", 'Float'>
+  readonly unitPrice: Prisma.FieldRef<"WarehouseItem", 'Decimal'>
   readonly unit: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly warehouse: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly location: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly supplier: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly lastRestocked: Prisma.FieldRef<"WarehouseItem", 'DateTime'>
   readonly expiryDate: Prisma.FieldRef<"WarehouseItem", 'DateTime'>
-  readonly status: Prisma.FieldRef<"WarehouseItem", 'String'>
+  readonly status: Prisma.FieldRef<"WarehouseItem", 'WarehouseItemStatus'>
   readonly notes: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly createdBy: Prisma.FieldRef<"WarehouseItem", 'String'>
   readonly createdAt: Prisma.FieldRef<"WarehouseItem", 'DateTime'>

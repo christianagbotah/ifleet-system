@@ -307,3 +307,104 @@ Stage Summary:
 - 4 API proxy routes with proper auth/role guards
 - Floating chat widget available globally to all authenticated users
 - Files created: 7 new (mini-service files + API routes + component), 1 modified (page.tsx)
+
+---
+Task ID: 29-33
+Agent: Main Agent
+Task: Implement three AI integration features — Document Intelligence (VLM), Predictive Maintenance, Invoice Dispute Resolution
+
+Work Log:
+- Read VLM skill instructions for z-ai-web-dev-sdk vision chat API (createVision with image_url content type)
+- Analyzed existing AI service (port 3007), API route patterns, and auth-server helpers
+- Created 3 Next.js API proxy routes:
+  - POST /api/ai/analyze-document — accepts FormData with image file, converts to base64, forwards to AI service
+  - POST /api/ai/maintenance-predict — accepts truck data JSON, forwards to AI service
+  - POST /api/ai/invoice-dispute — accepts invoice dispute JSON, forwards to AI service
+  - All routes use requireAuth for authentication
+- Extended AI service mini-service with 3 new HTTP handlers:
+  - POST /api/analyze-document — uses VLM SDK (createVision) to analyze receipt/invoice/delivery images
+    - System prompt: structured JSON extraction (type, vendor, date, totalAmount, items, fuelLiters, etc.)
+    - Handles markdown code fence cleanup for JSON parsing
+  - POST /api/maintenance-predict — uses LLM to predict maintenance needs
+    - System prompt: structured JSON prediction (nextMaintenance, issues, urgency, confidence, actions)
+  - POST /api/invoice-dispute — uses LLM for dispute resolution
+    - System prompt: structured JSON resolution (analysis, creditAmount, validity, recommendation, reasoning)
+  - All handlers: API key verification, JSON response, error handling, JSON cleanup for model outputs
+- Created 3 UI components:
+  - DocumentScanner.tsx — Dialog-based document scanner with drag & drop upload, image preview, AI analysis button, extracted data display (vendor, date, amount, fuel liters, line items), controlled/uncontrolled modes
+  - MaintenanceInsights.tsx — Card component showing predictive insights for a truck (urgency badge, next service date, predicted issues with severity, recommended actions, confidence score), auto-fetches on mount, manual refresh
+  - InvoiceDisputePanel.tsx — Dialog panel with dispute reason textarea, AI analysis, resolution display (validity badge, recommendation, credit amount, analysis, reasoning), action buttons (Accept/Reject/Escalate)
+- All components use shadcn/ui (Dialog, Card, Badge, Button, Textarea, Skeleton, etc.)
+- Currency formatted using String.fromCodePoint(0x20B5) for GHS symbol
+- All lint checks pass with zero errors
+
+Stage Summary:
+- 6 files created: 3 API routes + 3 UI components
+- 1 file modified: mini-services/ai-service/index.ts (3 new system prompts + 3 new route handlers + 3 handler functions)
+- VLM used for document intelligence (receipts, invoices, delivery notes)
+- LLM used for maintenance prediction and invoice dispute resolution
+- All z-ai-web-dev-sdk usage is backend-only (AI service mini-service)
+- Components are designed to be embedded in existing views (truck detail, expense forms, invoice detail)
+
+---
+Task ID: 13-16
+Agent: Main Agent
+Task: Prisma schema hardening (A1-A3) + Zod validation on API routes (B1-B5)
+
+Work Log:
+- A1: Changed ALL money/currency Float fields to Decimal across 25+ models:
+  - BorderCrossing (clearanceFee), CashAdvance (amount, totalDeducted, remainingBalance)
+  - DriverIncentive (amount), DriverSettlement (grossEarnings, fuelDeductions, expenseDeductions, bonusAmount, netPay)
+  - DriverWallet (availableBalance, totalAdvances, totalDeducted, totalSettled, monthlyAdvanceLimit, monthlyAdvancesThisMonth)
+  - DvlaRegistration (registrationFee, renewalFee), Expense (amount)
+  - ExpenseApproval (amount, approvedAmount), FuelBudget (budgetLimit, actualSpend)
+  - FuelLog (costPerLiter, totalCost), FuelPrice (pricePerLiter), FuelStation (corporateRatePerLiter)
+  - Insurance (coverAmount, premium), InsuranceClaim (claimAmount, approvedAmount, deductible, repairEstimate)
+  - Invoice (subtotal, taxAmount, taxRate, totalAmount, paidAmount), InvoiceItem (quantity, unitPrice, total)
+  - LoadBoard (offeredRate, budgetMin, budgetMax), MaintenanceRecord (cost)
+  - Payroll (baseSalary, tripBonus, overtimePay, deductions, netPay), Pricing (transportRate)
+  - RoadworthyInspection (inspectionFee), SettlementLine (amount)
+  - TollRecord (amount, overloadFine), Trip (unitPrice, totalRevenue, fuelCost)
+  - TripDeliveryDestination (zoneRate), TripItem (rate, total)
+  - WarehouseItem (unitPrice), ZoneRate (rateAmount)
+  - Tyre (purchasePrice), DvlaRenewalHistory (renewalFee), InsuranceRenewalHistory (renewalFee)
+  - Preserved Float for non-money fields (mileage, lat/lng, ratings, fuel volumes, weights, percentages)
+
+- A2: Added 28 Prisma enums for ALL status fields:
+  - TripStatus, TruckStatus, TruckInsuranceStatus, DriverStatus, DriverVerificationStatus
+  - InvoiceStatus, PaymentStatus, ExpenseStatus, ExpenseApprovalStatus, MaintenanceStatus
+  - InsuranceStatus, ClaimStatus, CashAdvanceStatus, SettlementStatus, LoadBoardStatus
+  - BorderCrossingStatus, DepotQueueStatus, DeliveryStopStatus, DvlaRegistrationStatus
+  - RoadConditionStatus, TollRecordStatus, ReportHistoryStatus, WarehouseItemStatus
+  - WeightVerificationStatus, TyreCondition, VehicleInspectionResult
+  - TripDeliveryDestinationStatus, IncentiveStatus
+  - Queried live database to verify all existing status values are represented in enums
+  - Added 'pending' to InvoiceStatus, 'suspended' to DvlaRegistrationStatus, 'decommissioned' to TruckStatus based on live data
+
+- A3: Added onDelete: Cascade for additional parent→child relations:
+  - User → AuditLog (user audit records)
+  - User → Notification (user notification records)
+  - Trip → DeliveryStop (trip delivery sub-records)
+  - Trip → VehicleInspection (trip inspection sub-records)
+  - Preserved existing cascades: Trip → FuelLog/Expense/BorderCrossing/TripComment/TripEvent/TollRecord/TripItem/TripDeliveryDestination/WeightVerification
+  - Preserved existing cascades: Invoice → InvoiceItem, DriverSettlement → SettlementLine, etc.
+
+- B1-B5: Applied Zod validation to 5 core API POST handlers:
+  - /api/trips POST → tripCreateSchema
+  - /api/trucks POST → truckCreateSchema
+  - /api/drivers POST → driverCreateSchema
+  - /api/expenses POST → expenseCreateSchema
+  - /api/users POST → userCreateSchema
+  - Each uses validateBody() helper returning discriminated union for early-return on validation failure
+
+- Pushed schema changes with `bunx prisma db push --accept-data-loss`
+- Regenerated Prisma client with `bunx prisma generate`
+- All ESLint checks pass with zero errors
+- Dev server compiles and runs successfully
+
+Stage Summary:
+- Schema file: prisma/schema.prisma — comprehensive rewrite with enums + Decimal + cascades
+- 28 new Prisma enums, ~80 Float→Decimal conversions, 4 new onDelete cascades
+- 5 API routes hardened with Zod validation (using existing validation schemas from task 12)
+- Files modified: prisma/schema.prisma, 5 API route files
+- All changes pushed to database, Prisma client regenerated

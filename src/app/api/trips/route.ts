@@ -5,6 +5,7 @@ import { generateInvoiceForTrip } from '@/lib/services/invoice-generator'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { APP_NAME } from '@/lib/constants'
+import { validateBody, tripCreateSchema } from '@/lib/validations'
 
 // Fields that drivers should NOT see in trip responses
 const DRIVER_EXCLUDE_FIELDS = {
@@ -137,6 +138,8 @@ export async function POST(request: NextRequest) {
     if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
+    const validation = validateBody(tripCreateSchema, body)
+    if (!validation.success) return validation.response
 
     let {
       truckId,

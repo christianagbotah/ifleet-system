@@ -28,25 +28,25 @@ export type AggregateExpenseApproval = {
 
 export type ExpenseApprovalAvgAggregateOutputType = {
   approvalLevel: number | null
-  amount: number | null
-  approvedAmount: number | null
+  amount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
 }
 
 export type ExpenseApprovalSumAggregateOutputType = {
   approvalLevel: number | null
-  amount: number | null
-  approvedAmount: number | null
+  amount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
 }
 
 export type ExpenseApprovalMinAggregateOutputType = {
   id: string | null
   expenseId: string | null
-  status: string | null
+  status: $Enums.ExpenseApprovalStatus | null
   requestedById: string | null
   approvedById: string | null
   approvalLevel: number | null
-  amount: number | null
-  approvedAmount: number | null
+  amount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
   notes: string | null
   rejectionReason: string | null
   reviewedAt: Date | null
@@ -57,12 +57,12 @@ export type ExpenseApprovalMinAggregateOutputType = {
 export type ExpenseApprovalMaxAggregateOutputType = {
   id: string | null
   expenseId: string | null
-  status: string | null
+  status: $Enums.ExpenseApprovalStatus | null
   requestedById: string | null
   approvedById: string | null
   approvalLevel: number | null
-  amount: number | null
-  approvedAmount: number | null
+  amount: runtime.Decimal | null
+  approvedAmount: runtime.Decimal | null
   notes: string | null
   rejectionReason: string | null
   reviewedAt: Date | null
@@ -238,12 +238,12 @@ export type ExpenseApprovalGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type ExpenseApprovalGroupByOutputType = {
   id: string
   expenseId: string
-  status: string
+  status: $Enums.ExpenseApprovalStatus
   requestedById: string
   approvedById: string | null
   approvalLevel: number
-  amount: number
-  approvedAmount: number | null
+  amount: runtime.Decimal
+  approvedAmount: runtime.Decimal | null
   notes: string | null
   rejectionReason: string | null
   reviewedAt: Date | null
@@ -277,12 +277,12 @@ export type ExpenseApprovalWhereInput = {
   NOT?: Prisma.ExpenseApprovalWhereInput | Prisma.ExpenseApprovalWhereInput[]
   id?: Prisma.StringFilter<"ExpenseApproval"> | string
   expenseId?: Prisma.StringFilter<"ExpenseApproval"> | string
-  status?: Prisma.StringFilter<"ExpenseApproval"> | string
+  status?: Prisma.EnumExpenseApprovalStatusFilter<"ExpenseApproval"> | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFilter<"ExpenseApproval"> | string
   approvedById?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   approvalLevel?: Prisma.IntFilter<"ExpenseApproval"> | number
-  amount?: Prisma.FloatFilter<"ExpenseApproval"> | number
-  approvedAmount?: Prisma.FloatNullableFilter<"ExpenseApproval"> | number | null
+  amount?: Prisma.DecimalFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   rejectionReason?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ExpenseApproval"> | Date | string | null
@@ -319,12 +319,12 @@ export type ExpenseApprovalWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ExpenseApprovalWhereInput | Prisma.ExpenseApprovalWhereInput[]
   OR?: Prisma.ExpenseApprovalWhereInput[]
   NOT?: Prisma.ExpenseApprovalWhereInput | Prisma.ExpenseApprovalWhereInput[]
-  status?: Prisma.StringFilter<"ExpenseApproval"> | string
+  status?: Prisma.EnumExpenseApprovalStatusFilter<"ExpenseApproval"> | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFilter<"ExpenseApproval"> | string
   approvedById?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   approvalLevel?: Prisma.IntFilter<"ExpenseApproval"> | number
-  amount?: Prisma.FloatFilter<"ExpenseApproval"> | number
-  approvedAmount?: Prisma.FloatNullableFilter<"ExpenseApproval"> | number | null
+  amount?: Prisma.DecimalFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   rejectionReason?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ExpenseApproval"> | Date | string | null
@@ -362,12 +362,12 @@ export type ExpenseApprovalScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ExpenseApprovalScalarWhereWithAggregatesInput | Prisma.ExpenseApprovalScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ExpenseApproval"> | string
   expenseId?: Prisma.StringWithAggregatesFilter<"ExpenseApproval"> | string
-  status?: Prisma.StringWithAggregatesFilter<"ExpenseApproval"> | string
+  status?: Prisma.EnumExpenseApprovalStatusWithAggregatesFilter<"ExpenseApproval"> | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringWithAggregatesFilter<"ExpenseApproval"> | string
   approvedById?: Prisma.StringNullableWithAggregatesFilter<"ExpenseApproval"> | string | null
   approvalLevel?: Prisma.IntWithAggregatesFilter<"ExpenseApproval"> | number
-  amount?: Prisma.FloatWithAggregatesFilter<"ExpenseApproval"> | number
-  approvedAmount?: Prisma.FloatNullableWithAggregatesFilter<"ExpenseApproval"> | number | null
+  amount?: Prisma.DecimalWithAggregatesFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableWithAggregatesFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"ExpenseApproval"> | string | null
   rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"ExpenseApproval"> | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ExpenseApproval"> | Date | string | null
@@ -377,10 +377,10 @@ export type ExpenseApprovalScalarWhereWithAggregatesInput = {
 
 export type ExpenseApprovalCreateInput = {
   id?: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -394,12 +394,12 @@ export type ExpenseApprovalCreateInput = {
 export type ExpenseApprovalUncheckedCreateInput = {
   id?: string
   expenseId: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   requestedById: string
   approvedById?: string | null
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -409,10 +409,10 @@ export type ExpenseApprovalUncheckedCreateInput = {
 
 export type ExpenseApprovalUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -426,12 +426,12 @@ export type ExpenseApprovalUpdateInput = {
 export type ExpenseApprovalUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -442,12 +442,12 @@ export type ExpenseApprovalUncheckedUpdateInput = {
 export type ExpenseApprovalCreateManyInput = {
   id?: string
   expenseId: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   requestedById: string
   approvedById?: string | null
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -457,10 +457,10 @@ export type ExpenseApprovalCreateManyInput = {
 
 export type ExpenseApprovalUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -471,12 +471,12 @@ export type ExpenseApprovalUpdateManyMutationInput = {
 export type ExpenseApprovalUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -681,12 +681,16 @@ export type ExpenseApprovalUncheckedUpdateOneWithoutExpenseNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ExpenseApprovalUpdateToOneWithWhereWithoutExpenseInput, Prisma.ExpenseApprovalUpdateWithoutExpenseInput>, Prisma.ExpenseApprovalUncheckedUpdateWithoutExpenseInput>
 }
 
+export type EnumExpenseApprovalStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ExpenseApprovalStatus
+}
+
 export type ExpenseApprovalCreateWithoutUser_ExpenseApproval_approvedByIdToUserInput = {
   id?: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -699,11 +703,11 @@ export type ExpenseApprovalCreateWithoutUser_ExpenseApproval_approvedByIdToUserI
 export type ExpenseApprovalUncheckedCreateWithoutUser_ExpenseApproval_approvedByIdToUserInput = {
   id?: string
   expenseId: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   requestedById: string
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -723,10 +727,10 @@ export type ExpenseApprovalCreateManyUser_ExpenseApproval_approvedByIdToUserInpu
 
 export type ExpenseApprovalCreateWithoutUser_ExpenseApproval_requestedByIdToUserInput = {
   id?: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -739,11 +743,11 @@ export type ExpenseApprovalCreateWithoutUser_ExpenseApproval_requestedByIdToUser
 export type ExpenseApprovalUncheckedCreateWithoutUser_ExpenseApproval_requestedByIdToUserInput = {
   id?: string
   expenseId: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   approvedById?: string | null
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -783,12 +787,12 @@ export type ExpenseApprovalScalarWhereInput = {
   NOT?: Prisma.ExpenseApprovalScalarWhereInput | Prisma.ExpenseApprovalScalarWhereInput[]
   id?: Prisma.StringFilter<"ExpenseApproval"> | string
   expenseId?: Prisma.StringFilter<"ExpenseApproval"> | string
-  status?: Prisma.StringFilter<"ExpenseApproval"> | string
+  status?: Prisma.EnumExpenseApprovalStatusFilter<"ExpenseApproval"> | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFilter<"ExpenseApproval"> | string
   approvedById?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   approvalLevel?: Prisma.IntFilter<"ExpenseApproval"> | number
-  amount?: Prisma.FloatFilter<"ExpenseApproval"> | number
-  approvedAmount?: Prisma.FloatNullableFilter<"ExpenseApproval"> | number | null
+  amount?: Prisma.DecimalFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.DecimalNullableFilter<"ExpenseApproval"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   rejectionReason?: Prisma.StringNullableFilter<"ExpenseApproval"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ExpenseApproval"> | Date | string | null
@@ -814,10 +818,10 @@ export type ExpenseApprovalUpdateManyWithWhereWithoutUser_ExpenseApproval_reques
 
 export type ExpenseApprovalCreateWithoutExpenseInput = {
   id?: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -829,12 +833,12 @@ export type ExpenseApprovalCreateWithoutExpenseInput = {
 
 export type ExpenseApprovalUncheckedCreateWithoutExpenseInput = {
   id?: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   requestedById: string
   approvedById?: string | null
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -860,10 +864,10 @@ export type ExpenseApprovalUpdateToOneWithWhereWithoutExpenseInput = {
 
 export type ExpenseApprovalUpdateWithoutExpenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -875,12 +879,12 @@ export type ExpenseApprovalUpdateWithoutExpenseInput = {
 
 export type ExpenseApprovalUncheckedUpdateWithoutExpenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -891,11 +895,11 @@ export type ExpenseApprovalUncheckedUpdateWithoutExpenseInput = {
 export type ExpenseApprovalCreateManyUser_ExpenseApproval_approvedByIdToUserInput = {
   id?: string
   expenseId: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   requestedById: string
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -906,11 +910,11 @@ export type ExpenseApprovalCreateManyUser_ExpenseApproval_approvedByIdToUserInpu
 export type ExpenseApprovalCreateManyUser_ExpenseApproval_requestedByIdToUserInput = {
   id?: string
   expenseId: string
-  status?: string
+  status?: $Enums.ExpenseApprovalStatus
   approvedById?: string | null
   approvalLevel?: number
-  amount: number
-  approvedAmount?: number | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: string | null
   rejectionReason?: string | null
   reviewedAt?: Date | string | null
@@ -920,10 +924,10 @@ export type ExpenseApprovalCreateManyUser_ExpenseApproval_requestedByIdToUserInp
 
 export type ExpenseApprovalUpdateWithoutUser_ExpenseApproval_approvedByIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -936,11 +940,11 @@ export type ExpenseApprovalUpdateWithoutUser_ExpenseApproval_approvedByIdToUserI
 export type ExpenseApprovalUncheckedUpdateWithoutUser_ExpenseApproval_approvedByIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -951,11 +955,11 @@ export type ExpenseApprovalUncheckedUpdateWithoutUser_ExpenseApproval_approvedBy
 export type ExpenseApprovalUncheckedUpdateManyWithoutUser_ExpenseApproval_approvedByIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -965,10 +969,10 @@ export type ExpenseApprovalUncheckedUpdateManyWithoutUser_ExpenseApproval_approv
 
 export type ExpenseApprovalUpdateWithoutUser_ExpenseApproval_requestedByIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -981,11 +985,11 @@ export type ExpenseApprovalUpdateWithoutUser_ExpenseApproval_requestedByIdToUser
 export type ExpenseApprovalUncheckedUpdateWithoutUser_ExpenseApproval_requestedByIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -996,11 +1000,11 @@ export type ExpenseApprovalUncheckedUpdateWithoutUser_ExpenseApproval_requestedB
 export type ExpenseApprovalUncheckedUpdateManyWithoutUser_ExpenseApproval_requestedByIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseApprovalStatusFieldUpdateOperationsInput | $Enums.ExpenseApprovalStatus
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvalLevel?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  approvedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1064,12 +1068,12 @@ export type $ExpenseApprovalPayload<ExtArgs extends runtime.Types.Extensions.Int
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     expenseId: string
-    status: string
+    status: $Enums.ExpenseApprovalStatus
     requestedById: string
     approvedById: string | null
     approvalLevel: number
-    amount: number
-    approvedAmount: number | null
+    amount: runtime.Decimal
+    approvedAmount: runtime.Decimal | null
     notes: string | null
     rejectionReason: string | null
     reviewedAt: Date | null
@@ -1449,12 +1453,12 @@ export interface Prisma__ExpenseApprovalClient<T, Null = never, ExtArgs extends 
 export interface ExpenseApprovalFieldRefs {
   readonly id: Prisma.FieldRef<"ExpenseApproval", 'String'>
   readonly expenseId: Prisma.FieldRef<"ExpenseApproval", 'String'>
-  readonly status: Prisma.FieldRef<"ExpenseApproval", 'String'>
+  readonly status: Prisma.FieldRef<"ExpenseApproval", 'ExpenseApprovalStatus'>
   readonly requestedById: Prisma.FieldRef<"ExpenseApproval", 'String'>
   readonly approvedById: Prisma.FieldRef<"ExpenseApproval", 'String'>
   readonly approvalLevel: Prisma.FieldRef<"ExpenseApproval", 'Int'>
-  readonly amount: Prisma.FieldRef<"ExpenseApproval", 'Float'>
-  readonly approvedAmount: Prisma.FieldRef<"ExpenseApproval", 'Float'>
+  readonly amount: Prisma.FieldRef<"ExpenseApproval", 'Decimal'>
+  readonly approvedAmount: Prisma.FieldRef<"ExpenseApproval", 'Decimal'>
   readonly notes: Prisma.FieldRef<"ExpenseApproval", 'String'>
   readonly rejectionReason: Prisma.FieldRef<"ExpenseApproval", 'String'>
   readonly reviewedAt: Prisma.FieldRef<"ExpenseApproval", 'DateTime'>

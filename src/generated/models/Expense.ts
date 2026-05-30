@@ -27,11 +27,11 @@ export type AggregateExpense = {
 }
 
 export type ExpenseAvgAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type ExpenseSumAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type ExpenseMinAggregateOutputType = {
@@ -39,12 +39,12 @@ export type ExpenseMinAggregateOutputType = {
   truckId: string | null
   category: string | null
   description: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   date: Date | null
   paymentMethod: string | null
   reference: string | null
   approvedBy: string | null
-  status: string | null
+  status: $Enums.ExpenseStatus | null
   receiptUrl: string | null
   tripId: string | null
   createdAt: Date | null
@@ -56,12 +56,12 @@ export type ExpenseMaxAggregateOutputType = {
   truckId: string | null
   category: string | null
   description: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   date: Date | null
   paymentMethod: string | null
   reference: string | null
   approvedBy: string | null
-  status: string | null
+  status: $Enums.ExpenseStatus | null
   receiptUrl: string | null
   tripId: string | null
   createdAt: Date | null
@@ -238,12 +238,12 @@ export type ExpenseGroupByOutputType = {
   truckId: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal
   date: Date
   paymentMethod: string
   reference: string | null
   approvedBy: string | null
-  status: string
+  status: $Enums.ExpenseStatus
   receiptUrl: string | null
   tripId: string | null
   createdAt: Date
@@ -278,12 +278,12 @@ export type ExpenseWhereInput = {
   truckId?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
-  amount?: Prisma.FloatFilter<"Expense"> | number
+  amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   paymentMethod?: Prisma.StringFilter<"Expense"> | string
   reference?: Prisma.StringNullableFilter<"Expense"> | string | null
   approvedBy?: Prisma.StringNullableFilter<"Expense"> | string | null
-  status?: Prisma.StringFilter<"Expense"> | string
+  status?: Prisma.EnumExpenseStatusFilter<"Expense"> | $Enums.ExpenseStatus
   receiptUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
   tripId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
@@ -322,12 +322,12 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   truckId?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
-  amount?: Prisma.FloatFilter<"Expense"> | number
+  amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   paymentMethod?: Prisma.StringFilter<"Expense"> | string
   reference?: Prisma.StringNullableFilter<"Expense"> | string | null
   approvedBy?: Prisma.StringNullableFilter<"Expense"> | string | null
-  status?: Prisma.StringFilter<"Expense"> | string
+  status?: Prisma.EnumExpenseStatusFilter<"Expense"> | $Enums.ExpenseStatus
   receiptUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
   tripId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
@@ -367,12 +367,12 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   truckId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   category?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   description?: Prisma.StringWithAggregatesFilter<"Expense"> | string
-  amount?: Prisma.FloatWithAggregatesFilter<"Expense"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   paymentMethod?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   reference?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"Expense"> | string
+  status?: Prisma.EnumExpenseStatusWithAggregatesFilter<"Expense"> | $Enums.ExpenseStatus
   receiptUrl?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   tripId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
@@ -383,12 +383,12 @@ export type ExpenseCreateInput = {
   id?: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -402,12 +402,12 @@ export type ExpenseUncheckedCreateInput = {
   truckId: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -419,12 +419,12 @@ export type ExpenseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,12 +438,12 @@ export type ExpenseUncheckedUpdateInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -456,12 +456,12 @@ export type ExpenseCreateManyInput = {
   truckId: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -472,12 +472,12 @@ export type ExpenseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,12 +488,12 @@ export type ExpenseUncheckedUpdateManyInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -578,6 +578,10 @@ export type ExpenseListRelationFilter = {
 
 export type ExpenseOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type EnumExpenseStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ExpenseStatus
 }
 
 export type ExpenseCreateNestedOneWithoutExpenseApprovalInput = {
@@ -682,12 +686,12 @@ export type ExpenseCreateWithoutExpenseApprovalInput = {
   id?: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -700,12 +704,12 @@ export type ExpenseUncheckedCreateWithoutExpenseApprovalInput = {
   truckId: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -732,12 +736,12 @@ export type ExpenseUpdateWithoutExpenseApprovalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -750,12 +754,12 @@ export type ExpenseUncheckedUpdateWithoutExpenseApprovalInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -766,12 +770,12 @@ export type ExpenseCreateWithoutTripInput = {
   id?: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -784,12 +788,12 @@ export type ExpenseUncheckedCreateWithoutTripInput = {
   truckId: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -830,12 +834,12 @@ export type ExpenseScalarWhereInput = {
   truckId?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
-  amount?: Prisma.FloatFilter<"Expense"> | number
+  amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   paymentMethod?: Prisma.StringFilter<"Expense"> | string
   reference?: Prisma.StringNullableFilter<"Expense"> | string | null
   approvedBy?: Prisma.StringNullableFilter<"Expense"> | string | null
-  status?: Prisma.StringFilter<"Expense"> | string
+  status?: Prisma.EnumExpenseStatusFilter<"Expense"> | $Enums.ExpenseStatus
   receiptUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
   tripId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
@@ -846,12 +850,12 @@ export type ExpenseCreateWithoutTruckInput = {
   id?: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -863,12 +867,12 @@ export type ExpenseUncheckedCreateWithoutTruckInput = {
   id?: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -907,12 +911,12 @@ export type ExpenseCreateManyTripInput = {
   truckId: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -922,12 +926,12 @@ export type ExpenseUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -940,12 +944,12 @@ export type ExpenseUncheckedUpdateWithoutTripInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -957,12 +961,12 @@ export type ExpenseUncheckedUpdateManyWithoutTripInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -972,12 +976,12 @@ export type ExpenseCreateManyTruckInput = {
   id?: string
   category: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   paymentMethod?: string
   reference?: string | null
   approvedBy?: string | null
-  status?: string
+  status?: $Enums.ExpenseStatus
   receiptUrl?: string | null
   tripId?: string | null
   createdAt?: Date | string
@@ -988,12 +992,12 @@ export type ExpenseUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1005,12 +1009,12 @@ export type ExpenseUncheckedUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1022,12 +1026,12 @@ export type ExpenseUncheckedUpdateManyWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1094,12 +1098,12 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     truckId: string
     category: string
     description: string
-    amount: number
+    amount: runtime.Decimal
     date: Date
     paymentMethod: string
     reference: string | null
     approvedBy: string | null
-    status: string
+    status: $Enums.ExpenseStatus
     receiptUrl: string | null
     tripId: string | null
     createdAt: Date
@@ -1480,12 +1484,12 @@ export interface ExpenseFieldRefs {
   readonly truckId: Prisma.FieldRef<"Expense", 'String'>
   readonly category: Prisma.FieldRef<"Expense", 'String'>
   readonly description: Prisma.FieldRef<"Expense", 'String'>
-  readonly amount: Prisma.FieldRef<"Expense", 'Float'>
+  readonly amount: Prisma.FieldRef<"Expense", 'Decimal'>
   readonly date: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly paymentMethod: Prisma.FieldRef<"Expense", 'String'>
   readonly reference: Prisma.FieldRef<"Expense", 'String'>
   readonly approvedBy: Prisma.FieldRef<"Expense", 'String'>
-  readonly status: Prisma.FieldRef<"Expense", 'String'>
+  readonly status: Prisma.FieldRef<"Expense", 'ExpenseStatus'>
   readonly receiptUrl: Prisma.FieldRef<"Expense", 'String'>
   readonly tripId: Prisma.FieldRef<"Expense", 'String'>
   readonly createdAt: Prisma.FieldRef<"Expense", 'DateTime'>
