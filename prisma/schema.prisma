@@ -445,6 +445,7 @@ model DvlaRegistration {
   createdAt          DateTime  @default(now())
   updatedAt DateTime @updatedAt
   truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
+  DvlaRenewalHistory DvlaRenewalHistory[]
 
   @@index([expiryDate])
   @@index([registeredOwner])
@@ -638,6 +639,7 @@ model Insurance {
   updatedAt DateTime @updatedAt
   truck               Truck            @relation(fields: [truckId], references: [id])
   InsuranceClaim      InsuranceClaim[]
+  InsuranceRenewalHistory InsuranceRenewalHistory[]
 
   @@index([endDate])
   @@index([truckId, status])
@@ -1565,4 +1567,32 @@ model ZoneRate {
 
   @@index([destinationZoneId])
   @@index([isActive])
+}
+
+model DvlaRenewalHistory {
+  id                  String                    @id @default(cuid())
+  dvlaRegistrationId  String
+  previousData        String                    @db.Text
+  renewalFee          Float?
+  renewedByName       String?
+  notes               String?
+  createdAt           DateTime                  @default(now())
+  dvlaRegistration    DvlaRegistration         @relation(fields: [dvlaRegistrationId], references: [id], onDelete: Cascade)
+
+  @@index([dvlaRegistrationId])
+  @@index([createdAt])
+}
+
+model InsuranceRenewalHistory {
+  id                  String                    @id @default(cuid())
+  insuranceId         String
+  previousData        String                    @db.Text
+  renewalFee          Float?
+  renewedByName       String?
+  notes               String?
+  createdAt           DateTime                  @default(now())
+  insurance           Insurance                 @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
+
+  @@index([insuranceId])
+  @@index([createdAt])
 }

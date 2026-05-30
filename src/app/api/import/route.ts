@@ -171,6 +171,11 @@ async function importTrucks(rows: ImportRow[]) {
 // Import: Expenses
 // ────────────────────────────────────────────────────────────────────
 
+/** Get cell value supporting both old (GHS) and new (\u20B5) column headers */
+function col(r: ImportRow, newHeader: string, oldHeader: string): string {
+  return trim(r[newHeader] ?? r[oldHeader] ?? '')
+}
+
 async function importExpenses(rows: ImportRow[]) {
   const errors: RowError[] = []
   let importedCount = 0
@@ -183,14 +188,14 @@ async function importExpenses(rows: ImportRow[]) {
       const truckPlate = trim(r['Truck'])
       const category = trim(r['Category'])
       const description = trim(r['Description'])
-      const amountStr = trim(r['Amount (GHS)'])
+      const amountStr = col(r, 'Amount (\u20B5)', 'Amount (GHS)')
 
       // Required fields
       if (!date) { errors.push({ row, column: 'Date', message: 'Date is required' }); continue }
       if (!truckPlate) { errors.push({ row, column: 'Truck', message: 'Truck plate number is required' }); continue }
       if (!category) { errors.push({ row, column: 'Category', message: 'Category is required' }); continue }
       if (!description) { errors.push({ row, column: 'Description', message: 'Description is required' }); continue }
-      if (!amountStr || isNaN(Number(amountStr))) { errors.push({ row, column: 'Amount (GHS)', message: 'Amount must be a valid number' }); continue }
+      if (!amountStr || isNaN(Number(amountStr))) { errors.push({ row, column: 'Amount (\u20B5)', message: 'Amount must be a valid number' }); continue }
 
       // Look up truck
       const truck = await db.truck.findUnique({ where: { plateNumber: truckPlate } })
@@ -235,13 +240,13 @@ async function importFuelLogs(rows: ImportRow[]) {
       const date = trim(r['Date'])
       const truckPlate = trim(r['Truck'])
       const litersStr = trim(r['Liters Filled'])
-      const totalCostStr = trim(r['Total Cost (GHS)'])
+      const totalCostStr = col(r, 'Total Cost (\u20B5)', 'Total Cost (GHS)')
 
       // Required fields
       if (!date) { errors.push({ row, column: 'Date', message: 'Date is required' }); continue }
       if (!truckPlate) { errors.push({ row, column: 'Truck', message: 'Truck plate number is required' }); continue }
       if (!litersStr || isNaN(Number(litersStr))) { errors.push({ row, column: 'Liters Filled', message: 'Liters Filled must be a valid number' }); continue }
-      if (!totalCostStr || isNaN(Number(totalCostStr))) { errors.push({ row, column: 'Total Cost (GHS)', message: 'Total Cost must be a valid number' }); continue }
+      if (!totalCostStr || isNaN(Number(totalCostStr))) { errors.push({ row, column: 'Total Cost (\u20B5)', message: 'Total Cost must be a valid number' }); continue }
 
       // Look up truck
       const truck = await db.truck.findUnique({ where: { plateNumber: truckPlate } })
@@ -275,7 +280,7 @@ async function importFuelLogs(rows: ImportRow[]) {
         tripId = trip.id
       }
 
-      const costPerLiterStr = trim(r['Cost/Liter (GHS)'])
+      const costPerLiterStr = col(r, 'Cost/Liter (\u20B5)', 'Cost/Liter (GHS)')
       const odometerStr = trim(r['Odometer (km)'])
       const fuelType = trim(r['Fuel Type'])
       const stationName = trim(r['Station Name'])
@@ -331,7 +336,7 @@ async function importMaintenance(rows: ImportRow[]) {
       if (!truck) { errors.push({ row, column: 'Truck', message: `Truck "${truckPlate}" not found` }); continue }
 
       const description = trim(r['Description'])
-      const costStr = trim(r['Cost (GHS)'])
+      const costStr = col(r, 'Cost (\u20B5)', 'Cost (GHS)')
       const performedBy = trim(r['Performed By'])
       const odometerStr = trim(r['Odometer (km)'])
       const nextDueDateStr = trim(r['Next Due Date'])

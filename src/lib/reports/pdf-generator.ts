@@ -10,6 +10,11 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
+
+/** Custom font family name that supports U+20B5 (Ghana Cedi sign) */
+const FF = getFontFamily()
 
 // ── Brand Colors ──
 const COLORS = {
@@ -59,6 +64,8 @@ export interface TableOptions {
  */
 export class PdfReport {
   private doc: jsPDF
+  /** Manually tracked Y cursor position (jsPDF 4.x has no getCursorPosition) */
+  private _cursorY: number
 
   constructor(orientation: 'portrait' | 'landscape' = 'portrait', format: 'a4' | 'letter' = 'a4') {
     this.doc = new jsPDF({
@@ -67,6 +74,9 @@ export class PdfReport {
       unit: 'mm',
       compress: true,
     })
+    // Register custom DejaVu Sans font (supports U+20B5 Ghana Cedi currency symbol)
+    registerFonts(this.doc)
+    this._cursorY = 14 // Start below the header bar
   }
 
   // ── Public Accessors ────────────────────────────────────────────
@@ -78,7 +88,12 @@ export class PdfReport {
 
   /** Get current Y cursor position */
   get y(): number {
-    return this.doc.getCursorPosition().y
+    return this._cursorY
+  }
+
+  /** Advance the Y cursor to a specific position */
+  setY(y: number): void {
+    this._cursorY = y
   }
 
   /** Get page width in mm */
@@ -105,13 +120,13 @@ export class PdfReport {
     this.doc.rect(0, 0, pageWidth, 14, 'F')
 
     // Company name — left
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     this.doc.setFontSize(14)
     this.doc.setTextColor(255, 255, 255)
     this.doc.text(APP_NAME, 10, 9.5)
 
     // System name — right
-    this.doc.setFont('helvetica', 'normal')
+    this.doc.setFont(FF, 'normal')
     this.doc.setFontSize(9)
     this.doc.text(APP_TAGLINE, pageWidth - 10, 9.5, { align: 'right' })
 
@@ -128,10 +143,12 @@ export class PdfReport {
 
   /** Add a bold report title below the header */
   addTitle(title: string): void {
-    this.doc.setFont('helvetica', 'bold')
+    this._cursorY += 4
+    this.doc.setFont(FF, 'bold')
     this.doc.setFontSize(16)
     this.doc.setTextColor(28, 25, 23)
-    this.doc.text(title, 10, this.y + 10)
+    this.doc.text(title, 10, this._cursorY + 6)
+    this._cursorY += 8
     this.doc.setTextColor(0, 0, 0)
   }
 
@@ -139,12 +156,14 @@ export class PdfReport {
 
   /** Add a smaller subtitle line (date range, filters, etc.) */
   addSubtitle(text: string): void {
-    this.doc.setFont('helvetica', 'normal')
+    this.doc.setFont(FF, 'normal')
     this.doc.setFontSize(9)
     this.doc.setTextColor(120, 113, 108)
-    this.doc.text(text, 10, this.y + 6)
+    this._cursorY += 2
+    this.doc.text(text, 10, this._cursorY + 4)
+    this._cursorY += 6
 
-    const yPos = this.y + 9
+    const yPos = this._cursorY + 3
     this.doc.setDrawColor(...COLORS.footerLine)
     this.doc.setLineWidth(0.2)
     this.doc.line(10, yPos, this.pageWidth - 10, yPos)
@@ -168,12 +187,12 @@ export class PdfReport {
     const cardWidth = (usableWidth - cardGap * (cardsPerRow - 1)) / cardsPerRow
     const cardHeight = 18
 
-    let currentY = this.y + 4
+    let currentY = this._cursorY + 4
 
     for (let i = 0; i < kpis.length; i += cardsPerRow) {
       if (currentY + cardHeight > this.pageHeight - 30) {
         this.newPage()
-        currentY = this.y + 4
+        currentY = this._cursorY + 4
       }
 
       const rowKpis = kpis.slice(i, i + cardsPerRow)
@@ -191,13 +210,13 @@ export class PdfReport {
         this.doc.rect(x, currentY, 1.5, cardHeight, 'F')
 
         // Label
-        this.doc.setFont('helvetica', 'normal')
+        this.doc.setFont(FF, 'normal')
         this.doc.setFontSize(7)
         this.doc.setTextColor(120, 113, 108)
         this.doc.text(kpi.label, x + 5, currentY + 6)
 
         // Value
-        this.doc.setFont('helvetica', 'bold')
+        this.doc.setFont(FF, 'bold')
         this.doc.setFontSize(11)
         this.doc.setTextColor(28, 25, 23)
         const displayValue = kpi.trend ? `${kpi.value} ${kpi.trend}` : kpi.value
@@ -208,9 +227,9 @@ export class PdfReport {
 
       currentY += cardHeight + cardGap
     }
-  }
 
-  // ── Data Table ─────────────────────────────────────────────────
+    this._cursorY = currentY
+  }
 
   /**
    * Add a styled data table using jspdf-autotable.
@@ -221,7 +240,7 @@ export class PdfReport {
     rows: (string | number)[][],
     options?: TableOptions,
   ): number {
-    const startY = options?.startY ?? this.y + 4
+    const startY = options?.startY ?? this._cursorY + 4
 
     const headStyles: Record<string, unknown> = {
       fillColor: COLORS.tableHeaderBg,
@@ -260,9 +279,8 @@ export class PdfReport {
       styles: allStyles,
       margin: { left: 10, right: 10 },
       tableWidth: 'auto',
-      didDrawPage: () => {
-        this.addHeader()
-      },
+      // Do NOT repeat table column headers on subsequent pages
+      repeatHeader: false,
     }
 
     if (options?.columnStyles) {
@@ -273,13 +291,15 @@ export class PdfReport {
 
     if (options?.summaryRow) {
       const finalY = (this.doc as unknown as Record<string, unknown>).lastAutoTable != null
-        ? ((this.doc as unknown as Record<string, Record<string, number>>).lastAutoTable?.finalY ?? this.y + 20)
-        : this.y + 20
+        ? ((this.doc as unknown as Record<string, Record<string, number>>).lastAutoTable?.finalY ?? this._cursorY + 20)
+        : this._cursorY + 20
       this._addSummaryRow(headers, options.summaryRow, finalY)
       return finalY + 8
     }
 
-    return (this.doc as unknown as Record<string, Record<string, number>>).lastAutoTable?.finalY ?? startY + 20
+    const finalTableY = (this.doc as unknown as Record<string, Record<string, number>>).lastAutoTable?.finalY ?? startY + 20
+    this._cursorY = finalTableY
+    return finalTableY
   }
 
   // ── Footer ─────────────────────────────────────────────────────
@@ -303,7 +323,7 @@ export class PdfReport {
       this.doc.line(10, pageHeight - 15, pageWidth - 10, pageHeight - 15)
 
       // Page number — center
-      this.doc.setFont('helvetica', 'normal')
+      this.doc.setFont(FF, 'normal')
       this.doc.setFontSize(8)
       this.doc.setTextColor(120, 113, 108)
       this.doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' })
@@ -331,6 +351,7 @@ export class PdfReport {
   newPage(): void {
     this.doc.addPage()
     this.addHeader()
+    this._cursorY = 14 // Reset cursor below header on new page
   }
 
   // ── Export ─────────────────────────────────────────────────────
@@ -362,13 +383,13 @@ export class PdfReport {
     this.doc.rect(10, y, pageWidth - 20, 7, 'F')
 
     // Label
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     this.doc.setFontSize(7)
     this.doc.setTextColor(146, 64, 14)
     this.doc.text(summary.label, 12, y + 5)
 
     // Values
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont(FF, 'bold')
     summary.values.forEach((val, idx) => {
       if (idx === 0) return
       const x = 10 + idx * colWidth + colWidth / 2
@@ -381,9 +402,9 @@ export class PdfReport {
 
 // ── Shared Formatting Utilities ─────────────────────────────────
 
-/** Format currency in GHS */
+/** Format currency — numbers only, no prefix (header already shows the symbol to avoid font rendering issues) */
 export function formatGHS(amount: number): string {
-  return `GHS ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 /** Format number with locale */

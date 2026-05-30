@@ -136,7 +136,7 @@ export async function GET() {
       const daysPending = differenceInDays(now, new Date(advance.createdAt))
       notifications.push({
         type: 'cash_advance_pending',
-        message: `Cash advance for ${advance.driver.driverName} (${advance.amount.toLocaleString()} GHS) pending ${daysPending} day${daysPending === 1 ? '' : 's'}`,
+        message: `Cash advance for ${advance.driver.driverName} (\u20B5${advance.amount.toLocaleString()}) pending ${daysPending} day${daysPending === 1 ? '' : 's'}`,
         severity: 'warning',
         entityId: advance.id,
         entityName: advance.driver.driverName,

@@ -16,7 +16,7 @@ const SUPPORTED_CURRENCIES = ['GHS', 'USD', 'EUR', 'GBP', 'XOF', 'NGN', 'CNY']
 
 // Currency metadata
 const CURRENCY_META: Record<string, { name: string; symbol: string }> = {
-  GHS: { name: 'Ghana Cedi', symbol: '₵' },
+  GHS: { name: 'Ghana Cedi', symbol: '\u20B5' },
   USD: { name: 'US Dollar', symbol: '$' },
   EUR: { name: 'Euro', symbol: '€' },
   GBP: { name: 'British Pound', symbol: '£' },

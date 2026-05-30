@@ -345,7 +345,8 @@ export const GHANA_LOCATIONS = [
 // ============ CURRENCY ============
 
 export const CURRENCY = "GHS"
-export const CURRENCY_SYMBOL = "₵"
+/** Ghana Cedi sign U+20B5 — runtime generation avoids encoding issues */
+export const CURRENCY_SYMBOL: string = String.fromCodePoint(0x20B5)
 
 // ============ PAYMENT METHODS ============
 

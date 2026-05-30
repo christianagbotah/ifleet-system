@@ -738,7 +738,7 @@ export default function CashAdvancesPage() {
               )} />
               <FormField control={form.control} name="amount" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount (GHS) *</FormLabel>
+                  <FormLabel>Amount (\u20B5) *</FormLabel>
                   <FormControl><Input type="number" step="0.01" {...field} placeholder="500.00" /></FormControl>
                   <FormMessage />
                 </FormItem>

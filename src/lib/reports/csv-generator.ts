@@ -4,6 +4,9 @@
 
 import { APP_NAME } from '@/lib/constants'
 
+/** Ghana Cedi sign — generated at runtime to avoid any encoding/transpilation issues */
+export const CEDI: string = String.fromCodePoint(0x20B5)
+
 export function csvEscape(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return ''
   const str = String(value)
@@ -37,7 +40,7 @@ export function csvDateTime(date: Date | string | null | undefined): string {
 
 export function csvCurrency(amount: number | null | undefined): string {
   if (amount === null || amount === undefined) return ''
-  return `GHS ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function csvNumber(value: number | null | undefined, decimals?: number): string {

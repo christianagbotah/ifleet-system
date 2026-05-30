@@ -142,7 +142,7 @@ function extractPricesFromHtml(html: string): LivePriceResponse | null {
   // Normalize whitespace for easier regex matching
   const text = html.replace(/\s+/g, ' ')
 
-  // Attempt to match common price patterns: GH₵ XX.XX or GHS XX.XX or just XX.XX near fuel keywords
+  // Attempt to match common price patterns: GH\u20B5 XX.XX or GHS XX.XX or just XX.XX near fuel keywords
   const fuelKeywords = [
     { key: 'Diesel', patterns: ['diesel', 'diesel (gasoil)', 'gasoil'] },
     { key: 'Petrol', patterns: ['petrol', 'gasoline', 'premium', 'super', 'unleaded'] },
@@ -152,7 +152,7 @@ function extractPricesFromHtml(html: string): LivePriceResponse | null {
   for (const fuel of fuelKeywords) {
     for (const keyword of fuel.patterns) {
       const regex = new RegExp(
-        `${keyword}[^0-9]*(?:GH₵|GHS|GH\\s?)?(\\d+\\.\\d{1,2})`,
+        `${keyword}[^0-9]*(?:GH\u20B5|GHS|GH\\s?)?(\\d+\\.\\d{1,2})`,
         'i'
       )
       const match = text.match(regex)
@@ -182,7 +182,7 @@ function extractPricesFromHtml(html: string): LivePriceResponse | null {
 
   for (const brand of knownBrands) {
     const brandRegex = new RegExp(
-      `${brand}[^0-9]*?(?:petrol|gasoline|premium)[^0-9]*(?:GH₵|GHS|GH\\s?)?(\\d+\\.\\d{1,2})[^0-9]*(?:diesel|gasoil)[^0-9]*(?:GH₵|GHS|GH\\s?)?(\\d+\\.\\d{1,2})`,
+      `${brand}[^0-9]*?(?:petrol|gasoline|premium)[^0-9]*(?:GH\u20B5|GHS|GH\\s?)?(\\d+\\.\\d{1,2})[^0-9]*(?:diesel|gasoil)[^0-9]*(?:GH\u20B5|GHS|GH\\s?)?(\\d+\\.\\d{1,2})`,
       'i'
     )
     const brandMatch = text.match(brandRegex)

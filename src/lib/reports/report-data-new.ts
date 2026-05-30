@@ -8,6 +8,7 @@ import {
   csvDateTime,
   csvCurrency,
   csvNumber,
+  CEDI,
   type ReportData,
 } from './csv-generator'
 
@@ -482,9 +483,9 @@ export async function fetchDailySummaryData(date?: string): Promise<ReportData> 
     ['Trips Departed Today', trips.length],
     ['Total Revenue (Trips Today)', csvCurrency(totalTripRevenue)],
     ['Expenses Recorded Today', expenses.length],
-    ['Total Expenses (GHS)', csvCurrency(totalExpenses)],
+    ['Total Expenses (${CEDI})', csvCurrency(totalExpenses)],
     ['Fuel Logs Today', fuelLogs.length],
-    ['Total Fuel Cost (GHS)', csvCurrency(totalFuelCost)],
+    ['Total Fuel Cost (${CEDI})', csvCurrency(totalFuelCost)],
     ['Total Fuel (Liters)', csvNumber(totalFuelLiters, 1)],
   ]
 
@@ -786,8 +787,8 @@ export async function fetchCostAnalyticsData(params: ReportParams): Promise<Repo
   ])
 
   const headers = [
-    'Truck', 'Make', 'Model', 'Fuel Cost (GHS)', 'Maintenance (GHS)', 'Other Costs (GHS)',
-    'Total Cost (GHS)', 'Distance (km)', 'Tonnage', 'Cost/km (GHS)', 'Cost/Tonne (GHS)',
+    'Truck', 'Make', 'Model', `Fuel Cost (${CEDI})`, `Maintenance (${CEDI})`, `Other Costs (${CEDI})`,
+    `Total Cost (${CEDI})`, 'Distance (km)', 'Tonnage', `Cost/km (${CEDI})`, `Cost/Tonne (${CEDI})`,
   ]
 
   const rows: (string | number | null | undefined)[][] = []
@@ -867,8 +868,8 @@ export async function fetchTripProfitabilityData(params: ReportParams): Promise<
 
   const headers = [
     'Trip #', 'Date', 'Driver', 'Truck', 'Route', 'Client',
-    'Revenue (GHS)', 'Fuel Cost (GHS)', 'Expenses (GHS)', 'Total Cost (GHS)',
-    'Net Profit (GHS)', 'Margin (%)',
+    `Revenue (${CEDI})`, `Fuel Cost (${CEDI})`, `Expenses (${CEDI})`, `Total Cost (${CEDI})`,
+    `Net Profit (${CEDI})`, 'Margin (%)',
   ]
 
   const rows = trips.map(t => {
@@ -928,7 +929,7 @@ export async function fetchFuelAnalyticsData(params: ReportParams): Promise<Repo
   }
 
   const headers = [
-    'Truck', 'Total Liters', 'Total Cost (GHS)', 'Avg Cost/Liter', 'Fill-ups',
+    'Truck', 'Total Liters', `Total Cost (${CEDI})`, 'Avg Cost/Liter', 'Fill-ups',
     'Avg Fill (L)', 'L/100km', 'Efficiency Rating',
   ]
 
@@ -1138,9 +1139,9 @@ export async function fetchFleetProfitLossData(params: ReportParams): Promise<Re
   ])
 
   const headers = [
-    'Truck', 'Make', 'Model', 'Driver', 'Trips', 'Revenue (GHS)',
-    'Fuel Cost (GHS)', 'Maintenance (GHS)', 'Tolls (GHS)', 'Other Expenses (GHS)',
-    'Total Expenses (GHS)', 'Net Income/Loss (GHS)', 'Margin (%)',
+    'Truck', 'Make', 'Model', 'Driver', 'Trips', `Revenue (${CEDI})`,
+    `Fuel Cost (${CEDI})`, `Maintenance (${CEDI})`, `Tolls (${CEDI})`, `Other Expenses (${CEDI})`,
+    `Total Expenses (${CEDI})`, `Net Income/Loss (${CEDI})`, 'Margin (%)',
   ]
 
   const rows: (string | number | null | undefined)[][] = []

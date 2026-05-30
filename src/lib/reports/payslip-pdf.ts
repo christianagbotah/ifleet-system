@@ -12,6 +12,10 @@ import jsPDF from 'jspdf'
 import { db } from '@/lib/db'
 import { fmtDate } from './pdf-generator'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
+
+const FF = getFontFamily()
 
 // ── Brand Colors ──
 const C = {
@@ -28,9 +32,9 @@ const C = {
 const MONTH_NAMES = ['', 'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
 
-/** Format a number as GHS currency string */
+/** Format a number as Ghana Cedi currency string */
 function ghs(amount: number): string {
-  return `GHS ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 /**
@@ -62,6 +66,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
 
   const driver = payroll.driver
   const doc = new jsPDF({ orientation: 'portrait', format: 'a4', unit: 'mm' })
+  registerFonts(doc)
   const pw = 210
   const margin = 15
   const contentW = pw - margin * 2
@@ -73,12 +78,12 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.setFillColor(...C.amber)
   doc.rect(0, 0, pw, 20, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(16)
   doc.setTextColor(...C.white)
   doc.text(APP_NAME, margin, 13)
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.text(APP_TAGLINE, pw - margin, 8, { align: 'right' })
   doc.text('37 Ring Road Central, Accra, Ghana', pw - margin, 13, { align: 'right' })
@@ -89,13 +94,13 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   // ════════════════════════════════════════════════════════════
   // 2. PAYSLIP TITLE
   // ════════════════════════════════════════════════════════════
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(18)
   doc.setTextColor(...C.amber)
   doc.text('PAYSLIP', margin, y)
   y += 6
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(9)
   doc.setTextColor(...C.dark)
   doc.text(`Pay Period: ${MONTH_NAMES[payroll.month]} ${payroll.year}`, margin, y)
@@ -113,7 +118,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.setFillColor(...C.light)
   doc.roundedRect(margin, y, contentW, 24, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('EMPLOYEE INFORMATION', margin + 4, y + 5)
@@ -135,12 +140,12 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
     const ix = margin + 4 + col * (contentW / 2)
     const iy = y + 10 + row * 3.5
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(7)
     doc.setTextColor(...C.gray)
     doc.text(`${info.label}:`, ix, iy)
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(info.value, ix + 22, iy)
@@ -151,7 +156,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   // ════════════════════════════════════════════════════════════
   // 4. EARNINGS & DEDUCTIONS (side by side)
   // ════════════════════════════════════════════════════════════
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('EARNINGS & DEDUCTIONS', margin, y)
@@ -170,7 +175,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.setFillColor(245, 245, 244)
   doc.rect(margin, y + 4, colW, 2, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.white)
   doc.text('EARNINGS', margin + 4, y + 4.5)
@@ -189,12 +194,12 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
 
   let ey = y + 12
   earnings.forEach((item) => {
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(item.label, margin + 4, ey)
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.text(ghs(item.amount), margin + colW - 4, ey, { align: 'right' })
     ey += 6
@@ -206,7 +211,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.line(margin + 4, ey, margin + colW - 4, ey)
   ey += 5
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(9)
   doc.setTextColor(...C.dark)
   doc.text('Total Earnings', margin + 4, ey)
@@ -225,7 +230,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.setFillColor(245, 245, 244)
   doc.rect(dedX, y + 4, colW, 2, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.white)
   doc.text('DEDUCTIONS', dedX + 4, y + 4.5)
@@ -238,12 +243,12 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
 
   let dy = y + 12
   deductions.forEach((item) => {
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(item.label, dedX + 4, dy)
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.red)
     doc.text(`- ${ghs(item.amount)}`, dedX + colW - 4, dy, { align: 'right' })
@@ -255,7 +260,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.line(dedX + 4, dy, dedX + colW - 4, dy)
   dy += 5
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(9)
   doc.setTextColor(...C.dark)
   doc.text('Total Deductions', dedX + 4, dy)
@@ -274,18 +279,18 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.setFillColor(...C.amber)
   doc.rect(margin, y, 3, 18, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(168, 162, 158) // stone-400
   doc.text('NET PAY', margin + 8, y + 8)
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(20)
   doc.setTextColor(...C.amber)
   doc.text(ghs(payroll.netPay), margin + 8, y + 15)
 
   // Pay date on the right
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(168, 162, 158)
   if (payroll.paidAt) {
@@ -300,7 +305,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   // ════════════════════════════════════════════════════════════
   // 6. EMPLOYER CONTRIBUTIONS
   // ════════════════════════════════════════════════════════════
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('EMPLOYER CONTRIBUTIONS', margin, y)
@@ -317,12 +322,12 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
 
   let cy = y + 5
   employerContributions.forEach((item) => {
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(item.label, margin + 4, cy)
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.text(item.value, pw - margin - 4, cy, { align: 'right' })
     cy += 6
   })
@@ -333,7 +338,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   // 7. NOTES (if any)
   // ════════════════════════════════════════════════════════════
   if (payroll.notes) {
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(8)
     doc.setTextColor(...C.amber)
     doc.text('NOTES', margin, y)
@@ -342,7 +347,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
     doc.setFillColor(...C.light)
     doc.roundedRect(margin, y, contentW, 12, 2, 2, 'F')
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     const splitNotes = doc.splitTextToSize(payroll.notes, contentW - 10)
@@ -366,7 +371,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
 
   // Employee
   doc.line(margin, y + 15, margin + sigW, y + 15)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(7)
   doc.setTextColor(...C.gray)
   doc.text("Employee's Signature", margin, y + 20)
@@ -389,7 +394,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
     doc.setLineWidth(0.3)
     doc.line(margin, ph - 25, pw - margin, ph - 25)
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(6)
     doc.setTextColor(...C.gray)
 

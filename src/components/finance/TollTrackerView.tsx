@@ -238,7 +238,7 @@ export function TollTrackerView() {
 
   // Export CSV
   const handleExportCSV = () => {
-    const headers = ['Date', 'Truck', 'Driver', 'Toll Point', 'Type', 'Amount (GHS)', 'Route', 'Status', 'Payment', 'Reference']
+    const headers = ['Date', 'Truck', 'Driver', 'Toll Point', 'Type', 'Amount (\u20B5)', 'Route', 'Status', 'Payment', 'Reference']
     const rows = records.map(r => [
       formatDate(r.tollDate),
       r.truck.plateNumber,
@@ -659,7 +659,7 @@ setShowViewDialog(true) }}>
             {/* Row 3: Amount + Payment */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs">Amount (GHS) *</Label>
+                <Label className="text-xs">Amount (\u20B5) *</Label>
                 <Input type="number" step="0.01" className="h-9 text-sm" placeholder="0.00" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} />
               </div>
               <div className="space-y-1.5">
@@ -728,7 +728,7 @@ setShowViewDialog(true) }}>
                 </div>
                 {form.overloaded && (
                   <div className="space-y-1.5">
-                    <Label className="text-xs">Overload Fine (GHS)</Label>
+                    <Label className="text-xs">Overload Fine (\u20B5)</Label>
                     <Input type="number" step="0.01" className="h-9 text-sm" placeholder="0.00" value={form.overloadFine} onChange={e => setForm(f => ({ ...f, overloadFine: e.target.value }))} />
                   </div>
                 )}

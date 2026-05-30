@@ -10,6 +10,7 @@
 import jsPDF from 'jspdf'
 import { db } from '@/lib/db'
 import { PdfReport, formatGHS, formatNumber, fmtDate, buildPdfSubtitle, buildTripWhereClause } from './pdf-generator'
+import { CEDI } from './csv-generator'
 import type { ReportParams } from './types'
 import { APP_NAME } from '@/lib/constants'
 

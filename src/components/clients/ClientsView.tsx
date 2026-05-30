@@ -68,7 +68,7 @@ const itemVariants = {
 }
 
 function formatGHS(amount: number): string {
-  return `₵${amount.toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
+  return `\u20B5${amount.toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
 }
 
 function formatDate(dateStr: string | null | undefined): string {

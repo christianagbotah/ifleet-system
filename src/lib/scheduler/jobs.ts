@@ -353,8 +353,8 @@ export async function generateDailySummary() {
       `🚛 Active Trucks: ${activeTrucks}`,
       `🛣️ Active Trips: ${activeTrips}`,
       `✅ Completed Today: ${completedTripsToday}`,
-      `💰 Revenue Today: GHS ${totalRevenue.toLocaleString()}`,
-      `💸 Expenses Today: GHS ${totalExpenses.toLocaleString()}`,
+      `💰 Revenue Today: \u20B5${totalRevenue.toLocaleString()}`,
+      `💸 Expenses Today: \u20B5${totalExpenses.toLocaleString()}`,
       `🔧 Overdue Maintenance: ${overdueMaintenance}`,
     ].join('\n')
 

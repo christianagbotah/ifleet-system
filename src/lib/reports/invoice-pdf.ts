@@ -10,6 +10,10 @@ import jsPDF from 'jspdf'
 import { db } from '@/lib/db'
 import { fmtDate } from './pdf-generator'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
+
+const FF = getFontFamily()
 
 // ── Brand Colors ──
 const C = {
@@ -22,9 +26,9 @@ const C = {
   green: [22, 163, 74] as [number, number, number],
 }
 
-/** Format a number as GHS currency string */
+/** Format a number as Ghana Cedi currency string */
 function ghs(amount: number): string {
-  return `GHS ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 /**
@@ -46,6 +50,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   }
 
   const doc = new jsPDF({ orientation: 'portrait', format: 'a4', unit: 'mm' })
+  registerFonts(doc)
   const pw = 210
   const margin = 15
   const contentW = pw - margin * 2
@@ -57,12 +62,12 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   doc.setFillColor(...C.amber)
   doc.rect(0, 0, pw, 20, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(16)
   doc.setTextColor(...C.white)
   doc.text(APP_NAME, margin, 13)
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.text(APP_TAGLINE, pw - margin, 8, { align: 'right' })
   doc.text('37 Ring Road Central, Accra, Ghana', pw - margin, 13, { align: 'right' })
@@ -73,13 +78,13 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   // ════════════════════════════════════════════════════════════
   // 2. INVOICE TITLE & META
   // ════════════════════════════════════════════════════════════
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(20)
   doc.setTextColor(...C.amber)
   doc.text('INVOICE', margin, y)
   y += 6
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(9)
   doc.setTextColor(...C.dark)
   doc.text(`Invoice No: ${invoice.invoiceNumber}`, margin, y)
@@ -87,7 +92,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   const statusLabel = invoice.status.toUpperCase().replace(/_/g, ' ')
   const statusColor = invoice.status === 'paid' ? C.green : invoice.status === 'overdue' ? [220, 38, 38] as [number, number, number] : C.gray
   doc.setTextColor(...statusColor)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.text(statusLabel, pw - margin, y, { align: 'right' })
   y += 2
 
@@ -102,18 +107,18 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   doc.setFillColor(...C.light)
   doc.roundedRect(margin, y, contentW, 30, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('BILL TO', margin + 4, y + 5)
 
   const client = invoice.client
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(client.companyName, margin + 4, y + 11)
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.gray)
 
@@ -146,12 +151,12 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     const ix = margin + 4 + col * (contentW / 2)
     const iy = y + 5 + row * 5.5
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(7)
     doc.setTextColor(...C.gray)
     doc.text(`${item.label}:`, ix, iy)
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(item.value, ix + 28, iy)
@@ -162,7 +167,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   // ════════════════════════════════════════════════════════════
   // 5. LINE ITEMS TABLE
   // ════════════════════════════════════════════════════════════
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('LINE ITEMS', margin, y)
@@ -178,7 +183,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
       ghs(item.total),
     ])
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     const tableStartY = y
 
     // Table header row
@@ -192,7 +197,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     tableHeaders.forEach((header, idx) => {
       doc.setTextColor(...C.white)
       doc.setFontSize(7)
-      doc.setFont('helvetica', 'bold')
+      doc.setFont(FF, 'bold')
       doc.text(header, cx + 2, tableStartY + 5, { align: idx > 1 ? 'right' : 'left' })
       cx += colWidths[idx]
     })
@@ -205,7 +210,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
         doc.addPage()
         doc.setFillColor(...C.amber)
         doc.rect(0, 0, pw, 14, 'F')
-        doc.setFont('helvetica', 'bold')
+        doc.setFont(FF, 'bold')
         doc.setFontSize(10)
         doc.setTextColor(...C.white)
         doc.text(APP_NAME, margin, 10)
@@ -229,7 +234,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
       cx = margin
       rowData.forEach((cell, idx) => {
         doc.setTextColor(...C.dark)
-        doc.setFont('helvetica', 'normal')
+        doc.setFont(FF, 'normal')
         doc.setFontSize(7)
         doc.text(cell, cx + 2, y + 5, { align: idx > 1 ? 'right' : 'left' })
         cx += colWidths[idx]
@@ -244,7 +249,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     doc.line(margin, y, pw - margin, y)
     y += 6
   } else {
-    doc.setFont('helvetica', 'italic')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.gray)
     doc.text('No line items on this invoice.', margin + 4, y + 4)
@@ -265,23 +270,23 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   let ty = y + 8
 
   // Subtotal
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(168, 162, 158)
   doc.text('Subtotal', margin + 8, ty)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.white)
   doc.text(ghs(invoice.subtotal), pw - margin - 4, ty, { align: 'right' })
   ty += 8
 
   // Tax
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(168, 162, 158)
   const taxPercent = invoice.taxRate > 0 ? `VAT (${invoice.taxRate}%)` : 'Tax'
   doc.text(`${taxPercent}`, margin + 8, ty)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.white)
   doc.text(ghs(invoice.taxAmount), pw - margin - 4, ty, { align: 'right' })
@@ -294,11 +299,11 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
 
   // Total
   ty += 2
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(11)
   doc.setTextColor(...C.amber)
   doc.text('TOTAL DUE', margin + 8, ty)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(16)
   doc.setTextColor(...C.white)
   doc.text(ghs(invoice.totalAmount), pw - margin - 4, ty, { align: 'right' })
@@ -313,11 +318,11 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     doc.setFillColor(245, 245, 244)
     doc.roundedRect(margin, y, contentW, 10, 2, 2, 'F')
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(7)
     doc.setTextColor(...C.dark)
     doc.text(`Paid: ${ghs(invoice.paidAmount)}`, margin + 4, y + 6)
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setTextColor(balance <= 0 ? C.green : C.dark)
     doc.text(`Balance Due: ${ghs(balance)}`, pw - margin - 4, y + 6, { align: 'right' })
     y += 14
@@ -331,14 +336,14 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
       doc.addPage()
       doc.setFillColor(...C.amber)
       doc.rect(0, 0, pw, 14, 'F')
-      doc.setFont('helvetica', 'bold')
+      doc.setFont(FF, 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...C.white)
       doc.text(APP_NAME, margin, 10)
       y = 18
     }
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(8)
     doc.setTextColor(...C.amber)
     doc.text('NOTES', margin, y)
@@ -349,7 +354,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     const noteH = Math.min(noteLines.length * 4, 20)
     doc.roundedRect(margin, y, contentW, noteH + 4, 2, 2, 'F')
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(noteLines.slice(0, 5), margin + 5, y + 6)
@@ -365,14 +370,14 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
       doc.addPage()
       doc.setFillColor(...C.amber)
       doc.rect(0, 0, pw, 14, 'F')
-      doc.setFont('helvetica', 'bold')
+      doc.setFont(FF, 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...C.white)
       doc.text(APP_NAME, margin, 10)
       y = 18
     }
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(8)
     doc.setTextColor(...C.amber)
     doc.text('PAYMENT TERMS', margin, y)
@@ -383,7 +388,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     const termH = Math.min(termLines.length * 4, 20)
     doc.roundedRect(margin, y, contentW, termH + 4, 2, 2, 'F')
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(termLines.slice(0, 5), margin + 5, y + 6)
@@ -398,7 +403,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     doc.addPage()
     doc.setFillColor(...C.amber)
     doc.rect(0, 0, pw, 14, 'F')
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(10)
     doc.setTextColor(...C.white)
     doc.text(APP_NAME, margin, 10)
@@ -408,11 +413,11 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   doc.setFillColor(...C.light)
   doc.roundedRect(margin, y, contentW, 12, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'italic')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.dark)
   doc.text('Thank you for your business!', margin + 5, y + 5)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.text('For questions, contact accounts@fleetpro.com.gh or call +233 30 277 8899.', margin + 5, y + 9)
 
   y += 18
@@ -429,7 +434,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     doc.setLineWidth(0.3)
     doc.line(margin, ph - 15, pw - margin, ph - 15)
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(7)
     doc.setTextColor(...C.gray)
 

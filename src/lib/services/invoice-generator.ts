@@ -231,7 +231,7 @@ export async function generateInvoiceForTrip(
 
     console.log(
       `[InvoiceGenerator] Created invoice ${invoice.invoiceNumber} for trip ${trip.tripNumber}. ` +
-      `Total: GHS ${invoice.totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })} ` +
+      `Total: \u20B5${invoice.totalAmount.toLocaleString('en-GH', { minimumFractionDigits: 2 })} ` +
       `(${invoiceItems.length} line items)`
     )
 

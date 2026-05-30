@@ -14,6 +14,7 @@ import {
   FileCheck,
   AlertTriangle,
   XCircle,
+  Eye,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -38,6 +39,7 @@ import { useApi, apiFetch } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { DvlaFormDialog, type DvlaRegistration } from './DvlaFormDialog'
+import { DvlaDetailSheet } from './DvlaDetailSheet'
 
 // ─── Animation Variants ───────────────────────────────────────────────────
 const containerVariants = {
@@ -124,6 +126,8 @@ export function DvlaView() {
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [editingRegistration, setEditingRegistration] = React.useState<DvlaRegistration | null>(null)
   const [deletingId, setDeletingId] = React.useState<string | null>(null)
+  const [selectedRegistrationId, setSelectedRegistrationId] = React.useState<string | null>(null)
+  const [detailOpen, setDetailOpen] = React.useState(false)
 
   const { data, loading, error, refetch } = useApi<{ data: DvlaRegistration[]; total: number }>(
     () => apiFetch('/api/dvla-registrations?limit=100'),
@@ -164,6 +168,11 @@ export function DvlaView() {
     setDialogOpen(true)
   }
 
+  function handleView(registration: DvlaRegistration) {
+    setSelectedRegistrationId(registration.id)
+    setDetailOpen(true)
+  }
+
   function handleEdit(registration: DvlaRegistration) {
     setEditingRegistration(registration)
     setDialogOpen(true)
@@ -184,6 +193,16 @@ export function DvlaView() {
 
   function handleDialogSuccess() {
     refetch()
+  }
+
+  function handleDetailDeleted() {
+    refetch()
+  }
+
+  function handleDetailEdit(registration: Record<string, unknown>) {
+    setDetailOpen(false)
+    setEditingRegistration(registration as DvlaRegistration)
+    setDialogOpen(true)
   }
 
   return (
@@ -327,7 +346,7 @@ export function DvlaView() {
                     <TableHead className="hidden sm:table-cell">Expiry Date</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="hidden md:table-cell">Expiry</TableHead>
-                    <TableHead className="w-[80px]">Actions</TableHead>
+                    <TableHead className="w-[110px]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -383,7 +402,17 @@ export function DvlaView() {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
+                            onClick={() => handleView(reg)}
+                            title="View details"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
                             onClick={() => handleEdit(reg)}
+                            title="Edit"
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
@@ -393,6 +422,7 @@ export function DvlaView() {
                             className="h-8 w-8 text-red-500 hover:text-red-600"
                             onClick={() => handleDelete(reg)}
                             disabled={deletingId === reg.id}
+                            title="Delete"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
@@ -438,6 +468,14 @@ export function DvlaView() {
                       </p>
                       <div className="flex items-center gap-1">
                         <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 h-8 text-xs"
+                          onClick={() => handleView(reg)}
+                        >
+                          <Eye className="mr-1 h-3 w-3" /> View
+                        </Button>
+                        <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
@@ -470,6 +508,15 @@ export function DvlaView() {
         onOpenChange={setDialogOpen}
         registration={editingRegistration}
         onSuccess={handleDialogSuccess}
+      />
+
+      {/* Detail Sheet */}
+      <DvlaDetailSheet
+        registrationId={selectedRegistrationId}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        onEdit={handleDetailEdit}
+        onDeleted={handleDetailDeleted}
       />
     </motion.div>
   )

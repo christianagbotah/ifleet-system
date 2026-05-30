@@ -110,7 +110,9 @@ export const ModelName = {
   VehicleInspection: 'VehicleInspection',
   WarehouseItem: 'WarehouseItem',
   WeightVerification: 'WeightVerification',
-  ZoneRate: 'ZoneRate'
+  ZoneRate: 'ZoneRate',
+  DvlaRenewalHistory: 'DvlaRenewalHistory',
+  InsuranceRenewalHistory: 'InsuranceRenewalHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1432,6 +1434,32 @@ export const ZoneRateScalarFieldEnum = {
 export type ZoneRateScalarFieldEnum = (typeof ZoneRateScalarFieldEnum)[keyof typeof ZoneRateScalarFieldEnum]
 
 
+export const DvlaRenewalHistoryScalarFieldEnum = {
+  id: 'id',
+  dvlaRegistrationId: 'dvlaRegistrationId',
+  previousData: 'previousData',
+  renewalFee: 'renewalFee',
+  renewedByName: 'renewedByName',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type DvlaRenewalHistoryScalarFieldEnum = (typeof DvlaRenewalHistoryScalarFieldEnum)[keyof typeof DvlaRenewalHistoryScalarFieldEnum]
+
+
+export const InsuranceRenewalHistoryScalarFieldEnum = {
+  id: 'id',
+  insuranceId: 'insuranceId',
+  previousData: 'previousData',
+  renewalFee: 'renewalFee',
+  renewedByName: 'renewedByName',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type InsuranceRenewalHistoryScalarFieldEnum = (typeof InsuranceRenewalHistoryScalarFieldEnum)[keyof typeof InsuranceRenewalHistoryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2333,4 +2361,26 @@ export const ZoneRateOrderByRelevanceFieldEnum = {
 } as const
 
 export type ZoneRateOrderByRelevanceFieldEnum = (typeof ZoneRateOrderByRelevanceFieldEnum)[keyof typeof ZoneRateOrderByRelevanceFieldEnum]
+
+
+export const DvlaRenewalHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dvlaRegistrationId: 'dvlaRegistrationId',
+  previousData: 'previousData',
+  renewedByName: 'renewedByName',
+  notes: 'notes'
+} as const
+
+export type DvlaRenewalHistoryOrderByRelevanceFieldEnum = (typeof DvlaRenewalHistoryOrderByRelevanceFieldEnum)[keyof typeof DvlaRenewalHistoryOrderByRelevanceFieldEnum]
+
+
+export const InsuranceRenewalHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  insuranceId: 'insuranceId',
+  previousData: 'previousData',
+  renewedByName: 'renewedByName',
+  notes: 'notes'
+} as const
+
+export type InsuranceRenewalHistoryOrderByRelevanceFieldEnum = (typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum)[keyof typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum]
 

@@ -12,6 +12,10 @@ import jsPDF from 'jspdf'
 import { db } from '@/lib/db'
 import { fmtDate, fmtDateTime } from './pdf-generator'
 import { APP_NAME, APP_COMPANY, APP_TAGLINE } from '@/lib/constants'
+import { registerFonts, getFontFamily } from './pdf-font'
+import { CEDI } from './csv-generator'
+
+const FF = getFontFamily()
 
 // ── Brand Colors ──
 const C = {
@@ -44,6 +48,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   }
 
   const doc = new jsPDF({ orientation: 'portrait', format: 'a4', unit: 'mm' })
+  registerFonts(doc)
   const pw = 210 // A4 width
   const margin = 15
   const contentW = pw - margin * 2
@@ -53,12 +58,12 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFillColor(...C.amber)
   doc.rect(0, 0, pw, 20, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(16)
   doc.setTextColor(...C.white)
   doc.text(APP_NAME, margin, 13)
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.text(APP_TAGLINE, pw - margin, 8, { align: 'right' })
   doc.text('37 Ring Road Central, Accra, Ghana', pw - margin, 13, { align: 'right' })
@@ -67,7 +72,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   y = 25
 
   // ── 2. WAYBILL Title ──
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(20)
   doc.setTextColor(...C.amber)
   doc.text('WAYBILL', margin, y)
@@ -75,7 +80,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
 
   // Waybill number and date on same line
   const waybillNum = trip.waybillNumber || `WB-${tripId.slice(-8).toUpperCase()}`
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(`Waybill No: ${waybillNum}`, margin, y)
@@ -92,17 +97,17 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFillColor(...C.light)
   doc.roundedRect(margin, y, contentW, 22, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('SHIPPER (FROM)', margin + 4, y + 5)
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(APP_COMPANY, margin + 4, y + 11)
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.gray)
   doc.text('37 Ring Road Central, Accra, Ghana', margin + 4, y + 16)
@@ -113,17 +118,17 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFillColor(245, 245, 244)
   doc.roundedRect(margin, y, contentW, 22, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('CONSIGNEE (TO)', margin + 4, y + 5)
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(trip.client?.companyName || trip.customerName || 'N/A', margin + 4, y + 11)
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.gray)
   const clientContact = trip.client?.contactPerson || 'N/A'
@@ -134,7 +139,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   y += 26
 
   // ── 5. Route Section ──
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('ROUTE', margin, y)
@@ -150,27 +155,27 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.rect(margin, y, 2, routeBoxH, 'F')
 
   // From
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(7)
   doc.setTextColor(...C.gray)
   doc.text('FROM', margin + 6, y + 4)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(trip.loadingLocation, margin + 6, y + 10)
 
   // Arrow
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(14)
   doc.setTextColor(...C.amber)
   doc.text('\u2192', pw / 2, y + 10, { align: 'center' })
 
   // To
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(7)
   doc.setTextColor(...C.gray)
   doc.text('TO', pw - margin - 50, y + 4)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(trip.destination, pw - margin - 50, y + 10)
@@ -178,7 +183,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   y += routeBoxH + 6
 
   // ── 6. Cargo Details ──
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('CARGO DETAILS', margin, y)
@@ -191,18 +196,18 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   const cargoRows = [
     ['Description', trip.itemName],
     ['Quantity', `${trip.quantity} ${trip.unit}`],
-    ['Unit Price', trip.unitPrice ? `GHS ${trip.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
-    ['Total Value', trip.totalRevenue ? `GHS ${trip.totalRevenue.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
+    ['Unit Price', trip.unitPrice ? `${CEDI}${trip.unitPrice.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
+    ['Total Value', trip.totalRevenue ? `${CEDI}${trip.totalRevenue.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'],
   ]
 
   cargoRows.forEach((row, idx) => {
     const ry = y + 5 + idx * 4
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.gray)
     doc.text(`${row[0]}:`, margin + 6, ry)
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(9)
     doc.setTextColor(...C.dark)
     doc.text(row[1], margin + 45, ry)
@@ -211,7 +216,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   y += 24
 
   // ── 7. Vehicle & Driver Info ──
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('VEHICLE & DRIVER', margin, y)
@@ -224,16 +229,16 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFillColor(245, 245, 244)
   doc.roundedRect(margin, y, colW, 24, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(7)
   doc.setTextColor(...C.gray)
   doc.text('VEHICLE', margin + 4, y + 5)
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(`${trip.truck.plateNumber}`, margin + 4, y + 11)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.gray)
   doc.text(`${trip.truck.make} ${trip.truck.model}`, margin + 4, y + 16)
@@ -243,16 +248,16 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFillColor(245, 245, 244)
   doc.roundedRect(margin + colW + 8, y, colW, 24, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(7)
   doc.setTextColor(...C.gray)
   doc.text('DRIVER', margin + colW + 12, y + 5)
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
   doc.text(`${trip.driver.firstName} ${trip.driver.lastName}`, margin + colW + 12, y + 11)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.gray)
   doc.text(`ID: ${trip.driver.employeeId}`, margin + colW + 12, y + 16)
@@ -261,7 +266,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   y += 28
 
   // ── 8. Trip Reference Info ──
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('TRIP INFORMATION', margin, y)
@@ -279,7 +284,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
 
   tripInfo.forEach((info, idx) => {
     const iy = y + 5 + idx * 3.5
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(8)
     doc.setTextColor(...C.dark)
     doc.text(info, margin + 5, iy)
@@ -288,7 +293,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   y += 20
 
   // ── 9. Special Instructions / Notes ──
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('SPECIAL INSTRUCTIONS / NOTES', margin, y)
@@ -297,7 +302,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFillColor(245, 245, 244)
   doc.roundedRect(margin, y, contentW, 14, 2, 2, 'F')
 
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.dark)
   const notes = trip.notes || 'No special instructions.'
@@ -313,7 +318,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
       y = 20
     }
 
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(8)
     doc.setTextColor(...C.amber)
     doc.text('DELIVERY STOPS', margin, y)
@@ -323,7 +328,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
     doc.roundedRect(margin, y, contentW, 6 + trip.deliveryStops.length * 6, 2, 2, 'F')
 
     // Header
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FF, 'bold')
     doc.setFontSize(7)
     doc.setTextColor(...C.gray)
     doc.text('Stop', margin + 5, y + 4)
@@ -334,7 +339,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
 
     trip.deliveryStops.forEach((stop, idx) => {
       const sy = y + 10 + idx * 6
-      doc.setFont('helvetica', 'normal')
+      doc.setFont(FF, 'normal')
       doc.setFontSize(7)
       doc.setTextColor(...C.dark)
       doc.text(`#${stop.stopOrder}`, margin + 5, sy)
@@ -353,7 +358,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
     y = 20
   }
 
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FF, 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...C.amber)
   doc.text('AUTHORIZATION', margin, y)
@@ -365,7 +370,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setDrawColor(...C.border)
   doc.setLineWidth(0.3)
   doc.line(margin, y + 15, margin + sigW, y + 15)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FF, 'normal')
   doc.setFontSize(7)
   doc.setTextColor(...C.gray)
   doc.text('Prepared By', margin, y + 20)
@@ -391,7 +396,7 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
     doc.setLineWidth(0.3)
     doc.line(margin, ph - 15, pw - margin, ph - 15)
 
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FF, 'normal')
     doc.setFontSize(7)
     doc.setTextColor(...C.gray)
     doc.text(`Waybill ${waybillNum} | ${APP_NAME} \u2014 Confidential`, margin, ph - 10)

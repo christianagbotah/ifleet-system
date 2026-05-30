@@ -102,6 +102,7 @@ async function generateExcelReport(type: string, params: ReportParams): Promise<
     trip_profitability: (p) => buildTripProfitabilityReport(p),
     fuel_analytics: (p) => buildFuelAnalyticsReport(p),
     safety_scoring: (p) => buildSafetyScoringReport(p),
+    fleet_profit_loss: (p) => buildFleetProfitLossFromCsv(p),
   }
 
   const builder = builders[type]
@@ -120,7 +121,7 @@ async function generatePdfReport(type: string, params: ReportParams): Promise<Bu
     import('@/lib/reports/pdf-builders-new'),
   ])
 
-  const builders: Record<string, (params: ReportParams) => Promise<{ toBuffer: () => Promise<Buffer> }>> = {
+  const builders: Record<string, (params: ReportParams) => Promise<{ output: (type: string) => ArrayBuffer }>> = {
     trip_summary: (p) => buildTripSummaryPdf(p),
     fuel_report: (p) => buildFuelReportPdf(p),
     expense_report: (p) => buildExpenseReportPdf(p),
@@ -146,22 +147,119 @@ async function generatePdfReport(type: string, params: ReportParams): Promise<Bu
     trip_profitability: (p) => buildTripProfitabilityReportPdf(p),
     fuel_analytics: (p) => buildFuelAnalyticsReportPdf(p),
     safety_scoring: (p) => buildSafetyScoringReportPdf(p),
+    fleet_profit_loss: (p) => buildFleetProfitLossPdfFromCsv(p),
   }
 
   const builder = builders[type]
   if (!builder) throw new Error(`Unsupported report type for PDF: ${type}`)
 
-  const report = await builder(params)
-  return report.toBuffer()
+  const pdf = await builder(params)
+  return Buffer.from(pdf.output('arraybuffer'))
+}
+
+// ─── Generic CSV-to-Excel builder for fleet_profit_loss ─────────────────
+async function buildFleetProfitLossFromCsv(params: ReportParams): Promise<{ toBuffer: () => Promise<Buffer> }> {
+  const ExcelJS = (await import('exceljs')).default
+  const { fetchFleetProfitLossData } = await import('@/lib/reports/report-data-new')
+  const data = await fetchFleetProfitLossData(params)
+
+  const workbook = new ExcelJS.Workbook()
+  workbook.creator = 'iFleet Pro'
+  const sheet = workbook.addWorksheet('Fleet Profit & Loss')
+
+  // Style the header row
+  const headerRow = sheet.addRow(data.headers)
+  headerRow.eachCell((cell) => {
+    cell.font = { bold: true, size: 11 }
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8F5E9' } }
+    cell.alignment = { horizontal: 'center' }
+    cell.border = {
+      bottom: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+    }
+  })
+
+  // Add data rows
+  for (const row of data.rows) {
+    sheet.addRow(row.map((v) => v ?? ''))
+  }
+
+  // Auto-fit columns (approximate)
+  data.headers.forEach((h, i) => {
+    const col = sheet.getColumn(i + 1)
+    col.width = Math.max(h.length + 2, 14)
+  })
+
+  const buffer = await workbook.xlsx.writeBuffer()
+  return { toBuffer: () => Promise.resolve(Buffer.from(buffer)) }
+}
+
+// ─── Generic CSV-to-PDF builder for fleet_profit_loss ──────────────────
+async function buildFleetProfitLossPdfFromCsv(params: ReportParams): Promise<{ output: (type: string) => ArrayBuffer }> {
+  const jsPDF = (await import('jspdf')).default
+  const autoTable = (await import('jspdf-autotable')).default
+  const { fetchFleetProfitLossData } = await import('@/lib/reports/report-data-new')
+  const data = await fetchFleetProfitLossData(params)
+
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+
+  // Title
+  doc.setFontSize(18)
+  doc.setTextColor(30, 30, 30)
+  doc.text('Fleet Profit & Loss Report', 14, 20)
+
+  // Date range subtitle
+  doc.setFontSize(10)
+  doc.setTextColor(100, 100, 100)
+  const dateRange = params.dateFrom && params.dateTo
+    ? `${params.dateFrom} to ${params.dateTo}`
+    : new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  doc.text(`Period: ${dateRange}`, 14, 28)
+
+  // Generated timestamp
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 34)
+
+  // Draw table
+  autoTable(doc, {
+    startY: 40,
+    head: [data.headers],
+    body: data.rows.map((row) => row.map((v) => v ?? '')),
+    styles: { fontSize: 8, cellPadding: 3 },
+    headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
+    margin: { left: 14, right: 14 },
+  })
+
+  // Footer
+  const pageCount = doc.getNumberOfPages()
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.setFontSize(8)
+    doc.setTextColor(150, 150, 150)
+    doc.text(
+      `iFleet Pro — Fleet Management System | Page ${i} of ${pageCount}`,
+      doc.internal.pageSize.getWidth() / 2,
+      doc.internal.pageSize.getHeight() - 10,
+      { align: 'center' }
+    )
+  }
+
+  return { output: (type: string) => doc.output(type) as ArrayBuffer }
 }
 
 export async function POST(request: NextRequest) {
   const auth = requireAuth(request)
   if (auth instanceof NextResponse) return auth
 
+  let reportType = 'unknown'
+  let reportFormat = 'unknown'
+  let reportParams: ReportParams = {}
+
   try {
     const body = await request.json()
     const { type, format, params = {} } = body as { type: string; format: string; params: ReportParams }
+    reportType = type || 'unknown'
+    reportFormat = format || 'unknown'
+    reportParams = params
 
     if (!type || !format) {
       return NextResponse.json({ error: 'Missing required fields: type, format' }, { status: 400 })
@@ -185,25 +283,42 @@ export async function POST(request: NextRequest) {
 
     // Handle waybill specially — uses dedicated PDF builder
     if (type === 'waybill_report' && format === 'pdf') {
-      const { buildWaybillPdf } = await import('@/lib/reports/waybill-pdf')
-      const pdf = await buildWaybillPdf(params.tripId!)
-      content = pdf.toBuffer()
-      fileSize = (content as Buffer).length
+      try {
+        const { buildWaybillPdf } = await import('@/lib/reports/waybill-pdf')
+        const pdf = await buildWaybillPdf(params.tripId!)
+        const buffer = Buffer.from(pdf.output('arraybuffer'))
+        content = buffer
+        fileSize = buffer.length
+      } catch (err) {
+        throw new Error(`Waybill PDF generation failed: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else if (format === 'csv') {
-      const result = await generateCsvReport(type, params)
-      content = result.content
-      fileSize = Buffer.byteLength(content, 'utf-8')
+      try {
+        const result = await generateCsvReport(type, params)
+        content = result.content
+        fileSize = Buffer.byteLength(content, 'utf-8')
+      } catch (err) {
+        throw new Error(`CSV data fetch failed for ${type}: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else if (format === 'xlsx') {
-      content = await generateExcelReport(type, params)
-      fileSize = (content as Buffer).length
+      try {
+        content = await generateExcelReport(type, params)
+        fileSize = (content as Buffer).length
+      } catch (err) {
+        throw new Error(`Excel generation failed for ${type}: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else if (format === 'pdf') {
-      content = await generatePdfReport(type, params)
-      fileSize = (content as Buffer).length
+      try {
+        content = await generatePdfReport(type, params)
+        fileSize = (content as Buffer).length
+      } catch (err) {
+        throw new Error(`PDF generation failed for ${type}: ${err instanceof Error ? err.message : String(err)}`)
+      }
     } else {
       return NextResponse.json({ error: 'Unsupported format' }, { status: 400 })
     }
 
-    // Save report history
+    // Save report history (non-blocking — don't fail the whole request if history save fails)
     const titleMap: Record<string, string> = {
       trip_summary: 'Trip Summary Report',
       fuel_report: 'Fuel Report',
@@ -235,17 +350,22 @@ export async function POST(request: NextRequest) {
       fleet_profit_loss: 'Fleet Profit & Loss Report',
     }
 
-    await db.reportHistory.create({
-      data: {
-        type,
-        title: titleMap[type] || type,
-        format,
-        parameters: JSON.stringify(params),
-        generatedBy: auth.email,
-        fileSize,
-        status: 'completed',
-      },
-    })
+    try {
+      await db.reportHistory.create({
+        data: {
+          type,
+          title: titleMap[type] || type,
+          format,
+          parameters: JSON.stringify(params),
+          generatedBy: auth.email,
+          fileSize,
+          status: 'completed',
+        },
+      })
+    } catch (historyErr) {
+      console.error('[Reports] Failed to save report history:', historyErr instanceof Error ? historyErr.message : String(historyErr))
+      // Don't fail the request — the report was generated successfully
+    }
 
     const filename = generateReportFilename(type, format)
     const contentType = CONTENT_TYPES[format] || 'application/octet-stream'
@@ -258,28 +378,33 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('[Reports] Generation failed:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorName = error instanceof Error ? error.constructor.name : 'Error'
+    const errorStack = error instanceof Error ? error.stack : ''
+    console.error(`[Reports] Generation failed for type=${reportType} format=${reportFormat}:`)
+    console.error('  Error:', errorName, '-', errorMessage)
+    if (errorStack) console.error('  Stack:', errorStack)
 
     // Save failed report history
     try {
-      const body = await request.clone().json().catch(() => ({}))
       await db.reportHistory.create({
         data: {
-          type: (body as { type?: string }).type || 'unknown',
-          title: `Failed: ${(body as { type?: string }).type || 'unknown'}`,
-          format: (body as { format?: string }).format || 'unknown',
-          parameters: JSON.stringify((body as { params?: ReportParams }).params || {}),
+          type: reportType,
+          title: `Failed: ${reportType}`,
+          format: reportFormat,
+          parameters: JSON.stringify(reportParams),
           generatedBy: auth.email,
           status: 'failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: errorMessage,
         },
       })
     } catch {
       // ignore history save failure
     }
 
+    // Return a descriptive error to help the user understand what went wrong
     return NextResponse.json(
-      { error: 'Failed to generate report. Please try again.' },
+      { error: `Report generation failed: ${errorMessage}` },
       { status: 500 }
     )
   }

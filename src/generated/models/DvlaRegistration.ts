@@ -437,6 +437,7 @@ export type DvlaRegistrationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryListRelationFilter
 }
 
 export type DvlaRegistrationOrderByWithRelationInput = {
@@ -471,6 +472,7 @@ export type DvlaRegistrationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   truck?: Prisma.TruckOrderByWithRelationInput
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryOrderByRelationAggregateInput
   _relevance?: Prisma.DvlaRegistrationOrderByRelevanceInput
 }
 
@@ -509,6 +511,7 @@ export type DvlaRegistrationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryListRelationFilter
 }, "id" | "registrationNumber" | "certificateNumber">
 
 export type DvlaRegistrationOrderByWithAggregationInput = {
@@ -616,6 +619,7 @@ export type DvlaRegistrationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   truck: Prisma.TruckCreateNestedOneWithoutDvlaRegistrationInput
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryCreateNestedManyWithoutDvlaRegistrationInput
 }
 
 export type DvlaRegistrationUncheckedCreateInput = {
@@ -649,6 +653,7 @@ export type DvlaRegistrationUncheckedCreateInput = {
   reminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryUncheckedCreateNestedManyWithoutDvlaRegistrationInput
 }
 
 export type DvlaRegistrationUpdateInput = {
@@ -682,6 +687,7 @@ export type DvlaRegistrationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   truck?: Prisma.TruckUpdateOneRequiredWithoutDvlaRegistrationNestedInput
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryUpdateManyWithoutDvlaRegistrationNestedInput
 }
 
 export type DvlaRegistrationUncheckedUpdateInput = {
@@ -715,6 +721,7 @@ export type DvlaRegistrationUncheckedUpdateInput = {
   reminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryUncheckedUpdateManyWithoutDvlaRegistrationNestedInput
 }
 
 export type DvlaRegistrationCreateManyInput = {
@@ -948,6 +955,11 @@ export type DvlaRegistrationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type DvlaRegistrationScalarRelationFilter = {
+  is?: Prisma.DvlaRegistrationWhereInput
+  isNot?: Prisma.DvlaRegistrationWhereInput
+}
+
 export type DvlaRegistrationCreateNestedManyWithoutTruckInput = {
   create?: Prisma.XOR<Prisma.DvlaRegistrationCreateWithoutTruckInput, Prisma.DvlaRegistrationUncheckedCreateWithoutTruckInput> | Prisma.DvlaRegistrationCreateWithoutTruckInput[] | Prisma.DvlaRegistrationUncheckedCreateWithoutTruckInput[]
   connectOrCreate?: Prisma.DvlaRegistrationCreateOrConnectWithoutTruckInput | Prisma.DvlaRegistrationCreateOrConnectWithoutTruckInput[]
@@ -990,6 +1002,20 @@ export type DvlaRegistrationUncheckedUpdateManyWithoutTruckNestedInput = {
   deleteMany?: Prisma.DvlaRegistrationScalarWhereInput | Prisma.DvlaRegistrationScalarWhereInput[]
 }
 
+export type DvlaRegistrationCreateNestedOneWithoutDvlaRenewalHistoryInput = {
+  create?: Prisma.XOR<Prisma.DvlaRegistrationCreateWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUncheckedCreateWithoutDvlaRenewalHistoryInput>
+  connectOrCreate?: Prisma.DvlaRegistrationCreateOrConnectWithoutDvlaRenewalHistoryInput
+  connect?: Prisma.DvlaRegistrationWhereUniqueInput
+}
+
+export type DvlaRegistrationUpdateOneRequiredWithoutDvlaRenewalHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.DvlaRegistrationCreateWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUncheckedCreateWithoutDvlaRenewalHistoryInput>
+  connectOrCreate?: Prisma.DvlaRegistrationCreateOrConnectWithoutDvlaRenewalHistoryInput
+  upsert?: Prisma.DvlaRegistrationUpsertWithoutDvlaRenewalHistoryInput
+  connect?: Prisma.DvlaRegistrationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DvlaRegistrationUpdateToOneWithWhereWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUpdateWithoutDvlaRenewalHistoryInput>, Prisma.DvlaRegistrationUncheckedUpdateWithoutDvlaRenewalHistoryInput>
+}
+
 export type DvlaRegistrationCreateWithoutTruckInput = {
   id?: string
   registrationNumber: string
@@ -1020,6 +1046,7 @@ export type DvlaRegistrationCreateWithoutTruckInput = {
   reminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryCreateNestedManyWithoutDvlaRegistrationInput
 }
 
 export type DvlaRegistrationUncheckedCreateWithoutTruckInput = {
@@ -1052,6 +1079,7 @@ export type DvlaRegistrationUncheckedCreateWithoutTruckInput = {
   reminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryUncheckedCreateNestedManyWithoutDvlaRegistrationInput
 }
 
 export type DvlaRegistrationCreateOrConnectWithoutTruckInput = {
@@ -1116,6 +1144,154 @@ export type DvlaRegistrationScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DvlaRegistration"> | Date | string
 }
 
+export type DvlaRegistrationCreateWithoutDvlaRenewalHistoryInput = {
+  id?: string
+  registrationNumber: string
+  certificateNumber: string
+  vehicleClass: string
+  bodyType?: string | null
+  axleConfiguration?: string | null
+  grossVehicleWeight?: number | null
+  unladenWeight?: number | null
+  seatingCapacity?: number | null
+  engineCapacity?: string | null
+  yearOfManufacture?: number | null
+  countryOfOrigin?: string | null
+  registeredOwner: string
+  ownerAddress?: string | null
+  ownerContact?: string | null
+  dvlaOffice?: string | null
+  registrationDate: Date | string
+  expiryDate: Date | string
+  lastRenewalDate?: Date | string | null
+  nextRenewalDue?: Date | string | null
+  registrationFee?: number | null
+  renewalFee?: number | null
+  status?: string
+  documentUrl?: string | null
+  transferHistory?: string | null
+  notes?: string | null
+  reminderSent?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  truck: Prisma.TruckCreateNestedOneWithoutDvlaRegistrationInput
+}
+
+export type DvlaRegistrationUncheckedCreateWithoutDvlaRenewalHistoryInput = {
+  id?: string
+  truckId: string
+  registrationNumber: string
+  certificateNumber: string
+  vehicleClass: string
+  bodyType?: string | null
+  axleConfiguration?: string | null
+  grossVehicleWeight?: number | null
+  unladenWeight?: number | null
+  seatingCapacity?: number | null
+  engineCapacity?: string | null
+  yearOfManufacture?: number | null
+  countryOfOrigin?: string | null
+  registeredOwner: string
+  ownerAddress?: string | null
+  ownerContact?: string | null
+  dvlaOffice?: string | null
+  registrationDate: Date | string
+  expiryDate: Date | string
+  lastRenewalDate?: Date | string | null
+  nextRenewalDue?: Date | string | null
+  registrationFee?: number | null
+  renewalFee?: number | null
+  status?: string
+  documentUrl?: string | null
+  transferHistory?: string | null
+  notes?: string | null
+  reminderSent?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DvlaRegistrationCreateOrConnectWithoutDvlaRenewalHistoryInput = {
+  where: Prisma.DvlaRegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.DvlaRegistrationCreateWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUncheckedCreateWithoutDvlaRenewalHistoryInput>
+}
+
+export type DvlaRegistrationUpsertWithoutDvlaRenewalHistoryInput = {
+  update: Prisma.XOR<Prisma.DvlaRegistrationUpdateWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUncheckedUpdateWithoutDvlaRenewalHistoryInput>
+  create: Prisma.XOR<Prisma.DvlaRegistrationCreateWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUncheckedCreateWithoutDvlaRenewalHistoryInput>
+  where?: Prisma.DvlaRegistrationWhereInput
+}
+
+export type DvlaRegistrationUpdateToOneWithWhereWithoutDvlaRenewalHistoryInput = {
+  where?: Prisma.DvlaRegistrationWhereInput
+  data: Prisma.XOR<Prisma.DvlaRegistrationUpdateWithoutDvlaRenewalHistoryInput, Prisma.DvlaRegistrationUncheckedUpdateWithoutDvlaRenewalHistoryInput>
+}
+
+export type DvlaRegistrationUpdateWithoutDvlaRenewalHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  certificateNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  vehicleClass?: Prisma.StringFieldUpdateOperationsInput | string
+  bodyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  axleConfiguration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grossVehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unladenWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  seatingCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  engineCapacity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearOfManufacture?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  countryOfOrigin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registeredOwner?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dvlaOffice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  truck?: Prisma.TruckUpdateOneRequiredWithoutDvlaRegistrationNestedInput
+}
+
+export type DvlaRegistrationUncheckedUpdateWithoutDvlaRenewalHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  certificateNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  vehicleClass?: Prisma.StringFieldUpdateOperationsInput | string
+  bodyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  axleConfiguration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grossVehicleWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  unladenWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  seatingCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  engineCapacity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearOfManufacture?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  countryOfOrigin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registeredOwner?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dvlaOffice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastRenewalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nextRenewalDue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  renewalFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type DvlaRegistrationCreateManyTruckInput = {
   id?: string
   registrationNumber: string
@@ -1178,6 +1354,7 @@ export type DvlaRegistrationUpdateWithoutTruckInput = {
   reminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryUpdateManyWithoutDvlaRegistrationNestedInput
 }
 
 export type DvlaRegistrationUncheckedUpdateWithoutTruckInput = {
@@ -1210,6 +1387,7 @@ export type DvlaRegistrationUncheckedUpdateWithoutTruckInput = {
   reminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  DvlaRenewalHistory?: Prisma.DvlaRenewalHistoryUncheckedUpdateManyWithoutDvlaRegistrationNestedInput
 }
 
 export type DvlaRegistrationUncheckedUpdateManyWithoutTruckInput = {
@@ -1245,6 +1423,35 @@ export type DvlaRegistrationUncheckedUpdateManyWithoutTruckInput = {
 }
 
 
+/**
+ * Count Type DvlaRegistrationCountOutputType
+ */
+
+export type DvlaRegistrationCountOutputType = {
+  DvlaRenewalHistory: number
+}
+
+export type DvlaRegistrationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  DvlaRenewalHistory?: boolean | DvlaRegistrationCountOutputTypeCountDvlaRenewalHistoryArgs
+}
+
+/**
+ * DvlaRegistrationCountOutputType without action
+ */
+export type DvlaRegistrationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DvlaRegistrationCountOutputType
+   */
+  select?: Prisma.DvlaRegistrationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DvlaRegistrationCountOutputType without action
+ */
+export type DvlaRegistrationCountOutputTypeCountDvlaRenewalHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DvlaRenewalHistoryWhereInput
+}
+
 
 export type DvlaRegistrationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1278,6 +1485,8 @@ export type DvlaRegistrationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdAt?: boolean
   updatedAt?: boolean
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
+  DvlaRenewalHistory?: boolean | Prisma.DvlaRegistration$DvlaRenewalHistoryArgs<ExtArgs>
+  _count?: boolean | Prisma.DvlaRegistrationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dvlaRegistration"]>
 
 
@@ -1318,12 +1527,15 @@ export type DvlaRegistrationSelectScalar = {
 export type DvlaRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "truckId" | "registrationNumber" | "certificateNumber" | "vehicleClass" | "bodyType" | "axleConfiguration" | "grossVehicleWeight" | "unladenWeight" | "seatingCapacity" | "engineCapacity" | "yearOfManufacture" | "countryOfOrigin" | "registeredOwner" | "ownerAddress" | "ownerContact" | "dvlaOffice" | "registrationDate" | "expiryDate" | "lastRenewalDate" | "nextRenewalDue" | "registrationFee" | "renewalFee" | "status" | "documentUrl" | "transferHistory" | "notes" | "reminderSent" | "createdAt" | "updatedAt", ExtArgs["result"]["dvlaRegistration"]>
 export type DvlaRegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
+  DvlaRenewalHistory?: boolean | Prisma.DvlaRegistration$DvlaRenewalHistoryArgs<ExtArgs>
+  _count?: boolean | Prisma.DvlaRegistrationCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $DvlaRegistrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DvlaRegistration"
   objects: {
     truck: Prisma.$TruckPayload<ExtArgs>
+    DvlaRenewalHistory: Prisma.$DvlaRenewalHistoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1697,6 +1909,7 @@ readonly fields: DvlaRegistrationFieldRefs;
 export interface Prisma__DvlaRegistrationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   truck<T extends Prisma.TruckDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TruckDefaultArgs<ExtArgs>>): Prisma.Prisma__TruckClient<runtime.Types.Result.GetResult<Prisma.$TruckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  DvlaRenewalHistory<T extends Prisma.DvlaRegistration$DvlaRenewalHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DvlaRegistration$DvlaRenewalHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DvlaRenewalHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2101,6 +2314,30 @@ export type DvlaRegistrationDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many DvlaRegistrations to delete.
    */
   limit?: number
+}
+
+/**
+ * DvlaRegistration.DvlaRenewalHistory
+ */
+export type DvlaRegistration$DvlaRenewalHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DvlaRenewalHistory
+   */
+  select?: Prisma.DvlaRenewalHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DvlaRenewalHistory
+   */
+  omit?: Prisma.DvlaRenewalHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DvlaRenewalHistoryInclude<ExtArgs> | null
+  where?: Prisma.DvlaRenewalHistoryWhereInput
+  orderBy?: Prisma.DvlaRenewalHistoryOrderByWithRelationInput | Prisma.DvlaRenewalHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.DvlaRenewalHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DvlaRenewalHistoryScalarFieldEnum | Prisma.DvlaRenewalHistoryScalarFieldEnum[]
 }
 
 /**

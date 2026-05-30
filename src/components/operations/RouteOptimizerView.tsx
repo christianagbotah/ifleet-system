@@ -395,7 +395,7 @@ export function RouteOptimizerView() {
                 {/* Cost Parameters */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-muted-foreground">Fuel Price (₵/L)</Label>
+                    <Label className="text-xs font-medium text-muted-foreground">Fuel Price (\u20B5/L)</Label>
                     <Input
                       type="number"
                       value={fuelPrice}
@@ -573,8 +573,8 @@ export function RouteOptimizerView() {
                             </div>
                             <span className="text-xs text-muted-foreground font-medium">Fuel Cost</span>
                           </div>
-                          <p className="text-2xl font-bold">₵{result.fuelEstimate.costAtCurrentPrice.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">{result.fuelEstimate.liters}L @ ₵{fuelPrice}/L</p>
+                          <p className="text-2xl font-bold">\u20B5{result.fuelEstimate.costAtCurrentPrice.toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground">{result.fuelEstimate.liters}L @ \u20B5{fuelPrice}/L</p>
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -593,9 +593,9 @@ export function RouteOptimizerView() {
                             <span className="text-xs text-muted-foreground font-medium">Total Cost</span>
                           </div>
                           <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">
-                            ₵{(result.fuelEstimate.costAtCurrentPrice + result.route.tollCost).toLocaleString()}
+                            \u20B5{(result.fuelEstimate.costAtCurrentPrice + result.route.tollCost).toLocaleString()}
                           </p>
-                          <p className="text-xs text-muted-foreground">incl. ₵{result.route.tollCost} tolls</p>
+                          <p className="text-xs text-muted-foreground">incl. \u20B5{result.route.tollCost} tolls</p>
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -656,8 +656,8 @@ export function RouteOptimizerView() {
                                       </td>
                                       <td className="text-right px-4 py-2.5 font-mono">{leg.distanceKm} km</td>
                                       <td className="text-right px-4 py-2.5">{leg.estimatedHours}h</td>
-                                      <td className="text-right px-4 py-2.5">₵{leg.tollCost}</td>
-                                      <td className="text-right px-4 py-2.5 font-medium">₵{leg.totalCost}</td>
+                                      <td className="text-right px-4 py-2.5">\u20B5{leg.tollCost}</td>
+                                      <td className="text-right px-4 py-2.5 font-medium">\u20B5{leg.totalCost}</td>
                                     </tr>
                                   ))}
                                 </tbody>
@@ -677,9 +677,9 @@ export function RouteOptimizerView() {
                                 <div className="flex items-center gap-3 text-sm">
                                   <span className="text-muted-foreground">{leg.distanceKm} km</span>
                                   <span className="text-muted-foreground">{leg.estimatedHours}h</span>
-                                  <span className="text-muted-foreground">Toll ₵{leg.tollCost}</span>
+                                  <span className="text-muted-foreground">Toll \u20B5{leg.tollCost}</span>
                                 </div>
-                                <p className="font-semibold text-sm">₵{leg.totalCost}</p>
+                                <p className="font-semibold text-sm">\u20B5{leg.totalCost}</p>
                               </div>
                             ))}
                           </div>
@@ -693,9 +693,9 @@ export function RouteOptimizerView() {
                             <Fuel className="h-3.5 w-3.5 text-sky-500" />
                             <span className="text-xs font-medium text-muted-foreground">Fuel</span>
                           </div>
-                          <p className="text-lg font-bold">₵{result.fuelEstimate.costAtCurrentPrice.toLocaleString()}</p>
+                          <p className="text-lg font-bold">\u20B5{result.fuelEstimate.costAtCurrentPrice.toLocaleString()}</p>
                           <p className="text-[11px] text-muted-foreground">
-                            {result.fuelEstimate.liters}L at ₵{fuelPrice}/L
+                            {result.fuelEstimate.liters}L at \u20B5{fuelPrice}/L
                             {parseFloat(cargoWeight) > 0 && (
                               <span className="text-amber-600 dark:text-amber-400">
                                 {' '}(+{result.fuelEstimate.weightAdjustment}L/100km for {cargoWeight}t)
@@ -708,7 +708,7 @@ export function RouteOptimizerView() {
                             <RouteIcon className="h-3.5 w-3.5 text-violet-500" />
                             <span className="text-xs font-medium text-muted-foreground">Tolls</span>
                           </div>
-                          <p className="text-lg font-bold">₵{result.route.tollCost.toLocaleString()}</p>
+                          <p className="text-lg font-bold">\u20B5{result.route.tollCost.toLocaleString()}</p>
                           <p className="text-[11px] text-muted-foreground">
                             {result.route.legs ? `${result.route.legs.length} toll point${result.route.legs.length > 1 ? 's' : ''}` : 'Ghana highway tolls'}
                           </p>
@@ -719,7 +719,7 @@ export function RouteOptimizerView() {
                             <span className="text-xs font-medium text-muted-foreground">Total Trip Cost</span>
                           </div>
                           <p className="text-lg font-bold text-amber-700 dark:text-amber-400">
-                            ₵{(result.fuelEstimate.costAtCurrentPrice + result.route.tollCost).toLocaleString()}
+                            \u20B5{(result.fuelEstimate.costAtCurrentPrice + result.route.tollCost).toLocaleString()}
                           </p>
                           <p className="text-[11px] text-muted-foreground">
                             Fuel + Tolls (one-way)
@@ -762,10 +762,10 @@ export function RouteOptimizerView() {
                                     {alt.totalDistance} km
                                   </span>
                                   <div className="flex items-center gap-1">
-                                    <span className="font-medium">₵{alt.totalCost.toLocaleString()}</span>
+                                    <span className="font-medium">\u20B5{alt.totalCost.toLocaleString()}</span>
                                     {isCheaper && (
                                       <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-300 dark:text-emerald-400 dark:border-emerald-700">
-                                        -₵{Math.abs(costDiff).toLocaleString()}
+                                        -\u20B5{Math.abs(costDiff).toLocaleString()}
                                       </Badge>
                                     )}
                                   </div>
@@ -912,7 +912,7 @@ export function RouteOptimizerView() {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Fuel Price per Liter (₵)</Label>
+                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Fuel Price per Liter (\u20B5)</Label>
                   <Input
                     type="number"
                     value={fuelPrice}
@@ -1002,9 +1002,9 @@ export function RouteOptimizerView() {
                               >
                                 <td className="px-4 py-2.5 font-medium">{route.label} <span className="text-xs text-muted-foreground ml-1">→ Plan</span></td>
                                 <td className="text-right px-4 py-2.5 font-mono">{dist} km</td>
-                                <td className="text-right px-4 py-2.5 font-mono">₵{Math.round(oneWayCost).toLocaleString()}</td>
+                                <td className="text-right px-4 py-2.5 font-mono">\u20B5{Math.round(oneWayCost).toLocaleString()}</td>
                                 <td className="text-right px-4 py-2.5 font-mono font-semibold text-amber-700 dark:text-amber-400">
-                                  ₵{Math.round(roundTrip).toLocaleString()}
+                                  \u20B5{Math.round(roundTrip).toLocaleString()}
                                 </td>
                               </tr>
                             )
@@ -1040,9 +1040,9 @@ export function RouteOptimizerView() {
                             <p className="font-semibold text-sm">{route.label} <span className="text-xs text-muted-foreground font-normal">→ Plan</span></p>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
                               <span>{dist} km</span>
-                              <span>One-way ₵{Math.round(oneWayCost).toLocaleString()}</span>
+                              <span>One-way \u20B5{Math.round(oneWayCost).toLocaleString()}</span>
                             </div>
-                            <p className="font-semibold text-sm text-amber-700 dark:text-amber-400">Round Trip ₵{Math.round(roundTrip).toLocaleString()}</p>
+                            <p className="font-semibold text-sm text-amber-700 dark:text-amber-400">Round Trip \u20B5{Math.round(roundTrip).toLocaleString()}</p>
                           </div>
                         )
                       })}
@@ -1058,7 +1058,7 @@ export function RouteOptimizerView() {
                   <div>
                     <h4 className="text-sm font-semibold text-amber-700 dark:text-amber-400">Ghana Fuel Price Tips</h4>
                     <ul className="text-xs text-muted-foreground mt-1 space-y-1 list-disc list-inside">
-                      <li>Diesel prices typically range from ₵14-16/liter at major fuel stations</li>
+                      <li>Diesel prices typically range from \u20B514-16/liter at major fuel stations</li>
                       <li>Tema and Accra industrial areas often have bulk pricing discounts</li>
                       <li>Fuel prices may be higher in northern regions (Tamale, Wa, Bolgatanga)</li>
                       <li>Consider carrying extra fuel for routes over 300km with limited stations</li>

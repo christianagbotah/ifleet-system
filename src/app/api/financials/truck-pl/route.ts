@@ -156,6 +156,22 @@ export async function GET(request: NextRequest) {
       },
     })
 
+    // ─── Fetch fuel logs in date range ───
+    const fuelLogWhere: Record<string, unknown> = {
+      date: { gte: startDate, lte: endDate },
+    }
+    if (truckId) fuelLogWhere.truckId = truckId
+
+    const fuelLogs = await db.fuelLog.findMany({
+      where: fuelLogWhere,
+      select: {
+        id: true,
+        truckId: true,
+        totalCost: true,
+        date: true,
+      },
+    })
+
     // ─── Fetch toll records in date range ───
     const tollWhere: Record<string, unknown> = {
       tollDate: { gte: startDate, lte: endDate },
@@ -240,6 +256,13 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Aggregate fuel logs (primary fuel cost source — FuelLog table)
+    for (const fuelLog of fuelLogs) {
+      const entry = truckMap.get(fuelLog.truckId)
+      if (!entry) continue
+      entry.fuelCost += fuelLog.totalCost
+    }
+
     // Aggregate maintenance records (separate from expenses)
     for (const maint of maintenanceRecords) {
       const entry = truckMap.get(maint.truckId)
@@ -313,6 +336,15 @@ export async function GET(request: NextRequest) {
         entry.trips += 1
         entry.revenue += trip.totalRevenue ?? 0
       }
+    }
+
+    // Aggregate fuel logs by date (primary fuel cost source)
+    for (const fuelLog of fuelLogs) {
+      const fDate = new Date(fuelLog.date)
+      const key = fDate.toISOString().split('T')[0]
+      const entry = dailyMap.get(key)
+      if (!entry) continue
+      entry.fuelCost += fuelLog.totalCost
     }
 
     // Aggregate expenses by date

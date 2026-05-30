@@ -62,13 +62,11 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
 
+/** Ghana Cedi sign — runtime generation avoids encoding issues */
+const CEDI = String.fromCodePoint(0x20B5)
+
 function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-GH', {
-    style: 'currency',
-    currency: 'GHS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)
+  return `${CEDI}${amount.toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
 }
 
 function getProgressColor(percent: number): string {
@@ -345,7 +343,7 @@ export function FuelBudgetView() {
                     </div>
                     <div className="rounded-full bg-blue-100 p-3">
                       <span className="text-sm font-semibold text-blue-600">
-                        ₵
+                        {CEDI}
                       </span>
                     </div>
                   </div>
@@ -639,7 +637,7 @@ export function FuelBudgetView() {
             </div>
 
             <div className="space-y-2">
-              <Label>Budget Limit (GHS) *</Label>
+              <Label>Budget Limit ({CEDI}) *</Label>
               <Input
                 type="number"
                 placeholder="e.g., 5000"
@@ -690,7 +688,7 @@ export function FuelBudgetView() {
           </DialogHeader>
           <DialogBody className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Budget Limit (GHS) *</Label>
+              <Label>Budget Limit ({CEDI}) *</Label>
               <Input
                 type="number"
                 value={formBudgetLimit}

@@ -1766,7 +1766,7 @@ function CurrenciesManager() {
               <div className="flex items-center gap-2">
                 <Input
                   id="curr-symbol"
-                  placeholder="e.g. ₵, $, €"
+                  placeholder="e.g. \u20B5, $, €"
                   value={formSymbol}
                   onChange={e => setFormSymbol(e.target.value)}
                   maxLength={5}

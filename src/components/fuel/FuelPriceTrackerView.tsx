@@ -117,7 +117,7 @@ export function FuelPriceTrackerView() {
 
   // Summary cards
   const avgPrice = analytics?.summary.overallAvg ?? 0
-  const cheapestStation = analytics?.cheapest?.[0]?.station
+  const cheapestStation = analytics?.cheapest?.[0]?.fuelStation
   const priceChange = analytics?.summary.priceChange
   const priceChangePercent = analytics?.summary.priceChangePercent
   const activeStationsCount = analytics?.summary.activeStations ?? 0
@@ -552,11 +552,11 @@ export function FuelPriceTrackerView() {
                         {analytics.cheapest.map((p, i) => (
                           <tr key={i} className="border-b last:border-0 hover:bg-stone-50 dark:hover:bg-stone-900/20">
                             <td className="py-2 px-3 text-muted-foreground">{i + 1}</td>
-                            <td className="py-2 px-3 font-medium">{p.station?.name || 'Unknown'}</td>
+                            <td className="py-2 px-3 font-medium">{p.fuelStation?.name || 'Unknown'}</td>
                             <td className="py-2 px-3">
-                              <Badge variant="outline" className="text-xs">{p.station?.brand}</Badge>
+                              <Badge variant="outline" className="text-xs">{p.fuelStation?.brand}</Badge>
                             </td>
-                            <td className="py-2 px-3 text-muted-foreground">{p.station?.city || '--'}</td>
+                            <td className="py-2 px-3 text-muted-foreground">{p.fuelStation?.city || '--'}</td>
                             <td className="py-2 px-3 text-right font-bold text-emerald-600">{`${CURRENCY_SYMBOL}${p.pricePerLiter.toFixed(2)}`}</td>
                           </tr>
                         ))}
@@ -570,13 +570,13 @@ export function FuelPriceTrackerView() {
                         <div className="flex items-center justify-between">
                           <div>
                             <span className="text-xs text-muted-foreground">#{i + 1}</span>
-                            <p className="font-semibold text-sm">{p.station?.name || 'Unknown'}</p>
+                            <p className="font-semibold text-sm">{p.fuelStation?.name || 'Unknown'}</p>
                           </div>
                           <span className="font-semibold text-emerald-600">{`${CURRENCY_SYMBOL}${p.pricePerLiter.toFixed(2)}/L`}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Badge variant="outline" className="text-[10px]">{p.station?.brand}</Badge>
-                          <span>{p.station?.city || '--'}</span>
+                          <Badge variant="outline" className="text-[10px]">{p.fuelStation?.brand}</Badge>
+                          <span>{p.fuelStation?.city || '--'}</span>
                         </div>
                       </div>
                     ))}
@@ -943,7 +943,7 @@ function AddStationForm({ onSubmit, loading }: { onSubmit: (data: Record<string,
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Corporate Rate (GHS/L)</Label>
+          <Label className="text-xs">Corporate Rate (\u20B5/L)</Label>
           <Input type="number" step="0.01" placeholder="Negotiated rate" value={form.corporateRatePerLiter} onChange={e => setForm(f => ({ ...f, corporateRatePerLiter: e.target.value }))} />
         </div>
         <div className="space-y-1.5">
@@ -1020,7 +1020,7 @@ function UpdatePriceForm({ station, onSubmit, loading }: { station: FuelStation;
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Price per Liter (GHS)</Label>
+            <Label className="text-xs">Price per Liter (\u20B5)</Label>
             <Input type="number" step="0.01" placeholder="0.00" value={price} onChange={e => setPrice(e.target.value)} />
           </div>
         </div>
