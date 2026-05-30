@@ -11,10 +11,45 @@
 // ────────────────────────────────────────────────────────────────────
 
 import bcrypt from 'bcryptjs'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '../src/generated/client'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 
 const SALT_ROUNDS = 12
-const db = new PrismaClient()
+
+function loadDatabaseUrl(): string {
+  try {
+    const envPath = resolve(process.cwd(), '.env')
+    const envContent = readFileSync(envPath, 'utf-8')
+    for (const line of envContent.split('\n')) {
+      const trimmed = line.trim()
+      if (trimmed.startsWith('DATABASE_URL=') && !trimmed.startsWith('#')) {
+        return trimmed.substring('DATABASE_URL='.length)
+      }
+    }
+  } catch {
+    // .env not found
+  }
+  return process.env.DATABASE_URL || ''
+}
+
+let databaseUrl = loadDatabaseUrl()
+if (databaseUrl.startsWith('mysql://')) {
+  databaseUrl = 'mariadb://' + databaseUrl.slice('mysql://'.length)
+}
+
+function extractDatabaseName(url: string): string {
+  try {
+    const urlObj = new URL(url)
+    return urlObj.pathname.slice(1).split('?')[0] || 'ifleetpro_data'
+  } catch {
+    return 'ifleetpro_data'
+  }
+}
+
+const adapter = new PrismaMariaDb(databaseUrl, { database: extractDatabaseName(databaseUrl) })
+const db = new PrismaClient({ adapter })
 
 async function main() {
   console.log('🔐 Password Migration: Checking all users...\n')
