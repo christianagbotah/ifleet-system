@@ -23,6 +23,7 @@ import {
   ChevronRight,
   ArrowUpRight,
 } from 'lucide-react'
+import { useAuthStore } from '@/lib/store/auth'
 
 interface InvoiceDisputeResolution {
   analysis?: string | null
@@ -112,9 +113,13 @@ export function InvoiceDisputePanel({
     setResolution(null)
 
     try {
+      const token = useAuthStore.getState().getToken()
       const response = await fetch('/api/ai/invoice-dispute', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           invoiceId,
           disputeReason,

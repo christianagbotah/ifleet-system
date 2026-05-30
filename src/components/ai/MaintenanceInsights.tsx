@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Wrench, RefreshCw, Calendar, AlertTriangle, CheckCircle, Loader2, Brain } from 'lucide-react'
+import { useAuthStore } from '@/lib/store/auth'
 
 interface PredictedIssue {
   issue: string
@@ -81,9 +82,13 @@ export function MaintenanceInsights({
     setError(null)
 
     try {
+      const token = useAuthStore.getState().getToken()
       const response = await fetch('/api/ai/maintenance-predict', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           truckId,
           mileage: mileage || null,

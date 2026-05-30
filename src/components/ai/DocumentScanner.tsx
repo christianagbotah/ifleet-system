@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/dialog'
 import { Loader2, ScanLine, Upload, X, FileText, Fuel, ShoppingBag, Truck, AlertCircle } from 'lucide-react'
 
+import { useAuthStore } from '@/lib/store/auth'
+
 interface ExtractedData {
   type?: string
   vendor?: string | null
@@ -153,8 +155,12 @@ export function DocumentScanner({
       const formData = new FormData()
       formData.append('file', file)
 
+      const token = useAuthStore.getState().getToken()
       const response = await fetch('/api/ai/analyze-document', {
         method: 'POST',
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: formData,
       })
 

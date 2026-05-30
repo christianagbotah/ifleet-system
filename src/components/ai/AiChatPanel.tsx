@@ -17,7 +17,7 @@ interface ChatMessage {
 
 // Floating AI chat panel — like Intercom/Drift widget
 export function AiChatPanel() {
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, getToken } = useAuthStore()
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -75,9 +75,13 @@ export function AiChatPanel() {
     abortControllerRef.current = new AbortController()
 
     try {
+      const token = getToken()
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           message: trimmed,
           conversationHistory,
