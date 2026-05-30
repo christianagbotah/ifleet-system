@@ -185,3 +185,25 @@ Stage Summary:
 - 14 files updated, zero lint errors
 - PDF header bar now only draws on page 2+ via didDrawPage (page 1 header drawn explicitly)
 - User needs to pull on VPS: `cd /home/ifleetpro/app && git stash && git pull && pm2 restart ifleetpro`
+
+---
+Task ID: security-hardening
+Agent: main
+Task: Fix all security, performance, and code quality issues identified in system analysis
+
+Work Log:
+- Fixed Socket.IO CORS on both mini-services (notification-service port 3004, tracking-service port 3003) - restricted to allowed origins
+- Added API key authentication to notification service HTTP API endpoints (/api/notify, /api/notify-role, /api/notify-all)
+- Fixed JWT fallback secret in auth-server.ts and auth/login/route.ts - now logs error in production
+- Removed plaintext password fallback from auth/login and auth/change-password - bcrypt only
+- Added SystemSettings singleton enforcement via isDefault unique constraint
+- Added onDelete: Cascade to 6 Trip child entities (FuelLog, Expense, BorderCrossing, TripComment, TripEvent, TollRecord)
+- Batched notification creation in scheduler (createMany instead of N queries)
+- Added 10,000 record limit to all 8 export queries
+- Fixed all `any` types in export route with proper AuthContext type
+
+Stage Summary:
+- 8 files changed, committed as 5100c82
+- All changes pushed to origin/main
+- Database schema updated and synced
+- Lint passes cleanly
