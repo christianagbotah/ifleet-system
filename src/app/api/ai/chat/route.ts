@@ -3,6 +3,8 @@ import { requireAuth } from '@/lib/auth-server'
 
 const AI_SERVICE_URL = 'http://localhost:3007'
 const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
+/** Server-side timeout for the AI service call (90 seconds) */
+const AI_TIMEOUT_MS = 90_000
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,19 +21,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Forward to AI service
-    const response = await fetch(`${AI_SERVICE_URL}/api/chat`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-internal-api-key': INTERNAL_API_KEY,
-      },
-      body: JSON.stringify({
-        userId: auth.userId,
-        message,
-        conversationHistory: conversationHistory || [],
-      }),
-    })
+    // Forward to AI service with server-side timeout
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), AI_TIMEOUT_MS)
+
+    let response: Response
+    try {
+      response = await fetch(`${AI_SERVICE_URL}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-api-key': INTERNAL_API_KEY,
+        },
+        body: JSON.stringify({
+          userId: auth.userId,
+          message,
+          conversationHistory: conversationHistory || [],
+        }),
+        signal: controller.signal,
+      })
+    } finally {
+      clearTimeout(timeoutId)
+    }
 
     const data = await response.json()
 
@@ -44,9 +55,16 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data)
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      console.error('[AI Chat] Timed out after', AI_TIMEOUT_MS, 'ms')
+      return NextResponse.json(
+        { error: 'AI service took too long to respond. Please try again.' },
+        { status: 504 }
+      )
+    }
     console.error('[AI Chat] Error:', error)
     return NextResponse.json(
-      { error: 'Failed to communicate with AI service' },
+      { error: 'Failed to communicate with AI service. Is it running on port 3007?' },
       { status: 500 }
     )
   }

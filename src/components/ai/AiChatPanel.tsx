@@ -79,8 +79,8 @@ export function AiChatPanel() {
       const controller = new AbortController()
       abortControllerRef.current = controller
 
-      // 60-second timeout for AI response (LLM calls can be slow)
-      const timeoutId = setTimeout(() => controller.abort(), 60000)
+      // 90-second timeout for AI response (LLM calls can be slow)
+      const timeoutId = setTimeout(() => controller.abort(), 90000)
 
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
