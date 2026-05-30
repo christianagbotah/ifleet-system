@@ -499,6 +499,20 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
     }
   }, [open])
 
+  // Auto-populate driver when truck is selected
+  useEffect(() => {
+    if (!truckId) {
+      setDriverId('')
+      return
+    }
+    const selectedTruck = trucks.find(t => t.id === truckId)
+    if (selectedTruck?.driverId) {
+      setDriverId(selectedTruck.driverId)
+    } else {
+      setDriverId('')
+    }
+  }, [truckId, trucks])
+
   useEffect(() => {
     if (type) {
       setCheckItems(getDefaultCheckItems(type))
@@ -582,9 +596,9 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Driver</label>
-              <Select value={driverId} onValueChange={setDriverId}>
+              <Select value={driverId} disabled>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select driver" />
+                  <SelectValue placeholder={truckId ? 'No driver assigned to truck' : 'Select a truck first'} />
                 </SelectTrigger>
                 <SelectContent>
                   {drivers.map(d => (
@@ -592,6 +606,9 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
                   ))}
                 </SelectContent>
               </Select>
+              {truckId && !driverId && (
+                <p className="text-xs text-amber-600">No driver assigned to this truck</p>
+              )}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Inspection Type *</label>

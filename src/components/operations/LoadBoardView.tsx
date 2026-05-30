@@ -192,6 +192,20 @@ export function LoadBoardView() {
     } catch { /* ignore */ }
   }, [])
 
+  // Auto-populate driver when truck is selected in assign dialog
+  React.useEffect(() => {
+    if (!assignTruckId) {
+      setAssignDriverId('')
+      return
+    }
+    const selectedTruck = trucks.find(t => t.id === assignTruckId)
+    if (selectedTruck?.driverId) {
+      setAssignDriverId(selectedTruck.driverId)
+    } else {
+      setAssignDriverId('')
+    }
+  }, [assignTruckId, trucks])
+
   const loadCreateData = React.useCallback(async () => {
     try {
       const clientsRes = await fetchClients({ limit: 200 })
@@ -515,9 +529,9 @@ export function LoadBoardView() {
 
               <div className="space-y-2">
                 <Label>Select Driver</Label>
-                <Select value={assignDriverId} onValueChange={setAssignDriverId}>
+                <Select value={assignDriverId} onValueChange={setAssignDriverId} disabled={!!assignTruckId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose a driver..." />
+                    <SelectValue placeholder={assignTruckId ? 'No driver assigned to truck' : 'Select a truck first'} />
                   </SelectTrigger>
                   <SelectContent>
                     {drivers.map((d) => (
@@ -527,6 +541,9 @@ export function LoadBoardView() {
                     ))}
                   </SelectContent>
                 </Select>
+                {assignTruckId && !assignDriverId && (
+                  <p className="text-xs text-amber-600">No driver assigned to this truck</p>
+                )}
               </div>
             </DialogBody>
           )}

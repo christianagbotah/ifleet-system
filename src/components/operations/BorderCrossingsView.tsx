@@ -475,6 +475,20 @@ function CreateForm({ trucks, drivers, trips, onSubmit, onCancel }: {
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  // Auto-populate driver when truck is selected
+  useEffect(() => {
+    if (!truckId) {
+      setDriverId('')
+      return
+    }
+    const selectedTruck = trucks.find(t => t.id === truckId)
+    if (selectedTruck?.driverId) {
+      setDriverId(selectedTruck.driverId)
+    } else {
+      setDriverId('')
+    }
+  }, [truckId, trucks])
+
   const handleBorderChange = (name: string) => {
     setBorderName(name)
     const border = GHANA_BORDERS.find(b => b.name === name)
@@ -531,8 +545,8 @@ function CreateForm({ trucks, drivers, trips, onSubmit, onCancel }: {
         </div>
         <div className="space-y-2">
           <Label>Driver *</Label>
-          <Select value={driverId} onValueChange={setDriverId}>
-            <SelectTrigger><SelectValue placeholder="Select driver" /></SelectTrigger>
+          <Select value={driverId} disabled={!!truckId} onValueChange={setDriverId}>
+            <SelectTrigger><SelectValue placeholder={truckId ? 'No driver assigned to truck' : 'Select a truck first'} /></SelectTrigger>
             <SelectContent>
               {drivers.filter(d => d.status === 'active').map(d => (
                 <SelectItem key={d.id} value={d.id}>
@@ -541,6 +555,9 @@ function CreateForm({ trucks, drivers, trips, onSubmit, onCancel }: {
               ))}
             </SelectContent>
           </Select>
+          {truckId && !driverId && (
+            <p className="text-xs text-amber-600">No driver assigned to this truck</p>
+          )}
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">

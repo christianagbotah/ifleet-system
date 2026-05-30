@@ -139,6 +139,20 @@ function DepotQueueFormDialog({
     }
   }, [open, editing])
 
+  // Auto-populate driver when truck is selected
+  React.useEffect(() => {
+    if (!truckId) {
+      setDriverId('')
+      return
+    }
+    const selectedTruck = trucks.find(t => t.id === truckId)
+    if (selectedTruck?.driverId) {
+      setDriverId(selectedTruck.driverId)
+    } else {
+      setDriverId('')
+    }
+  }, [truckId, trucks])
+
   React.useEffect(() => {
     if (driverId) {
       apiFetch<{ data: Trip[] }>('/api/trips?status=in_transit&limit=100')
@@ -217,7 +231,10 @@ function DepotQueueFormDialog({
             </div>
             <div className="space-y-2">
               <Label className="text-sm font-medium">Driver</Label>
-              <SearchableSelect options={driverOptions} value={driverId} onValueChange={setDriverId} placeholder="Optional" emptyMessage="No drivers found" searchPlaceholder="Search drivers..." alwaysSearchable />
+              <SearchableSelect options={driverOptions} value={driverId} onValueChange={setDriverId} placeholder={truckId ? 'No driver assigned' : 'Select truck first'} emptyMessage="No drivers found" searchPlaceholder="Search drivers..." alwaysSearchable disabled={!!truckId} />
+              {truckId && !driverId && (
+                <p className="text-xs text-amber-600">No driver assigned to this truck</p>
+              )}
             </div>
           </div>
 

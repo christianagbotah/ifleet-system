@@ -614,12 +614,15 @@ setShowViewDialog(true) }}>
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Driver</Label>
-                <Select value={form.driverId} onValueChange={v => setForm(f => ({ ...f, driverId: v }))}>
-                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Select driver" /></SelectTrigger>
+                <Select value={form.driverId} onValueChange={v => setForm(f => ({ ...f, driverId: v }))} disabled={!!form.truckId}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={form.truckId ? 'No driver assigned' : 'Select truck first'} /></SelectTrigger>
                   <SelectContent>
                     {drivers.map(d => <SelectItem key={d.id} value={d.id}>{d.firstName} {d.lastName}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                {form.truckId && !form.driverId && (
+                  <p className="text-xs text-amber-600">No driver assigned to this truck</p>
+                )}
               </div>
             </div>
 
