@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -578,7 +578,7 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <DialogBody className="space-y-6">
           {/* Basic Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -747,9 +747,10 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
               onChange={(e) => setOverallNotes(e.target.value)}
             />
           </div>
+        </DialogBody>
 
-          {/* Actions */}
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <DialogFooter>
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end w-full">
             <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
             <Button
               onClick={handleSubmit}
@@ -760,7 +761,7 @@ function InspectionFormDialog({ open, onOpenChange, onSave }: InspectionFormDial
               Submit Inspection
             </Button>
           </div>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
