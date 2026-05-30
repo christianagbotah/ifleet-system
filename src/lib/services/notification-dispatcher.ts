@@ -24,6 +24,7 @@ import { sendEmail } from './email'
 
 // ── Socket.IO Notification Service Config ──
 const NOTIFICATION_SERVICE_URL = 'http://localhost:3004'
+const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
 
 export type NotificationChannel = 'in_app' | 'sms' | 'email' | 'push'
 
@@ -246,7 +247,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     try {
       const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-internal-api-key': INTERNAL_API_KEY },
         body: JSON.stringify({
           userIds: [userId],
           notification: {
@@ -394,7 +395,7 @@ export async function dispatchRoleNotification(params: {
   try {
     const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify-role`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-internal-api-key': INTERNAL_API_KEY },
       body: JSON.stringify({
         role,
         notification: {
@@ -432,7 +433,7 @@ export async function dispatchBroadcastNotification(params: {
   try {
     const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify-all`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-internal-api-key': INTERNAL_API_KEY },
       body: JSON.stringify({
         notification: {
           id: `broadcast-push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,

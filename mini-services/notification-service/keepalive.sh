@@ -12,6 +12,11 @@ restart_delay=1
 while true; do
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting notification service..."
   
+  # Source parent .env for shared environment variables (INTERNAL_API_KEY, etc.)
+  if [ -f "$SERVICE_DIR/../../.env" ]; then
+    set -a; source "$SERVICE_DIR/../../.env"; set +a
+  fi
+
   # Start the service with stdin closed to prevent SIGHUP on terminal close
   cd "$SERVICE_DIR" && bun index.ts </dev/null 2>&1 &
   SERVICE_PID=$!
