@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { hashPassword, validatePassword } from '@/lib/auth-utils'
+import { hashPassword } from '@/lib/auth-utils'
 import { rateLimit, RATE_LIMITS, getClientIp } from '@/lib/rate-limit'
 import { createAuditLog } from '@/lib/audit'
 import { requireRole } from '@/lib/auth-server'
+import { adminResetPasswordSchema, parseBody } from '@/lib/schemas'
 
 const ENDPOINT_KEY = 'auth/admin-reset-password'
 
@@ -15,21 +16,12 @@ export async function POST(request: NextRequest) {
     const auth = requireRole(request, 'Admin')
     if (auth instanceof NextResponse) return auth
 
-    const { userId, newPassword } = await request.json()
-
-    if (!userId || typeof userId !== 'string') {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      )
+    const raw = await request.json()
+    const parsed = parseBody(adminResetPasswordSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
-
-    if (!newPassword || typeof newPassword !== 'string') {
-      return NextResponse.json(
-        { error: 'New password is required' },
-        { status: 400 }
-      )
-    }
+    const { userId, newPassword } = parsed.data
 
     // Rate limiting
     const clientIp = getClientIp(request)
@@ -51,14 +43,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate password strength
-    const passwordError = validatePassword(newPassword)
-    if (passwordError) {
-      return NextResponse.json(
-        { error: passwordError },
-        { status: 400 }
-      )
-    }
+    // Password strength already validated by Zod schema
 
     // Find the target user
     const targetUser = await db.user.findUnique({

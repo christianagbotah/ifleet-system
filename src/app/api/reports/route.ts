@@ -3,6 +3,9 @@ import { db } from '@/lib/db'
 import { format } from 'date-fns'
 import { requireAuth } from '@/lib/auth-server'
 
+/** Safety cap so the reports dashboard never loads the entire trip table at once. */
+const MAX_REPORT_TRIPS = 5000
+
 export async function GET(request: NextRequest) {
   try {
     const auth = requireAuth(request)
@@ -23,6 +26,8 @@ export async function GET(request: NextRequest) {
           driver: { select: { id: true, firstName: true, lastName: true } },
           truck: { select: { id: true, plateNumber: true, truckName: true } },
         },
+        take: MAX_REPORT_TRIPS,
+        orderBy: { createdAt: 'desc' },
       }),
       db.cashAdvance.findMany({
         where: { status: 'pending' },
@@ -195,8 +200,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Add cash advances and incentives expenses per month
-    const allCashAdvancesAll = await db.cashAdvance.findMany()
-    const allIncentivesAll = await db.driverIncentive.findMany()
+    const allCashAdvancesAll = await db.cashAdvance.findMany({ take: MAX_REPORT_TRIPS })
+    const allIncentivesAll = await db.driverIncentive.findMany({ take: MAX_REPORT_TRIPS })
 
     for (const ca of allCashAdvancesAll) {
       const month = format(new Date(ca.createdAt), 'yyyy-MM')

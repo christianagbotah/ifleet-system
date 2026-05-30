@@ -2,15 +2,29 @@ import { Server } from 'socket.io';
 
 const PORT = 3003;
 
+// ─── CORS Configuration ───────────────────────────────────────────────────
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? (process.env.CORS_ORIGIN.startsWith('[')
+      ? JSON.parse(process.env.CORS_ORIGIN)
+      : [process.env.CORS_ORIGIN])
+  : ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com'];
+
 const io = new Server(PORT, {
   cors: {
-    origin: process.env.CORS_ORIGIN || ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com'],
+    origin: (origin, callback) => {
+      // Allow connections with no origin (mobile apps, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      console.warn(`[Tracking] Blocked connection from disallowed origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    },
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
-// In-memory store for driver locations
+// ─── In-memory stores ─────────────────────────────────────────────────────
+
 const driverLocations = new Map<string, {
   lat: number;
   lng: number;
@@ -21,23 +35,51 @@ const driverLocations = new Map<string, {
   driverName?: string;
 }>();
 
-// In-memory store for active connections
 const activeDrivers = new Map<string, { socketId: string; lastSeen: number }>();
 const activeViewers = new Map<string, { socketId: string; watching: string[] }>();
+
+// ─── Lightweight validation (no Zod dep needed in mini-service) ───────────
+
+function isValidLocation(data: unknown): data is {
+  driverId: string;
+  lat: number;
+  lng: number;
+  heading?: number;
+  speed?: number;
+  truckId?: string;
+  driverName?: string;
+} {
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as Record<string, unknown>;
+  return (
+    typeof d.driverId === 'string' && d.driverId.length > 0 &&
+    typeof d.lat === 'number' && d.lat >= -90 && d.lat <= 90 &&
+    typeof d.lng === 'number' && d.lng >= -180 && d.lng <= 180 &&
+    (d.heading === undefined || (typeof d.heading === 'number' && d.heading >= 0 && d.heading < 360)) &&
+    (d.speed === undefined || (typeof d.speed === 'number' && d.speed >= 0 && d.speed <= 300)) &&
+    (d.truckId === undefined || typeof d.truckId === 'string') &&
+    (d.driverName === undefined || typeof d.driverName === 'string')
+  );
+}
+
+function isValidSubscribe(data: unknown): data is string[] {
+  if (!Array.isArray(data)) return false;
+  if (data.length > 50) return false; // Max 50 drivers per subscription
+  return data.every((id) => typeof id === 'string' && id.length > 0);
+}
+
+// ─── Event Handlers ────────────────────────────────────────────────────────
 
 io.on('connection', (socket) => {
   console.log(`[Tracking] Client connected: ${socket.id}`);
 
   // Driver sends location update
-  socket.on('driver:location', (data: {
-    driverId: string;
-    lat: number;
-    lng: number;
-    heading?: number;
-    speed?: number;
-    truckId?: string;
-    driverName?: string;
-  }) => {
+  socket.on('driver:location', (data: unknown) => {
+    if (!isValidLocation(data)) {
+      socket.emit('error', { message: 'Invalid location data format' });
+      return;
+    }
+
     const location = {
       lat: data.lat,
       lng: data.lng,
@@ -57,10 +99,15 @@ io.on('connection', (socket) => {
   });
 
   // Viewer subscribes to specific drivers
-  socket.on('viewer:subscribe', (driverIds: string[]) => {
-    activeViewers.set(socket.id, { socketId: socket.id, watching: driverIds });
+  socket.on('viewer:subscribe', (data: unknown) => {
+    if (!isValidSubscribe(data)) {
+      socket.emit('error', { message: 'Invalid subscription — must be an array of up to 50 driver IDs' });
+      return;
+    }
+
+    activeViewers.set(socket.id, { socketId: socket.id, watching: data });
     // Send current locations for subscribed drivers
-    for (const driverId of driverIds) {
+    for (const driverId of data) {
       const location = driverLocations.get(driverId);
       if (location) {
         socket.emit('location:updated', { driverId, ...location });
@@ -106,7 +153,8 @@ io.on('connection', (socket) => {
   });
 });
 
-// Cleanup stale locations every 10 minutes
+// ─── Periodic cleanup ────────────────────────────────────────────────────
+
 setInterval(() => {
   const now = Date.now();
   const staleThreshold = 10 * 60 * 1000; // 10 minutes
@@ -123,3 +171,4 @@ setInterval(() => {
 }, 10 * 60 * 1000);
 
 console.log(`[Tracking Service] Running on port ${PORT}`);
+console.log(`[Tracking Service] CORS origins: ${allowedOrigins.join(', ')}`);

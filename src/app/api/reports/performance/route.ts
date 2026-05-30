@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth } from '@/lib/auth-server'
 
+const MAX_PERFORMANCE_TRIPS = 5000
+
 /**
  * Performance Reports — returns tabular data for different report types.
  *
@@ -82,6 +84,7 @@ async function generateDriverReport(
       truck: { select: { id: true, plateNumber: true } },
     },
     orderBy: { departureTime: 'desc' },
+    take: MAX_PERFORMANCE_TRIPS,
   })
 
   // Group by driver
@@ -199,6 +202,7 @@ async function generateTruckReport(
       driver: { select: { id: true, firstName: true, lastName: true } },
     },
     orderBy: { departureTime: 'desc' },
+    take: MAX_PERFORMANCE_TRIPS,
   })
 
   // Get trip IDs for expense aggregation
@@ -289,6 +293,7 @@ async function generateZoneReport(
       },
     },
     orderBy: { departureTime: 'desc' },
+    take: MAX_PERFORMANCE_TRIPS,
   })
 
   // Group by zone
@@ -365,6 +370,7 @@ async function generateComparativeReport(
       truck: { select: { id: true, plateNumber: true } },
     },
     orderBy: { departureTime: 'desc' },
+    take: MAX_PERFORMANCE_TRIPS,
   })
 
   // Group by driver -> zone

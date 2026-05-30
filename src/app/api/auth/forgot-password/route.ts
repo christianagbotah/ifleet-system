@@ -4,6 +4,7 @@ import { generateResetToken } from '@/lib/auth-utils'
 import { rateLimit, RATE_LIMITS, getClientIp } from '@/lib/rate-limit'
 import { sendEmail } from '@/lib/services/email'
 import { APP_NAME } from '@/lib/constants'
+import { forgotPasswordSchema, parseBody } from '@/lib/schemas'
 
 // ── In-memory reset token store ──────────────────────────────────────────
 // In production this would be a database table (PasswordReset).
@@ -40,14 +41,12 @@ const ENDPOINT_KEY = 'auth/forgot-password'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json()
-
-    if (!email || typeof email !== 'string' || !email.trim()) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
+    const raw = await request.json()
+    const parsed = parseBody(forgotPasswordSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
+    const { email } = parsed.data
 
     // Rate limiting by client IP
     const clientIp = getClientIp(request)

@@ -1,0 +1,11 @@
+# ZAI SDK Configuration Template
+# Copy this file to .z-ai-config in the ai-service directory and fill in your credentials.
+# The .z-ai-config file is already in .gitignore and will NOT be committed.
+
+{
+  "baseUrl": "https://internal-api.z.ai/v1",
+  "apiKey": "<YOUR_ZAI_API_KEY>",
+  "chatId": "<YOUR_CHAT_ID>",
+  "token": "<YOUR_JWT_TOKEN>",
+  "userId": "<YOUR_USER_ID>"
+}

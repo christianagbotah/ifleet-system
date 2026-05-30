@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { rateLimit, RATE_LIMITS, getClientIp as getClientIpFromRateLimit } from '@/lib/rate-limit'
 import { JWT_SECRET } from '@/lib/jwt-secret'
+import { loginSchema, parseBody } from '@/lib/schemas'
 
 const ENDPOINT_KEY = 'auth/login'
 
@@ -12,11 +13,12 @@ const ENDPOINT_KEY = 'auth/login'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json()
-
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
+    const raw = await request.json()
+    const parsed = parseBody(loginSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
+    const { email, password } = parsed.data
 
     // Rate limiting by client IP using shared utility
     const clientIp = getClientIpFromRateLimit(request)

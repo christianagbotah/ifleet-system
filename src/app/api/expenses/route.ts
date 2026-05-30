@@ -2,7 +2,20 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
-import { validateBody, expenseCreateSchema } from '@/lib/validations'
+import { expenseSchema, parseBody } from '@/lib/schemas'
+import { z } from 'zod'
+
+/** Create expense — fields differ from shared expenseSchema (uses 'date' not 'expenseDate', requires 'truckId') */
+const expenseCreateSchema = z.object({
+  truckId: z.string().min(1, 'Truck is required'),
+  category: z.string().min(1, 'Category is required'),
+  description: z.string().min(1, 'Description is required'),
+  amount: z.coerce.number().positive('Amount must be positive'),
+  date: z.string().min(1, 'Date is required'),
+  paymentMethod: z.string().optional(),
+  reference: z.string().optional(),
+  tripId: z.string().optional(),
+})
 
 export async function GET(request: NextRequest) {
   try {
@@ -64,9 +77,11 @@ export async function POST(request: NextRequest) {
     const writeGuard = requireWriteAccess(auth)
     if (writeGuard instanceof NextResponse) return writeGuard
 
-    const body = await request.json()
-    const validation = validateBody(expenseCreateSchema, body)
-    if (!validation.success) return validation.response
+    const raw = await request.json()
+    const parsed = parseBody(expenseCreateSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
+    }
 
     const {
       truckId,
@@ -77,14 +92,7 @@ export async function POST(request: NextRequest) {
       paymentMethod,
       reference,
       tripId,
-    } = body
-
-    if (!truckId || !category || !description || !amount || !date) {
-      return NextResponse.json(
-        { error: 'truckId, category, description, amount, and date are required' },
-        { status: 400 }
-      )
-    }
+    } = parsed.data
 
     // Verify truck exists
     const truck = await db.truck.findUnique({ where: { id: truckId } })
@@ -97,7 +105,7 @@ export async function POST(request: NextRequest) {
         truckId,
         category,
         description,
-        amount: parseFloat(amount),
+        amount,
         date: new Date(date),
         paymentMethod: paymentMethod || 'cash',
         reference,

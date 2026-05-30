@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { hashPassword, validatePassword } from '@/lib/auth-utils'
+import { hashPassword } from '@/lib/auth-utils'
 import { rateLimit, RATE_LIMITS, getClientIp } from '@/lib/rate-limit'
 import { createAuditLog } from '@/lib/audit'
 import { resetTokenStore } from '@/app/api/auth/forgot-password/route'
+import { resetPasswordSchema, parseBody } from '@/lib/schemas'
 
 const ENDPOINT_KEY = 'auth/reset-password'
 
@@ -11,21 +12,12 @@ const ENDPOINT_KEY = 'auth/reset-password'
 
 export async function POST(request: NextRequest) {
   try {
-    const { token, newPassword } = await request.json()
-
-    if (!token || typeof token !== 'string' || !token.trim()) {
-      return NextResponse.json(
-        { error: 'Reset code is required' },
-        { status: 400 }
-      )
+    const raw = await request.json()
+    const parsed = parseBody(resetPasswordSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
-
-    if (!newPassword || typeof newPassword !== 'string') {
-      return NextResponse.json(
-        { error: 'New password is required' },
-        { status: 400 }
-      )
-    }
+    const { token, newPassword } = parsed.data
 
     // Rate limiting
     const clientIp = getClientIp(request)
@@ -47,11 +39,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate password strength
-    const passwordError = validatePassword(newPassword)
-    if (passwordError) {
+    // Validate password strength (double-check — Zod already enforces this)
+    if (newPassword.length < 6) {
       return NextResponse.json(
-        { error: passwordError },
+        { error: 'New password is too short' },
         { status: 400 }
       )
     }

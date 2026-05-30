@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth } from '@/lib/auth-server'
 
+const MAX_EXPORT_RECORDS = 10000
+
 export async function GET(request: NextRequest) {
   try {
     const auth = requireAuth(request)
@@ -31,6 +33,7 @@ export async function GET(request: NextRequest) {
         truck: { select: { plateNumber: true } },
       },
       orderBy: { createdAt: 'desc' },
+      take: MAX_EXPORT_RECORDS,
     })
 
     const getDriverName = (driver: { firstName: string; lastName: string } | null) =>

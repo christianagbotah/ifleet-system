@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { Prisma } from '@/generated/client'
+import { invoiceSchema, parseBody } from '@/lib/schemas'
 
 // ============ GET: List invoices ============
 export async function GET(request: NextRequest) {
@@ -113,14 +114,15 @@ export async function POST(request: NextRequest) {
   if (writeGuard instanceof NextResponse) return writeGuard
 
   try {
-    const body = await request.json()
-    const { clientId, tripId, issueDate, dueDate, taxRate, notes, terms, items } = body
+    const raw = await request.json()
+    const parsed = parseBody(invoiceSchema.omit({ invoiceNumber: true }).passthrough(), raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
+    }
+    const { clientId, tripId, issueDate, dueDate, taxRate, notes, terms, items } = parsed.data
 
-    if (!clientId || !dueDate || !items || !items.length) {
-      return NextResponse.json(
-        { error: 'clientId, dueDate, and at least one item are required' },
-        { status: 400 }
-      )
+    if (!dueDate) {
+      return NextResponse.json({ error: 'Due date is required' }, { status: 400 })
     }
 
     // Validate client exists

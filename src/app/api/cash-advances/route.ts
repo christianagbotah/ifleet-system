@@ -3,6 +3,20 @@ import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import type { AuthContext } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { cashAdvanceSchema, parseBody } from '@/lib/schemas'
+import { z } from 'zod'
+
+/** Create cash advance — fields differ from shared cashAdvanceSchema (uses 'purpose' not 'reason') */
+const cashAdvanceCreateSchema = z.object({
+  driverId: z.string().min(1, 'Driver is required'),
+  tripId: z.string().optional(),
+  amount: z.coerce.number().positive('Amount must be positive'),
+  purpose: z.string().min(1, 'Purpose is required'),
+  paymentMethod: z.string().optional(),
+  mobileMoneyRef: z.string().optional(),
+  mobileMoneyNetwork: z.string().optional(),
+  notes: z.string().optional(),
+})
 
 export async function GET(request: NextRequest) {
   try {
@@ -102,7 +116,11 @@ export async function POST(request: NextRequest) {
       if (writeGuard instanceof NextResponse) return writeGuard
     }
 
-    const body = await request.json()
+    const raw = await request.json()
+    const parsed = parseBody(cashAdvanceCreateSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
+    }
     const {
       driverId,
       tripId,
@@ -112,27 +130,13 @@ export async function POST(request: NextRequest) {
       mobileMoneyRef,
       mobileMoneyNetwork,
       notes,
-    } = body
-
-    if (!driverId || !amount || !purpose) {
-      return NextResponse.json(
-        { error: 'driverId, amount, and purpose are required' },
-        { status: 400 }
-      )
-    }
+    } = parsed.data
 
     // Drivers must create requests for themselves only
     if (isDriver && driverId !== auth.driverId) {
       return NextResponse.json(
         { error: 'Drivers can only create cash advance requests for themselves' },
         { status: 403 }
-      )
-    }
-
-    if (parseFloat(amount) <= 0) {
-      return NextResponse.json(
-        { error: 'Amount must be greater than zero' },
-        { status: 400 }
       )
     }
 
@@ -154,12 +158,12 @@ export async function POST(request: NextRequest) {
       data: {
         driverId,
         tripId: tripId || null,
-        amount: parseFloat(amount),
+        amount,
         purpose,
         paymentMethod: paymentMethod || 'cash',
         mobileMoneyRef: mobileMoneyRef || null,
         mobileMoneyNetwork: mobileMoneyNetwork || null,
-        remainingBalance: parseFloat(amount),
+        remainingBalance: amount,
         notes: notes || null,
       },
       include: {

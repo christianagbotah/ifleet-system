@@ -4,6 +4,7 @@ import { comparePassword, hashPassword } from '@/lib/auth-utils'
 import { requireAuth } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { rateLimit, RATE_LIMITS, getClientIp as getClientIpFromRateLimit } from '@/lib/rate-limit'
+import { changePasswordSchema, parseBody } from '@/lib/schemas'
 
 const ENDPOINT_KEY = 'auth/change-password'
 
@@ -32,15 +33,11 @@ export async function POST(request: NextRequest) {
     if (auth instanceof NextResponse) return auth
 
     const body = await request.json()
-    const { currentPassword, newPassword } = body
-
-    if (!currentPassword || !newPassword) {
-      return NextResponse.json({ error: 'Current password and new password are required' }, { status: 400 })
+    const parsed = parseBody(changePasswordSchema, body)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
-
-    if (newPassword.length < 6) {
-      return NextResponse.json({ error: 'New password must be at least 6 characters' }, { status: 400 })
-    }
+    const { currentPassword, newPassword } = parsed.data
 
     // SECURITY: Always use the authenticated user's ID — ignore any userId from body
     const userId = auth.userId

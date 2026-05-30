@@ -408,3 +408,55 @@ Stage Summary:
 - 5 API routes hardened with Zod validation (using existing validation schemas from task 12)
 - Files modified: prisma/schema.prisma, 5 API route files
 - All changes pushed to database, Prisma client regenerated
+
+---
+Task ID: hardening-2
+Agent: Main Agent
+Task: Continue hardening — fix keepalive paths, unbounded queries, Zod auth validation, Socket.IO validation
+
+Work Log:
+- Fixed hardcoded paths in mini-services keepalive.sh scripts:
+  - ai-service/keepalive.sh: Changed SERVICE_DIR and LOG_FILE to use $(dirname "$0") dynamically
+  - notification-service/keepalive.sh: Same fix
+  - Both now source parent .env for INTERNAL_API_KEY via $SERVICE_DIR/../../.env
+  - Future git pulls will no longer break VPS deployments
+- Created .z-ai-config.template in ai-service directory for documentation
+- P0: Fixed unbounded database queries that could cause OOM:
+  - export/financial/route.ts: Added take: MAX_EXPORT_RECORDS (10,000)
+  - reports/route.ts: Added take: MAX_REPORT_TRIPS (5,000) + orderBy
+  - reports/performance/route.ts: Added take: MAX_PERFORMANCE_TRIPS (5,000) to all 4 sub-reports (driver, truck, zone, comparative)
+  - Also limited allCashAdvancesAll and allIncentivesAll queries in reports/route.ts
+- P0: Hardened tracking-service Socket.IO:
+  - Added input validation for driver:location events (lat/lng bounds, speed limits, heading range)
+  - Added input validation for viewer:subscribe events (array of strings, max 50 drivers)
+  - Changed CORS from static array to dynamic origin function that rejects unknown origins with warning log
+  - Logs blocked connection attempts for security auditing
+- P1: Created shared Zod schemas at src/lib/schemas/index.ts:
+  - Auth schemas: loginSchema, forgotPasswordSchema, resetPasswordSchema, changePasswordSchema, adminResetPasswordSchema
+  - Report schemas: generateReportSchema
+  - Financial schemas: invoiceSchema, cashAdvanceSchema, expenseSchema
+  - Socket.IO schemas: driverLocationSchema, viewerSubscribeSchema
+  - parseBody() helper for consistent validation across all routes
+  - All password schemas enforce: min 8 chars, uppercase, lowercase, number
+- P1: Applied Zod validation to 5 auth endpoints:
+  - auth/login → loginSchema
+  - auth/forgot-password → forgotPasswordSchema
+  - auth/reset-password → resetPasswordSchema
+  - auth/change-password → changePasswordSchema
+  - auth/admin-reset-password → adminResetPasswordSchema
+- P1: Applied Zod validation to 4 financial/report endpoints:
+  - reports/generate → generateReportSchema
+  - invoices → invoiceSchema (with .omit + .passthrough adaptation)
+  - cash-advances → local schema (field name mismatch: reason vs purpose)
+  - expenses → local schema (field name mismatch: expenseDate vs date)
+- All ESLint checks pass with zero errors
+- Dev server compiles and runs successfully
+
+Stage Summary:
+- Critical OOM risk fixed: 4 unbounded queries now have take limits (5K-10K)
+- Socket.IO hardened: Input validation + dynamic CORS origin checking
+- 9 API routes now use Zod validation (5 auth + 4 financial)
+- Shared schema library created for consistent validation
+- keepalive.sh scripts are now portable (no hardcoded paths)
+- Files created: src/lib/schemas/index.ts, .z-ai-config.template
+- Files modified: 4 keepalive.sh files, 9 API route files, tracking-service/index.ts

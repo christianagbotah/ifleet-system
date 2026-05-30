@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { generateReportSchema, parseBody } from '@/lib/schemas'
 import { fetchTripSummaryData, fetchFuelReportData, fetchExpenseReportData, fetchPayrollReportData, fetchFleetOverviewData, fetchWaybillData, fetchDriverPerformanceData, fetchMaintenanceReportData } from '@/lib/reports/report-data'
 import { fetchComplianceData, fetchTyreReportData, fetchInsuranceClaimsData, fetchWarehouseData, fetchDriverIncentivesData, fetchTollData, fetchSafetyInspectionsData, fetchCashAdvancesData, fetchDailySummaryData, fetchBorderCrossingsData, fetchDepotQueueData, fetchLoadBoardData, fetchFuelAnomalyData, fetchCostAnalyticsData, fetchTripProfitabilityData, fetchFuelAnalyticsData, fetchSafetyScoringData, fetchFleetProfitLossData } from '@/lib/reports/report-data-new'
 import { buildCsv, generateReportFilename } from '@/lib/reports/csv-generator'
-import type { ReportType, ExportFormat, ReportParams } from '@/lib/reports/types'
+import type { ReportType, ReportParams } from '@/lib/reports/types'
 
 const VALID_REPORT_TYPES: ReportType[] = [
   // Original 7
@@ -18,8 +19,6 @@ const VALID_REPORT_TYPES: ReportType[] = [
   'cost_analytics', 'trip_profitability', 'fuel_analytics', 'safety_scoring',
   'fleet_profit_loss',
 ]
-
-const VALID_FORMATS: ExportFormat[] = ['csv', 'xlsx', 'pdf']
 
 const CONTENT_TYPES: Record<string, string> = {
   csv: 'text/csv',
@@ -255,22 +254,18 @@ export async function POST(request: NextRequest) {
   let reportParams: ReportParams = {}
 
   try {
-    const body = await request.json()
-    const { type, format, params = {} } = body as { type: string; format: string; params: ReportParams }
-    reportType = type || 'unknown'
-    reportFormat = format || 'unknown'
-    reportParams = params
-
-    if (!type || !format) {
-      return NextResponse.json({ error: 'Missing required fields: type, format' }, { status: 400 })
+    const raw = await request.json()
+    const parsed = parseBody(generateReportSchema, raw)
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
+    const { type, format, params = {} } = parsed.data
+    reportType = type
+    reportFormat = format
+    reportParams = params
 
     if (!VALID_REPORT_TYPES.includes(type as ReportType)) {
       return NextResponse.json({ error: `Invalid report type. Must be one of: ${VALID_REPORT_TYPES.join(', ')}` }, { status: 400 })
-    }
-
-    if (!VALID_FORMATS.includes(format as ExportFormat)) {
-      return NextResponse.json({ error: `Invalid format. Must be one of: ${VALID_FORMATS.join(', ')}` }, { status: 400 })
     }
 
     // Waybill requires a specific tripId
