@@ -109,7 +109,7 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
 
   // Fire-and-forget: warm up the background scheduler on dashboard mount
   React.useEffect(() => {
-    fetch('/api/scheduler/warmup').catch(() => {
+    fetch('/api/scheduler/warmup?secret=warmup').catch(() => {
       // Silently ignore — scheduler warmup is non-critical
     })
   }, [])

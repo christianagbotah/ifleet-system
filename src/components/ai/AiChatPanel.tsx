@@ -76,6 +76,12 @@ export function AiChatPanel() {
 
     try {
       const token = getToken()
+      const controller = new AbortController()
+      abortControllerRef.current = controller
+
+      // 60-second timeout for AI response (LLM calls can be slow)
+      const timeoutId = setTimeout(() => controller.abort(), 60000)
+
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: {
@@ -86,8 +92,9 @@ export function AiChatPanel() {
           message: trimmed,
           conversationHistory,
         }),
-        signal: abortControllerRef.current.signal,
+        signal: controller.signal,
       })
+      clearTimeout(timeoutId)
 
       const data = await response.json()
 
@@ -103,9 +110,17 @@ export function AiChatPanel() {
 
       setMessages(prev => [...prev, assistantMessage])
     } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        setError('AI response timed out. Please try again.')
+        return
+      }
       const message = err instanceof Error ? err.message : 'Something went wrong'
-      setError(message)
+      // Provide more helpful error messages for common failures
+      if (message.includes('Failed to fetch') || message.includes('Unable to connect') || message.includes('NetworkError')) {
+        setError('Unable to reach AI service. The service may be starting up — please try again in a moment.')
+      } else {
+        setError(message)
+      }
     } finally {
       setIsLoading(false)
     }
