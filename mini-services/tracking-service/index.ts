@@ -4,8 +4,9 @@ const PORT = 3003;
 
 const io = new Server(PORT, {
   cors: {
-    origin: '*',
+    origin: process.env.CORS_ORIGIN || ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com'],
     methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 

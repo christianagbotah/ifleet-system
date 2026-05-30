@@ -16,7 +16,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { requireAuth, requireWriteAccess, type AuthContext } from '@/lib/auth-server'
 import {
   generateCSV,
   formatDate,
@@ -27,6 +27,8 @@ import { APP_NAME } from '@/lib/constants'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+
+const MAX_EXPORT_RECORDS = 10000
 
 type ExportType =
   | 'trucks'
@@ -68,6 +70,7 @@ async function exportTrucks(params: URLSearchParams, auth: Awaited<ReturnType<ty
 
   const trucks = await db.truck.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       driver: { select: { firstName: true, lastName: true } },
     },
@@ -105,7 +108,7 @@ async function exportTrucks(params: URLSearchParams, auth: Awaited<ReturnType<ty
   return csvResponse(generateCSV(headers, rows), `fleetpro-trucks-${Date.now()}.csv`)
 }
 
-async function exportDrivers(params: URLSearchParams, auth: any) {
+async function exportDrivers(params: URLSearchParams, auth: AuthContext) {
   const status = params.get('status')
   const search = params.get('search')
 
@@ -121,6 +124,7 @@ async function exportDrivers(params: URLSearchParams, auth: any) {
 
   const drivers = await db.driver.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     orderBy: { createdAt: 'desc' },
   })
 
@@ -159,7 +163,7 @@ async function exportDrivers(params: URLSearchParams, auth: any) {
   return csvResponse(generateCSV(headers, rows), `fleetpro-drivers-${Date.now()}.csv`)
 }
 
-async function exportTrips(params: URLSearchParams, auth: any) {
+async function exportTrips(params: URLSearchParams, auth: AuthContext) {
   const status = params.get('status')
   const startDate = params.get('startDate')
   const endDate = params.get('endDate')
@@ -175,6 +179,7 @@ async function exportTrips(params: URLSearchParams, auth: any) {
 
   const trips = await db.trip.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       truck: { select: { plateNumber: true } },
       driver: { select: { firstName: true, lastName: true } },
@@ -217,7 +222,7 @@ async function exportTrips(params: URLSearchParams, auth: any) {
   return csvResponse(generateCSV(headers, rows), `fleetpro-trips-${Date.now()}.csv`)
 }
 
-async function exportFuelLogs(params: URLSearchParams, auth: any) {
+async function exportFuelLogs(params: URLSearchParams, auth: AuthContext) {
   const truckId = params.get('truckId')
   const startDate = params.get('startDate')
   const endDate = params.get('endDate')
@@ -235,6 +240,7 @@ async function exportFuelLogs(params: URLSearchParams, auth: any) {
 
   const logs = await db.fuelLog.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       truck: { select: { plateNumber: true } },
       trip: { select: { tripNumber: true } },
@@ -271,7 +277,7 @@ async function exportFuelLogs(params: URLSearchParams, auth: any) {
   return csvResponse(generateCSV(headers, rows), `fleetpro-fuel-logs-${Date.now()}.csv`)
 }
 
-async function exportExpenses(params: URLSearchParams, auth: any) {
+async function exportExpenses(params: URLSearchParams, auth: AuthContext) {
   const truckId = params.get('truckId')
   const category = params.get('category')
   const startDate = params.get('startDate')
@@ -291,6 +297,7 @@ async function exportExpenses(params: URLSearchParams, auth: any) {
 
   const expenses = await db.expense.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       truck: { select: { plateNumber: true } },
     },
@@ -324,7 +331,7 @@ async function exportExpenses(params: URLSearchParams, auth: any) {
   return csvResponse(generateCSV(headers, rows), `fleetpro-expenses-${Date.now()}.csv`)
 }
 
-async function exportPayroll(params: URLSearchParams, auth: any) {
+async function exportPayroll(params: URLSearchParams, auth: AuthContext) {
   const driverId = params.get('driverId')
   const month = params.get('month')
   const year = params.get('year')
@@ -338,6 +345,7 @@ async function exportPayroll(params: URLSearchParams, auth: any) {
 
   const records = await db.payroll.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       driver: { select: { firstName: true, lastName: true } },
     },
@@ -375,7 +383,7 @@ async function exportPayroll(params: URLSearchParams, auth: any) {
   return csvResponse(generateCSV(headers, rows), `fleetpro-payroll-${Date.now()}.csv`)
 }
 
-async function exportInsurance(params: URLSearchParams, auth: any) {
+async function exportInsurance(params: URLSearchParams, auth: AuthContext) {
   const truckId = params.get('truckId')
   const status = params.get('status')
 
@@ -385,6 +393,7 @@ async function exportInsurance(params: URLSearchParams, auth: any) {
 
   const records = await db.insurance.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       truck: { select: { plateNumber: true } },
     },
@@ -422,7 +431,7 @@ async function exportInsurance(params: URLSearchParams, auth: any) {
   return csvResponse(generateCSV(headers, rows), `fleetpro-insurance-${Date.now()}.csv`)
 }
 
-async function exportMaintenance(params: URLSearchParams, auth: any) {
+async function exportMaintenance(params: URLSearchParams, auth: AuthContext) {
   const truckId = params.get('truckId')
   const type = params.get('type')
   const status = params.get('status')
@@ -434,6 +443,7 @@ async function exportMaintenance(params: URLSearchParams, auth: any) {
 
   const records = await db.maintenanceRecord.findMany({
     where,
+    take: MAX_EXPORT_RECORDS,
     include: {
       truck: { select: { plateNumber: true } },
     },
@@ -479,7 +489,7 @@ async function exportMaintenance(params: URLSearchParams, auth: any) {
 
 const EXPORT_HANDLERS: Record<
   ExportType,
-  (params: URLSearchParams, auth: any) => Promise<NextResponse>
+  (params: URLSearchParams, auth: AuthContext) => Promise<NextResponse>
 > = {
   trucks: exportTrucks,
   drivers: exportDrivers,

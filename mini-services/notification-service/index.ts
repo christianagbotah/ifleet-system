@@ -24,6 +24,9 @@ import http from 'http'
 
 const PORT = 3004
 
+// API key for authenticating backend requests to the notification service
+const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
+
 // ── Create HTTP server + Socket.IO ──
 const httpServer = http.createServer((_req, res) => {
   // Default response for unmatched routes
@@ -33,8 +36,9 @@ const httpServer = http.createServer((_req, res) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: '*',
+    origin: process.env.CORS_ORIGIN || ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com'],
     methods: ['GET', 'POST'],
+    credentials: true,
   },
   // Allow polling and websocket
   transports: ['polling', 'websocket'],
@@ -142,6 +146,12 @@ httpServer.on('request', (req, res) => {
   res.end(JSON.stringify({ error: 'Not found' }))
 })
 
+// Verify internal API key from request headers
+function verifyApiKey(req: http.IncomingMessage): boolean {
+  const apiKey = req.headers['x-internal-api-key']
+  return apiKey === INTERNAL_API_KEY
+}
+
 function readBody(req: http.IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = []
@@ -153,6 +163,11 @@ function readBody(req: http.IncomingMessage): Promise<string> {
 
 async function handleNotify(req: http.IncomingMessage, res: http.ServerResponse) {
   try {
+    if (!verifyApiKey(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: 'Unauthorized: Invalid or missing API key' }))
+      return
+    }
     const body = JSON.parse(await readBody(req))
     const userIds: string[] = body.userIds || []
     const notification = body.notification || {}
@@ -179,6 +194,11 @@ async function handleNotify(req: http.IncomingMessage, res: http.ServerResponse)
 
 async function handleNotifyRole(req: http.IncomingMessage, res: http.ServerResponse) {
   try {
+    if (!verifyApiKey(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: 'Unauthorized: Invalid or missing API key' }))
+      return
+    }
     const body = JSON.parse(await readBody(req))
     const role: string = body.role || ''
     const notification = body.notification || {}
@@ -206,6 +226,11 @@ async function handleNotifyRole(req: http.IncomingMessage, res: http.ServerRespo
 
 async function handleNotifyAll(req: http.IncomingMessage, res: http.ServerResponse) {
   try {
+    if (!verifyApiKey(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: 'Unauthorized: Invalid or missing API key' }))
+      return
+    }
     const body = JSON.parse(await readBody(req))
     const notification = body.notification || {}
 

@@ -33,7 +33,11 @@ export const ROLES = {
 
 export type RoleName = (typeof ROLES)[keyof typeof ROLES]
 
-const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fleetpro-fallback-secret'
+const _JWT_SECRET_RAW = process.env.NEXTAUTH_SECRET
+if (!_JWT_SECRET_RAW && process.env.NODE_ENV !== 'development') {
+  console.error('[SECURITY] NEXTAUTH_SECRET environment variable is not set! Using fallback is UNSAFE for production.')
+}
+const JWT_SECRET = _JWT_SECRET_RAW || 'fleetpro-fallback-secret-DO-NOT-USE-IN-PROD'
 
 // ============ JWT Decoder Cache ============
 // Avoid re-parsing the same JWT on every requireAuth call within one request.

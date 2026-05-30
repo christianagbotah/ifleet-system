@@ -81,7 +81,7 @@ model BorderCrossing {
   updatedAt DateTime @updatedAt
   user           User      @relation(fields: [createdBy], references: [id])
   driver         Driver    @relation(fields: [driverId], references: [id])
-  trip           Trip      @relation(fields: [tripId], references: [id])
+  trip           Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
   truck          Truck     @relation(fields: [truckId], references: [id])
 
   @@index([borderName])
@@ -468,7 +468,7 @@ model Expense {
   tripId          String?
   createdAt       DateTime         @default(now())
   updatedAt DateTime @updatedAt
-  trip            Trip?            @relation(fields: [tripId], references: [id])
+  trip            Trip?            @relation(fields: [tripId], references: [id], onDelete: Cascade)
   truck           Truck            @relation(fields: [truckId], references: [id])
   ExpenseApproval ExpenseApproval?
 
@@ -546,7 +546,7 @@ model FuelLog {
   notes           String?
   createdAt       DateTime @default(now())
   updatedAt DateTime @updatedAt
-  trip            Trip     @relation(fields: [tripId], references: [id])
+  trip            Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
   truck           Truck    @relation(fields: [truckId], references: [id])
 
   @@index([date])
@@ -1075,6 +1075,7 @@ model Supplier {
 
 model SystemSettings {
   id                      String                    @id @default(cuid())
+  isDefault               Boolean                   @unique @default(true)
   companyName             String   @default("iFleetPro Ltd.")
   companyEmail            String   @default("info@fleetpro.com.gh")
   companyPhone            String   @default("+233 30 277 8899")
@@ -1302,7 +1303,7 @@ model TripComment {
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  trip      Trip     @relation(fields: [tripId], references: [id])
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([tripId, createdAt])
@@ -1346,7 +1347,7 @@ model TripEvent {
   location   String?
   metadata   String?   @db.Text
   createdAt  DateTime @default(now())
-  trip       Trip     @relation(fields: [tripId], references: [id])
+  trip       Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@index([tripId, createdAt])
 }
@@ -1544,7 +1545,7 @@ model WeightVerification {
   location        String?
   createdAt       DateTime @default(now())
   updatedAt DateTime @updatedAt
-  trip            Trip     @relation(fields: [tripId], references: [id])
+  trip            Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@index([checkpointType])
   @@index([createdAt])

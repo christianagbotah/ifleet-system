@@ -59,16 +59,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No password set for this account' }, { status: 400 })
     }
 
-    // Verify current password using bcrypt (with plaintext fallback for backward compat)
-    const isBcryptHash = user.password.startsWith('$2')
-    let isCurrentPasswordValid = false
-
-    if (isBcryptHash) {
-      isCurrentPasswordValid = await comparePassword(currentPassword, user.password)
-    } else {
-      // Backward compatibility: plaintext comparison during migration
-      isCurrentPasswordValid = user.password === currentPassword
-    }
+    // Verify current password using bcrypt
+    const isCurrentPasswordValid = await comparePassword(currentPassword, user.password)
 
     if (!isCurrentPasswordValid) {
       return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 })

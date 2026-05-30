@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { comparePassword, hashPassword } from '@/lib/auth-utils'
+import { comparePassword } from '@/lib/auth-utils'
 import jwt from 'jsonwebtoken'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { rateLimit, RATE_LIMITS, getClientIp as getClientIpFromRateLimit } from '@/lib/rate-limit'
 
-const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fleetpro-fallback-secret'
+const _JWT_SECRET_RAW = process.env.NEXTAUTH_SECRET
+if (!_JWT_SECRET_RAW && process.env.NODE_ENV !== 'development') {
+  console.error('[SECURITY] NEXTAUTH_SECRET environment variable is not set!')
+}
+const JWT_SECRET = _JWT_SECRET_RAW || 'fleetpro-fallback-secret-DO-NOT-USE-IN-PROD'
 
 const ENDPOINT_KEY = 'auth/login'
 
@@ -60,33 +64,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No password set for this account' }, { status: 401 })
     }
 
-    // Compare password using bcrypt
-    const isBcryptHash = user.password.startsWith('$2')
-    let isPasswordValid = false
-    let needsMigration = false
-
-    if (isBcryptHash) {
-      isPasswordValid = await comparePassword(password, user.password)
-    } else {
-      // Backward compatibility: allow plaintext during migration
-      isPasswordValid = user.password === password
-      if (isPasswordValid) {
-        needsMigration = true
-      }
-    }
+    // Compare password using bcrypt only
+    const isPasswordValid = await comparePassword(password, user.password)
 
     if (!isPasswordValid) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
-    }
-
-    // Auto-migrate plaintext password to bcrypt hash
-    if (needsMigration) {
-      const hashedPassword = await hashPassword(password)
-      await db.user.update({
-        where: { id: user.id },
-        data: { password: hashedPassword },
-      })
-      console.log(`[Auth] Migrated plaintext password to bcrypt for user: ${user.email}`)
     }
 
     // Parse permissions from JSON string

@@ -38,7 +38,7 @@ async function getAdminManagerUsers() {
   })
 }
 
-/** Create in_app notifications for all admin/manager users */
+/** Create in_app notifications for all admin/manager users (batch) */
 async function notifyAdminManagers(data: {
   type: string
   title: string
@@ -53,26 +53,23 @@ async function notifyAdminManagers(data: {
     return 0
   }
 
-  let count = 0
-  for (const user of users) {
-    try {
-      await db.notification.create({
-        data: {
-          userId: user.id,
-          type: data.type,
-          title: data.title,
-          message: data.message,
-          channel: 'in_app',
-          link: data.link,
-          metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
-        },
-      })
-      count++
-    } catch (error) {
-      logger.error(`Failed to create notification for user ${user.id}:`, error)
-    }
+  try {
+    await db.notification.createMany({
+      data: users.map(user => ({
+        userId: user.id,
+        type: data.type,
+        title: data.title,
+        message: data.message,
+        channel: 'in_app',
+        link: data.link,
+        metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
+      })),
+    })
+    return users.length
+  } catch (error) {
+    logger.error('Failed to batch-create notifications:', error)
+    return 0
   }
-  return count
 }
 
 // ============ Job 1: Insurance Expiry Check ============
