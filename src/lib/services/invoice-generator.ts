@@ -64,7 +64,8 @@ const DEFAULT_TAX_RATE = 0
  */
 export async function generateInvoiceForTrip(
   tripId: string,
-  _userId: string
+  _userId: string,
+  options?: { status?: string }
 ): Promise<GeneratedInvoice | null> {
   try {
     // ── 1. Fetch trip with all relations ──
@@ -207,7 +208,7 @@ export async function generateInvoiceForTrip(
         tripId,
         issueDate,
         dueDate,
-        status: 'sent', // Trip is confirmed, so invoice is sent
+        status: options?.status || 'draft', // Default to draft for auto-generation; explicit 'sent' for manual
         subtotal: Math.round(subtotal * 100) / 100,
         taxAmount,
         taxRate,

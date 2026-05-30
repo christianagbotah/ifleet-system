@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate the invoice
-    const invoice = await generateInvoiceForTrip(tripId, auth.userId)
+    const invoice = await generateInvoiceForTrip(tripId, auth.userId, { status: 'sent' })
 
     if (!invoice) {
       return NextResponse.json(

@@ -38,6 +38,7 @@ import { apiFetch, uploadFiles, createTrip, updateTrip, fetchTrucks, fetchDriver
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
 import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2, CheckSquare, Square, Camera } from 'lucide-react'
+import { TripInvoicePanel } from './TripInvoicePanel'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -493,6 +494,10 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
 
   // Mark as completed on creation
   const [markCompleted, setMarkCompleted] = React.useState(false)
+
+  // Auto-generated invoice state (shown after trip creation)
+  const [createdInvoice, setCreatedInvoice] = React.useState<Record<string, unknown> | null>(null)
+  const [createdTripNumber, setCreatedTripNumber] = React.useState<string>('')
 
   // Cargo items state (flat list)
   const [cargoItems, setCargoItems] = React.useState<CargoItemRow[]>([])
@@ -1006,12 +1011,19 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
       } else {
         // Include markCompleted flag for new trips
         if (markCompleted) body.markCompleted = true
-        await createTrip(body)
-        toast.success(markCompleted ? 'Trip created and completed' : 'Trip created successfully', {
-          description: `${data.loadingLocation || 'Origin'} → ${data.destination || 'Destination'} (${data.itemName})`,
-        })
-        onOpenChange(false)
-        onCreated?.()
+        const response = await createTrip(body)
+        // Check if auto-generated invoice came back
+        const responseAny = response as Record<string, unknown>
+        if (responseAny.invoice && typeof responseAny.invoice === 'object' && (responseAny.invoice as Record<string, unknown>).id) {
+          setCreatedInvoice(responseAny.invoice as Parameters<typeof setCreatedInvoice>[0])
+          setCreatedTripNumber(responseAny.tripNumber as string)
+        } else {
+          toast.success(markCompleted ? 'Trip created and completed' : 'Trip created successfully', {
+            description: `${data.loadingLocation || 'Origin'} → ${data.destination || 'Destination'} (${data.itemName})`,
+          })
+          onOpenChange(false)
+          onCreated?.()
+        }
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : trip ? 'Failed to update trip' : 'Failed to create trip')
@@ -1867,14 +1879,38 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
           </form>
         </Form>
         </DialogBody>
-        <DialogFooter className="gap-2 sm:gap-0 shrink-0 border-t pt-3">
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={submitting}>
-            Cancel
-          </Button>
-          <Button type="submit" form="trip-form" className="bg-amber-500 hover:bg-amber-600 text-white" disabled={submitting}>
-            {submitting ? 'Saving...' : trip ? 'Update Trip' : 'Create Trip'}
-          </Button>
-        </DialogFooter>
+
+        {/* Invoice Panel - shown after trip creation when auto-invoice is generated */}
+        {createdInvoice && (
+          <>
+            <Separator />
+            <div className="px-1">
+              <TripInvoicePanel
+                invoice={createdInvoice as Parameters<typeof TripInvoicePanel>[0]['invoice']}
+                tripNumber={createdTripNumber}
+                onClose={() => {
+                  setCreatedInvoice(null)
+                  onOpenChange(false)
+                  onCreated?.()
+                }}
+                onFinalized={() => {
+                  toast.success('Trip created and invoice finalized successfully')
+                }}
+              />
+            </div>
+          </>
+        )}
+
+        {!createdInvoice && (
+          <DialogFooter className="gap-2 sm:gap-0 shrink-0 border-t pt-3">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={submitting}>
+              Cancel
+            </Button>
+            <Button type="submit" form="trip-form" className="bg-amber-500 hover:bg-amber-600 text-white" disabled={submitting}>
+              {submitting ? 'Saving...' : trip ? 'Update Trip' : 'Create Trip'}
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   )

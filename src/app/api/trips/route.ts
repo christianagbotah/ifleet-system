@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { dispatchNotification } from '@/lib/services/notification-dispatcher'
+import { generateInvoiceForTrip } from '@/lib/services/invoice-generator'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { APP_NAME } from '@/lib/constants'
@@ -422,6 +423,30 @@ export async function POST(request: NextRequest) {
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
+    // ── Auto-generate draft invoice for the trip ──
+    let generatedInvoice: Record<string, unknown> | null = null
+    try {
+      const invoice = await generateInvoiceForTrip(trip.id, auth.userId)
+      if (invoice) {
+        // Fetch full invoice with relations
+        const full = await db.invoice.findUnique({
+          where: { id: invoice.id },
+          include: {
+            client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true } },
+            InvoiceItem: { orderBy: { order: 'asc' } },
+          },
+        })
+        if (full) {
+          generatedInvoice = {
+            ...(full as Record<string, unknown>),
+            items: (full as Record<string, unknown>).InvoiceItem,
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[Trip] Auto-invoice generation failed (non-blocking):', err)
+    }
+
     // ── Fire-and-forget: notify admins and driver about new trip ──
     const newTripId = trip.id
     const driverPhone = driver.phone
@@ -495,7 +520,7 @@ export async function POST(request: NextRequest) {
       }
     })().catch(() => { /* fire-and-forget */ })
 
-    return NextResponse.json(trip, { status: 201 })
+    return NextResponse.json({ ...trip, invoice: generatedInvoice }, { status: 201 })
   } catch (error) {
     console.error('Trip create error:', error)
     return NextResponse.json({ error: 'Failed to create trip' }, { status: 500 })
