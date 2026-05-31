@@ -22,7 +22,7 @@ async function buildFleetContext(auth: { userId: string; driverId: string | null
         id: true, firstName: true, lastName: true, phone: true,
         status: true, totalTrips: true, rating: true,
         licenseExpiry: true,
-        truck: { select: { id: true, plateNumber: true, make: true, model: true, status: true } },
+        Truck: { select: { id: true, plateNumber: true, make: true, model: true, status: true } },
       },
       take: 50,
     })
@@ -83,7 +83,7 @@ async function buildFleetContext(auth: { userId: string; driverId: string | null
     // Drivers
     lines.push(`--- DRIVERS (${activeDrivers} active, ${inactiveDrivers} inactive) ---`)
     for (const d of drivers.slice(0, 30)) {
-      const truck = d.truck ? ` [${d.truck.plateNumber}]` : ''
+      const truck = d.Truck ? ` [${d.Truck.plateNumber}]` : ''
       const licenseWarning = d.licenseExpiry && d.licenseExpiry <= new Date(now.getTime() + 30 * 86400000) ? ' ⚠ LICENSE EXPIRING' : ''
       lines.push(`  • ${d.firstName} ${d.lastName} — ${d.phone} — ${d.status}${truck} — ${d.totalTrips} trips — Rating: ${d.rating}${licenseWarning}`)
     }
