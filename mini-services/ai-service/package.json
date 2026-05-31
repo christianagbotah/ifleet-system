@@ -1,13 +1,13 @@
 {
   "name": "ifleetpro-ai-service",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "bun --hot index.ts",
     "start": "bun index.ts"
   },
   "dependencies": {
-    "socket.io": "^4.7.5",
-    "z-ai-web-dev-sdk": "^0.0.17"
+    "@google/generative-ai": "^0.24.0",
+    "socket.io": "^4.7.5"
   }
 }
