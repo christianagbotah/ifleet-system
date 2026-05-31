@@ -6,7 +6,7 @@
 # Derive paths dynamically so this works on any machine / VPS
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SERVICE_DIR="$SCRIPT_DIR"
-LOG_FILE="$SCRIPT_DIR/../../ai-service.log"
+LOG_FILE="$SCRIPT_DIR/ai-service.log"
 MAX_RESTART_DELAY=30
 
 restart_delay=1
@@ -14,9 +14,14 @@ restart_delay=1
 while true; do
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting AI service..."
 
-  # Source parent .env for shared environment variables (INTERNAL_API_KEY, etc.)
+  # Source parent .env for shared env vars (INTERNAL_API_KEY, etc.)
   if [ -f "$SERVICE_DIR/../../.env" ]; then
     set -a; source "$SERVICE_DIR/../../.env"; set +a
+  fi
+
+  # Source local .env for service-specific vars (GROQ_API_KEY)
+  if [ -f "$SERVICE_DIR/.env" ]; then
+    set -a; source "$SERVICE_DIR/.env"; set +a
   fi
 
   # Start the service with stdin closed to prevent SIGHUP on terminal close
