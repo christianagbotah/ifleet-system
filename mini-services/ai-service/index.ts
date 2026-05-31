@@ -3,32 +3,35 @@
 // ════════════════════════════════════════════════════════════════════
 //
 // AI-powered fleet management assistant on port 3007.
-// Uses Google Gemini (free) via @google/generative-ai SDK.
+// Uses Groq (free, fast) via groq-sdk (OpenAI-compatible API).
 //
 // HTTP API (backend → service):
-//   - POST /api/chat            → chat completions with conversation history
-//   - POST /api/dispatch-suggest → optimal driver/truck recommendations
-//   - POST /api/fuel-anomaly    → fuel log anomaly analysis
-//   - POST /api/report-nl       → natural language report generation
-//   - POST /api/analyze-document → receipt/document intelligence (Vision)
+//   - POST /api/chat              → chat completions with conversation history
+//   - POST /api/dispatch-suggest  → optimal driver/truck recommendations
+//   - POST /api/fuel-anomaly      → fuel log anomaly analysis
+//   - POST /api/report-nl         → natural language report generation
+//   - POST /api/analyze-document  → receipt/document intelligence (Vision)
 //   - POST /api/maintenance-predict → predictive maintenance alerts
 //   - POST /api/invoice-dispute   → invoice dispute resolution
 //
 // Health check:
-//   - GET /api/health           → { status: 'ok' }
+//   - GET /api/health             → { status: 'ok' }
 // ────────────────────────────────────────────────────────────────────
 
 import { Server } from 'socket.io'
 import http from 'http'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import Groq from 'groq-sdk'
 
 const PORT = 3007
 
 // API key for authenticating backend requests
 const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
 
-// Google Gemini API key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || ''
+// Groq API key
+const GROQ_API_KEY = process.env.GROQ_API_KEY || ''
+
+// Default model — mixtral is fast and free on Groq
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 
 // ── System prompts ──
 const FLEET_ASSISTANT_PROMPT = `You are an AI assistant for iFleet Pro fleet management system. Help drivers and managers with questions about trips, fuel, maintenance, routes, and general fleet operations. Be concise and helpful. Use bullet points when listing items. Format currency amounts in GHS (Ghana Cedi). When discussing trips, consider factors like distance, fuel consumption, driver availability, and truck maintenance status.`
@@ -90,66 +93,67 @@ const io = new Server(httpServer, {
 const userSockets = new Map<string, Set<string>>()
 const socketUserMap = new Map<string, string>()
 
-// ── Google Gemini SDK ──
-let genAI: GoogleGenerativeAI | null = null
+// ── Groq SDK ──
+let groq: Groq | null = null
 let initialized = false
 
-function initGemini() {
-  if (!GEMINI_API_KEY) {
-    console.error('[AI Service] GEMINI_API_KEY not set. AI features will return errors.')
+function initGroq() {
+  if (!GROQ_API_KEY) {
+    console.error('[AI Service] GROQ_API_KEY not set. AI features will return errors.')
     console.error('[AI Service] Set it in .env or as environment variable.')
     return
   }
-  genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
+  groq = new Groq({ apiKey: GROQ_API_KEY })
   initialized = true
-  console.log('[AI Service] Google Gemini SDK initialized')
+  console.log('[AI Service] Groq SDK initialized')
 }
 
 /**
- * Call Gemini with a text prompt. Returns the raw text response.
+ * Call Groq with a text prompt. Returns the raw text response.
  */
-async function callGemini(systemPrompt: string, userMessage: string): Promise<string> {
-  if (!genAI) throw new Error('Gemini API not initialized. Set GEMINI_API_KEY.')
+async function callGroq(systemPrompt: string, userMessage: string): Promise<string> {
+  if (!groq) throw new Error('Groq not initialized. Set GROQ_API_KEY.')
 
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 2048,
-    },
+  const response = await groq.chat.completions.create({
+    model: GROQ_MODEL,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userMessage },
+    ],
+    temperature: 0.7,
+    max_tokens: 2048,
   })
 
-  const prompt = `${systemPrompt}\n\n---\n\n${userMessage}`
-  const result = await model.generateContent(prompt)
-  return result.response.text()
+  return response.choices[0]?.message?.content || ''
 }
 
 /**
- * Call Gemini with image (vision model) + text prompt. Returns raw text.
+ * Call Groq with image (vision) + text prompt. Returns raw text.
  */
-async function callGeminiVision(prompt: string, imageBase64: string, mimeType: string): Promise<string> {
-  if (!genAI) throw new Error('Gemini API not initialized. Set GEMINI_API_KEY.')
+async function callGroqVision(prompt: string, imageBase64: string, mimeType: string): Promise<string> {
+  if (!groq) throw new Error('Groq not initialized. Set GROQ_API_KEY.')
 
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-    generationConfig: {
-      temperature: 0.3,
-      maxOutputTokens: 2048,
-    },
-  })
-
-  const parts = [
-    { text: prompt },
-    {
-      inlineData: {
-        mimeType,
-        data: imageBase64,
+  const response = await groq.chat.completions.create({
+    model: 'llama-3.2-90b-vision-preview',
+    messages: [
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: prompt },
+          {
+            type: 'image_url',
+            image_url: {
+              url: `data:${mimeType};base64,${imageBase64}`,
+            },
+          },
+        ],
       },
-    },
-  ]
+    ],
+    temperature: 0.3,
+    max_tokens: 2048,
+  })
 
-  const result = await model.generateContent(parts)
-  return result.response.text()
+  return response.choices[0]?.message?.content || ''
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -168,14 +172,17 @@ io.on('connection', (socket) => {
     try {
       subscribeUser(socket.id, data.userId)
 
-      // Build conversation context as a single prompt for Gemini
-      let contextPrompt = ''
+      // Build messages array for Groq conversation
+      const messages: Array<{ role: string; content: string }> = [
+        { role: 'system', content: FLEET_ASSISTANT_PROMPT },
+      ]
       if (data.conversationHistory && data.conversationHistory.length > 0) {
         const recent = data.conversationHistory.slice(-20)
-        contextPrompt = 'Previous conversation:\n' + recent.map(m => `${m.role}: ${m.content}`).join('\n') + '\n\n'
+        messages.push(...recent)
       }
+      messages.push({ role: 'user', content: data.message })
 
-      const response = await callGemini(FLEET_ASSISTANT_PROMPT, `${contextPrompt}User question: ${data.message}`)
+      const response = await callGroqMulti(messages)
 
       socket.emit('ai:response', {
         userId: data.userId,
@@ -201,6 +208,22 @@ io.on('connection', (socket) => {
     cleanupSocket(socket.id)
   })
 })
+
+/**
+ * Call Groq with a full messages array (for multi-turn conversation).
+ */
+async function callGroqMulti(messages: Array<{ role: string; content: string }>): Promise<string> {
+  if (!groq) throw new Error('Groq not initialized. Set GROQ_API_KEY.')
+
+  const response = await groq.chat.completions.create({
+    model: GROQ_MODEL,
+    messages: messages as Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
+    temperature: 0.7,
+    max_tokens: 2048,
+  })
+
+  return response.choices[0]?.message?.content || ''
+}
 
 function subscribeUser(socketId: string, userId: string) {
   const sockets = userSockets.get(userId) || new Set()
@@ -247,7 +270,8 @@ httpServer.on('request', async (req, res) => {
       status: 'ok',
       connectedUsers: userSockets.size,
       service: 'ai',
-      provider: initialized ? 'gemini' : 'not_configured',
+      provider: initialized ? 'groq' : 'not_configured',
+      model: initialized ? GROQ_MODEL : undefined,
     }))
     return
   }
@@ -355,14 +379,18 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
 
     console.log(`[AI Service] /api/chat request from ${userId}: ${message.substring(0, 100)}`)
 
-    let contextPrompt = ''
+    // Build messages array for multi-turn conversation
+    const messages: Array<{ role: string; content: string }> = [
+      { role: 'system', content: FLEET_ASSISTANT_PROMPT },
+    ]
     if (conversationHistory && Array.isArray(conversationHistory) && conversationHistory.length > 0) {
       const recent = conversationHistory.slice(-20)
-      contextPrompt = 'Previous conversation:\n' + recent.map(m => `${m.role}: ${m.content}`).join('\n') + '\n\n'
+      messages.push(...recent)
     }
+    messages.push({ role: 'user', content: message })
 
-    const aiResponse = await callGemini(FLEET_ASSISTANT_PROMPT, `${contextPrompt}User question: ${message}`)
-    console.log(`[AI Service] Gemini response received (${aiResponse.length} chars)`)
+    const aiResponse = await callGroqMulti(messages)
+    console.log(`[AI Service] Groq response received (${aiResponse.length} chars)`)
 
     jsonResponse(res, 200, { success: true, response: aiResponse, userId })
   } catch (error) {
@@ -388,7 +416,7 @@ async function handleDispatchSuggest(req: http.IncomingMessage, res: http.Server
     }
 
     const dataDescription = JSON.stringify({ tripDetails, availableDrivers: availableDrivers || [], availableTrucks: availableTrucks || [] }, null, 2)
-    const aiResponse = await callGemini(DISPATCH_PROMPT, `Analyze this trip and recommend optimal driver/truck assignments:\n\n${dataDescription}`)
+    const aiResponse = await callGroq(DISPATCH_PROMPT, `Analyze this trip and recommend optimal driver/truck assignments:\n\n${dataDescription}`)
 
     jsonResponse(res, 200, { success: true, response: aiResponse })
   } catch (error) {
@@ -411,7 +439,7 @@ async function handleFuelAnomaly(req: http.IncomingMessage, res: http.ServerResp
     }
 
     const dataDescription = JSON.stringify({ fuelLogs, vehicleInfo: vehicleInfo || null, logCount: fuelLogs.length }, null, 2)
-    const aiResponse = await callGemini(FUEL_ANOMALY_PROMPT, `Analyze these fuel logs for anomalies:\n\n${dataDescription}`)
+    const aiResponse = await callGroq(FUEL_ANOMALY_PROMPT, `Analyze these fuel logs for anomalies:\n\n${dataDescription}`)
 
     jsonResponse(res, 200, { success: true, response: aiResponse })
   } catch (error) {
@@ -434,7 +462,7 @@ async function handleReportNL(req: http.IncomingMessage, res: http.ServerRespons
     }
 
     const dataDescription = JSON.stringify({ reportType, data, additionalContext: additionalContext || '' }, null, 2)
-    const aiResponse = await callGemini(REPORT_PROMPT, `Generate a ${reportType} report from this data:\n\n${dataDescription}`)
+    const aiResponse = await callGroq(REPORT_PROMPT, `Generate a ${reportType} report from this data:\n\n${dataDescription}`)
 
     jsonResponse(res, 200, { success: true, response: aiResponse, reportType })
   } catch (error) {
@@ -467,10 +495,10 @@ async function handleAnalyzeDocument(req: http.IncomingMessage, res: http.Server
     const mimeType = matches[1]
     const base64Data = matches[2]
 
-    console.log(`[AI Service] Sending image to Gemini Vision for document analysis (${base64Data.length} chars base64)...`)
+    console.log(`[AI Service] Sending image to Groq Vision for document analysis (${base64Data.length} chars base64)...`)
 
-    const rawContent = await callGeminiVision(DOCUMENT_ANALYSIS_PROMPT, base64Data, mimeType)
-    console.log(`[AI Service] Gemini Vision response received (${rawContent.length} chars)`)
+    const rawContent = await callGroqVision(DOCUMENT_ANALYSIS_PROMPT, base64Data, mimeType)
+    console.log(`[AI Service] Groq Vision response received (${rawContent.length} chars)`)
 
     const parsed = parseJsonResponse(rawContent)
 
@@ -497,7 +525,7 @@ async function handleMaintenancePredict(req: http.IncomingMessage, res: http.Ser
     console.log(`[AI Service] /api/maintenance-predict request for truck ${truckId}`)
 
     const dataDescription = JSON.stringify({ truckId, mileage, lastMaintenanceDate, maintenanceHistory: maintenanceHistory || [], analysisDate: new Date().toISOString() }, null, 2)
-    const rawContent = await callGemini(MAINTENANCE_PREDICT_PROMPT, `Predict maintenance needs for this truck:\n\n${dataDescription}`)
+    const rawContent = await callGroq(MAINTENANCE_PREDICT_PROMPT, `Predict maintenance needs for this truck:\n\n${dataDescription}`)
     console.log(`[AI Service] Maintenance predict response received (${rawContent.length} chars)`)
 
     const parsed = parseJsonResponse(rawContent)
@@ -525,7 +553,7 @@ async function handleInvoiceDispute(req: http.IncomingMessage, res: http.ServerR
     console.log(`[AI Service] /api/invoice-dispute request for invoice ${invoiceId}`)
 
     const dataDescription = JSON.stringify({ invoiceId, disputeReason, invoiceData: invoiceData || {}, analysisDate: new Date().toISOString() }, null, 2)
-    const rawContent = await callGemini(INVOICE_DISPUTE_PROMPT, `Analyze this invoice dispute:\n\n${dataDescription}`)
+    const rawContent = await callGroq(INVOICE_DISPUTE_PROMPT, `Analyze this invoice dispute:\n\n${dataDescription}`)
     console.log(`[AI Service] Invoice dispute response received (${rawContent.length} chars)`)
 
     const parsed = parseJsonResponse(rawContent)
@@ -542,19 +570,19 @@ async function handleInvoiceDispute(req: http.IncomingMessage, res: http.ServerR
 // ════════════════════════════════════════════════════════════════════
 
 function main() {
-  initGemini()
+  initGroq()
 
   httpServer.listen(PORT, () => {
     console.log(`[AI Service] Running on port ${PORT}`)
-    console.log(`[AI Service] Provider: ${initialized ? 'Google Gemini (gemini-2.0-flash)' : 'NOT CONFIGURED — set GEMINI_API_KEY'}`)
-    console.log(`[AI Service] Chat:            http://localhost:${PORT}/api/chat`)
-    console.log(`[AI Service] Dispatch Suggest: http://localhost:${PORT}/api/dispatch-suggest`)
-    console.log(`[AI Service] Fuel Anomaly:    http://localhost:${PORT}/api/fuel-anomaly`)
-    console.log(`[AI Service] Report NL:       http://localhost:${PORT}/api/report-nl`)
-    console.log(`[AI Service] Analyze Doc:     http://localhost:${PORT}/api/analyze-document`)
-    console.log(`[AI Service] Maint Predict:   http://localhost:${PORT}/api/maintenance-predict`)
-    console.log(`[AI Service] Invoice Dispute: http://localhost:${PORT}/api/invoice-dispute`)
-    console.log(`[AI Service] Health:          http://localhost:${PORT}/api/health`)
+    console.log(`[AI Service] Provider: ${initialized ? `Groq (${GROQ_MODEL})` : 'NOT CONFIGURED — set GROQ_API_KEY'}`)
+    console.log(`[AI Service] Chat:              http://localhost:${PORT}/api/chat`)
+    console.log(`[AI Service] Dispatch Suggest:  http://localhost:${PORT}/api/dispatch-suggest`)
+    console.log(`[AI Service] Fuel Anomaly:      http://localhost:${PORT}/api/fuel-anomaly`)
+    console.log(`[AI Service] Report NL:         http://localhost:${PORT}/api/report-nl`)
+    console.log(`[AI Service] Analyze Doc:       http://localhost:${PORT}/api/analyze-document`)
+    console.log(`[AI Service] Maint Predict:     http://localhost:${PORT}/api/maintenance-predict`)
+    console.log(`[AI Service] Invoice Dispute:   http://localhost:${PORT}/api/invoice-dispute`)
+    console.log(`[AI Service] Health:            http://localhost:${PORT}/api/health`)
   })
 }
 
