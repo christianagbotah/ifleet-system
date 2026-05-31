@@ -371,7 +371,7 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
     }
 
     const body = JSON.parse(await readBody(req))
-    const { userId, message, conversationHistory } = body
+    const { userId, message, conversationHistory, fleetContext } = body
 
     if (!userId || !message) {
       return jsonResponse(res, 400, { error: 'userId and message are required' })
@@ -379,9 +379,15 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
 
     console.log(`[AI Service] /api/chat request from ${userId}: ${message.substring(0, 100)}`)
 
+    // Build system prompt with fleet context if provided
+    let systemPrompt = FLEET_ASSISTANT_PROMPT
+    if (fleetContext) {
+      systemPrompt += '\n\n' + fleetContext
+    }
+
     // Build messages array for multi-turn conversation
     const messages: Array<{ role: string; content: string }> = [
-      { role: 'system', content: FLEET_ASSISTANT_PROMPT },
+      { role: 'system', content: systemPrompt },
     ]
     if (conversationHistory && Array.isArray(conversationHistory) && conversationHistory.length > 0) {
       const recent = conversationHistory.slice(-20)
