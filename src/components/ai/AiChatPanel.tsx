@@ -225,12 +225,12 @@ export function AiChatPanel() {
 
               {/* ── Body (hidden when minimized) ── */}
               {!isMinimized && (
-                <>
+                <div className="flex flex-col flex-1 min-h-0">
                   {/* Messages area */}
                   <div
                     ref={scrollRef}
-                    className="flex-1 overflow-y-auto p-3 space-y-3"
-                    style={{ height: '360px' }}
+                    className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-amber-300/50 dark:[&::-webkit-scrollbar-thumb]:bg-amber-700/50 [&::-webkit-scrollbar-thumb]:hover:bg-amber-400/70 dark:[&::-webkit-scrollbar-thumb]:hover:bg-amber-600/70"
+                    style={{ maxHeight: '360px' }}
                   >
                     {messages.length === 0 && !isLoading && (
                       <div className="flex flex-col items-center justify-center h-full text-center px-4">
@@ -307,7 +307,7 @@ export function AiChatPanel() {
                   </div>
 
                   {/* ── Input area ── */}
-                  <div className="border-t p-3">
+                  <div className="border-t p-3 shrink-0">
                     <div className="flex gap-2">
                       <Input
                         ref={inputRef}
@@ -336,7 +336,7 @@ export function AiChatPanel() {
                       AI may not always be accurate. Verify important information.
                     </p>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </motion.div>
