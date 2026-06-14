@@ -28,11 +28,7 @@ const PORT = 3004
 const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
 
 // ── Create HTTP server + Socket.IO ──
-const httpServer = http.createServer((_req, res) => {
-  // Default response for unmatched routes
-  res.writeHead(404, { 'Content-Type': 'application/json' })
-  res.end(JSON.stringify({ error: 'Not found' }))
-})
+const httpServer = http.createServer()
 
 const io = new Server(httpServer, {
   cors: {

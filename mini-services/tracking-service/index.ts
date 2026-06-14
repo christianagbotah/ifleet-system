@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import http from 'http';
 
 const PORT = 3003;
 
@@ -9,7 +10,28 @@ const allowedOrigins = process.env.CORS_ORIGIN
       : [process.env.CORS_ORIGIN])
   : ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com'];
 
-const io = new Server(PORT, {
+// ─── Create HTTP server + Socket.IO (with health endpoint) ────────────────
+const httpServer = http.createServer((req, res) => {
+  const url = new URL(req.url || '/', `http://localhost:${PORT}`);
+
+  // Health check endpoint
+  if (url.pathname === '/api/health' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      status: 'ok',
+      connectedUsers: io.sockets.sockets.size,
+      activeDrivers: driverLocations.size,
+      service: 'tracking',
+    }));
+    return;
+  }
+
+  // 404 for unmatched HTTP routes
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'Not found' }));
+});
+
+const io = new Server(httpServer, {
   cors: {
     origin: (origin, callback) => {
       // Allow connections with no origin (mobile apps, server-to-server)
@@ -21,6 +43,8 @@ const io = new Server(PORT, {
     methods: ['GET', 'POST'],
     credentials: true,
   },
+  // Allow polling and websocket
+  transports: ['polling', 'websocket'],
 });
 
 // ─── In-memory stores ─────────────────────────────────────────────────────
@@ -170,5 +194,12 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000);
 
-console.log(`[Tracking Service] Running on port ${PORT}`);
-console.log(`[Tracking Service] CORS origins: ${allowedOrigins.join(', ')}`);
+// ════════════════════════════════════════════════════════════════════
+// START
+// ════════════════════════════════════════════════════════════════════
+
+httpServer.listen(PORT, () => {
+  console.log(`[Tracking Service] Running on port ${PORT}`);
+  console.log(`[Tracking Service] Health:    http://localhost:${PORT}/api/health`);
+  console.log(`[Tracking Service] CORS origins: ${allowedOrigins.join(', ')}`);
+});

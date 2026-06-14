@@ -25,7 +25,8 @@ while true; do
   fi
 
   # Start the service with stdin closed to prevent SIGHUP on terminal close
-  cd "$SERVICE_DIR" && bun index.ts </dev/null 2>&1 &
+  BUN_CMD="${BUN_CMD:-bun}"
+  cd "$SERVICE_DIR" && $BUN_CMD index.ts </dev/null 2>&1 &
   SERVICE_PID=$!
 
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] AI service PID: $SERVICE_PID"
