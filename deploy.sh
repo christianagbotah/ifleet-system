@@ -1,188 +1,291 @@
 #!/bin/bash
 # ════════════════════════════════════════════════════════════════════
-# iFleetPro — Production Deployment Script
+# iFleetPro — Fresh VPS Deployment Script
 # ════════════════════════════════════════════════════════════════════
 #
-# Run this script on your VPS after uploading/cloning the code.
-# It will install dependencies, build the app, and set up PM2.
+# For Webuzo VPS with MariaDB (local).
+# User: lightworld | App dir: /home/lightworld/app
 #
-# Usage:
-#   chmod +x deploy.sh
-#   ./deploy.sh
+# USAGE:
+#   1. Run this script as root or lightworld user
+#   2. It will prompt for DB password
+#   3. Everything gets installed and started
 #
-# ════════════════════════════════════════════════════════════════════
+# ────────────────────────────────────────────────────────────────────
 
 set -e
 
-# ── Configuration ──
-APP_DIR="/home/ifleetpro/app"
-LOG_DIR="/home/ifleetpro/logs"
-DB_DIR="/home/ifleetpro/db"
-BACKUP_DIR="/home/ifleetpro/backups"
+APP_USER="${1:-lightworld}"
+APP_DIR="/home/$APP_USER/app"
+REPO_URL="https://github.com/christianagbotah/ifleet-system.git"
+NODE_VERSION="20"
+BUN_VERSION="1.3.13"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-log_info()  { echo -e "${GREEN}[INFO]${NC}  $1"; }
-log_warn()  { echo -e "${YELLOW}[WARN]${NC}  $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}  iFleetPro — Fresh Deployment${NC}"
+echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
+echo ""
 
-# ══════════════════════════════════════════════════════════════
-# STEP 1: Prerequisites Check
-# ══════════════════════════════════════════════════════════════
+# ── Step 1: Check prerequisites ──
+echo -e "${YELLOW}[1/10] Checking prerequisites...${NC}"
 
-log_info "Checking prerequisites..."
-
-# Check Node.js (v18+)
-if ! command -v node &> /dev/null; then
-    log_error "Node.js is not installed. Install it via Webuzo or manually."
-    exit 1
-elif [ "$(node -v | cut -d'.' -f1 | sed 's/v//')" -lt 18 ]; then
-    log_error "Node.js v18+ required. Current: $(node -v)"
-    exit 1
-fi
-log_info "Node.js $(node -v) found"
-
-# Check Bun
-if ! command -v bun &> /dev/null; then
-    log_info "Installing Bun..."
-    curl -fsSL https://bun.sh/install | bash
-    export PATH="$HOME/.bun/bin:$PATH"
-fi
-log_info "Bun $(bun --version) found"
-
-# Check PM2
-if ! command -v pm2 &> /dev/null; then
-    log_info "Installing PM2 globally..."
-    sudo npm install -g pm2
-fi
-log_info "PM2 found"
-
-# ══════════════════════════════════════════════════════════════
-# STEP 2: Create Directory Structure
-# ══════════════════════════════════════════════════════════════
-
-log_info "Creating directory structure..."
-mkdir -p "$LOG_DIR" "$DB_DIR" "$BACKUP_DIR"
-mkdir -p "$APP_DIR/public/uploads"
-
-# ══════════════════════════════════════════════════════════════
-# STEP 3: Install Dependencies
-# ══════════════════════════════════════════════════════════════
-
-cd "$APP_DIR"
-
-log_info "Installing main app dependencies..."
-bun install --frozen-lockfile 2>/dev/null || bun install
-
-log_info "Installing mini-service dependencies..."
-cd "$APP_DIR/mini-services/tracking-service"
-bun install 2>/dev/null || true
-
-cd "$APP_DIR/mini-services/notification-service"
-bun install 2>/dev/null || true
-
-cd "$APP_DIR"
-
-# ══════════════════════════════════════════════════════════════
-# STEP 4: Environment Configuration
-# ══════════════════════════════════════════════════════════════
-
-if [ ! -f "$APP_DIR/.env" ]; then
-    if [ -f "$APP_DIR/.env.example" ]; then
-        cp "$APP_DIR/.env.example" "$APP_DIR/.env"
-        log_warn ".env created from .env.example — EDIT IT with your production values!"
-        log_warn "  - Update DATABASE_URL"
-        log_warn "  - Set NEXTAUTH_SECRET (generate with: openssl rand -base64 32)"
-        log_warn "  - Set NEXTAUTH_URL to your domain"
-        log_warn "  - Configure SMTP, Hubtel SMS, etc."
-    else
-        log_error ".env.example not found. Create .env manually!"
-    fi
+# Check if running as root
+if [ "$(id -u)" -eq 0 ]; then
+  echo "  Running as root — will set up for user $APP_USER"
 else
-    log_info ".env already exists — skipping"
+  echo "  Running as $(whoami) — setting APP_USER=$(whoami)"
+  APP_USER=$(whoami)
+  APP_DIR="/home/$APP_USER/app"
 fi
 
-# ══════════════════════════════════════════════════════════════
-# STEP 5: Database Setup
-# ══════════════════════════════════════════════════════════════
+# Check git
+if ! command -v git &>/dev/null; then
+  echo -e "${RED}  ERROR: git is not installed. Run: yum install git -y${NC}"
+  exit 1
+fi
 
-log_info "Setting up database..."
+# Check if bun is installed, if not install it
+if ! command -v bun &>/dev/null; then
+  echo -e "${YELLOW}  Installing Bun...${NC}"
+  curl -fsSL https://bun.sh/install | bash -s "bun-v${BUN_VERSION}"
+  export PATH="$HOME/.bun/bin:$PATH"
+  # If root, also install for APP_USER
+  if [ "$(id -u)" -eq 0 ]; then
+    su - "$APP_USER" -c 'curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.13"'
+    export BUN_INSTALL="/home/$APP_USER/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+  fi
+fi
+
+echo -e "${GREEN}  ✓ Prerequisites OK${NC}"
+echo ""
+
+# ── Step 2: Create app directory and clone ──
+echo -e "${YELLOW}[2/10] Cloning repository...${NC}"
+
+if [ -d "$APP_DIR" ]; then
+  echo "  Directory $APP_DIR exists — updating via git pull"
+  cd "$APP_DIR"
+  git pull origin main
+else
+  echo "  Cloning to $APP_DIR..."
+  if [ "$(id -u)" -eq 0 ]; then
+    mkdir -p "$(dirname "$APP_DIR")"
+    chown "$APP_USER:$APP_USER" "$(dirname "$APP_DIR")"
+    su - "$APP_USER" -c "git clone $REPO_URL $APP_DIR"
+  else
+    mkdir -p "$(dirname "$APP_DIR")"
+    git clone "$REPO_URL "$APP_DIR"
+  fi
+  cd "$APP_DIR"
+fi
+
+echo -e "${GREEN}  ✓ Repository ready${NC}"
+echo ""
+
+# ── Step 3: Install dependencies ──
+echo -e "${YELLOW}[3/10] Installing dependencies (bun install)...${NC}"
 cd "$APP_DIR"
+bun install --production 2>&1 | tail -5
+echo -e "${GREEN}  ✓ Dependencies installed${NC}"
+echo ""
 
-# Generate Prisma client
+# ── Step 4: Setup .env ──
+echo -e "${YELLOW}[4/10] Setting up environment variables...${NC}"
+
+# Prompt for DB password
+read -rsp "  Enter MariaDB password for lightworld_db_user: " DB_PASSWORD
+echo ""
+
+# Generate secrets
+INTERNAL_API_KEY=$(openssl rand -hex 24)
+NEXTAUTH_SECRET=$(openssl rand -hex 32)
+JWT_SECRET=$(openssl rand -hex 32)
+WARMUP_SECRET=$(openssl rand -hex 16)
+
+cat > "$APP_DIR/.env" << EOF
+# ═══ iFleetPro Environment Configuration ═══
+# Generated: $(date -Iseconds)
+
+# Database (MariaDB via Webuzo)
+DATABASE_URL=mysql://lightworld_db_user:${DB_PASSWORD}@localhost:3306/lightworld_ifleetpro_db
+
+# NextAuth
+NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+NEXTAUTH_URL=https://ifleetpro.lightworldtech.com
+
+# JWT
+JWT_SECRET=${JWT_SECRET}
+
+# Internal API Key (shared between Next.js and mini-services)
+INTERNAL_API_KEY=${INTERNAL_API_KEY}
+
+# Warmup secret for scheduler
+WARMUP_SECRET=${WARMUP_SECRET}
+
+# SMTP (email) — update with your real credentials
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=noreply@lightworldtech.com
+
+# App
+NODE_ENV=production
+PORT=3000
+EOF
+
+chmod 600 "$APP_DIR/.env"
+
+echo -e "${GREEN}  ✓ .env created${NC}"
+echo ""
+
+# ── Step 5: Prisma setup ──
+echo -e "${YELLOW}[5/10] Setting up database (Prisma)...${NC}"
+cd "$APP_DIR"
 bunx prisma generate
-
-# Push schema to database
 bunx prisma db push
+echo -e "${GREEN}  ✓ Database schema pushed${NC}"
+echo ""
 
-# Run seed if exists
-if [ -f "prisma/seed.ts" ]; then
-    log_info "Running database seed..."
-    bunx prisma db seed 2>/dev/null || log_warn "Seed failed or no seed configured"
+# ── Step 6: Build ──
+echo -e "${YELLOW}[6/10] Building Next.js application...${NC}"
+cd "$APP_DIR"
+bun run build 2>&1 | tail -20
+echo -e "${GREEN}  ✓ Build complete${NC}"
+echo ""
+
+# ── Step 7: Create uploads directory ──
+echo -e "${YELLOW}[7/10] Creating uploads directory...${NC}"
+mkdir -p "$APP_DIR/uploads/images"
+chmod 755 "$APP_DIR/uploads"
+echo -e "${GREEN}  ✓ Uploads directory created${NC}"
+echo ""
+
+# ── Step 8: Setup mini-services ──
+echo -e "${YELLOW}[8/10] Setting up mini-services...${NC}"
+
+# Create .env for AI service
+cat > "$APP_DIR/mini-services/ai-service/.env" << EOF
+INTERNAL_API_KEY=${INTERNAL_API_KEY}
+GROQ_API_KEY=YOUR_GROQ_API_KEY_HERE
+EOF
+chmod 600 "$APP_DIR/mini-services/ai-service/.env"
+
+# Create .env for notification service
+cat > "$APP_DIR/mini-services/notification-service/.env" << EOF
+INTERNAL_API_KEY=${INTERNAL_API_KEY}
+DATABASE_URL=mysql://lightworld_db_user:${DB_PASSWORD}@localhost:3306/lightworld_ifleetpro_db
+EOF
+chmod 600 "$APP_DIR/mini-services/notification-service/.env"
+
+# Create .env for tracking service
+cat > "$APP_DIR/mini-services/tracking-service/.env" << EOF
+INTERNAL_API_KEY=${INTERNAL_API_KEY}
+DATABASE_URL=mysql://lightworld_db_user:${DB_PASSWORD}@localhost:3306/lightworld_ifleetpro_db
+EOF
+chmod 600 "$APP_DIR/mini-services/tracking-service/.env"
+
+# Install mini-service dependencies
+cd "$APP_DIR/mini-services/ai-service" && bun install
+cd "$APP_DIR/mini-services/notification-service" && bun install
+cd "$APP_DIR/mini-services/tracking-service" && bun install
+
+echo -e "${GREEN}  ✓ Mini-services configured${NC}"
+echo ""
+
+# ── Step 9: Create PM2 ecosystem ──
+echo -e "${YELLOW}[9/10] Creating PM2 process manager config...${NC}"
+
+cat > "$APP_DIR/ecosystem.config.cjs" << 'ECOSYSTEM'
+module.exports = {
+  apps: [
+    {
+      name: 'ifleetpro',
+      script: '.next/standalone/server.js',
+      cwd: '/home/lightworld/app',
+      env: { NODE_ENV: 'production' },
+      instances: 1,
+      autorestart: true,
+      max_memory_restart: '512M',
+    },
+  ],
+}
+ECOSYSTEM
+
+# Fix cwd if APP_USER is different
+sed -i "s|/home/lightworld/app|$APP_DIR|g" "$APP_DIR/ecosystem.config.cjs"
+
+echo -e "${GREEN}  ✓ PM2 config created${NC}"
+echo ""
+
+# ── Step 10: Start everything ──
+echo -e "${YELLOW}[10/10] Starting services...${NC}"
+
+# Start main app with PM2
+cd "$APP_DIR"
+if command -v pm2 &>/dev/null; then
+  pm2 delete ifleetpro 2>/dev/null || true
+  pm2 start ecosystem.config.cjs
+  pm2 save
+  pm2 startup 2>/dev/null || true
+else
+  echo -e "${YELLOW}  PM2 not found. Installing...${NC}"
+  npm install -g pm2
+  pm2 start ecosystem.config.cjs
+  pm2 save
+  pm2 startup 2>/dev/null || true
 fi
 
-# ══════════════════════════════════════════════════════════════
-# STEP 6: Build Next.js Application
-# ══════════════════════════════════════════════════════════════
+# Start AI service with keepalive
+cd "$APP_DIR/mini-services/ai-service"
+fuser -k 3007/tcp 2>/dev/null || true
+sleep 1
+nohup bash keepalive.sh </dev/null >keepalive-wrapper.log 2>&1 &
+AI_PID=$!
+echo "  AI service PID: $AI_PID (keepalive)"
 
-log_info "Building Next.js application (this may take a few minutes)..."
-cd "$APP_DIR"
-bun run build
+# Start notification service with keepalive
+cd "$APP_DIR/mini-services/notification-service"
+fuser -k 3004/tcp 2>/dev/null || true
+sleep 1
+nohup bash keepalive.sh </dev/null >keepalive-wrapper.log 2>&1 &
+NOTIF_PID=$!
+echo "  Notification service PID: $NOTIF_PID (keepalive)"
 
-# Copy static assets and public folder for standalone mode
-log_info "Copying static assets..."
-cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
-cp -r public .next/standalone/ 2>/dev/null || true
-
-# ══════════════════════════════════════════════════════════════
-# STEP 7: Start with PM2
-# ══════════════════════════════════════════════════════════════
-
-log_info "Starting services with PM2..."
-cd "$APP_DIR"
-
-# Stop existing processes if any
-pm2 stop all 2>/dev/null || true
-pm2 delete all 2>/dev/null || true
-
-# Start all services
-pm2 start ecosystem.config.js
-
-# Save PM2 configuration for auto-restart
-pm2 save
-
-# Setup PM2 startup (auto-start on server boot)
-pm2 startup 2>/dev/null || log_warn "Run 'pm2 startup' manually and follow the instructions"
-
-# ══════════════════════════════════════════════════════════════
-# STEP 8: Verify
-# ══════════════════════════════════════════════════════════════
+# Start tracking service with keepalive
+cd "$APP_DIR/mini-services/tracking-service"
+fuser -k 3005/tcp 2>/dev/null || true
+sleep 1
+nohup bash keepalive.sh </dev/null >keepalive-wrapper.log 2>&1 &
+TRACK_PID=$!
+echo "  Tracking service PID: $TRACK_PID (keepalive)"
 
 echo ""
-log_info "══════════════════════════════════════════════════════"
-log_info "  DEPLOYMENT COMPLETE!"
-log_info "══════════════════════════════════════════════════════"
+echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}  ✅ DEPLOYMENT COMPLETE!${NC}"
+echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
 echo ""
-pm2 status
+echo "  Services running:"
+echo "    • Main App (Next.js):     port 3000 (PM2 managed)"
+echo "    • AI Service:             port 3007 (keepalive)"
+echo "    • Notification Service:  port 3004 (keepalive)"
+echo "    • Tracking Service:      port 3005 (keepalive)"
 echo ""
-log_info "Services running:"
-log_info "  - Main app:       http://localhost:3000"
-log_info "  - Tracking WS:    ws://localhost:3003"
-log_info "  - Notifications:  ws://localhost:3004"
+echo "  Useful commands:"
+echo "    pm2 logs ifleetpro          — View app logs"
+echo "    pm2 restart ifleetpro       — Restart app"
+echo "    tail -f mini-services/ai-service/ai-service.log"
+echo "    tail -f mini-services/notification-service/notification-service.log"
+echo "    tail -f mini-services/tracking-service/tracking-service.log"
 echo ""
-log_warn "NEXT STEPS:"
-log_warn "  1. Configure reverse proxy (see DEPLOYMENT.md)"
-log_warn "  2. Set up SSL certificate via Webuzo"
-log_warn "  3. Verify all services at your domain"
-log_warn "  4. Create a cron job for backups"
-echo ""
-log_info "Useful PM2 commands:"
-log_info "  pm2 logs          — View all logs"
-log_info "  pm2 monit         — Monitor CPU/memory"
-log_info "  pm2 restart all   — Restart all services"
-log_info "  pm2 stop ifleetpro — Stop main app"
+echo "  To update:"
+echo "    cd $APP_DIR"
+echo "    git pull && bunx prisma generate && bun run build && pm2 restart ifleetpro"
 echo ""
