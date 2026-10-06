@@ -367,7 +367,7 @@ Edit each value:
 # ══════════════════════════════════════════════════════
 
 # Database — MySQL
-DATABASE_URL=mysql://root:YOUR_MYSQL_PASSWORD@localhost:3306/ifleetpro
+DATABASE_URL=mysql://<db-user>:<db-password>@<db-host>:3306/<db-name>
 
 # NextAuth — REQUIRED
 NEXTAUTH_SECRET=REPLACE-WITH-A-LONG-RANDOM-STRING
@@ -443,7 +443,7 @@ nano /home/ifleetpro/app/.env
 Update the `DATABASE_URL` to use the dedicated user:
 
 ```env
-DATABASE_URL=mysql://ifleetpro:a-strong-password-here@localhost:3306/ifleetpro
+DATABASE_URL=mysql://<db-user>:<db-password>@<db-host>:3306/<db-name>
 ```
 
 Save and exit (`Ctrl+X`, `Y`, `Enter`).

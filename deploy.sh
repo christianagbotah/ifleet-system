@@ -99,9 +99,13 @@ echo ""
 # ── Step 4: Setup .env ──
 echo -e "${YELLOW}[4/10] Setting up environment variables...${NC}"
 
-# Prompt for DB password
-read -rsp "  Enter MariaDB password for lightworld_db_user: " DB_PASSWORD
+# Read the full database URL at deploy time without echoing it.
+read -rsp "  Enter MariaDB DATABASE_URL: " DATABASE_URL_INPUT
 echo ""
+if [ -z "$DATABASE_URL_INPUT" ]; then
+  echo "  DATABASE_URL is required"
+  exit 1
+fi
 
 # Generate secrets
 INTERNAL_API_KEY=$(openssl rand -hex 24)
@@ -114,7 +118,7 @@ cat > "$APP_DIR/.env" << EOF
 # Generated: $(date -Iseconds)
 
 # Database (MariaDB via Webuzo)
-DATABASE_URL=mysql://lightworld_db_user:${DB_PASSWORD}@localhost:3306/lightworld_ifleetpro_db
+DATABASE_URL=${DATABASE_URL_INPUT}
 
 # NextAuth
 NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
@@ -181,14 +185,14 @@ chmod 600 "$APP_DIR/mini-services/ai-service/.env"
 # Create .env for notification service
 cat > "$APP_DIR/mini-services/notification-service/.env" << EOF
 INTERNAL_API_KEY=${INTERNAL_API_KEY}
-DATABASE_URL=mysql://lightworld_db_user:${DB_PASSWORD}@localhost:3306/lightworld_ifleetpro_db
+DATABASE_URL=${DATABASE_URL_INPUT}
 EOF
 chmod 600 "$APP_DIR/mini-services/notification-service/.env"
 
 # Create .env for tracking service
 cat > "$APP_DIR/mini-services/tracking-service/.env" << EOF
 INTERNAL_API_KEY=${INTERNAL_API_KEY}
-DATABASE_URL=mysql://lightworld_db_user:${DB_PASSWORD}@localhost:3306/lightworld_ifleetpro_db
+DATABASE_URL=${DATABASE_URL_INPUT}
 EOF
 chmod 600 "$APP_DIR/mini-services/tracking-service/.env"
 
