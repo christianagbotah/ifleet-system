@@ -1,0 +1,31 @@
+-- CreateTable
+CREATE TABLE `DispatchRecommendation` (
+    `id` VARCHAR(191) NOT NULL,
+    `tripId` VARCHAR(191) NULL,
+    `requestedBy` VARCHAR(191) NOT NULL,
+    `requestedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `rulesetVersion` VARCHAR(191) NOT NULL,
+    `provider` VARCHAR(191) NULL,
+    `model` VARCHAR(191) NULL,
+    `inputHash` VARCHAR(191) NOT NULL,
+    `inputSnapshot` LONGTEXT NOT NULL,
+    `rankedOutput` LONGTEXT NOT NULL,
+    `confidence` DOUBLE NOT NULL,
+    `dataQuality` DOUBLE NOT NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'pending',
+    `decision` VARCHAR(191) NULL,
+    `decisionBy` VARCHAR(191) NULL,
+    `decisionAt` DATETIME(3) NULL,
+    `decisionReason` TEXT NULL,
+    `selectedDriverId` VARCHAR(191) NULL,
+    `selectedTruckId` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `DispatchRecommendation_requestedAt_idx`(`requestedAt`),
+    INDEX `DispatchRecommendation_tripId_idx`(`tripId`),
+    INDEX `DispatchRecommendation_status_idx`(`status`),
+    INDEX `DispatchRecommendation_selectedDriverId_idx`(`selectedDriverId`),
+    INDEX `DispatchRecommendation_selectedTruckId_idx`(`selectedTruckId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

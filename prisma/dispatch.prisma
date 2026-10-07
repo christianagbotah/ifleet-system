@@ -1,0 +1,29 @@
+model DispatchRecommendation {
+  id               String   @id @default(cuid())
+  tripId           String?
+  requestedBy      String
+  requestedAt      DateTime @default(now())
+  rulesetVersion   String
+  provider         String?
+  model            String?
+  inputHash        String
+  inputSnapshot    String   @db.LongText
+  rankedOutput     String   @db.LongText
+  confidence       Float
+  dataQuality      Float
+  status           String   @default("pending")
+  decision         String?
+  decisionBy       String?
+  decisionAt       DateTime?
+  decisionReason   String?  @db.Text
+  selectedDriverId String?
+  selectedTruckId  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([requestedAt])
+  @@index([tripId])
+  @@index([status])
+  @@index([selectedDriverId])
+  @@index([selectedTruckId])
+}

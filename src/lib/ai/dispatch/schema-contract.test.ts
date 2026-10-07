@@ -1,7 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { readFileSync } from "node:fs"
 
-const schema = readFileSync("prisma/schema.prisma", "utf8")
+const schema = [
+  readFileSync("prisma/schema.prisma", "utf8"),
+  readFileSync("prisma/dispatch.prisma", "utf8"),
+].join("\n")
 
 function modelBlock(name: string): string {
   const match = schema.match(new RegExp(`model ${name} \\{([\\s\\S]*?)\\n\\}`, "m"))
