@@ -22,20 +22,6 @@ export const DISPATCH_TRUCK_SELECT = {
   nextServiceDate: true,
 } as const
 
-const ACTIVE_TRIP_STATUSES = [
-  "scheduled",
-  "loading",
-  "loaded",
-  "departed_depot",
-  "in_transit",
-  "arrived_destination",
-  "offloading",
-  "offloaded",
-  "return_journey",
-  "arrived_depot",
-  "delayed",
-] as const
-
 export type DispatchActor = { userId: string; role: string }
 
 export type DispatchTripDraft = {
@@ -104,7 +90,13 @@ export type DispatchCopilotDependencies = {
     recordDecision(id: string, data: DispatchDecisionRecord): Promise<DispatchRecommendationRecord>
   }
   availability: {
-    isPairAvailable(driverId: string, truckId: string, departureTime: Date, excludeTripId?: string | null): Promise<boolean>
+    isPairAvailable(
+      driverId: string,
+      truckId: string,
+      departureTime: Date,
+      excludeTripId?: string | null,
+      tripDraft?: DispatchTripDraft,
+    ): Promise<boolean>
   }
   tripSource?: {
     resolveTrip(id: string): Promise<DispatchTripDraft | null>
@@ -174,57 +166,48 @@ type RuntimeDispatchDatabase = {
 
 const dispatchDb = db as unknown as RuntimeDispatchDatabase
 
-const defaultDependencies: DispatchCopilotDependencies = {
-  candidateSource: createDefaultCandidateSource(),
-  recommendationStore: {
-    create: (data) => dispatchDb.dispatchRecommendation.create({ data }),
-    findById: (id) => dispatchDb.dispatchRecommendation.findUnique({ where: { id } }),
-    recordDecision: (id, data) => dispatchDb.dispatchRecommendation.update({ where: { id }, data }),
-  },
-  availability: {
-    async isPairAvailable(driverId, truckId, departureTime, excludeTripId) {
-      const conflictWhere: Record<string, unknown> = {
-        status: { in: [...ACTIVE_TRIP_STATUSES] },
-        OR: [{ driverId }, { truckId }],
-      }
-      if (excludeTripId) conflictWhere.id = { not: excludeTripId }
-
-      const [driver, truck, conflictCount] = await Promise.all([
-        db.driver.findUnique({
-          where: { id: driverId },
-          select: { status: true, verificationStatus: true, licenseExpiry: true },
-        }),
-        db.truck.findUnique({ where: { id: truckId }, select: { status: true } }),
-        db.trip.count({ where: conflictWhere }),
-      ])
-
-      return Boolean(
-        driver
-        && truck
-        && driver.status === "active"
-        && driver.verificationStatus === "verified"
-        && driver.licenseExpiry.getTime() > departureTime.getTime()
-        && truck.status === "active"
-        && conflictCount === 0
-      )
+function createDefaultDependencies(): DispatchCopilotDependencies {
+  return {
+    candidateSource: createDefaultCandidateSource(),
+    recommendationStore: {
+      create: (data) => dispatchDb.dispatchRecommendation.create({ data }),
+      findById: (id) => dispatchDb.dispatchRecommendation.findUnique({ where: { id } }),
+      recordDecision: (id, data) => dispatchDb.dispatchRecommendation.update({ where: { id }, data }),
     },
-  },
-  tripSource: {
-    async resolveTrip(id) {
-      const trip = await db.trip.findUnique({
-        where: { id },
-        select: { departureTime: true, destinationZoneId: true, quantity: true, unit: true },
-      })
-      if (!trip) return null
-      return {
-        departureTime: trip.departureTime,
-        destinationZoneId: trip.destinationZoneId,
-        quantity: trip.quantity,
-        cargoUnit: trip.unit,
-      }
+    availability: {
+      async isPairAvailable(driverId, truckId, departureTime, excludeTripId, tripDraft) {
+        const evidence = await loadDispatchCandidateEvidence({
+          departureTime,
+          destinationZoneId: tripDraft?.destinationZoneId,
+          quantity: tripDraft?.quantity,
+          cargoUnit: tripDraft?.cargoUnit,
+          excludeTripId,
+        })
+        const driver = evidence.drivers.find((row) => row.id === driverId)
+        const truck = evidence.trucks.find((row) => row.id === truckId)
+        if (!driver || !truck) return false
+
+        const freshRanking = rankEligibleDispatchCandidates([driver], [truck], { departureTime })
+        return freshRanking.ranked.some((row) => row.driverId === driverId && row.truckId === truckId)
+      },
     },
-  },
-  now: () => new Date(),
+    tripSource: {
+      async resolveTrip(id) {
+        const trip = await db.trip.findUnique({
+          where: { id },
+          select: { departureTime: true, destinationZoneId: true, quantity: true, unit: true },
+        })
+        if (!trip) return null
+        return {
+          departureTime: trip.departureTime,
+          destinationZoneId: trip.destinationZoneId,
+          quantity: trip.quantity,
+          cargoUnit: trip.unit,
+        }
+      },
+    },
+    now: () => new Date(),
+  }
 }
 
 async function resolveDraft(
@@ -242,7 +225,7 @@ async function resolveDraft(
 export async function getDispatchRecommendations(
   input: DispatchRequest,
   actor: DispatchActor,
-  deps: DispatchCopilotDependencies = defaultDependencies,
+  deps: DispatchCopilotDependencies = createDefaultDependencies(),
 ): Promise<DispatchRecommendationResult> {
   const { tripId, draft } = await resolveDraft(input, deps)
   const departureTime = asDate(draft.departureTime)
@@ -313,7 +296,7 @@ export async function recordDispatchDecision(
   recommendationId: string,
   decision: DispatchDecision,
   actor: DispatchActor,
-  deps: DispatchCopilotDependencies = defaultDependencies,
+  deps: DispatchCopilotDependencies = createDefaultDependencies(),
 ): Promise<DispatchRecommendationRecord & { stale: boolean }> {
   const recommendation = await deps.recommendationStore.findById(recommendationId)
   if (!recommendation) throw new Error("Dispatch recommendation not found")
@@ -337,14 +320,26 @@ export async function recordDispatchDecision(
     selectedTruckId = decision.selectedTruckId
     const inputSnapshot = JSON.parse(recommendation.inputSnapshot) as {
       tripId?: string | null
-      tripDraft?: { departureTime?: string }
+      tripDraft?: {
+        departureTime?: string
+        destinationZoneId?: string | null
+        quantity?: number | null
+        cargoUnit?: string | null
+      }
     }
     const departureTime = asDate(inputSnapshot.tripDraft?.departureTime ?? recommendation.requestedAt)
+    const storedDraft: DispatchTripDraft = {
+      departureTime,
+      destinationZoneId: inputSnapshot.tripDraft?.destinationZoneId,
+      quantity: inputSnapshot.tripDraft?.quantity,
+      cargoUnit: inputSnapshot.tripDraft?.cargoUnit,
+    }
     stale = !(await deps.availability.isPairAvailable(
       selectedDriverId,
       selectedTruckId,
       departureTime,
       inputSnapshot.tripId ?? recommendation.tripId,
+      storedDraft,
     ))
   }
 
