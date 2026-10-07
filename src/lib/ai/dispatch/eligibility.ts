@@ -86,6 +86,14 @@ export function evaluateTruckEligibility(
     hardBlocks.push(reason("TRUCK_MAINTENANCE_BLOCK", "Truck has a blocking maintenance condition"))
   }
 
+  if (candidate.capacitySufficient === false) {
+    hardBlocks.push(reason(
+      "TRUCK_CAPACITY_INSUFFICIENT",
+      "Authoritative vehicle capacity is below the planned load",
+      "capacity",
+    ))
+  }
+
   if (candidate.hasConflictingTrip) {
     hardBlocks.push(reason("TRUCK_TRIP_CONFLICT", "Truck is already committed to another active trip"))
   }
