@@ -34,6 +34,7 @@ export type TruckEligibilityCandidate = {
   status: TruckOperationalStatus
   hasConflictingTrip: boolean
   maintenanceBlocking: boolean
+  capacitySufficient?: boolean | null
   compliance: TruckComplianceEvidence
 }
 
