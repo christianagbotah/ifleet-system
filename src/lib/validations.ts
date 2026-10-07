@@ -489,3 +489,38 @@ export function validateQuery<T>(
   }
   return validateBody(schema, obj)
 }
+
+// ─── Weight Verification Schemas ─────────────────────────────────────────
+
+export const weightCheckpointTypeEnum = z.enum([
+  'origin_loading',
+  'border_crossing',
+  'destination_offloading',
+])
+
+export const weightVerificationStatusEnum = z.enum([
+  'pending',
+  'verified',
+  'failed',
+  'variance_detected',
+])
+
+const optionalDeclaredWeight = z.union([z.coerce.number().positive('Declared weight must be greater than zero'), z.null()]).optional()
+
+export const weightVerificationCreateSchema = z.object({
+  tripId: idSchema,
+  checkpointType: weightCheckpointTypeEnum,
+  verifiedWeight: z.coerce.number().positive('Verified weight must be greater than zero'),
+  declaredWeight: optionalDeclaredWeight,
+  notes: z.string().max(2000).nullable().optional(),
+  location: z.string().max(500).nullable().optional(),
+})
+
+export const weightVerificationUpdateSchema = z.object({
+  checkpointType: weightCheckpointTypeEnum.optional(),
+  verifiedWeight: z.coerce.number().positive('Verified weight must be greater than zero').optional(),
+  declaredWeight: optionalDeclaredWeight,
+  status: weightVerificationStatusEnum.optional(),
+  notes: z.string().max(2000).nullable().optional(),
+  location: z.string().max(500).nullable().optional(),
+})

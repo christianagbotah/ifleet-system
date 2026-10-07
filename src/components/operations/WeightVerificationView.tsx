@@ -37,6 +37,7 @@ interface WeightVerification {
   variance: number | null
   variancePercent: number | null
   status: string
+  varianceClass: string
   verifiedBy: string | null
   verifiedByName: string | null
   notes: string | null
@@ -68,10 +69,16 @@ interface WeightVerificationResponse {
 // ── Status Config ──
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
+  pending: { label: 'Pending', color: 'bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-300' },
   verified: { label: 'Verified', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' },
-  overweight: { label: 'Overweight', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
-  underweight: { label: 'Underweight', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
-  disputed: { label: 'Disputed', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' },
+  failed: { label: 'Failed', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
+  variance_detected: { label: 'Variance detected', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
+}
+
+const VARIANCE_CLASS_CONFIG: Record<string, { label: string; color: string }> = {
+  within_tolerance: { label: 'Within tolerance', color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400' },
+  over: { label: 'Over', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
+  under: { label: 'Under', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
 }
 
 const CHECKPOINT_LABELS: Record<string, string> = {
@@ -149,7 +156,8 @@ export function WeightVerificationView() {
     setLoading(true)
     try {
       const params: Record<string, unknown> = { page, limit: 20 }
-      if (activeTab !== 'all') params.status = activeTab
+      if (['over', 'under', 'within_tolerance'].includes(activeTab)) params.varianceClass = activeTab
+      else if (activeTab !== 'all') params.status = activeTab
       const res = await apiFetch<WeightVerificationResponse>(`/api/weight-verifications?${new URLSearchParams(
         Object.entries(params).map(([k, v]) => [k, String(v)])
       ).toString()}`)
@@ -242,8 +250,8 @@ export function WeightVerificationView() {
 
   const summaryCards = [
     { label: 'Total Verifications', value: summary.total, icon: Scale, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-    { label: 'Overweight', value: summary.overweightCount, icon: AlertTriangle, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/20' },
-    { label: 'Underweight', value: summary.underweightCount, icon: ArrowUpDown, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+    { label: 'Over', value: summary.overweightCount, icon: AlertTriangle, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/20' },
+    { label: 'Under', value: summary.underweightCount, icon: ArrowUpDown, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
     { label: 'Avg Variance %', value: `${summary.avgVariancePercent}%`, icon: Weight, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
   ]
 
@@ -287,9 +295,9 @@ export function WeightVerificationView() {
           <TabsList className="flex-wrap h-auto">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="verified">Verified</TabsTrigger>
-            <TabsTrigger value="overweight">Overweight</TabsTrigger>
-            <TabsTrigger value="underweight">Underweight</TabsTrigger>
-            <TabsTrigger value="disputed">Disputed</TabsTrigger>
+            <TabsTrigger value="variance_detected">Variance detected</TabsTrigger>
+            <TabsTrigger value="over">Over</TabsTrigger>
+            <TabsTrigger value="under">Under</TabsTrigger>
           </TabsList>
         </Tabs>
         <Button variant="outline" size="sm" onClick={loadData} className="gap-1 ml-auto">
@@ -309,6 +317,7 @@ export function WeightVerificationView() {
                 <th className="text-left p-3 font-medium">Verified (t)</th>
                 <th className="text-left p-3 font-medium">Declared (t)</th>
                 <th className="text-left p-3 font-medium">Variance %</th>
+                <th className="text-left p-3 font-medium">Classification</th>
                 <th className="text-left p-3 font-medium">Status</th>
                 <th className="text-left p-3 font-medium">Date</th>
                 <th className="text-right p-3 font-medium">Actions</th>
@@ -318,14 +327,14 @@ export function WeightVerificationView() {
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
-                    {Array.from({ length: 9 }).map((_, j) => (
+                    {Array.from({ length: 10 }).map((_, j) => (
                       <td key={j} className="p-3"><Skeleton className="h-5 w-16" /></td>
                     ))}
                   </tr>
                 ))
               ) : verifications.length === 0 ? (
                 <tr>
-                  <td colSpan={9}>
+                  <td colSpan={10}>
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                       <div className="rounded-full bg-muted p-4 mb-4">
                         <Scale className="h-8 w-8 text-muted-foreground" />
@@ -366,6 +375,11 @@ export function WeightVerificationView() {
                           {v.variancePercent > 0 ? '+' : ''}{v.variancePercent.toFixed(1)}%
                         </span>
                       ) : '—'}
+                    </td>
+                    <td className="p-3">
+                      <Badge variant="outline" className={`border-transparent font-medium ${VARIANCE_CLASS_CONFIG[v.varianceClass]?.color || ''}`}>
+                        {VARIANCE_CLASS_CONFIG[v.varianceClass]?.label || v.varianceClass}
+                      </Badge>
                     </td>
                     <td className="p-3">
                       <Badge variant="outline" className={`border-transparent font-medium ${STATUS_CONFIG[v.status]?.color || ''}`}>
@@ -453,9 +467,14 @@ export function WeightVerificationView() {
                     <p className="font-semibold">{CHECKPOINT_LABELS[v.checkpointType] || v.checkpointType}</p>
                     <p className="text-xs text-muted-foreground">Trip: {v.trip?.tripNumber || '—'}</p>
                   </div>
-                  <Badge variant="outline" className={`border-transparent font-medium ${STATUS_CONFIG[v.status]?.color || ''}`}>
-                    {STATUS_CONFIG[v.status]?.label || v.status}
-                  </Badge>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant="outline" className={`border-transparent font-medium ${STATUS_CONFIG[v.status]?.color || ''}`}>
+                      {STATUS_CONFIG[v.status]?.label || v.status}
+                    </Badge>
+                    <Badge variant="outline" className={`border-transparent text-[11px] ${VARIANCE_CLASS_CONFIG[v.varianceClass]?.color || ''}`}>
+                      {VARIANCE_CLASS_CONFIG[v.varianceClass]?.label || v.varianceClass}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm mb-3">
                   <div className="flex items-center gap-1.5">

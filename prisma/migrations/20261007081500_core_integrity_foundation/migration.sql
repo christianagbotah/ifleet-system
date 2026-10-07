@@ -14,6 +14,18 @@ UPDATE `FuelLog` SET `verificationStatus` = 'verified' WHERE `verificationStatus
 -- AlterTable
 ALTER TABLE `WeightVerification` ADD COLUMN `varianceClass` ENUM('within_tolerance', 'over', 'under') NOT NULL DEFAULT 'within_tolerance';
 
+-- Classify existing weight records without inventing invalid status values.
+UPDATE `WeightVerification`
+SET `varianceClass` = CASE
+      WHEN `variancePercent` > 5 THEN 'over'
+      WHEN `variancePercent` < -5 THEN 'under'
+      ELSE 'within_tolerance'
+    END,
+    `status` = CASE
+      WHEN `status` = 'verified' AND (`variancePercent` > 5 OR `variancePercent` < -5) THEN 'variance_detected'
+      ELSE `status`
+    END;
+
 -- CreateTable
 CREATE TABLE `TripSequence` (
     `id` VARCHAR(191) NOT NULL,
