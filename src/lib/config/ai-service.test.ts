@@ -32,8 +32,9 @@ describe("AI service configuration", () => {
     expect(() => getAiServiceConfig(testEnv({ AI_SERVICE_URL: "http://127.0.0.1:3007", INTERNAL_API_KEY: "   " }))).toThrow("INTERNAL_API_KEY")
   })
 
-  test("dispatch route and supported AI-service launch paths fail closed", () => {
+  test("dispatch explanation boundary and supported AI-service launch paths fail closed", () => {
     const route = readFileSync("src/app/api/ai/dispatch-suggest/route.ts", "utf8")
+    const explainer = readFileSync("src/lib/ai/dispatch/explainer-client.ts", "utf8")
     const bootstrap = readFileSync("mini-services/ai-service/bootstrap.ts", "utf8")
     const packageJson = readFileSync("mini-services/ai-service/package.json", "utf8")
     const startScript = readFileSync("mini-services/ai-service/start.sh", "utf8")
@@ -41,7 +42,8 @@ describe("AI service configuration", () => {
 
     expect(route).not.toContain("ifleetpro-internal-key-change-me")
     expect(route).not.toContain("const AI_SERVICE_URL = 'http://localhost:3007'")
-    expect(route).toContain("getAiServiceConfig")
+    expect(route).toContain("explainDispatchRanking")
+    expect(explainer).toContain("getAiServiceConfig")
 
     expect(bootstrap).toContain("INTERNAL_API_KEY")
     expect(bootstrap).toContain("refusing to start")
