@@ -5,4 +5,4 @@ if [ -f "$SCRIPT_DIR/../.."/.env ]; then
   set -a; source "$SCRIPT_DIR/../.."/.env; set +a
 fi
 cd "$SCRIPT_DIR"
-exec bun index.ts
+exec bun bootstrap.ts
