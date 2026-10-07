@@ -329,8 +329,21 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
     },
     async transitionReview(input) {
       return db.$transaction(async (tx) => {
-        const current = await tx.fuelAnomalyAssessment.findUnique({ where: { id: input.assessmentId } })
-        if (!current) throw new Error("ASSESSMENT_NOT_FOUND")
+        const claimed = await tx.fuelAnomalyAssessment.updateMany({
+          where: { id: input.assessmentId, status: input.fromStatus },
+          data: {
+            status: input.toStatus,
+            outcomeCode: input.outcomeCode,
+            reviewNotes: input.notes,
+            reviewedBy: input.actorId,
+            reviewedAt: input.reviewedAt,
+          },
+        })
+        if (claimed.count !== 1) {
+          const current = await tx.fuelAnomalyAssessment.findUnique({ where: { id: input.assessmentId }, select: { id: true } })
+          if (!current) throw new Error("ASSESSMENT_NOT_FOUND")
+          throw new Error("INVALID_REVIEW_TRANSITION")
+        }
         await tx.fuelAnomalyReviewEvent.create({
           data: {
             assessmentId: input.assessmentId,
@@ -342,17 +355,11 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
             createdAt: input.reviewedAt,
           },
         })
-        const row = await tx.fuelAnomalyAssessment.update({
+        const row = await tx.fuelAnomalyAssessment.findUnique({
           where: { id: input.assessmentId },
-          data: {
-            status: input.toStatus,
-            outcomeCode: input.outcomeCode,
-            reviewNotes: input.notes,
-            reviewedBy: input.actorId,
-            reviewedAt: input.reviewedAt,
-          },
           include,
         })
+        if (!row) throw new Error("ASSESSMENT_NOT_FOUND")
         return mapFuelAnomalyPrismaAssessment(row)
       })
     },

@@ -231,6 +231,18 @@ describe("fuel anomaly assessment service", () => {
     expect(serialized).not.toContain("source\":\"verified")
   })
 
+  test("guards persisted review transitions atomically against stale concurrent status", () => {
+    const source = readFileSync(join(import.meta.dir, "fuel-anomaly-assessment-service.ts"), "utf8")
+    const claim = source.indexOf("fuelAnomalyAssessment.updateMany")
+    const expectedStatus = source.indexOf("status: input.fromStatus", claim)
+    const conflictGuard = source.indexOf('claimed.count !== 1', claim)
+    const eventWrite = source.indexOf("fuelAnomalyReviewEvent.create", claim)
+    expect(claim).toBeGreaterThanOrEqual(0)
+    expect(expectedStatus).toBeGreaterThan(claim)
+    expect(conflictGuard).toBeGreaterThan(claim)
+    expect(eventWrite).toBeGreaterThan(conflictGuard)
+  })
+
   test("has no source-record mutation authority in the assessment service", () => {
     const source = readFileSync(join(import.meta.dir, "fuel-anomaly-assessment-service.ts"), "utf8")
     for (const forbidden of ["fuelLog.update", "fuelLog.create", "trip.update", "odometerReading.update", "tripReconciliation.update", "driver.update", "truck.update"]) {
