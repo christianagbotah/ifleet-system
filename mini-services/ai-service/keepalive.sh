@@ -24,9 +24,9 @@ while true; do
     set -a; source "$SERVICE_DIR/.env"; set +a
   fi
 
-  # Start the service with stdin closed to prevent SIGHUP on terminal close
+  # Start through the secure bootstrap; it refuses to run without INTERNAL_API_KEY.
   BUN_CMD="${BUN_CMD:-bun}"
-  cd "$SERVICE_DIR" && $BUN_CMD index.ts </dev/null 2>&1 &
+  cd "$SERVICE_DIR" && $BUN_CMD bootstrap.ts </dev/null 2>&1 &
   SERVICE_PID=$!
 
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] AI service PID: $SERVICE_PID"
