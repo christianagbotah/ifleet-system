@@ -21,6 +21,10 @@
 import { Server } from 'socket.io'
 import http from 'http'
 import Groq from 'groq-sdk'
+import {
+  buildDispatchExplanationRequest,
+  parseDispatchExplanationResponse,
+} from './dispatch-explainer'
 
 const PORT = 3007
 
@@ -39,7 +43,7 @@ const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 // ── System prompts ──
 const FLEET_ASSISTANT_PROMPT = `You are an AI assistant for iFleet Pro fleet management system. Help drivers and managers with questions about trips, fuel, maintenance, routes, and general fleet operations. Be concise and helpful. Use bullet points when listing items. Format currency amounts in GHS (Ghana Cedi). When discussing trips, consider factors like distance, fuel consumption, driver availability, and truck maintenance status.`
 
-const DISPATCH_PROMPT = `You are a fleet dispatch optimization expert for iFleet Pro. Analyze trip details and recommend the best driver and truck assignments based on factors like: driver availability and proximity, truck suitability (capacity, fuel type, maintenance status), historical performance, route familiarity, and regulatory compliance (license, certifications). Respond with a JSON object containing: { "recommendations": [{ "driverId": "...", "driverName": "...", "truckId": "...", "truckPlate": "...", "score": 0-100, "reason": "..." }], "summary": "..." }`
+const DISPATCH_EXPLANATION_PROMPT = `You explain an authoritative server-ranked dispatch result for iFleet Pro. The application owns candidate eligibility, ordering, scores, approvals, and assignments. Follow the supplied explanation-only contract exactly and return JSON only.`
 
 const FUEL_ANOMALY_PROMPT = `You are a fuel analytics expert for iFleet Pro. Analyze fuel log data to identify anomalies such as: unusual fuel consumption patterns, potential fuel theft indicators, inconsistent odometer readings, abnormal fill-up frequencies, mileage-per-gallon deviations. Respond with a JSON object containing: { "anomalies": [{ "type": "...", "severity": "low|medium|high|critical", "description": "...", "affectedRecord": "..." }], "summary": "...", "recommendations": ["..."] }`
 
@@ -412,25 +416,36 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
 }
 
 async function handleDispatchSuggest(req: http.IncomingMessage, res: http.ServerResponse) {
+  if (!verifyApiKey(req)) {
+    return jsonResponse(res, 401, { error: 'Unauthorized: Invalid or missing API key' })
+  }
+
+  let explanationRequest
   try {
-    if (!verifyApiKey(req)) {
-      return jsonResponse(res, 401, { error: 'Unauthorized: Invalid or missing API key' })
-    }
-
     const body = JSON.parse(await readBody(req))
-    const { tripDetails, availableDrivers, availableTrucks } = body
-
-    if (!tripDetails) {
-      return jsonResponse(res, 400, { error: 'tripDetails is required' })
-    }
-
-    const dataDescription = JSON.stringify({ tripDetails, availableDrivers: availableDrivers || [], availableTrucks: availableTrucks || [] }, null, 2)
-    const aiResponse = await callGroq(DISPATCH_PROMPT, `Analyze this trip and recommend optimal driver/truck assignments:\n\n${dataDescription}`)
-
-    jsonResponse(res, 200, { success: true, response: aiResponse })
+    explanationRequest = buildDispatchExplanationRequest(body)
   } catch (error) {
-    console.error('[AI Service] /api/dispatch-suggest error:', error)
-    jsonResponse(res, 500, { success: false, error: error instanceof Error ? error.message : 'Internal server error' })
+    const message = error instanceof Error ? error.message : 'Invalid dispatch explanation request'
+    return jsonResponse(res, 400, { success: false, error: message })
+  }
+
+  try {
+    const rawResponse = await callGroq(
+      DISPATCH_EXPLANATION_PROMPT,
+      explanationRequest.prompt,
+    )
+    const parsedResponse = parseDispatchExplanationResponse(
+      rawResponse,
+      explanationRequest.candidates,
+    )
+
+    return jsonResponse(res, 200, { success: true, response: parsedResponse })
+  } catch (error) {
+    console.error('[AI Service] /api/dispatch-suggest explanation error:', error)
+    return jsonResponse(res, 502, {
+      success: false,
+      error: error instanceof Error ? error.message : 'AI explanation provider error',
+    })
   }
 }
 

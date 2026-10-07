@@ -111,7 +111,7 @@ export function buildDispatchExplanationRequest(body: unknown): DispatchExplanat
   const rulesetVersion = typeof input.rulesetVersion === "string" ? input.rulesetVersion : null
 
   const prompt = [
-    "Explain only the server-ranked driver/truck pairs supplied below.",
+    "explain only the server-ranked driver/truck pairs supplied below.",
     "Do not add, remove, reorder, rescore, approve, or assign any candidate.",
     "The numeric scores and eligibility decisions are authoritative application output; use them only as context for concise explanations.",
     "Return ONLY JSON with this shape: {\"summary\":\"...\",\"explanations\":[{\"driverId\":\"...\",\"truckId\":\"...\",\"explanation\":\"...\"}]}.",

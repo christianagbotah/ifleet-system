@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test"
+import { readFileSync } from "node:fs"
 import {
   buildDispatchExplanationRequest,
   parseDispatchExplanationResponse,
@@ -62,6 +63,14 @@ describe("dispatch explanation-only mini-service contract", () => {
       rankedCandidates,
       availableDrivers: [{ id: "driver-invented" }],
     })).toThrow("caller-supplied candidate")
+  })
+
+  test("wires the HTTP endpoint through the explanation-only validator and parser", () => {
+    const service = readFileSync("mini-services/ai-service/index.ts", "utf8")
+    expect(service).toContain("buildDispatchExplanationRequest(body)")
+    expect(service).toContain("parseDispatchExplanationResponse(")
+    expect(service).not.toContain("const { tripDetails, availableDrivers, availableTrucks } = body")
+    expect(service).not.toContain("callGroq(DISPATCH_PROMPT")
   })
 
   test("returns explanation text only for known supplied pairs", () => {
