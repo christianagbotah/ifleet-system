@@ -378,7 +378,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-gmail-app-password
-SMTP_FROM="iFleetPro" <noreply@yourcompany.com>
+SMTP_FROM="iFleetPro <noreply@yourcompany.com>"
 
 # Hubtel SMS (Ghana) — Optional, leave blank if not using
 HUBTEL_CLIENT_ID=
@@ -528,21 +528,28 @@ echo '/swapfile none swap sw 0 0' >> /etc/fstab
 
 ## Step 10: Set Up the Database
 
+Production and staging databases are managed with **versioned Prisma migrations**. Direct production schema synchronization is not permitted.
+
+### New empty database
+
 ```bash
 cd /home/ifleetpro/app
-
-# Create MySQL tables from your Prisma schema
-bunx prisma db push
+bunx prisma generate
+bunx prisma migrate deploy
 ```
 
-This will automatically create all the required tables in your MySQL `ifleetpro` database.
+The migration chain starts with `20261007080000_baseline`, which represents the reviewed legacy schema, followed by later versioned migrations. Verify migration status before starting the application:
 
-You should see output like:
-```
-🚀 Your database is now in sync with your Prisma schema.
+```bash
+bunx prisma migrate status
 ```
 
-If you have seed data (initial admin user, etc.):
+### Existing production database
+
+Before the first migration-managed rollout, verify that the existing schema matches `20261007080000_baseline`, create and verify a restorable checkpoint, then follow the approved Prisma baseline procedure before applying later migrations. Never mark a migration applied merely to silence an error.
+
+If seed data is required for a non-production environment, run it only after migrations complete:
+
 ```bash
 bunx prisma db seed
 ```
@@ -963,7 +970,7 @@ pm2 status
 |---|---|
 | Code | `git pull origin main` (force clean) |
 | Dependencies | `bun install` for main + mini-services |
-| Database | `prisma generate` + `prisma db push` |
+| Database | reviewed `prisma migrate deploy` migrations after a verified backup |
 | Build | `bun run build` + copy static files |
 | Restart | `pm2 restart ifleetpro` |
 
@@ -1028,33 +1035,14 @@ When you push new code to GitHub and want to update your live app:
 
 ### Quick Method
 
+Use the same guarded deployment path as the webhook instead of applying schema changes manually:
+
 ```bash
 cd /home/ifleetpro/app
-
-# 1. Pull latest code
-git pull origin main
-
-# 2. Install any new dependencies
-bun install
-cd mini-services/tracking-service && bun install && cd ../..
-cd mini-services/notification-service && bun install && cd ../..
-
-# 3. Update database (if schema changed)
-cd /home/ifleetpro/app
-bunx prisma generate
-bunx prisma db push
-
-# 4. Rebuild
-bun run build
-cp -r .next/static .next/standalone/.next/
-cp -r public .next/standalone/
-
-# 5. Restart all services
-pm2 restart all
-
-# 6. Check everything is working
-pm2 status
+./scripts/webhook-deploy.sh
 ```
+
+That path installs dependencies, runs preflight and quality gates, enforces the configured backup policy, applies reviewed migrations, builds, restarts PM2, and runs smoke tests.
 
 ### Or use the update script
 
@@ -1192,7 +1180,7 @@ Print this and check off each item as you go:
 - [ ] Dependencies installed (`bun install`)
 - [ ] MySQL database created (Step 8)
 - [ ] `DATABASE_URL` updated in `.env` with MySQL credentials
-- [ ] Database tables created (`bunx prisma db push`)
+- [ ] Database migrations applied (`bunx prisma migrate deploy`)
 - [ ] App built successfully (`bun run build`)
 - [ ] Static files copied (`cp -r .next/static .next/standalone/.next/`)
 - [ ] PM2 started — all 3 services **online** (`pm2 status`)
@@ -1210,13 +1198,9 @@ Print this and check off each item as you go:
 
 ---
 
-## 🔑 Default Login Credentials
+## 🔑 Production administrator credentials
 
-After database seed, your admin login is:
-- **Email:** `admin@fleetpro.com.gh`
-- **Password:** `admin123`
-
-> ⚠️ **IMPORTANT:** Change this password immediately after first login! Go to **Profile → Change Password**.
+Do **not** use the repository's demo accounts or shared demo passwords in production. The bundled seed data is for development/demo environments only. Production administrator credentials must be provisioned separately with a unique strong password, and any historical demo accounts already present in a production database must be disabled or have their credentials rotated before launch.
 
 ---
 
@@ -1272,3 +1256,24 @@ Production deployments use versioned Prisma migrations only. The required sequen
 Set `REQUIRE_DEPLOY_BACKUP=1` in production so deployment refuses to migrate without an executable `DEPLOY_BACKUP_HOOK`. The hook must write a restorable database checkpoint outside the application checkout and return non-zero if backup creation or verification fails.
 
 For rollback after an application-only failure, redeploy the previous known-good commit. For a migration-related failure, stop deployment, preserve logs and the failed database state, restore the verified pre-deploy backup to a separate recovery database first, verify it, and only then perform the approved production restore/roll-forward procedure. Do not improvise destructive reverse SQL against live production.
+
+
+### Development / staging / production separation
+
+Development, staging/test, and production must use separate MariaDB databases, credentials, and environment files. A developer checkout must never default to a production database connection.
+
+### Secret rotation
+
+Rotate database credentials, webhook secrets, API tokens, and any other credential that has ever appeared in repository history. Redacting the current file does not revoke an exposed historical secret.
+
+### Baseline migration for an existing production database
+
+The migration `20261007080000_baseline` represents the pre-hardening schema. On an existing production database, take a verified backup and compare the schema before running `bunx prisma migrate resolve --applied 20261007080000_baseline`. This is a one-time history alignment step; it does not execute the baseline SQL. An empty database must apply the baseline normally through `bunx prisma migrate deploy`.
+
+### Backup before migration
+
+Set `REQUIRE_DEPLOY_BACKUP=1` in production and configure `DEPLOY_BACKUP_HOOK` as an executable that produces and verifies a restorable database checkpoint outside the application checkout. Deployment must stop if that hook fails.
+
+### Rollback
+
+For an application-only failure, redeploy the previous known-good commit. For a migration-related incident, do not run improvised reverse SQL against the live database. Preserve the failed state and logs, restore the verified pre-deploy backup to an isolated recovery database first, validate it, then execute the approved restore or roll-forward procedure.

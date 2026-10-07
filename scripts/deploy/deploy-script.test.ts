@@ -51,11 +51,20 @@ describe("production deployment contract", () => {
     expect(source).toContain("curl")
   })
 
+  test("main health endpoint verifies database reachability without exposing details", () => {
+    const source = readFileSync(join(root, "src/app/api/health/route.ts"), "utf8")
+    expect(source).toContain("$queryRaw")
+    expect(source).toContain("status: 503")
+    expect(source).not.toContain("DATABASE_URL")
+  })
+
   test("deployment documentation covers environment separation, rotation, baseline, backup and rollback", () => {
     expect(deploymentDoc).toContain("Development / staging / production separation")
     expect(deploymentDoc).toContain("Secret rotation")
     expect(deploymentDoc).toContain("20261007080000_baseline")
     expect(deploymentDoc).toContain("Backup before migration")
     expect(deploymentDoc).toContain("Rollback")
+    expect(deploymentDoc).not.toContain("bunx prisma db push")
+    expect(deploymentDoc).not.toContain("admin123")
   })
 })
