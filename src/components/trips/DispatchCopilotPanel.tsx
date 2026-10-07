@@ -120,7 +120,7 @@ export function DispatchCopilotPanel({
     }
   }
 
-  async function useRecommendation(candidate: DispatchCandidate) {
+  async function applyRecommendation(candidate: DispatchCandidate) {
     if (!result?.recommendationId || applyingId || disabled) return
 
     const recommendationId = result.recommendationId
@@ -240,7 +240,7 @@ export function DispatchCopilotPanel({
                 <Button
                   type="button"
                   size="sm"
-                  onClick={() => useRecommendation(candidate)}
+                  onClick={() => applyRecommendation(candidate)}
                   disabled={Boolean(applyingId) || disabled}
                 >
                   {isApplying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
