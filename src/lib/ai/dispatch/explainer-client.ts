@@ -6,9 +6,14 @@ import {
   type MergedDispatchExplanations,
 } from "./model-payload"
 
+export type DispatchFetchLike = (
+  input: string | URL,
+  init?: RequestInit,
+) => Promise<Response>
+
 type DispatchExplainerDependencies = {
   config?: AiServiceConfig
-  fetcher?: typeof fetch
+  fetcher?: DispatchFetchLike
   timeoutMs?: number
 }
 
@@ -61,7 +66,7 @@ export async function explainDispatchRanking(
   dependencies: DispatchExplainerDependencies = {},
 ): Promise<MergedDispatchExplanations> {
   const safePayload = buildDispatchExplanationPayload(input)
-  const fetcher = dependencies.fetcher ?? fetch
+  const fetcher: DispatchFetchLike = dependencies.fetcher ?? fetch
   const timeoutMs = Math.max(250, Math.min(10_000, dependencies.timeoutMs ?? 2_500))
 
   let config: AiServiceConfig
