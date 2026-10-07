@@ -7,7 +7,7 @@ export function parseTypeScriptDiagnostics(output: string): DiagnosticCounts {
   const counts: DiagnosticCounts = new Map()
   const pattern = /^(.+?)\(\d+,\d+\): error TS(\d+): (.*)$/gm
   for (const match of output.matchAll(pattern)) {
-    const key = `${match[1]}\tTS${match[2]}\t${match[3]}`
+    const key = `${match[1]}\tTS${match[2]}`
     counts.set(key, (counts.get(key) ?? 0) + 1)
   }
   return counts
