@@ -32,13 +32,22 @@ describe("AI service configuration", () => {
     expect(() => getAiServiceConfig(testEnv({ AI_SERVICE_URL: "http://127.0.0.1:3007", INTERNAL_API_KEY: "   " }))).toThrow("INTERNAL_API_KEY")
   })
 
-  test("dispatch route and AI mini-service contain no fallback internal credential", () => {
+  test("dispatch route and supported AI-service launch paths fail closed", () => {
     const route = readFileSync("src/app/api/ai/dispatch-suggest/route.ts", "utf8")
-    const service = readFileSync("mini-services/ai-service/index.ts", "utf8")
+    const bootstrap = readFileSync("mini-services/ai-service/bootstrap.ts", "utf8")
+    const packageJson = readFileSync("mini-services/ai-service/package.json", "utf8")
+    const startScript = readFileSync("mini-services/ai-service/start.sh", "utf8")
+    const keepaliveScript = readFileSync("mini-services/ai-service/keepalive.sh", "utf8")
 
     expect(route).not.toContain("ifleetpro-internal-key-change-me")
-    expect(service).not.toContain("ifleetpro-internal-key-change-me")
     expect(route).not.toContain("const AI_SERVICE_URL = 'http://localhost:3007'")
+    expect(route).toContain("getAiServiceConfig")
+
+    expect(bootstrap).toContain("INTERNAL_API_KEY")
+    expect(bootstrap).toContain("refusing to start")
+    expect(packageJson).toContain("bootstrap.ts")
+    expect(startScript).toContain("bootstrap.ts")
+    expect(keepaliveScript).toContain("bootstrap.ts")
   })
 
   test("environment template exposes the AI service URL explicitly", () => {
