@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { explainDispatchRanking } from "./explainer-client"
+import { explainDispatchRanking, type DispatchFetchLike } from "./explainer-client"
 import { scoreDispatchPair } from "./scoring"
 
 const ranked = [scoreDispatchPair({
@@ -32,7 +32,7 @@ const trip = {
 describe("dispatch explanation client", () => {
   test("sends only the sanitized deterministic payload and ignores model score authority", async () => {
     let sentBody = ""
-    const fetcher: typeof fetch = async (_input, init) => {
+    const fetcher: DispatchFetchLike = async (_input, init) => {
       sentBody = String(init?.body ?? "")
       return new Response(JSON.stringify({
         success: true,
@@ -63,7 +63,7 @@ describe("dispatch explanation client", () => {
   })
 
   test("falls back deterministically when the model invents a candidate", async () => {
-    const fetcher: typeof fetch = async () => new Response(JSON.stringify({
+    const fetcher: DispatchFetchLike = async () => new Response(JSON.stringify({
       success: true,
       response: JSON.stringify({
         recommendations: [{ driverId: "driver-999", truckId: "truck-999", reason: "Invented" }],
@@ -81,7 +81,7 @@ describe("dispatch explanation client", () => {
   })
 
   test("falls back deterministically on provider errors and timeouts", async () => {
-    const failingFetch: typeof fetch = async () => {
+    const failingFetch: DispatchFetchLike = async () => {
       throw new Error("provider unavailable")
     }
 
