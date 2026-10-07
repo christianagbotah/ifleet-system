@@ -45,6 +45,7 @@ export type FuelBaselineObservation = {
   costPerLiter: number | null
   kmPerLiter: number | null
   litersPer100Km: number | null
+  fillFrequencyPer100Km?: number | null
 }
 
 export type FuelComparableCohorts = {
@@ -140,6 +141,10 @@ export type FuelAnomalyPolicy = {
   nearDuplicateCostTolerance: number
   reversalClusterCount: number
   postVerificationReversalClusterCount: number
+  robustZThreshold: number
+  iqrFenceMultiplier: number
+  zeroSpreadRelativeToleranceRatio: number
+  sustainedEfficiencyPriorCount: number
   baselinePreferredSampleSize: number
   baselineAdvisorySampleSize: number
   riskWeights: {

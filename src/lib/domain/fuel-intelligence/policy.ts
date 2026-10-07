@@ -18,6 +18,10 @@ export const DEFAULT_FUEL_ANOMALY_POLICY: FuelAnomalyPolicy = Object.freeze({
   nearDuplicateCostTolerance: 5,
   reversalClusterCount: 3,
   postVerificationReversalClusterCount: 2,
+  robustZThreshold: 3.5,
+  iqrFenceMultiplier: 1.5,
+  zeroSpreadRelativeToleranceRatio: 0.2,
+  sustainedEfficiencyPriorCount: 2,
   baselinePreferredSampleSize: 12,
   baselineAdvisorySampleSize: 6,
   riskWeights: {
