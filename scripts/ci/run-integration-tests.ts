@@ -1,22 +1,40 @@
-const testUrl = process.env.TEST_DATABASE_URL?.trim()
-if (!testUrl) throw new Error("TEST_DATABASE_URL is required")
-if (process.env.NODE_ENV === "production") throw new Error("Integration tests refuse to run with NODE_ENV=production")
+export function assertSafeIntegrationDatabase(env: NodeJS.ProcessEnv = process.env): string {
+  const testUrl = env.TEST_DATABASE_URL?.trim()
+  if (!testUrl) throw new Error("TEST_DATABASE_URL is required")
+  if (env.NODE_ENV === "production") {
+    throw new Error("Integration tests refuse to run with NODE_ENV=production")
+  }
 
-const parsed = new URL(testUrl)
-const databaseName = decodeURIComponent(parsed.pathname.replace(/^\/+/, ""))
-if (!databaseName) throw new Error("TEST_DATABASE_URL must include a database name")
-const productionName = process.env.PRODUCTION_DATABASE_NAME?.trim()
-if (productionName && databaseName === productionName) {
-  throw new Error("Integration tests refuse to use the configured production database")
-}
-if (!/(test|ci|integration)/i.test(databaseName)) {
-  throw new Error("Integration database name must contain test, ci, or integration")
+  const parsed = new URL(testUrl)
+  const databaseName = decodeURIComponent(parsed.pathname.replace(/^\/+/, ""))
+  if (!databaseName) throw new Error("TEST_DATABASE_URL must include a database name")
+
+  const normalizedName = databaseName.toLowerCase()
+  const productionName = env.PRODUCTION_DATABASE_NAME?.trim().toLowerCase()
+  if (productionName && normalizedName === productionName) {
+    throw new Error("Integration tests refuse to use the configured production database")
+  }
+  if (/(^|[_-])(prod|production|live)([_-]|$)/i.test(databaseName)) {
+    throw new Error("Integration tests refuse production-like database names")
+  }
+  if (!/(test|ci|integration)/i.test(databaseName)) {
+    throw new Error("Integration database name must contain test, ci, or integration")
+  }
+
+  return testUrl
 }
 
-const result = Bun.spawnSync(["bun", "test", "tests/integration/core-integrity.test.ts"], {
-  cwd: process.cwd(),
-  env: { ...process.env, DATABASE_URL: testUrl, NODE_ENV: "test" },
-  stdout: "inherit",
-  stderr: "inherit",
-})
-process.exit(result.exitCode ?? 1)
+export function runIntegrationTests(env: NodeJS.ProcessEnv = process.env): number {
+  const testUrl = assertSafeIntegrationDatabase(env)
+  const result = Bun.spawnSync(["bun", "test", "tests/integration/core-integrity.test.ts"], {
+    cwd: process.cwd(),
+    env: { ...env, DATABASE_URL: testUrl, NODE_ENV: "test" },
+    stdout: "inherit",
+    stderr: "inherit",
+  })
+  return result.exitCode ?? 1
+}
+
+if (import.meta.main) {
+  process.exit(runIntegrationTests())
+}

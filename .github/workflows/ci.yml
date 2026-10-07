@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - 'implementation/**'
 
 jobs:
   quality:
@@ -26,6 +27,7 @@ jobs:
     env:
       DATABASE_URL: mysql://root@127.0.0.1:3306/ifleet_ci
       TEST_DATABASE_URL: mysql://root@127.0.0.1:3306/ifleet_ci
+      PRODUCTION_DATABASE_NAME: ifleetpro
       NEXTAUTH_SECRET: ci-only-nextauth-secret
       INTERNAL_API_KEY: ci-only-internal-api-key
       WARMUP_SECRET: ci-only-warmup-secret

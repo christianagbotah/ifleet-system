@@ -17,7 +17,7 @@ if (!/(test|ci|integration)/i.test(databaseName)) {
   throw new Error("Integration database name must contain test, ci, or integration")
 }
 const productionName = process.env.PRODUCTION_DATABASE_NAME?.trim()
-if (productionName && databaseName === productionName) {
+if (productionName && databaseName.toLowerCase() === productionName.toLowerCase()) {
   throw new Error("Integration tests refuse to use the configured production database")
 }
 const adapterUrl = rawUrl.replace(/^mysql:\/\//, "mariadb://")
@@ -83,6 +83,7 @@ describe("core integrity foundation", () => {
       startMileage: 100000,
     }, integrationActor, db as never)
     expect(created.trip.tripNumber).toBe("TRP-2026-001")
+    expect(await db.trip.count({ where: { tripNumber: created.trip.tripNumber } })).toBe(1)
 
     await createFuelEvent({
       truckId, tripId: created.trip.id, date: new Date("2026-10-07T09:00:00Z"), litersFilled: 100, totalCost: 1500,
@@ -130,9 +131,13 @@ describe("core integrity foundation", () => {
     expect(Number(snapshot.fuelCostPerKm)).toBe(2.625)
 
     const projected = await db.trip.findUniqueOrThrow({ where: { id: created.trip.id } })
+    expect(projected.startMileage).toBe(100000)
+    expect(projected.endMileage).toBe(100800)
     expect(projected.totalMileage).toBe(800)
     expect(projected.fuelUsed).toBe(160)
     expect(Number(projected.fuelCost)).toBe(2100)
+    const projectedTruck = await db.truck.findUniqueOrThrow({ where: { id: truckId } })
+    expect(projectedTruck.currentMileage).toBe(100800)
 
     const odometerCount = await db.odometerReading.count({ where: { tripId: created.trip.id } })
     await expect(db.$transaction((tx) => recordOdometerReading({
@@ -142,8 +147,9 @@ describe("core integrity foundation", () => {
       readingType: "inspection",
       source: "admin",
       verificationStatus: "verified",
-    }, tx))).rejects.toThrow()
+    }, tx))).rejects.toMatchObject({ code: "ODOMETER_ROLLBACK" })
     expect(await db.odometerReading.count({ where: { tripId: created.trip.id } })).toBe(odometerCount)
+    expect((await db.truck.findUniqueOrThrow({ where: { id: truckId } })).currentMileage).toBe(100800)
 
     const fuelCount = await db.fuelLog.count({ where: { tripId: created.trip.id } })
     await expect(createFuelEvent({
@@ -156,13 +162,17 @@ describe("core integrity foundation", () => {
       source: "admin",
       stationName: "Wrong Truck Station",
       receiptNumber: "WRONG-TRUCK",
-    }, integrationActor, db as never)).rejects.toThrow()
+    }, integrationActor, db as never)).rejects.toMatchObject({ code: "TRIP_TRUCK_MISMATCH" })
     expect(await db.fuelLog.count({ where: { tripId: created.trip.id } })).toBe(fuelCount)
+    const unchangedTrip = await db.trip.findUniqueOrThrow({ where: { id: created.trip.id } })
+    expect(unchangedTrip.fuelUsed).toBe(160)
+    expect(Number(unchangedTrip.fuelCost)).toBe(2100)
   })
 
   test("rolls back trip and yearly sequence when a nested destination write fails", async () => {
     const sequenceBefore = await db.tripSequence.findUniqueOrThrow({ where: { year: 2026 } })
     const tripCountBefore = await db.trip.count()
+    const destinationCountBefore = await db.tripDeliveryDestination.count()
     await expect(createTrip({
       truckId,
       driverId,
@@ -176,6 +186,7 @@ describe("core integrity foundation", () => {
       deliveryDestinations: [{ customerName: "Invalid FK", stopOrder: 1, clientId: "missing-client-id", destinationZoneId: zoneId }],
     }, integrationActor, db as never)).rejects.toThrow()
     expect(await db.trip.count()).toBe(tripCountBefore)
+    expect(await db.tripDeliveryDestination.count()).toBe(destinationCountBefore)
     const sequenceAfter = await db.tripSequence.findUniqueOrThrow({ where: { year: 2026 } })
     expect(sequenceAfter.lastValue).toBe(sequenceBefore.lastValue)
   })
