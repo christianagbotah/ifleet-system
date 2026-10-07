@@ -917,11 +917,14 @@ export async function fetchFuelAnalyticsData(params: ReportParams): Promise<Repo
     orderBy: { departureTime: 'asc' },
   })
   const normalized = trips.map((trip) => normalizeFuelTrip({
-    tripId: trip.id,
+    id: trip.id,
     truckId: trip.truckId,
-    zoneId: trip.destinationZoneId,
+    destinationZoneId: trip.destinationZoneId,
     departureTime: trip.departureTime,
-    legacy: { fuelCost: trip.fuelCost, distanceKm: trip.totalMileage, revenue: trip.totalRevenue, consumedLiters: trip.fuelUsed },
+    totalMileage: trip.totalMileage,
+    fuelCost: trip.fuelCost,
+    fuelUsed: trip.fuelUsed,
+    totalRevenue: trip.totalRevenue,
     reconciliation: trip.TripReconciliation,
   }))
   const analytics = aggregateFuelAnalytics(normalized)
