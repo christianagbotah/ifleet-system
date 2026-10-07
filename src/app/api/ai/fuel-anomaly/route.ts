@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-server'
-
-const AI_SERVICE_URL = 'http://localhost:3007'
-const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
+import { getAiServiceConfig } from '@/lib/config/ai-service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,12 +17,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Forward to AI service
-    const response = await fetch(`${AI_SERVICE_URL}/api/fuel-anomaly`, {
+    const ai = getAiServiceConfig()
+    // Legacy route remains non-authoritative; the mini-service rejects raw candidate evidence.
+    const response = await fetch(`${ai.url}/api/fuel-anomaly`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-internal-api-key': INTERNAL_API_KEY,
+        'x-internal-api-key': ai.internalApiKey,
       },
       body: JSON.stringify({
         fuelLogs,

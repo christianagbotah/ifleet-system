@@ -21,11 +21,12 @@
 import { Server } from 'socket.io'
 import http from 'http'
 import Groq from 'groq-sdk'
+import { explainFuelAnomalyPayload, FUEL_ANOMALY_EXPLANATION_SYSTEM_PROMPT } from './fuel-anomaly-explainer'
 
 const PORT = 3007
 
 // API key for authenticating backend requests
-const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
+const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY?.trim() || ''
 
 // Groq API key
 const GROQ_API_KEY = process.env.GROQ_API_KEY || ''
@@ -37,8 +38,6 @@ const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 const FLEET_ASSISTANT_PROMPT = `You are an AI assistant for iFleet Pro fleet management system. Help drivers and managers with questions about trips, fuel, maintenance, routes, and general fleet operations. Be concise and helpful. Use bullet points when listing items. Format currency amounts in GHS (Ghana Cedi). When discussing trips, consider factors like distance, fuel consumption, driver availability, and truck maintenance status.`
 
 const DISPATCH_PROMPT = `You are a fleet dispatch optimization expert for iFleet Pro. Analyze trip details and recommend the best driver and truck assignments based on factors like: driver availability and proximity, truck suitability (capacity, fuel type, maintenance status), historical performance, route familiarity, and regulatory compliance (license, certifications). Respond with a JSON object containing: { "recommendations": [{ "driverId": "...", "driverName": "...", "truckId": "...", "truckPlate": "...", "score": 0-100, "reason": "..." }], "summary": "..." }`
-
-const FUEL_ANOMALY_PROMPT = `You are a fuel analytics expert for iFleet Pro. Analyze fuel log data to identify anomalies such as: unusual fuel consumption patterns, potential fuel theft indicators, inconsistent odometer readings, abnormal fill-up frequencies, mileage-per-gallon deviations. Respond with a JSON object containing: { "anomalies": [{ "type": "...", "severity": "low|medium|high|critical", "description": "...", "affectedRecord": "..." }], "summary": "...", "recommendations": ["..."] }`
 
 const REPORT_PROMPT = `You are a fleet data analyst for iFleet Pro. Generate a clear, well-structured natural language report from the provided data. Include key metrics, trends, and actionable insights. Use professional language suitable for management review. Format numbers with appropriate precision. Use GHS for currency amounts.`
 
@@ -327,7 +326,7 @@ httpServer.on('request', async (req, res) => {
 
 function verifyApiKey(req: http.IncomingMessage): boolean {
   const apiKey = req.headers['x-internal-api-key']
-  return apiKey === INTERNAL_API_KEY
+  return INTERNAL_API_KEY.length > 0 && apiKey === INTERNAL_API_KEY
 }
 
 function setCorsHeaders(res: http.ServerResponse) {
@@ -438,19 +437,18 @@ async function handleFuelAnomaly(req: http.IncomingMessage, res: http.ServerResp
     }
 
     const body = JSON.parse(await readBody(req))
-    const { fuelLogs, vehicleInfo } = body
+    const result = await explainFuelAnomalyPayload(
+      body,
+      (prompt) => callGroq(FUEL_ANOMALY_EXPLANATION_SYSTEM_PROMPT, prompt),
+      { provider: 'groq', model: GROQ_MODEL },
+    )
 
-    if (!fuelLogs || !Array.isArray(fuelLogs) || fuelLogs.length === 0) {
-      return jsonResponse(res, 400, { error: 'fuelLogs array is required and must not be empty' })
-    }
-
-    const dataDescription = JSON.stringify({ fuelLogs, vehicleInfo: vehicleInfo || null, logCount: fuelLogs.length }, null, 2)
-    const aiResponse = await callGroq(FUEL_ANOMALY_PROMPT, `Analyze these fuel logs for anomalies:\n\n${dataDescription}`)
-
-    jsonResponse(res, 200, { success: true, response: aiResponse })
+    jsonResponse(res, 200, { success: true, ...result })
   } catch (error) {
     console.error('[AI Service] /api/fuel-anomaly error:', error)
-    jsonResponse(res, 500, { success: false, error: error instanceof Error ? error.message : 'Internal server error' })
+    const message = error instanceof Error ? error.message : 'Internal server error'
+    const status = message.startsWith('INVALID_FUEL_ANOMALY_') ? 400 : 500
+    jsonResponse(res, status, { success: false, error: message })
   }
 }
 
@@ -576,6 +574,11 @@ async function handleInvoiceDispute(req: http.IncomingMessage, res: http.ServerR
 // ════════════════════════════════════════════════════════════════════
 
 function main() {
+  if (!INTERNAL_API_KEY) {
+    console.error('[AI Service] INTERNAL_API_KEY is required; refusing to start.')
+    process.exitCode = 1
+    return
+  }
   initGroq()
 
   httpServer.listen(PORT, () => {
