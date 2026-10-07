@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { requireAuth, requireWriteAccess } from "@/lib/auth-server"
+import { requireRole, ROLES } from "@/lib/auth-server"
 import { calculateTripReconciliation, saveTripReconciliation, TripReconciliationError } from "@/lib/services/trip-reconciliation-service"
 
 function domainResponse(error: unknown) {
@@ -10,7 +10,7 @@ function domainResponse(error: unknown) {
 }
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = requireAuth(request)
+  const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
   if (auth instanceof NextResponse) return auth
   try {
     const { id } = await params
@@ -22,10 +22,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 async function save(request: NextRequest, params: Promise<{ id: string }>) {
-  const auth = requireAuth(request)
+  const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
   if (auth instanceof NextResponse) return auth
-  const writeGuard = requireWriteAccess(auth)
-  if (writeGuard instanceof NextResponse) return writeGuard
   try {
     const { id } = await params
     return NextResponse.json(await saveTripReconciliation(id, auth))
