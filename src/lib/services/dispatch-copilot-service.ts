@@ -58,6 +58,25 @@ export type DispatchRecommendationRecord = DispatchRecommendationCreate & {
   decisionReason?: string | null
   selectedDriverId?: string | null
   selectedTruckId?: string | null
+  explanationSource?: string | null
+  explanationOutput?: string | null
+  explanationAt?: Date | null
+}
+
+export type DispatchExplanationAuditInput = {
+  provider: string | null
+  model: string | null
+  explanationSource: "ai" | "deterministic"
+  summary: string | null
+  explanations: Array<{ driverId: string; truckId: string; explanation: string }>
+}
+
+export type DispatchExplanationRecord = {
+  provider: string | null
+  model: string | null
+  explanationSource: "ai" | "deterministic"
+  explanationOutput: string
+  explanationAt: Date
 }
 
 export type DispatchDecision = {
@@ -88,6 +107,7 @@ export type DispatchCopilotDependencies = {
     create(data: DispatchRecommendationCreate): Promise<DispatchRecommendationRecord>
     findById(id: string): Promise<DispatchRecommendationRecord | null>
     recordDecision(id: string, data: DispatchDecisionRecord): Promise<DispatchRecommendationRecord>
+    recordExplanation?(id: string, data: DispatchExplanationRecord): Promise<DispatchRecommendationRecord>
   }
   availability: {
     isPairAvailable(
@@ -160,7 +180,7 @@ type RuntimeDispatchDatabase = {
   dispatchRecommendation: {
     create(args: { data: DispatchRecommendationCreate }): Promise<DispatchRecommendationRecord>
     findUnique(args: { where: { id: string } }): Promise<DispatchRecommendationRecord | null>
-    update(args: { where: { id: string }; data: DispatchDecisionRecord }): Promise<DispatchRecommendationRecord>
+    update(args: { where: { id: string }; data: DispatchDecisionRecord | DispatchExplanationRecord }): Promise<DispatchRecommendationRecord>
   }
 }
 
@@ -173,6 +193,7 @@ function createDefaultDependencies(): DispatchCopilotDependencies {
       create: (data) => dispatchDb.dispatchRecommendation.create({ data }),
       findById: (id) => dispatchDb.dispatchRecommendation.findUnique({ where: { id } }),
       recordDecision: (id, data) => dispatchDb.dispatchRecommendation.update({ where: { id }, data }),
+      recordExplanation: (id, data) => dispatchDb.dispatchRecommendation.update({ where: { id }, data }),
     },
     availability: {
       async isPairAvailable(driverId, truckId, departureTime, excludeTripId, tripDraft) {
@@ -290,6 +311,40 @@ export async function getDispatchRecommendations(
     confidence: top?.confidence ?? 0,
     dataQuality: top?.dataQuality ?? 0,
   }
+}
+
+
+export async function recordDispatchExplanation(
+  recommendationId: string,
+  explanation: DispatchExplanationAuditInput,
+  _actor: DispatchActor,
+  deps: DispatchCopilotDependencies = createDefaultDependencies(),
+): Promise<DispatchRecommendationRecord> {
+  if (!deps.recommendationStore.recordExplanation) {
+    throw new Error("Dispatch explanation audit store is unavailable")
+  }
+
+  const provider = explanation.explanationSource === "ai"
+    ? explanation.provider?.trim() || null
+    : null
+  const model = explanation.explanationSource === "ai"
+    ? explanation.model?.trim() || null
+    : null
+
+  return deps.recommendationStore.recordExplanation(recommendationId, {
+    provider,
+    model,
+    explanationSource: explanation.explanationSource,
+    explanationOutput: JSON.stringify({
+      summary: explanation.summary,
+      explanations: explanation.explanations.map(({ driverId, truckId, explanation: text }) => ({
+        driverId,
+        truckId,
+        explanation: text,
+      })),
+    }),
+    explanationAt: deps.now(),
+  })
 }
 
 export async function recordDispatchDecision(

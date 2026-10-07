@@ -439,7 +439,12 @@ async function handleDispatchSuggest(req: http.IncomingMessage, res: http.Server
       explanationRequest.candidates,
     )
 
-    return jsonResponse(res, 200, { success: true, response: parsedResponse })
+    return jsonResponse(res, 200, {
+      success: true,
+      provider: 'groq',
+      model: GROQ_MODEL,
+      response: parsedResponse,
+    })
   } catch (error) {
     console.error('[AI Service] /api/dispatch-suggest explanation error:', error)
     return jsonResponse(res, 502, {

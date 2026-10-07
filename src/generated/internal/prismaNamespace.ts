@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  DispatchRecommendation: 'DispatchRecommendation',
   User: 'User',
   AuditLog: 'AuditLog',
   BorderCrossing: 'BorderCrossing',
@@ -464,10 +465,76 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "tripSequence" | "odometerReading" | "tripReconciliation" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
+    modelProps: "dispatchRecommendation" | "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "tripSequence" | "odometerReading" | "tripReconciliation" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    DispatchRecommendation: {
+      payload: Prisma.$DispatchRecommendationPayload<ExtArgs>
+      fields: Prisma.DispatchRecommendationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DispatchRecommendationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DispatchRecommendationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>
+        }
+        findFirst: {
+          args: Prisma.DispatchRecommendationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DispatchRecommendationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>
+        }
+        findMany: {
+          args: Prisma.DispatchRecommendationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>[]
+        }
+        create: {
+          args: Prisma.DispatchRecommendationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>
+        }
+        createMany: {
+          args: Prisma.DispatchRecommendationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DispatchRecommendationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>
+        }
+        update: {
+          args: Prisma.DispatchRecommendationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>
+        }
+        deleteMany: {
+          args: Prisma.DispatchRecommendationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DispatchRecommendationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DispatchRecommendationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchRecommendationPayload>
+        }
+        aggregate: {
+          args: Prisma.DispatchRecommendationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDispatchRecommendation>
+        }
+        groupBy: {
+          args: Prisma.DispatchRecommendationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DispatchRecommendationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DispatchRecommendationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DispatchRecommendationCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -4797,6 +4864,36 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const DispatchRecommendationScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  requestedBy: 'requestedBy',
+  requestedAt: 'requestedAt',
+  rulesetVersion: 'rulesetVersion',
+  provider: 'provider',
+  model: 'model',
+  explanationSource: 'explanationSource',
+  explanationOutput: 'explanationOutput',
+  explanationAt: 'explanationAt',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  rankedOutput: 'rankedOutput',
+  confidence: 'confidence',
+  dataQuality: 'dataQuality',
+  status: 'status',
+  decision: 'decision',
+  decisionBy: 'decisionBy',
+  decisionAt: 'decisionAt',
+  decisionReason: 'decisionReason',
+  selectedDriverId: 'selectedDriverId',
+  selectedTruckId: 'selectedTruckId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DispatchRecommendationScalarFieldEnum = (typeof DispatchRecommendationScalarFieldEnum)[keyof typeof DispatchRecommendationScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -6207,6 +6304,29 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const DispatchRecommendationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  requestedBy: 'requestedBy',
+  rulesetVersion: 'rulesetVersion',
+  provider: 'provider',
+  model: 'model',
+  explanationSource: 'explanationSource',
+  explanationOutput: 'explanationOutput',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  rankedOutput: 'rankedOutput',
+  status: 'status',
+  decision: 'decision',
+  decisionBy: 'decisionBy',
+  decisionReason: 'decisionReason',
+  selectedDriverId: 'selectedDriverId',
+  selectedTruckId: 'selectedTruckId'
+} as const
+
+export type DispatchRecommendationOrderByRelevanceFieldEnum = (typeof DispatchRecommendationOrderByRelevanceFieldEnum)[keyof typeof DispatchRecommendationOrderByRelevanceFieldEnum]
+
+
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
   email: 'email',
@@ -7135,16 +7255,23 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'DateTime'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
     
 
 
 /**
- * Reference to a field of type 'DateTime'
+ * Reference to a field of type 'Float'
  */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -7173,13 +7300,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'CashAdvanceStatus'
  */
 export type EnumCashAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CashAdvanceStatus'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
@@ -7509,6 +7629,7 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  dispatchRecommendation?: Prisma.DispatchRecommendationOmit
   user?: Prisma.UserOmit
   auditLog?: Prisma.AuditLogOmit
   borderCrossing?: Prisma.BorderCrossingOmit

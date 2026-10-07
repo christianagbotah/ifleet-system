@@ -19,13 +19,24 @@ type DispatchExplainerDependencies = {
 
 type LegacyAiServiceEnvelope = {
   success?: boolean
+  provider?: unknown
+  model?: unknown
   response?: unknown
   data?: unknown
   error?: unknown
 }
 
-function deterministicFallback(input: DispatchExplanationInput): MergedDispatchExplanations {
-  return mergeDispatchExplanations(input.rankedCandidates, null)
+export type DispatchExplanationResult = MergedDispatchExplanations & {
+  provider: string | null
+  model: string | null
+}
+
+function deterministicFallback(input: DispatchExplanationInput): DispatchExplanationResult {
+  return {
+    ...mergeDispatchExplanations(input.rankedCandidates, null),
+    provider: null,
+    model: null,
+  }
 }
 
 function normalizeModelResponse(raw: unknown): unknown {
@@ -64,7 +75,7 @@ function normalizeModelResponse(raw: unknown): unknown {
 export async function explainDispatchRanking(
   input: DispatchExplanationInput,
   dependencies: DispatchExplainerDependencies = {},
-): Promise<MergedDispatchExplanations> {
+): Promise<DispatchExplanationResult> {
   const safePayload = buildDispatchExplanationPayload(input)
   const fetcher: DispatchFetchLike = dependencies.fetcher ?? fetch
   const timeoutMs = Math.max(250, Math.min(10_000, dependencies.timeoutMs ?? 2_500))
@@ -101,7 +112,17 @@ export async function explainDispatchRanking(
     if (!envelope || envelope.success === false) return deterministicFallback(input)
 
     const normalized = normalizeModelResponse(envelope.response ?? envelope.data ?? envelope)
-    return mergeDispatchExplanations(input.rankedCandidates, normalized)
+    const merged = mergeDispatchExplanations(input.rankedCandidates, normalized)
+    if (merged.explanationSource !== "ai") return deterministicFallback(input)
+
+    const provider = typeof envelope.provider === "string" && envelope.provider.trim()
+      ? envelope.provider.trim()
+      : null
+    const model = typeof envelope.model === "string" && envelope.model.trim()
+      ? envelope.model.trim()
+      : null
+
+    return { ...merged, provider, model }
   } catch {
     return deterministicFallback(input)
   } finally {

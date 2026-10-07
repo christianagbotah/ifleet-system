@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  DispatchRecommendation: 'DispatchRecommendation',
   User: 'User',
   AuditLog: 'AuditLog',
   BorderCrossing: 'BorderCrossing',
@@ -132,6 +133,36 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const DispatchRecommendationScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  requestedBy: 'requestedBy',
+  requestedAt: 'requestedAt',
+  rulesetVersion: 'rulesetVersion',
+  provider: 'provider',
+  model: 'model',
+  explanationSource: 'explanationSource',
+  explanationOutput: 'explanationOutput',
+  explanationAt: 'explanationAt',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  rankedOutput: 'rankedOutput',
+  confidence: 'confidence',
+  dataQuality: 'dataQuality',
+  status: 'status',
+  decision: 'decision',
+  decisionBy: 'decisionBy',
+  decisionAt: 'decisionAt',
+  decisionReason: 'decisionReason',
+  selectedDriverId: 'selectedDriverId',
+  selectedTruckId: 'selectedTruckId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DispatchRecommendationScalarFieldEnum = (typeof DispatchRecommendationScalarFieldEnum)[keyof typeof DispatchRecommendationScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -1542,6 +1573,29 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const DispatchRecommendationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  requestedBy: 'requestedBy',
+  rulesetVersion: 'rulesetVersion',
+  provider: 'provider',
+  model: 'model',
+  explanationSource: 'explanationSource',
+  explanationOutput: 'explanationOutput',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  rankedOutput: 'rankedOutput',
+  status: 'status',
+  decision: 'decision',
+  decisionBy: 'decisionBy',
+  decisionReason: 'decisionReason',
+  selectedDriverId: 'selectedDriverId',
+  selectedTruckId: 'selectedTruckId'
+} as const
+
+export type DispatchRecommendationOrderByRelevanceFieldEnum = (typeof DispatchRecommendationOrderByRelevanceFieldEnum)[keyof typeof DispatchRecommendationOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {

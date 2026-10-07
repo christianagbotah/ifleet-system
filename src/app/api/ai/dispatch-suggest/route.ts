@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireRole, ROLES } from '@/lib/auth-server'
 import { dispatchRecommendationRequestSchema } from '@/lib/ai/dispatch/request-schema'
 import { explainDispatchRanking } from '@/lib/ai/dispatch/explainer-client'
-import { getDispatchRecommendations } from '@/lib/services/dispatch-copilot-service'
+import { getDispatchRecommendations, recordDispatchExplanation } from '@/lib/services/dispatch-copilot-service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,6 +34,18 @@ export async function POST(request: NextRequest) {
       trip,
       rankedCandidates: recommendation.ranked,
     })
+
+    await recordDispatchExplanation(recommendation.recommendationId, {
+      provider: explanations.provider,
+      model: explanations.model,
+      explanationSource: explanations.explanationSource,
+      summary: explanations.summary,
+      explanations: explanations.candidates.map((candidate) => ({
+        driverId: candidate.driverId,
+        truckId: candidate.truckId,
+        explanation: candidate.explanation,
+      })),
+    }, actor)
 
     return NextResponse.json({
       recommendationId: recommendation.recommendationId,

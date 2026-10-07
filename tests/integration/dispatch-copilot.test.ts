@@ -7,6 +7,7 @@ import { generateDispatchRecommendations } from "../../src/lib/ai/dispatch/recom
 import {
   getDispatchRecommendations,
   recordDispatchDecision,
+  recordDispatchExplanation,
 } from "../../src/lib/services/dispatch-copilot-service"
 import { fixtureIdentity, integrationActor } from "../fixtures/core-integrity"
 
@@ -359,6 +360,27 @@ describe("dispatch copilot evidence and deterministic ranking", () => {
     expect(persisted?.status).toBe("pending")
     expect(persisted?.inputSnapshot).not.toContain(goodDriverPhone)
     expect(persisted?.inputSnapshot).not.toContain(goodDriverLicense)
+
+    await recordDispatchExplanation(recommendation.recommendationId, {
+      provider: "groq",
+      model: "llama-test",
+      explanationSource: "ai",
+      summary: "Strong operational fit.",
+      explanations: [{
+        driverId: recommendation.ranked[0].driverId,
+        truckId: recommendation.ranked[0].truckId,
+        explanation: "Top verified operational fit.",
+      }],
+    }, dispatchActor)
+
+    const persistedExplanation = await db.dispatchRecommendation.findUnique({
+      where: { id: recommendation.recommendationId },
+    })
+    expect(persistedExplanation?.provider).toBe("groq")
+    expect(persistedExplanation?.model).toBe("llama-test")
+    expect(persistedExplanation?.explanationSource).toBe("ai")
+    expect(persistedExplanation?.explanationOutput).toContain("Top verified operational fit.")
+    expect(persistedExplanation?.explanationAt).toBeInstanceOf(Date)
 
     const selected = recommendation.ranked[0]
     await createTrip({
