@@ -30,12 +30,14 @@ const trip = {
 }
 
 describe("dispatch explanation client", () => {
-  test("sends only the sanitized deterministic payload and ignores model score authority", async () => {
+  test("sends only the sanitized deterministic payload and returns provider/model provenance without score authority", async () => {
     let sentBody = ""
     const fetcher: DispatchFetchLike = async (_input, init) => {
       sentBody = String(init?.body ?? "")
       return new Response(JSON.stringify({
         success: true,
+        provider: "groq",
+        model: "llama-test",
         response: JSON.stringify({
           summary: "Strong operational fit.",
           recommendations: [{
@@ -58,6 +60,8 @@ describe("dispatch explanation client", () => {
     expect(sentBody).not.toContain("sensitive")
     expect(sentBody).toContain("driver-1")
     expect(result.explanationSource).toBe("ai")
+    expect(result.provider).toBe("groq")
+    expect(result.model).toBe("llama-test")
     expect(result.candidates[0].score).toBe(86.25)
     expect(result.candidates[0].explanation).toBe("Strong compliant choice.")
   })
@@ -65,6 +69,8 @@ describe("dispatch explanation client", () => {
   test("falls back deterministically when the model invents a candidate", async () => {
     const fetcher: DispatchFetchLike = async () => new Response(JSON.stringify({
       success: true,
+      provider: "groq",
+      model: "llama-test",
       response: JSON.stringify({
         recommendations: [{ driverId: "driver-999", truckId: "truck-999", reason: "Invented" }],
       }),
@@ -77,6 +83,8 @@ describe("dispatch explanation client", () => {
     })
 
     expect(result.explanationSource).toBe("deterministic")
+    expect(result.provider).toBeNull()
+    expect(result.model).toBeNull()
     expect(result.candidates[0].score).toBe(86.25)
   })
 
@@ -92,6 +100,8 @@ describe("dispatch explanation client", () => {
     })
 
     expect(result.explanationSource).toBe("deterministic")
+    expect(result.provider).toBeNull()
+    expect(result.model).toBeNull()
     expect(result.candidates[0].score).toBe(86.25)
   })
 })
