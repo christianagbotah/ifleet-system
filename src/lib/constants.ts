@@ -154,7 +154,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "fuel-logs", label: "Fuel Management", icon: Fuel },
       { id: "fuel-consumption", label: "Fuel Consumption", icon: TrendingUp },
       { id: "fuel-analytics", label: "Fuel Analytics", icon: BarChart3 },
-      { id: "fuel-anomaly", label: "Fuel Anomaly", icon: AlertTriangle },
+      { id: "fuel-anomaly", label: "Fuel Intelligence", icon: AlertTriangle },
       { id: "fuel-budgets", label: "Fuel Budgets", icon: PiggyBank },
       { id: "invoices", label: "Invoices", icon: Receipt },
       { id: "trip-profitability", label: "Trip Profitability", icon: TrendingUp },

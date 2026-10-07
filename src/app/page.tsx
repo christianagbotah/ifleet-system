@@ -173,8 +173,8 @@ const DriverIncentivesView = dynamic(
   () => import('@/components/drivers/DriverIncentivesView').then(m => ({ default: m.DriverIncentivesView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
-const FuelAnomalyDashboard = dynamic(
-  () => import('@/components/fuel/FuelAnomalyDashboard').then(m => ({ default: m.FuelAnomalyDashboard })),
+const FuelIntelligenceDashboard = dynamic(
+  () => import('@/components/fuel-intelligence/FuelIntelligenceDashboard').then(m => ({ default: m.FuelIntelligenceDashboard })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
 const RouteOptimizerView = dynamic(
@@ -333,7 +333,7 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
     case 'fuel-analytics':
       return <FuelAnalyticsView />
     case 'fuel-anomaly':
-      return <FuelAnomalyDashboard />
+      return <FuelIntelligenceDashboard />
     case 'fuel-budgets':
       return <FuelBudgetView />
     case 'tracking':
