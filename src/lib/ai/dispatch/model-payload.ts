@@ -102,8 +102,11 @@ export function mergeDispatchExplanations(
   const response = modelResponse as Record<string, unknown>
   if (!Array.isArray(response.explanations)) return deterministicFallback(ranked)
 
-  const allowed = new Map(
-    ranked.map((candidate) => [`${candidate.driverId}:${candidate.truckId}`, candidate] as const),
+  const allowed = new Map<string, DispatchPairScore>(
+    ranked.map((candidate): [string, DispatchPairScore] => [
+      `${candidate.driverId}:${candidate.truckId}`,
+      candidate,
+    ]),
   )
   const explanations = new Map<string, string>()
 
