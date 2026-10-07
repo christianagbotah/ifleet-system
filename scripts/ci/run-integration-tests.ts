@@ -1,6 +1,7 @@
 export const INTEGRATION_TEST_FILES = [
   "tests/integration/core-integrity.test.ts",
   "tests/integration/dispatch-copilot.test.ts",
+  "tests/integration/dispatch-copilot-stale-maintenance.test.ts",
 ] as const
 
 export function assertSafeIntegrationDatabase(env: NodeJS.ProcessEnv = process.env): string {
