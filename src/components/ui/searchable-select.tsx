@@ -19,9 +19,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-interface SearchableOption {
+export interface SearchableOption {
   value: string
   label: string
+  description?: string
 }
 
 interface SearchableSelectProps {

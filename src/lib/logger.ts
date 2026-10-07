@@ -10,7 +10,7 @@
  * `debug` / `info` are silently dropped.
  */
 
-type LogPayload = Record<string, unknown> | unknown[] | string | number | null | undefined
+type LogPayload = unknown
 
 const isDev = process.env.NODE_ENV !== 'production'
 

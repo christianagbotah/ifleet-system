@@ -57,9 +57,9 @@ export const adminResetPasswordSchema = z.object({
 export const generateReportSchema = z.object({
   type: z.string().min(1, 'Report type is required'),
   format: z.enum(['csv', 'xlsx', 'pdf'], {
-    errorMap: () => ({ message: 'Format must be csv, xlsx, or pdf' }),
+    error: 'Format must be csv, xlsx, or pdf',
   }),
-  params: z.record(z.unknown()).optional().default({}),
+  params: z.record(z.string(), z.unknown()).optional().default({}),
 })
 
 // ─── Financial Schemas ────────────────────────────────────────────────────

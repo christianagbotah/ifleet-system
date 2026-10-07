@@ -361,10 +361,10 @@ export const invoiceCreateSchema = z.object({
     .array(
       z.object({
         description: z.string().min(1, 'Item description is required').max(1000),
-        quantity: z.number({ coerce: true }).positive('Item quantity must be positive'),
-        unitPrice: z.number({ coerce: true }).nonnegative('Item unit price must be zero or more'),
-        total: z.number({ coerce: true }).optional(),
-        order: z.number({ coerce: true }).int().optional(),
+        quantity: z.coerce.number().positive('Item quantity must be positive'),
+        unitPrice: z.coerce.number().nonnegative('Item unit price must be zero or more'),
+        total: z.coerce.number().optional(),
+        order: z.coerce.number().int().optional(),
       })
     )
     .min(1, 'At least one invoice item is required')

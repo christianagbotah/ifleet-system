@@ -282,7 +282,7 @@ export type TripPhaseKey = keyof typeof TRIP_PHASES
 /** Get which phase a status belongs to */
 export function getTripPhase(status: string): TripPhaseKey {
   for (const [key, phase] of Object.entries(TRIP_PHASES)) {
-    if (phase.statuses.includes(status as (typeof phase.statuses)[number])) {
+    if ((phase.statuses as readonly string[]).includes(status)) {
       return key as TripPhaseKey
     }
   }

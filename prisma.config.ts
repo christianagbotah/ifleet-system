@@ -10,7 +10,6 @@ if (!databaseUrl) {
 }
 
 export default defineConfig({
-  earlyAccess: true,
   schema: path.join(__dirname, 'prisma/schema.prisma'),
   datasource: {
     url: databaseUrl,
