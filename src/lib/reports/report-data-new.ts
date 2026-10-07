@@ -3,6 +3,7 @@
 // ════════════════════════════════════════════════════════════════════
 
 import { db } from '@/lib/db'
+import { aggregateFuelAnalytics, normalizeFuelTrip } from '@/lib/domain/analytics/fuel-analytics'
 import {
   csvDate,
   csvDateTime,
@@ -902,61 +903,34 @@ export async function fetchTripProfitabilityData(params: ReportParams): Promise<
 // ── 16. Fuel Analytics Report ────────────────────────────────────
 
 export async function fetchFuelAnalyticsData(params: ReportParams): Promise<ReportData> {
-  const where: Record<string, unknown> = {}
-  if (params.truckId) where.truckId = params.truckId
-  if (params.dateFrom || params.dateTo) {
-    const dateFilter: Record<string, unknown> = {}
-    if (params.dateFrom) dateFilter.gte = new Date(params.dateFrom)
-    if (params.dateTo) dateFilter.lte = new Date(params.dateTo)
-    where.date = dateFilter
-  }
-
-  const fuelLogs = await db.fuelLog.findMany({
-    where,
-    include: { truck: { select: { plateNumber: true, make: true, model: true } } },
-    orderBy: { date: 'desc' },
+  const departureTime = params.dateFrom || params.dateTo
+    ? { ...(params.dateFrom ? { gte: new Date(params.dateFrom) } : {}), ...(params.dateTo ? { lte: new Date(params.dateTo) } : {}) }
+    : undefined
+  const trips = await db.trip.findMany({
+    where: { status: 'completed', ...(params.truckId ? { truckId: params.truckId } : {}), ...(departureTime ? { departureTime } : {}) },
+    select: {
+      id: true, truckId: true, destinationZoneId: true, departureTime: true,
+      totalMileage: true, fuelCost: true, fuelUsed: true, totalRevenue: true,
+      TripReconciliation: { select: { distanceKm: true, fuelCost: true, revenue: true, consumedLiters: true, fuelAddedLiters: true } },
+      truck: { select: { plateNumber: true } },
+    },
+    orderBy: { departureTime: 'asc' },
   })
-
-  // Per-truck aggregation
-  const truckMap = new Map<string, { liters: number; cost: number; fillups: number; station: string }>()
-  for (const f of fuelLogs) {
-    const existing = truckMap.get(f.truckId) || { liters: 0, cost: 0, fillups: 0, station: '' }
-    existing.liters += f.litersFilled
-    existing.cost += f.totalCost
-    existing.fillups += 1
-    if (f.stationName) existing.station = f.stationName
-    truckMap.set(f.truckId, existing)
-  }
-
-  const headers = [
-    'Truck', 'Total Liters', `Total Cost (${CEDI})`, 'Avg Cost/Liter', 'Fill-ups',
-    'Avg Fill (L)', 'L/100km', 'Efficiency Rating',
-  ]
-
-  const rows = fuelLogs.length === 0 ? [] : Array.from(truckMap.entries()).map(([truckId, data]) => {
-    const truck = fuelLogs.find(f => f.truckId === truckId)?.truck
-    const avgCostPerLiter = data.liters > 0 ? data.cost / data.liters : 0
-    const avgFill = data.fillups > 0 ? data.liters / data.fillups : 0
-    // Assume ~4 km/l average for rating
-    const estimatedKm = data.liters * AVG_KM_PER_LITER
-    const lPer100km = estimatedKm > 0 ? (data.liters / estimatedKm) * 100 : 0
-    let rating = 'Good'
-    if (lPer100km > 35) rating = 'Poor'
-    else if (lPer100km > 28) rating = 'Fair'
-    else if (lPer100km < 18) rating = 'Excellent'
-
-    return [
-      truck ? `${truck.plateNumber} (${truck.make})` : truckId,
-      csvNumber(data.liters, 1),
-      csvCurrency(data.cost),
-      csvCurrency(avgCostPerLiter),
-      data.fillups,
-      csvNumber(avgFill, 1),
-      csvNumber(lPer100km, 1),
-      rating,
-    ]
-  })
-
+  const normalized = trips.map((trip) => normalizeFuelTrip({
+    tripId: trip.id,
+    truckId: trip.truckId,
+    zoneId: trip.destinationZoneId,
+    departureTime: trip.departureTime,
+    legacy: { fuelCost: trip.fuelCost, distanceKm: trip.totalMileage, revenue: trip.totalRevenue, consumedLiters: trip.fuelUsed },
+    reconciliation: trip.TripReconciliation,
+  }))
+  const analytics = aggregateFuelAnalytics(normalized)
+  const plates = new Map(trips.map((trip) => [trip.truckId, trip.truck.plateNumber]))
+  const headers = ['Truck', 'Trips', `Fuel Cost (${CEDI})`, 'Distance (km)', 'L/100km', `Avg Cost/Trip (${CEDI})`, `Avg Cost/km (${CEDI})`, `Revenue (${CEDI})`, 'Fuel/Revenue %', 'Reconciled Trips', 'Legacy Projection Trips']
+  const rows = analytics.byTruck.map((row) => [
+    plates.get(row.truckId) || 'Unknown', row.tripCount, csvCurrency(row.totalFuelCost), csvNumber(row.totalDistance, 1), csvNumber(row.litersPer100Km, 1),
+    csvCurrency(row.avgCostPerTrip), csvCurrency(row.avgCostPerKm), csvCurrency(row.totalRevenue), csvNumber(row.fuelCostRatio, 1), row.reconciledTrips, row.legacyTrips,
+  ])
   return { headers, rows }
 }
 

@@ -1,42 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { requireAuth } from '@/lib/auth-server'
+import { NextRequest, NextResponse } from "next/server"
+import { db } from "@/lib/db"
+import { requireAuth } from "@/lib/auth-server"
+import { aggregateFuelAnalytics, normalizeFuelTrip } from "@/lib/domain/analytics/fuel-analytics"
 
-// Helper: round to 2 decimal places
-function round2(n: number): number {
-  return Math.round((n + Number.EPSILON) * 100) / 100
-}
-
-// Helper: parse period into number of months
-function getMonthsFromPeriod(period: string): number {
-  switch (period) {
-    case '1month': return 1
-    case '3months': return 3
-    case '6months': return 6
-    case '12months': return 12
-    case '24months': return 24
-    default: return 6
+function tripDateFilter(dateFrom: string | null, dateTo: string | null) {
+  if (!dateFrom && !dateTo) return undefined
+  return {
+    ...(dateFrom ? { gte: new Date(dateFrom) } : {}),
+    ...(dateTo ? { lte: new Date(dateTo) } : {}),
   }
 }
 
-// Helper: build date filter for FuelLog queries
-function buildFuelDateFilter(dateFrom?: string | null, dateTo?: string | null): Record<string, unknown> {
-  if (!dateFrom && !dateTo) return {}
-  const filter: Record<string, unknown> = {}
-  filter.date = {}
-  if (dateFrom) (filter.date as Record<string, unknown>).gte = new Date(dateFrom)
-  if (dateTo) (filter.date as Record<string, unknown>).lte = new Date(dateTo)
-  return filter
-}
-
-// Helper: build date filter for Trip queries (using departureTime)
-function buildTripDateFilter(dateFrom?: string | null, dateTo?: string | null): Record<string, unknown> {
-  if (!dateFrom && !dateTo) return {}
-  const filter: Record<string, unknown> = {}
-  filter.departureTime = {}
-  if (dateFrom) (filter.departureTime as Record<string, unknown>).gte = new Date(dateFrom)
-  if (dateTo) (filter.departureTime as Record<string, unknown>).lte = new Date(dateTo)
-  return filter
+function monthsFromPeriod(period: string) {
+  const value = Number.parseInt(period, 10)
+  return Number.isFinite(value) && value > 0 ? value : ({ "1month": 1, "3months": 3, "6months": 6, "12months": 12, "24months": 24 }[period] ?? 6)
 }
 
 export async function GET(request: NextRequest) {
@@ -45,325 +22,110 @@ export async function GET(request: NextRequest) {
     if (auth instanceof NextResponse) return auth
 
     const { searchParams } = new URL(request.url)
-    const truckId = searchParams.get('truckId')
-    const dateFrom = searchParams.get('dateFrom')
-    const dateTo = searchParams.get('dateTo')
-    const period = searchParams.get('period') || '6months'
-    const zoneId = searchParams.get('zoneId')
+    const truckId = searchParams.get("truckId")
+    const zoneId = searchParams.get("zoneId")
+    const dateFrom = searchParams.get("dateFrom")
+    const dateTo = searchParams.get("dateTo")
+    const period = searchParams.get("period") || "6months"
 
-    // ========== BUILD WHERE CLAUSES ==========
-
-    // Fuel log base filter
-    const fuelWhere: Record<string, unknown> = {}
-    if (truckId) fuelWhere.truckId = truckId
-    Object.assign(fuelWhere, buildFuelDateFilter(dateFrom, dateTo))
-
-    // Completed trips base filter
-    const completedTripWhere: Record<string, unknown> = { status: 'completed' }
-    if (truckId) completedTripWhere.truckId = truckId
-    if (zoneId) completedTripWhere.destinationZoneId = zoneId
-    Object.assign(completedTripWhere, buildTripDateFilter(dateFrom, dateTo))
-
-    // ========== SUMMARY ==========
-
-    // Total fuel cost from FuelLog
-    const fuelSummary = await db.fuelLog.aggregate({
-      _sum: { totalCost: true },
-      _count: { id: true },
-      where: fuelWhere,
-    })
-    const totalFuelCost = fuelSummary._sum.totalCost || 0
-
-    // Completed trip data: count, revenue, mileage
-    const tripSummary = await db.trip.aggregate({
-      _count: { id: true },
-      _sum: { totalMileage: true, totalRevenue: true },
-      where: completedTripWhere,
-    })
-
-    const totalTrips = tripSummary._count.id
-    const totalRevenue = tripSummary._sum.totalRevenue || 0
-    const totalDistanceFromTrips = tripSummary._sum.totalMileage || 0
-
-    // Fallback: calculate distance from fuel log odometer readings if trip mileage is insufficient
-    let totalDistance = totalDistanceFromTrips
-    if (totalDistance <= 0) {
-      const truckIds = truckId
-        ? [truckId]
-        : (await db.fuelLog.findMany({
-            where: fuelWhere,
-            select: { truckId: true },
-            distinct: ['truckId'],
-          })).map(l => l.truckId)
-
-      if (truckIds.length > 0) {
-        const allLogs = await db.fuelLog.findMany({
-          where: fuelWhere,
-          orderBy: [{ truckId: 'asc' }, { date: 'asc' }],
-          select: { truckId: true, odometer: true, date: true },
-        })
-
-        // Group by truck and calculate distance from consecutive odometer readings
-        const logsByTruck = new Map<string, typeof allLogs>()
-        for (const log of allLogs) {
-          const existing = logsByTruck.get(log.truckId) || []
-          existing.push(log)
-          logsByTruck.set(log.truckId, existing)
-        }
-
-        let odometerDist = 0
-        for (const [, logs] of logsByTruck) {
-          for (let i = 1; i < logs.length; i++) {
-            if (logs[i - 1].odometer && logs[i].odometer) {
-              const d = logs[i].odometer - logs[i - 1].odometer
-              if (d > 0) odometerDist += d
-            }
-          }
-        }
-        totalDistance = odometerDist
-      }
-    }
-
-    const avgFuelCostPerTrip = totalTrips > 0 ? totalFuelCost / totalTrips : 0
-    const avgFuelCostPerKm = totalDistance > 0 ? totalFuelCost / totalDistance : 0
-    const fuelAsPercentageOfRevenue = totalRevenue > 0 ? (totalFuelCost / totalRevenue) * 100 : 0
-
-    // ========== BY TRUCK ==========
-
-    // Get fuel cost per truck
-    const fuelByTruck = await db.fuelLog.groupBy({
-      by: ['truckId'],
-      _sum: { totalCost: true },
-      _count: { id: true },
-      where: fuelWhere,
-      orderBy: { _sum: { totalCost: 'desc' } },
-    })
-
-    // Get completed trip data per truck
-    const truckIdsForTrips = fuelByTruck.map(f => f.truckId)
-    const tripsByTruck = truckIdsForTrips.length > 0
-      ? await db.trip.groupBy({
-          by: ['truckId'],
-          _count: { id: true },
-          _sum: { totalMileage: true, totalRevenue: true },
-          where: {
-            truckId: { in: truckIdsForTrips },
-            status: 'completed',
-            ...buildTripDateFilter(dateFrom, dateTo),
-          },
-        })
-      : []
-
-    // Map trip data by truckId
-    const tripByTruckMap = new Map(tripsByTruck.map(t => [t.truckId, t]))
-
-    // Get truck details
-    const truckDetails = truckIdsForTrips.length > 0
-      ? await db.truck.findMany({
-          where: { id: { in: truckIdsForTrips } },
-          select: { id: true, plateNumber: true, make: true, model: true },
-        })
-      : []
-    const truckMap = new Map(truckDetails.map(t => [t.id, t]))
-
-    const byTruck = fuelByTruck.map(f => {
-      const truck = truckMap.get(f.truckId)
-      const tripData = tripByTruckMap.get(f.truckId)
-      const tCost = f._sum.totalCost || 0
-      const tCount = tripData?._count.id || 0
-      const tDist = tripData?._sum.totalMileage || 0
-      const tRevenue = tripData?._sum.totalRevenue || 0
-
-      return {
-        truckId: f.truckId,
-        plateNumber: truck?.plateNumber || 'Unknown',
-        make: truck?.make || '',
-        model: truck?.model || '',
-        totalFuelCost: round2(tCost),
-        tripCount: tCount,
-        avgCostPerTrip: round2(tCount > 0 ? tCost / tCount : 0),
-        avgCostPerKm: round2(tDist > 0 ? tCost / tDist : 0),
-        totalDistance: round2(tDist),
-        totalRevenue: round2(tRevenue),
-        fuelCostRatio: round2(tRevenue > 0 ? (tCost / tRevenue) * 100 : 0),
-      }
-    })
-
-    // ========== BY ZONE ==========
-
-    // Find completed trips with a destination zone (filtered by zoneId if provided)
-    const zoneTrips = await db.trip.findMany({
+    const trips = await db.trip.findMany({
       where: {
-        status: 'completed',
-        destinationZoneId: { not: null },
-        ...(zoneId ? { destinationZoneId: zoneId } : {}),
+        status: "completed",
         ...(truckId ? { truckId } : {}),
-        ...buildTripDateFilter(dateFrom, dateTo),
+        ...(zoneId ? { destinationZoneId: zoneId } : {}),
+        ...(tripDateFilter(dateFrom, dateTo) ? { departureTime: tripDateFilter(dateFrom, dateTo) } : {}),
       },
       select: {
         id: true,
+        truckId: true,
         destinationZoneId: true,
-        totalRevenue: true,
+        departureTime: true,
         totalMileage: true,
+        fuelCost: true,
+        fuelUsed: true,
+        totalRevenue: true,
+        TripReconciliation: { select: { distanceKm: true, fuelCost: true, revenue: true, consumedLiters: true, fuelAddedLiters: true } },
+        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+        destinationZone: { select: { id: true, name: true, destinationCity: { select: { id: true, name: true } } } },
       },
+      orderBy: { departureTime: "asc" },
     })
 
-    let byZone: Array<{
-      zoneId: string
-      zoneName: string
-      cityId: string
-      cityName: string
-      expectedFuelCost: number | null
-      actualFuelCost: number
-      tripCount: number
-      deviation: number
-      deviationPercent: number
-    }> = []
-
-    if (zoneTrips.length > 0) {
-      const zoneTripIds = zoneTrips.map(t => t.id)
-
-      // Get fuel costs for these trips
-      const fuelForZoneTrips = await db.fuelLog.groupBy({
-        by: ['tripId'],
-        _sum: { totalCost: true },
-        where: { tripId: { in: zoneTripIds } },
-      })
-
-      const fuelByTripId = new Map(fuelForZoneTrips.map(f => [f.tripId, f._sum.totalCost || 0]))
-
-      // Group by destinationZoneId
-      const zoneAggMap = new Map<string, {
-        tripCount: number
-        actualFuelCost: number
-        totalRevenue: number
-        totalDistance: number
-      }>()
-
-      for (const trip of zoneTrips) {
-        const zid = trip.destinationZoneId!
-        const existing = zoneAggMap.get(zid) || { tripCount: 0, actualFuelCost: 0, totalRevenue: 0, totalDistance: 0 }
-        existing.tripCount += 1
-        existing.actualFuelCost += fuelByTripId.get(trip.id) || 0
-        existing.totalRevenue += trip.totalRevenue || 0
-        existing.totalDistance += trip.totalMileage || 0
-        zoneAggMap.set(zid, existing)
+    const zoneIds = [...new Set(trips.map((trip) => trip.destinationZoneId).filter((value): value is string => Boolean(value)))]
+    const rateRows = zoneIds.length ? await db.zoneRate.findMany({
+      where: { destinationZoneId: { in: zoneIds }, isActive: true },
+      orderBy: { effectiveDate: "desc" },
+      select: { destinationZoneId: true, expectedFuelConsumption: true },
+    }) : []
+    const expectedFuelLitersByZone: Record<string, number> = {}
+    for (const rate of rateRows) {
+      if (expectedFuelLitersByZone[rate.destinationZoneId] === undefined && rate.expectedFuelConsumption != null) {
+        expectedFuelLitersByZone[rate.destinationZoneId] = rate.expectedFuelConsumption
       }
-
-      // Get zone details
-      const zoneIds = [...zoneAggMap.keys()]
-      const zoneDetails = await db.destinationZone.findMany({
-        where: { id: { in: zoneIds } },
-        include: { destinationCity: { select: { id: true, name: true } } },
-      })
-      const zoneDetailMap = new Map(zoneDetails.map(z => [z.id, z]))
-
-      // Get active zone rates for expected fuel cost
-      const zoneRates = await db.zoneRate.findMany({
-        where: {
-          destinationZoneId: { in: zoneIds },
-          isActive: true,
-        },
-        orderBy: { effectiveDate: 'desc' },
-      })
-
-      // Keep the most recent rate per zone
-      const zoneRateMap = new Map<string, number | null>()
-      for (const rate of zoneRates) {
-        if (!zoneRateMap.has(rate.destinationZoneId)) {
-          zoneRateMap.set(rate.destinationZoneId, rate.expectedFuelCost)
-        }
-      }
-
-      // Build byZone array
-      byZone = [...zoneAggMap.entries()].map(([zid, agg]) => {
-        const zone = zoneDetailMap.get(zid)
-        const expectedCost = zoneRateMap.get(zid)
-        const deviation = expectedCost != null ? agg.actualFuelCost - expectedCost : 0
-        const deviationPercent = expectedCost != null && expectedCost > 0 ? (deviation / expectedCost) * 100 : 0
-
-        return {
-          zoneId: zid,
-          zoneName: zone?.name || 'Unknown',
-          cityId: zone?.destinationCity?.id || '',
-          cityName: zone?.destinationCity?.name || '',
-          expectedFuelCost: expectedCost != null ? round2(expectedCost) : null,
-          actualFuelCost: round2(agg.actualFuelCost),
-          tripCount: agg.tripCount,
-          deviation: round2(deviation),
-          deviationPercent: round2(deviationPercent),
-        }
-      }).sort((a, b) => b.actualFuelCost - a.actualFuelCost)
     }
 
-    // ========== MONTHLY TREND ==========
+    const normalized = trips.map((trip) => normalizeFuelTrip({
+      tripId: trip.id,
+      truckId: trip.truckId,
+      zoneId: trip.destinationZoneId,
+      departureTime: trip.departureTime,
+      legacy: { fuelCost: trip.fuelCost, distanceKm: trip.totalMileage, revenue: trip.totalRevenue, consumedLiters: trip.fuelUsed },
+      reconciliation: trip.TripReconciliation,
+    }))
+    const analytics = aggregateFuelAnalytics(normalized, { expectedFuelLitersByZone })
 
-    const monthsCount = getMonthsFromPeriod(period)
+    const truckDetails = new Map(trips.map((trip) => [trip.truckId, trip.truck]))
+    const zoneDetails = new Map(trips.filter((trip) => trip.destinationZone).map((trip) => [trip.destinationZoneId!, trip.destinationZone!]))
+
+    const byTruck = analytics.byTruck.map((row) => ({
+      ...row,
+      plateNumber: truckDetails.get(row.truckId)?.plateNumber ?? "Unknown",
+      make: truckDetails.get(row.truckId)?.make ?? "",
+      model: truckDetails.get(row.truckId)?.model ?? "",
+    }))
+    const byZone = analytics.byZone.map((row) => ({
+      ...row,
+      zoneName: zoneDetails.get(row.zoneId)?.name ?? "Unknown",
+      cityId: zoneDetails.get(row.zoneId)?.destinationCity.id ?? "",
+      cityName: zoneDetails.get(row.zoneId)?.destinationCity.name ?? "",
+    }))
+
+    const monthsCount = monthsFromPeriod(period)
     const now = new Date()
-    const monthlyTrend = []
-
-    for (let i = monthsCount - 1; i >= 0; i--) {
-      const mStart = new Date(now.getFullYear(), now.getMonth() - i, 1)
-      const mEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59, 999)
-
-      // Fuel cost for this month
-      const mFuelWhere: Record<string, unknown> = { date: { gte: mStart, lte: mEnd } }
-      if (truckId) mFuelWhere.truckId = truckId
-      const mFuelAgg = await db.fuelLog.aggregate({
-        _sum: { totalCost: true },
-        _count: { id: true },
-        where: mFuelWhere,
-      })
-
-      // Completed trips for this month
-      const mTripWhere: Record<string, unknown> = {
-        status: 'completed',
-        departureTime: { gte: mStart, lte: mEnd },
+    const monthlyTrend = Array.from({ length: monthsCount }, (_, index) => {
+      const offset = monthsCount - index - 1
+      const start = new Date(now.getFullYear(), now.getMonth() - offset, 1)
+      const end = new Date(now.getFullYear(), now.getMonth() - offset + 1, 1)
+      const group = normalized.filter((row) => row.departureTime >= start && row.departureTime < end)
+      const month = aggregateFuelAnalytics(group).summary
+      return {
+        month: start.toLocaleString("en-US", { month: "short", year: "numeric" }),
+        year: start.getFullYear(),
+        monthIndex: start.getMonth() + 1,
+        totalFuelCost: month.totalFuelCost,
+        totalRevenue: month.totalRevenue,
+        tripCount: month.totalTrips,
+        avgCostPerTrip: month.avgFuelCostPerTrip,
+        fuelCostRatio: month.fuelAsPercentageOfRevenue,
+        reconciledTrips: month.reconciledTrips,
+        legacyProjectionTrips: month.legacyProjectionTrips,
       }
-      if (truckId) mTripWhere.truckId = truckId
-      if (zoneId) mTripWhere.destinationZoneId = zoneId
-      const mTripAgg = await db.trip.aggregate({
-        _count: { id: true },
-        _sum: { totalRevenue: true },
-        where: mTripWhere,
-      })
-
-      const mFuelCost = mFuelAgg._sum.totalCost || 0
-      const mRevenue = mTripAgg._sum.totalRevenue || 0
-      const mTrips = mTripAgg._count.id
-
-      monthlyTrend.push({
-        month: mStart.toLocaleString('en-US', { month: 'short', year: 'numeric' }),
-        year: mStart.getFullYear(),
-        monthIndex: mStart.getMonth() + 1,
-        totalFuelCost: round2(mFuelCost),
-        totalRevenue: round2(mRevenue),
-        tripCount: mTrips,
-        avgCostPerTrip: round2(mTrips > 0 ? mFuelCost / mTrips : 0),
-        fuelCostRatio: round2(mRevenue > 0 ? (mFuelCost / mRevenue) * 100 : 0),
-      })
-    }
-
-    // ========== RETURN RESPONSE ==========
+    })
 
     return NextResponse.json({
-      summary: {
-        totalFuelCost: round2(totalFuelCost),
-        totalTrips,
-        avgFuelCostPerTrip: round2(avgFuelCostPerTrip),
-        avgFuelCostPerKm: round2(avgFuelCostPerKm),
-        fuelAsPercentageOfRevenue: round2(fuelAsPercentageOfRevenue),
-        totalRevenue: round2(totalRevenue),
-      },
+      summary: analytics.summary,
       byTruck,
       byZone,
       monthlyTrend,
+      dataQuality: {
+        reconciledTrips: analytics.summary.reconciledTrips,
+        legacyProjectionTrips: analytics.summary.legacyProjectionTrips,
+        expectedFuelBenchmark: "zone_expected_litres_x_observed_cost_per_litre",
+      },
+      rows: analytics.rows.map((row) => ({ tripId: row.tripId, source: row.source })),
     })
   } catch (error) {
-    console.error('Fuel Consumption Analytics API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to load fuel consumption analytics' },
-      { status: 500 }
-    )
+    console.error("Fuel Consumption Analytics API error:", error)
+    return NextResponse.json({ error: "Failed to load fuel consumption analytics" }, { status: 500 })
   }
 }
