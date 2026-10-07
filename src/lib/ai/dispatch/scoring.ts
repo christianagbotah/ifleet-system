@@ -14,12 +14,17 @@ export const DISPATCH_SCORE_WEIGHTS = {
 
 export type DispatchScoreComponentName = keyof typeof DISPATCH_SCORE_WEIGHTS
 
+export type DispatchScoreEvidenceValue = number | null | {
+  value: number
+  known: boolean
+}
+
 export type DispatchScoreEvidence = {
   driverId: string
   truckId: string
   eligible: boolean
   currentWorkload: number
-  components: Record<DispatchScoreComponentName, number | null>
+  components: Record<DispatchScoreComponentName, DispatchScoreEvidenceValue>
 }
 
 export type DispatchScoreComponent = {
@@ -51,8 +56,20 @@ function round(value: number, decimals = 2): number {
   return Math.round((value + Number.EPSILON) * factor) / factor
 }
 
+function normalizeEvidenceValue(raw: DispatchScoreEvidenceValue): { value: number; known: boolean } {
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    return { value: clampScore(raw), known: true }
+  }
+
+  if (raw && typeof raw === "object" && Number.isFinite(raw.value)) {
+    return { value: clampScore(raw.value), known: raw.known === true }
+  }
+
+  return { value: NEUTRAL_UNKNOWN_SCORE, known: false }
+}
+
 function componentReason(name: DispatchScoreComponentName, value: number, known: boolean): string | null {
-  if (!known) return `${name}: evidence unavailable; neutral score used`
+  if (!known) return `${name}: evidence incomplete or unavailable`
   if (value >= 85) return `${name}: strong evidence`
   if (value <= 35) return `${name}: weak evidence`
   return null
@@ -70,9 +87,7 @@ export function scoreDispatchPair(evidence: DispatchScoreEvidence): DispatchPair
 
   for (const name of Object.keys(DISPATCH_SCORE_WEIGHTS) as DispatchScoreComponentName[]) {
     const weight = DISPATCH_SCORE_WEIGHTS[name]
-    const raw = evidence.components[name]
-    const known = typeof raw === "number" && Number.isFinite(raw)
-    const value = known ? clampScore(raw) : NEUTRAL_UNKNOWN_SCORE
+    const { value, known } = normalizeEvidenceValue(evidence.components[name])
 
     components[name] = { value, weight, known }
     weightedTotal += value * weight / 100
