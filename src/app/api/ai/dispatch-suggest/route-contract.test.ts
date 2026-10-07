@@ -5,12 +5,14 @@ const recommendationRoutePath = "src/app/api/ai/dispatch-suggest/route.ts"
 const decisionRoutePath = "src/app/api/ai/dispatch-recommendations/[id]/decision/route.ts"
 
 describe("dispatch copilot route contracts", () => {
-  test("recommendation route delegates authority to the dispatch service", () => {
+  test("recommendation route delegates authority to the dispatch service and persists explanation provenance", () => {
     const source = readFileSync(recommendationRoutePath, "utf8")
 
     expect(source).toContain("dispatchRecommendationRequestSchema")
     expect(source).toContain("getDispatchRecommendations")
     expect(source).toContain("explainDispatchRanking")
+    expect(source).toContain("recordDispatchExplanation")
+    expect(source).toContain("recommendation.recommendationId")
     expect(source).toContain("auth.userId")
     expect(source).toContain("auth.roleName")
     expect(source).not.toContain("availableDrivers")
