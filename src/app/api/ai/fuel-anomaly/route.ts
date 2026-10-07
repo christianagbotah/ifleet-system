@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireRole, ROLES } from "@/lib/auth-server"
-import { assessFuelAnomaly, getFuelAnomalyAssessment, recordFuelAnomalyExplanation } from "@/lib/services/fuel-anomaly-assessment-service"
+import { assessFuelAnomaly, recordFuelAnomalyExplanation } from "@/lib/services/fuel-anomaly-assessment-service"
 import { explainFuelAnomalyAssessment } from "@/lib/ai/fuel-anomaly/explainer-client"
 import { parseFuelAnomalySubject } from "./request-schema"
+import { getFuelAnomalyDashboardSummary, listFuelAnomalyAssessments } from "@/lib/services/fuel-anomaly-query-service"
 
 export async function POST(request: NextRequest) {
   const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
@@ -38,14 +39,28 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
   if (auth instanceof NextResponse) return auth
-  const id = new URL(request.url).searchParams.get("id")?.trim()
-  if (!id) return NextResponse.json({ error: "Assessment id is required" }, { status: 400 })
   try {
-    const assessment = await getFuelAnomalyAssessment(id)
-    if (!assessment) return NextResponse.json({ error: "Fuel anomaly assessment not found" }, { status: 404 })
-    return NextResponse.json({ assessment })
+    const params = new URL(request.url).searchParams
+    const startDate = params.get("startDate") ? new Date(params.get("startDate")!) : undefined
+    const endDate = params.get("endDate") ? new Date(params.get("endDate")!) : undefined
+    const truckId = params.get("truckId") ?? undefined
+    if (params.get("view") === "summary") {
+      const summary = await getFuelAnomalyDashboardSummary({ startDate, endDate, truckId })
+      return NextResponse.json({ summary })
+    }
+    const result = await listFuelAnomalyAssessments({
+      startDate,
+      endDate,
+      truckId,
+      status: params.get("status") ?? undefined,
+      severity: params.get("severity") ?? undefined,
+      page: params.get("page") ? Number(params.get("page")) : undefined,
+      pageSize: params.get("pageSize") ? Number(params.get("pageSize")) : undefined,
+    })
+    return NextResponse.json(result)
   } catch (error) {
-    console.error("[FuelAnomaly] assessment retrieval failed", error instanceof Error ? error.message : "unknown")
-    return NextResponse.json({ error: "Failed to load fuel anomaly assessment" }, { status: 500 })
+    const message = error instanceof Error ? error.message : "invalid request"
+    const clientError = message.startsWith("FUEL_ANOMALY_QUERY_")
+    return NextResponse.json({ error: clientError ? message : "Failed to load fuel anomaly intelligence" }, { status: clientError ? 400 : 500 })
   }
 }

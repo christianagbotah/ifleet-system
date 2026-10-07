@@ -228,7 +228,7 @@ function validateReview(current: FuelAnomalyStoredAssessment, input: FuelAnomaly
   }
 }
 
-function mapPrismaAssessment(row: any): FuelAnomalyStoredAssessment {
+export function mapFuelAnomalyPrismaAssessment(row: any): FuelAnomalyStoredAssessment {
   return {
     id: row.id,
     subjectType: row.subjectType,
@@ -297,7 +297,7 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
   return {
     async findByIdentity(identity) {
       const row = await db.fuelAnomalyAssessment.findFirst({ where: identity, include })
-      return row ? mapPrismaAssessment(row) : null
+      return row ? mapFuelAnomalyPrismaAssessment(row) : null
     },
     async create(input) {
       const row = await db.fuelAnomalyAssessment.create({
@@ -307,11 +307,11 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
         },
         include,
       })
-      return mapPrismaAssessment(row)
+      return mapFuelAnomalyPrismaAssessment(row)
     },
     async getById(id) {
       const row = await db.fuelAnomalyAssessment.findUnique({ where: { id }, include })
-      return row ? mapPrismaAssessment(row) : null
+      return row ? mapFuelAnomalyPrismaAssessment(row) : null
     },
     async recordExplanation(input) {
       const row = await db.fuelAnomalyAssessment.update({
@@ -325,7 +325,7 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
         },
         include,
       })
-      return mapPrismaAssessment(row)
+      return mapFuelAnomalyPrismaAssessment(row)
     },
     async transitionReview(input) {
       return db.$transaction(async (tx) => {
@@ -353,7 +353,7 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
           },
           include,
         })
-        return mapPrismaAssessment(row)
+        return mapFuelAnomalyPrismaAssessment(row)
       })
     },
   }
