@@ -1259,3 +1259,16 @@ After database seed, your admin login is:
 ---
 
 **Need help?** If you get stuck on any step, SSH into your server and run the troubleshooting commands in Step 16. Most issues are solved by checking `pm2 logs` and `pm2 status`.
+
+
+## Production database and migration safety
+
+Development, test/staging, and production must use separate MariaDB databases and separate credentials. Developer machines must never default to the production `DATABASE_URL`.
+
+Before the first rollout of the hardened pipeline, rotate every database password, API token, webhook secret, and service credential that has ever appeared in repository history. Removing a value from the current tree does not make an exposed historical secret safe.
+
+Production deployments use versioned Prisma migrations only. The required sequence is: run `scripts/deploy/preflight.sh`, create a database backup/checkpoint using `DEPLOY_BACKUP_HOOK`, run the quality gate, execute `prisma migrate deploy`, build, restart, then run `scripts/deploy/smoke-test.sh`. `prisma db push` is prohibited in production.
+
+Set `REQUIRE_DEPLOY_BACKUP=1` in production so deployment refuses to migrate without an executable `DEPLOY_BACKUP_HOOK`. The hook must write a restorable database checkpoint outside the application checkout and return non-zero if backup creation or verification fails.
+
+For rollback after an application-only failure, redeploy the previous known-good commit. For a migration-related failure, stop deployment, preserve logs and the failed database state, restore the verified pre-deploy backup to a separate recovery database first, verify it, and only then perform the approved production restore/roll-forward procedure. Do not improvise destructive reverse SQL against live production.
