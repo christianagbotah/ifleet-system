@@ -19,6 +19,7 @@ export type FuelEvidenceEvent = {
   totalCost: number
   costPerLiter: number | null
   stationName: string | null
+  fuelType?: string | null
   receiptNumber: string | null
   fuelLevelBeforeLiters: number | null
   fuelLevelAfterLiters: number | null
@@ -28,6 +29,7 @@ export type FuelEvidenceEvent = {
   insideExpectedFuelingArea: boolean | null
   reversalOfId: string | null
   reversalTargetWasVerified: boolean
+  paymentSource?: string | null
 }
 
 export type FuelBaselineObservation = {
