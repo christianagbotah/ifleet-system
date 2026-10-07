@@ -48,6 +48,12 @@ jobs:
       - name: Check tracked secrets
         run: bash scripts/ci/check-no-secrets.sh
 
+      - name: Validate Prisma schema
+        run: bunx prisma validate
+
+      - name: Generate Prisma client
+        run: bunx prisma generate
+
       - name: Lint
         run: bun run lint
 
@@ -56,9 +62,6 @@ jobs:
 
       - name: Unit tests
         run: bun run test
-
-      - name: Validate Prisma schema
-        run: bunx prisma validate
 
       - name: Apply integration migrations
         run: bunx prisma migrate deploy
