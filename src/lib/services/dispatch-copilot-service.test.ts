@@ -51,7 +51,7 @@ function dependencies(overrides: Partial<DispatchCopilotDependencies> = {}): Dis
     rulesetVersion: "dispatch-v1",
     inputHash: "hash",
     inputSnapshot: "{}",
-    rankedOutput: "[]",
+    rankedOutput: JSON.stringify({ ranked: [{ driverId: "driver-1", truckId: "truck-1" }] }),
     confidence: 1,
     dataQuality: 1,
     status: "pending",
