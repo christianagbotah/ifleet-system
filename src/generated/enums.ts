@@ -9,6 +9,53 @@
 * 🟢 You can import this file directly.
 */
 
+export const FuelAnomalySubjectType = {
+  fuel_event: 'fuel_event',
+  trip: 'trip',
+  truck_window: 'truck_window'
+} as const
+
+export type FuelAnomalySubjectType = (typeof FuelAnomalySubjectType)[keyof typeof FuelAnomalySubjectType]
+
+
+export const FuelAnomalySeverity = {
+  info: 'info',
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  critical: 'critical'
+} as const
+
+export type FuelAnomalySeverity = (typeof FuelAnomalySeverity)[keyof typeof FuelAnomalySeverity]
+
+
+export const FuelAnomalyAssessmentStatus = {
+  open: 'open',
+  acknowledged: 'acknowledged',
+  investigating: 'investigating',
+  resolved: 'resolved',
+  false_positive: 'false_positive'
+} as const
+
+export type FuelAnomalyAssessmentStatus = (typeof FuelAnomalyAssessmentStatus)[keyof typeof FuelAnomalyAssessmentStatus]
+
+
+export const FuelAnomalyOutcomeCode = {
+  verified_legitimate: 'verified_legitimate',
+  data_entry_error: 'data_entry_error',
+  duplicate_record: 'duplicate_record',
+  mechanical_issue: 'mechanical_issue',
+  route_or_operational_factor: 'route_or_operational_factor',
+  supplier_or_price_issue: 'supplier_or_price_issue',
+  fuel_loss_confirmed: 'fuel_loss_confirmed',
+  policy_violation_confirmed: 'policy_violation_confirmed',
+  insufficient_evidence: 'insufficient_evidence',
+  other: 'other'
+} as const
+
+export type FuelAnomalyOutcomeCode = (typeof FuelAnomalyOutcomeCode)[keyof typeof FuelAnomalyOutcomeCode]
+
+
 export const TripStatus = {
   scheduled: 'scheduled',
   loading: 'loading',

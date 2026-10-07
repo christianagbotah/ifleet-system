@@ -10,7 +10,7 @@ if (!databaseUrl) {
 }
 
 export default defineConfig({
-  schema: path.join(__dirname, 'prisma/schema.prisma'),
+  schema: path.join(__dirname, 'prisma'),
   datasource: {
     url: databaseUrl,
   },

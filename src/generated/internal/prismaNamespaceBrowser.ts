@@ -51,6 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  FuelAnomalyAssessment: 'FuelAnomalyAssessment',
+  FuelAnomalyFinding: 'FuelAnomalyFinding',
+  FuelAnomalyReviewEvent: 'FuelAnomalyReviewEvent',
   User: 'User',
   AuditLog: 'AuditLog',
   BorderCrossing: 'BorderCrossing',
@@ -132,6 +135,75 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const FuelAnomalyAssessmentScalarFieldEnum = {
+  id: 'id',
+  subjectType: 'subjectType',
+  subjectKey: 'subjectKey',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  requestedBy: 'requestedBy',
+  requestedAt: 'requestedAt',
+  rulesetVersion: 'rulesetVersion',
+  baselineVersion: 'baselineVersion',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  overallRiskScore: 'overallRiskScore',
+  overallSeverity: 'overallSeverity',
+  confidence: 'confidence',
+  dataQuality: 'dataQuality',
+  status: 'status',
+  explanationSource: 'explanationSource',
+  explanationProvider: 'explanationProvider',
+  explanationModel: 'explanationModel',
+  explanationOutput: 'explanationOutput',
+  explanationAt: 'explanationAt',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  reviewNotes: 'reviewNotes',
+  outcomeCode: 'outcomeCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FuelAnomalyAssessmentScalarFieldEnum = (typeof FuelAnomalyAssessmentScalarFieldEnum)[keyof typeof FuelAnomalyAssessmentScalarFieldEnum]
+
+
+export const FuelAnomalyFindingScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  code: 'code',
+  severity: 'severity',
+  riskContribution: 'riskContribution',
+  confidence: 'confidence',
+  dataQuality: 'dataQuality',
+  evidence: 'evidence',
+  reason: 'reason',
+  recommendedAction: 'recommendedAction',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  createdAt: 'createdAt'
+} as const
+
+export type FuelAnomalyFindingScalarFieldEnum = (typeof FuelAnomalyFindingScalarFieldEnum)[keyof typeof FuelAnomalyFindingScalarFieldEnum]
+
+
+export const FuelAnomalyReviewEventScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  outcomeCode: 'outcomeCode',
+  notes: 'notes',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type FuelAnomalyReviewEventScalarFieldEnum = (typeof FuelAnomalyReviewEventScalarFieldEnum)[keyof typeof FuelAnomalyReviewEventScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -1542,6 +1614,54 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const FuelAnomalyAssessmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  subjectKey: 'subjectKey',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  requestedBy: 'requestedBy',
+  rulesetVersion: 'rulesetVersion',
+  baselineVersion: 'baselineVersion',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  explanationSource: 'explanationSource',
+  explanationProvider: 'explanationProvider',
+  explanationModel: 'explanationModel',
+  explanationOutput: 'explanationOutput',
+  reviewedBy: 'reviewedBy',
+  reviewNotes: 'reviewNotes'
+} as const
+
+export type FuelAnomalyAssessmentOrderByRelevanceFieldEnum = (typeof FuelAnomalyAssessmentOrderByRelevanceFieldEnum)[keyof typeof FuelAnomalyAssessmentOrderByRelevanceFieldEnum]
+
+
+export const FuelAnomalyFindingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  code: 'code',
+  evidence: 'evidence',
+  reason: 'reason',
+  recommendedAction: 'recommendedAction',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  driverId: 'driverId'
+} as const
+
+export type FuelAnomalyFindingOrderByRelevanceFieldEnum = (typeof FuelAnomalyFindingOrderByRelevanceFieldEnum)[keyof typeof FuelAnomalyFindingOrderByRelevanceFieldEnum]
+
+
+export const FuelAnomalyReviewEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  notes: 'notes',
+  actorId: 'actorId'
+} as const
+
+export type FuelAnomalyReviewEventOrderByRelevanceFieldEnum = (typeof FuelAnomalyReviewEventOrderByRelevanceFieldEnum)[keyof typeof FuelAnomalyReviewEventOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {

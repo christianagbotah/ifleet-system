@@ -18,6 +18,21 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model FuelAnomalyAssessment
+ * 
+ */
+export type FuelAnomalyAssessment = Prisma.FuelAnomalyAssessmentModel
+/**
+ * Model FuelAnomalyFinding
+ * 
+ */
+export type FuelAnomalyFinding = Prisma.FuelAnomalyFindingModel
+/**
+ * Model FuelAnomalyReviewEvent
+ * 
+ */
+export type FuelAnomalyReviewEvent = Prisma.FuelAnomalyReviewEventModel
+/**
  * Model User
  * 
  */

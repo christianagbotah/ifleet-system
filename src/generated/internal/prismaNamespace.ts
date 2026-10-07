@@ -384,6 +384,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  FuelAnomalyAssessment: 'FuelAnomalyAssessment',
+  FuelAnomalyFinding: 'FuelAnomalyFinding',
+  FuelAnomalyReviewEvent: 'FuelAnomalyReviewEvent',
   User: 'User',
   AuditLog: 'AuditLog',
   BorderCrossing: 'BorderCrossing',
@@ -464,10 +467,208 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "tripSequence" | "odometerReading" | "tripReconciliation" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
+    modelProps: "fuelAnomalyAssessment" | "fuelAnomalyFinding" | "fuelAnomalyReviewEvent" | "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "tripSequence" | "odometerReading" | "tripReconciliation" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    FuelAnomalyAssessment: {
+      payload: Prisma.$FuelAnomalyAssessmentPayload<ExtArgs>
+      fields: Prisma.FuelAnomalyAssessmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FuelAnomalyAssessmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FuelAnomalyAssessmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>
+        }
+        findFirst: {
+          args: Prisma.FuelAnomalyAssessmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FuelAnomalyAssessmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>
+        }
+        findMany: {
+          args: Prisma.FuelAnomalyAssessmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>[]
+        }
+        create: {
+          args: Prisma.FuelAnomalyAssessmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>
+        }
+        createMany: {
+          args: Prisma.FuelAnomalyAssessmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.FuelAnomalyAssessmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>
+        }
+        update: {
+          args: Prisma.FuelAnomalyAssessmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.FuelAnomalyAssessmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FuelAnomalyAssessmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.FuelAnomalyAssessmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyAssessmentPayload>
+        }
+        aggregate: {
+          args: Prisma.FuelAnomalyAssessmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFuelAnomalyAssessment>
+        }
+        groupBy: {
+          args: Prisma.FuelAnomalyAssessmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FuelAnomalyAssessmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FuelAnomalyAssessmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FuelAnomalyAssessmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    FuelAnomalyFinding: {
+      payload: Prisma.$FuelAnomalyFindingPayload<ExtArgs>
+      fields: Prisma.FuelAnomalyFindingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FuelAnomalyFindingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FuelAnomalyFindingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>
+        }
+        findFirst: {
+          args: Prisma.FuelAnomalyFindingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FuelAnomalyFindingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>
+        }
+        findMany: {
+          args: Prisma.FuelAnomalyFindingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>[]
+        }
+        create: {
+          args: Prisma.FuelAnomalyFindingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>
+        }
+        createMany: {
+          args: Prisma.FuelAnomalyFindingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.FuelAnomalyFindingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>
+        }
+        update: {
+          args: Prisma.FuelAnomalyFindingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>
+        }
+        deleteMany: {
+          args: Prisma.FuelAnomalyFindingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FuelAnomalyFindingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.FuelAnomalyFindingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyFindingPayload>
+        }
+        aggregate: {
+          args: Prisma.FuelAnomalyFindingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFuelAnomalyFinding>
+        }
+        groupBy: {
+          args: Prisma.FuelAnomalyFindingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FuelAnomalyFindingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FuelAnomalyFindingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FuelAnomalyFindingCountAggregateOutputType> | number
+        }
+      }
+    }
+    FuelAnomalyReviewEvent: {
+      payload: Prisma.$FuelAnomalyReviewEventPayload<ExtArgs>
+      fields: Prisma.FuelAnomalyReviewEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FuelAnomalyReviewEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FuelAnomalyReviewEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>
+        }
+        findFirst: {
+          args: Prisma.FuelAnomalyReviewEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FuelAnomalyReviewEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>
+        }
+        findMany: {
+          args: Prisma.FuelAnomalyReviewEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>[]
+        }
+        create: {
+          args: Prisma.FuelAnomalyReviewEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>
+        }
+        createMany: {
+          args: Prisma.FuelAnomalyReviewEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.FuelAnomalyReviewEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>
+        }
+        update: {
+          args: Prisma.FuelAnomalyReviewEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.FuelAnomalyReviewEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FuelAnomalyReviewEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.FuelAnomalyReviewEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FuelAnomalyReviewEventPayload>
+        }
+        aggregate: {
+          args: Prisma.FuelAnomalyReviewEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFuelAnomalyReviewEvent>
+        }
+        groupBy: {
+          args: Prisma.FuelAnomalyReviewEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FuelAnomalyReviewEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FuelAnomalyReviewEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FuelAnomalyReviewEventCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -4797,6 +4998,75 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const FuelAnomalyAssessmentScalarFieldEnum = {
+  id: 'id',
+  subjectType: 'subjectType',
+  subjectKey: 'subjectKey',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  requestedBy: 'requestedBy',
+  requestedAt: 'requestedAt',
+  rulesetVersion: 'rulesetVersion',
+  baselineVersion: 'baselineVersion',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  overallRiskScore: 'overallRiskScore',
+  overallSeverity: 'overallSeverity',
+  confidence: 'confidence',
+  dataQuality: 'dataQuality',
+  status: 'status',
+  explanationSource: 'explanationSource',
+  explanationProvider: 'explanationProvider',
+  explanationModel: 'explanationModel',
+  explanationOutput: 'explanationOutput',
+  explanationAt: 'explanationAt',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  reviewNotes: 'reviewNotes',
+  outcomeCode: 'outcomeCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FuelAnomalyAssessmentScalarFieldEnum = (typeof FuelAnomalyAssessmentScalarFieldEnum)[keyof typeof FuelAnomalyAssessmentScalarFieldEnum]
+
+
+export const FuelAnomalyFindingScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  code: 'code',
+  severity: 'severity',
+  riskContribution: 'riskContribution',
+  confidence: 'confidence',
+  dataQuality: 'dataQuality',
+  evidence: 'evidence',
+  reason: 'reason',
+  recommendedAction: 'recommendedAction',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  createdAt: 'createdAt'
+} as const
+
+export type FuelAnomalyFindingScalarFieldEnum = (typeof FuelAnomalyFindingScalarFieldEnum)[keyof typeof FuelAnomalyFindingScalarFieldEnum]
+
+
+export const FuelAnomalyReviewEventScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  outcomeCode: 'outcomeCode',
+  notes: 'notes',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type FuelAnomalyReviewEventScalarFieldEnum = (typeof FuelAnomalyReviewEventScalarFieldEnum)[keyof typeof FuelAnomalyReviewEventScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -6207,6 +6477,54 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const FuelAnomalyAssessmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  subjectKey: 'subjectKey',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  requestedBy: 'requestedBy',
+  rulesetVersion: 'rulesetVersion',
+  baselineVersion: 'baselineVersion',
+  inputHash: 'inputHash',
+  inputSnapshot: 'inputSnapshot',
+  explanationSource: 'explanationSource',
+  explanationProvider: 'explanationProvider',
+  explanationModel: 'explanationModel',
+  explanationOutput: 'explanationOutput',
+  reviewedBy: 'reviewedBy',
+  reviewNotes: 'reviewNotes'
+} as const
+
+export type FuelAnomalyAssessmentOrderByRelevanceFieldEnum = (typeof FuelAnomalyAssessmentOrderByRelevanceFieldEnum)[keyof typeof FuelAnomalyAssessmentOrderByRelevanceFieldEnum]
+
+
+export const FuelAnomalyFindingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  code: 'code',
+  evidence: 'evidence',
+  reason: 'reason',
+  recommendedAction: 'recommendedAction',
+  fuelLogId: 'fuelLogId',
+  tripId: 'tripId',
+  truckId: 'truckId',
+  driverId: 'driverId'
+} as const
+
+export type FuelAnomalyFindingOrderByRelevanceFieldEnum = (typeof FuelAnomalyFindingOrderByRelevanceFieldEnum)[keyof typeof FuelAnomalyFindingOrderByRelevanceFieldEnum]
+
+
+export const FuelAnomalyReviewEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  notes: 'notes',
+  actorId: 'actorId'
+} as const
+
+export type FuelAnomalyReviewEventOrderByRelevanceFieldEnum = (typeof FuelAnomalyReviewEventOrderByRelevanceFieldEnum)[keyof typeof FuelAnomalyReviewEventOrderByRelevanceFieldEnum]
+
+
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
   email: 'email',
@@ -7135,9 +7453,9 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'FuelAnomalySubjectType'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type EnumFuelAnomalySubjectTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FuelAnomalySubjectType'>
     
 
 
@@ -7149,16 +7467,51 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
- * Reference to a field of type 'BorderCrossingStatus'
+ * Reference to a field of type 'Int'
  */
-export type EnumBorderCrossingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BorderCrossingStatus'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'FuelAnomalySeverity'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type EnumFuelAnomalySeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FuelAnomalySeverity'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'FuelAnomalyAssessmentStatus'
+ */
+export type EnumFuelAnomalyAssessmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FuelAnomalyAssessmentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'FuelAnomalyOutcomeCode'
+ */
+export type EnumFuelAnomalyOutcomeCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FuelAnomalyOutcomeCode'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'BorderCrossingStatus'
+ */
+export type EnumBorderCrossingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BorderCrossingStatus'>
     
 
 
@@ -7173,13 +7526,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'CashAdvanceStatus'
  */
 export type EnumCashAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CashAdvanceStatus'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
@@ -7509,6 +7855,9 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  fuelAnomalyAssessment?: Prisma.FuelAnomalyAssessmentOmit
+  fuelAnomalyFinding?: Prisma.FuelAnomalyFindingOmit
+  fuelAnomalyReviewEvent?: Prisma.FuelAnomalyReviewEventOmit
   user?: Prisma.UserOmit
   auditLog?: Prisma.AuditLogOmit
   borderCrossing?: Prisma.BorderCrossingOmit

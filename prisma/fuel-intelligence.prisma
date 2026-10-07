@@ -1,0 +1,112 @@
+enum FuelAnomalySubjectType {
+  fuel_event
+  trip
+  truck_window
+}
+
+enum FuelAnomalySeverity {
+  info
+  low
+  medium
+  high
+  critical
+}
+
+enum FuelAnomalyAssessmentStatus {
+  open
+  acknowledged
+  investigating
+  resolved
+  false_positive
+}
+
+enum FuelAnomalyOutcomeCode {
+  verified_legitimate
+  data_entry_error
+  duplicate_record
+  mechanical_issue
+  route_or_operational_factor
+  supplier_or_price_issue
+  fuel_loss_confirmed
+  policy_violation_confirmed
+  insufficient_evidence
+  other
+}
+
+model FuelAnomalyAssessment {
+  id                  String                      @id @default(cuid())
+  subjectType         FuelAnomalySubjectType
+  subjectKey          String                      @db.VarChar(191)
+  fuelLogId           String?
+  tripId              String?
+  truckId             String?
+  requestedBy         String?
+  requestedAt         DateTime                    @default(now())
+  rulesetVersion      String                      @db.VarChar(64)
+  baselineVersion     String                      @db.VarChar(64)
+  inputHash           String                      @db.VarChar(64)
+  inputSnapshot       String                      @db.LongText
+  overallRiskScore    Int
+  overallSeverity     FuelAnomalySeverity
+  confidence          Float
+  dataQuality         Float
+  status              FuelAnomalyAssessmentStatus @default(open)
+  explanationSource   String?
+  explanationProvider String?
+  explanationModel    String?
+  explanationOutput   String?                     @db.LongText
+  explanationAt       DateTime?
+  reviewedBy          String?
+  reviewedAt          DateTime?
+  reviewNotes         String?                     @db.Text
+  outcomeCode         FuelAnomalyOutcomeCode?
+  createdAt           DateTime                    @default(now())
+  updatedAt           DateTime                    @updatedAt
+  findings            FuelAnomalyFinding[]
+  reviewEvents        FuelAnomalyReviewEvent[]
+
+  @@unique([subjectType, subjectKey, rulesetVersion, baselineVersion, inputHash], map: "FuelAnomalyAssessment_identity_key")
+  @@index([status])
+  @@index([overallSeverity])
+  @@index([truckId])
+  @@index([tripId])
+  @@index([fuelLogId])
+  @@index([requestedAt])
+}
+
+model FuelAnomalyFinding {
+  id                String                @id @default(cuid())
+  assessmentId      String
+  code              String                @db.VarChar(96)
+  severity          FuelAnomalySeverity
+  riskContribution  Int
+  confidence        Float
+  dataQuality       Float
+  evidence          String                @db.LongText
+  reason            String                @db.Text
+  recommendedAction String                @db.Text
+  fuelLogId         String?
+  tripId            String?
+  truckId           String?
+  driverId          String?
+  createdAt         DateTime              @default(now())
+  assessment        FuelAnomalyAssessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId])
+  @@index([code])
+  @@index([severity])
+}
+
+model FuelAnomalyReviewEvent {
+  id           String                      @id @default(cuid())
+  assessmentId String
+  fromStatus   FuelAnomalyAssessmentStatus
+  toStatus     FuelAnomalyAssessmentStatus
+  outcomeCode  FuelAnomalyOutcomeCode?
+  notes        String?                     @db.Text
+  actorId      String
+  createdAt    DateTime                    @default(now())
+  assessment   FuelAnomalyAssessment       @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId, createdAt])
+}
