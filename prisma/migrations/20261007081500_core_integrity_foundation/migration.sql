@@ -8,6 +8,9 @@ ALTER TABLE `FuelLog` ADD COLUMN `capturedBy` VARCHAR(191) NULL,
     ADD COLUMN `source` ENUM('manual', 'driver_app', 'admin', 'gps', 'import', 'integration', 'system') NOT NULL DEFAULT 'manual',
     ADD COLUMN `verificationStatus` ENUM('pending', 'verified', 'rejected', 'superseded') NOT NULL DEFAULT 'pending';
 
+-- Existing fuel logs predate verification workflow and are treated as accepted historical records.
+UPDATE `FuelLog` SET `verificationStatus` = 'verified' WHERE `verificationStatus` = 'pending';
+
 -- AlterTable
 ALTER TABLE `WeightVerification` ADD COLUMN `varianceClass` ENUM('within_tolerance', 'over', 'under') NOT NULL DEFAULT 'within_tolerance';
 

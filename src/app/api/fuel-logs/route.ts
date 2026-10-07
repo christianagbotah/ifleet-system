@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { fuelLogCreateSchema, validateBody } from '@/lib/validations'
+import { createFuelEvent, FuelDomainError } from '@/lib/services/fuel-service'
+import { OdometerDomainError } from '@/lib/services/odometer-service'
 
 export async function GET(request: NextRequest) {
   try {
@@ -99,123 +102,29 @@ export async function POST(request: NextRequest) {
     const writeGuard = requireWriteAccess(auth)
     if (writeGuard instanceof NextResponse) return writeGuard
 
-    const body = await request.json()
+    const validation = validateBody(fuelLogCreateSchema, await request.json())
+    if (!validation.success) return validation.response
 
-    const {
-      truckId,
-      tripId,
-      date,
-      litersFilled,
-      totalCost,
-      odometer,
-      fuelLevelBefore,
-      fuelLevelAfter,
-      costPerLiter,
-      stationName,
-      fuelType,
-      receiptNumber,
-      endMileage,
-      endMileageImage,
-      images,
-      distanceCovered: bodyDistanceCovered,
-      notes,
-    } = body
-
-    if (!truckId || !tripId || !litersFilled || !totalCost || !date) {
-      return NextResponse.json(
-        { error: 'truckId, tripId, litersFilled, totalCost, and date are required' },
-        { status: 400 }
-      )
-    }
-
-    // Verify truck exists
-    const truck = await db.truck.findUnique({ where: { id: truckId } })
-    if (!truck) {
-      return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
-    }
-
-    // Post-trip workflow: look up trip for auto-calculation
-    let resolvedEndMileage: number | null = null
-    let resolvedDistanceCovered: number | null = null
-    const trip = await db.trip.findUnique({
-      where: { id: tripId },
-      select: { id: true, startMileage: true, truckId: true },
-    })
-    if (trip) {
-      // Parse endMileage if provided
-      if (endMileage !== undefined && endMileage !== null) {
-        resolvedEndMileage = parseFloat(endMileage)
-        // Auto-calculate distance if trip has startMileage
-        if (trip.startMileage && resolvedEndMileage !== null) {
-          resolvedDistanceCovered = resolvedEndMileage - trip.startMileage
-        }
-      }
-      // Use body-provided distance if no auto-calculation
-      if (resolvedDistanceCovered === null && bodyDistanceCovered !== undefined && bodyDistanceCovered !== null) {
-        resolvedDistanceCovered = parseFloat(bodyDistanceCovered)
-      }
-    }
-
-    // Auto-calculate costPerLiter if not provided
-    const parsedLiters = parseFloat(litersFilled)
-    const parsedCost = parseFloat(totalCost)
-    const calculatedCostPerLiter =
-      costPerLiter !== undefined
-        ? parseFloat(costPerLiter)
-        : parsedLiters > 0
-          ? parsedCost / parsedLiters
-          : 0
-
-    const fuelLog = await db.fuelLog.create({
-      data: {
-        truckId,
-        tripId,
-        date: new Date(date),
-        litersFilled: parsedLiters,
-        totalCost: parsedCost,
-        costPerLiter: calculatedCostPerLiter,
-        odometer: odometer !== undefined ? parseFloat(odometer) : null,
-        fuelLevelBefore: fuelLevelBefore !== undefined ? parseFloat(fuelLevelBefore) : null,
-        fuelLevelAfter: fuelLevelAfter !== undefined ? parseFloat(fuelLevelAfter) : null,
-        stationName,
-        fuelType: fuelType || 'Diesel',
-        receiptNumber,
-        ...(resolvedEndMileage !== null && { endMileage: resolvedEndMileage }),
-        ...(endMileageImage && { endMileageImage }),
-        ...(resolvedDistanceCovered !== null && { distanceCovered: resolvedDistanceCovered }),
-        ...(notes && { notes }),
-        ...(images && { images }),
-      },
-      include: {
-        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
-        trip: { select: { id: true, tripNumber: true } },
-      },
-    })
-
-    // Post-trip: update the trip with endMileage, totalMileage, fuelUsed, fuelCost
-    if (trip) {
-      const tripUpdateData: Record<string, unknown> = {}
-      if (resolvedEndMileage !== null) {
-        tripUpdateData.endMileage = resolvedEndMileage
-      }
-      if (resolvedDistanceCovered !== null) {
-        tripUpdateData.totalMileage = resolvedDistanceCovered
-      }
-      if (parsedLiters > 0) {
-        tripUpdateData.fuelUsed = parsedLiters
-      }
-      tripUpdateData.fuelCost = parsedCost
-
-      if (Object.keys(tripUpdateData).length > 0) {
-        await db.trip.update({
-          where: { id: tripId },
-          data: tripUpdateData,
-        }).catch(() => { /* best-effort trip update */ })
-      }
-    }
-
+    const fuelLog = await createFuelEvent(validation.data, auth)
     return NextResponse.json(fuelLog, { status: 201 })
   } catch (error) {
+    if (error instanceof FuelDomainError) {
+      const status =
+        error.code === 'TRIP_NOT_FOUND' || error.code === 'REVERSAL_TARGET_NOT_FOUND'
+          ? 404
+          : error.code === 'DUPLICATE_FUEL_EVENT' ||
+              error.code === 'TRIP_TRUCK_MISMATCH' ||
+              error.code === 'REVERSAL_TARGET_MISMATCH'
+            ? 409
+            : 400
+      return NextResponse.json({ error: error.message, code: error.code }, { status })
+    }
+
+    if (error instanceof OdometerDomainError) {
+      const status = error.code === 'TRIP_NOT_FOUND' ? 404 : error.code === 'TRIP_TRUCK_MISMATCH' ? 409 : 400
+      return NextResponse.json({ error: error.message, code: error.code }, { status })
+    }
+
     console.error('Fuel log create error:', error)
     return NextResponse.json({ error: 'Failed to create fuel log' }, { status: 500 })
   }

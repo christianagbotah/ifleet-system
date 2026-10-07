@@ -280,21 +280,46 @@ export const fuelLogCreateSchema = z.object({
   truckId: idSchema,
   tripId: idSchema,
   date: z.coerce.date({ error: 'Invalid fuel log date' }),
-  litersFilled: z.union([z.string(), z.number()]),
-  totalCost: z.union([z.string(), z.number()]),
+  litersFilled: z.coerce.number().nonnegative('Litres cannot be negative'),
+  totalCost: z.coerce.number().nonnegative('Fuel cost cannot be negative'),
 
-  odometer: z.union([z.string(), z.number()]).optional(),
-  fuelLevelBefore: z.union([z.string(), z.number()]).optional(),
-  fuelLevelAfter: z.union([z.string(), z.number()]).optional(),
-  costPerLiter: z.union([z.string(), z.number()]).optional(),
+  eventType: z.enum(['purchase', 'company_issue', 'external_issue', 'emergency', 'tank_observation', 'reversal']).optional().default('purchase'),
+  source: z.enum(['manual', 'driver_app', 'admin', 'gps', 'import', 'integration', 'system']).optional().default('manual'),
+  paymentSource: z.string().max(100).optional(),
+  reversalOfId: idSchema.optional(),
+
+  odometer: z.coerce.number().nonnegative().optional(),
+  fuelLevelBefore: z.coerce.number().nonnegative().optional(),
+  fuelLevelAfter: z.coerce.number().nonnegative().optional(),
+  costPerLiter: z.coerce.number().nonnegative().optional(),
   stationName: z.string().max(200).optional(),
   fuelType: fuelTypeEnum.optional().default('Diesel'),
   receiptNumber: z.string().max(100).optional(),
-  endMileage: z.union([z.string(), z.number()]).optional(),
+  endMileage: z.coerce.number().nonnegative().optional(),
   endMileageImage: z.string().url().optional().or(z.literal('')),
-  images: z.string().max(5000).optional(), // JSON array of URLs
-  distanceCovered: z.union([z.string(), z.number()]).optional(),
+  images: z.string().max(5000).optional(),
+  distanceCovered: z.coerce.number().nonnegative().optional(),
+  latitude: z.coerce.number().min(-90).max(90).optional(),
+  longitude: z.coerce.number().min(-180).max(180).optional(),
   notes: z.string().max(2000).optional(),
+}).superRefine((data, ctx) => {
+  if (data.eventType !== 'tank_observation') {
+    if (data.litersFilled <= 0) {
+      ctx.addIssue({ code: 'custom', path: ['litersFilled'], message: 'Litres must be positive for fuel events' })
+    }
+    if (data.totalCost <= 0) {
+      ctx.addIssue({ code: 'custom', path: ['totalCost'], message: 'Fuel cost must be positive for fuel events' })
+    }
+  }
+
+  if (data.eventType === 'reversal') {
+    if (!data.reversalOfId) {
+      ctx.addIssue({ code: 'custom', path: ['reversalOfId'], message: 'Reversal must reference the original fuel event' })
+    }
+    if (!data.notes?.trim()) {
+      ctx.addIssue({ code: 'custom', path: ['notes'], message: 'Reversal reason is required' })
+    }
+  }
 })
 
 /**
