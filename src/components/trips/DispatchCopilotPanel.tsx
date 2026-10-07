@@ -193,6 +193,19 @@ export function DispatchCopilotPanel({
       )}
 
       {result && result.candidates.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 text-[11px]">
+          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 font-medium text-emerald-700 dark:text-emerald-400">
+            Eligible
+          </span>
+          <span className="rounded-full border px-2 py-1 text-muted-foreground">
+            Evidence: {result.explanationSource === 'deterministic'
+              ? 'Deterministic server checks'
+              : 'Deterministic server checks + AI explanation'}
+          </span>
+        </div>
+      )}
+
+      {result && result.candidates.length > 0 && (
         <div className="space-y-3">
           {result.candidates.slice(0, 3).map((candidate, index) => {
             const pairId = `${candidate.driverId}:${candidate.truckId}`

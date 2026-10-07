@@ -39,6 +39,7 @@ import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
 import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2, CheckSquare, Square, Camera } from 'lucide-react'
 import { TripInvoicePanel } from './TripInvoicePanel'
+import { DispatchCopilotPanel } from './DispatchCopilotPanel'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -502,6 +503,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
   // Cargo items state (flat list)
   const [cargoItems, setCargoItems] = React.useState<CargoItemRow[]>([])
   const [deliveryDestinations, setDeliveryDestinations] = React.useState<DeliveryDestinationRow[]>([])
+  const dispatchPrefillRef = React.useRef<{ truckId: string; driverId: string } | null>(null)
 
   const form = useForm<TripFormValues>({
     resolver: zodResolver(tripFormSchema),
@@ -734,6 +736,13 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
   React.useEffect(() => {
     const subscription = form.watch((data, { name }) => {
       if (name === 'truckId' && data.truckId) {
+        const dispatchPrefill = dispatchPrefillRef.current
+        if (dispatchPrefill?.truckId === data.truckId) {
+          form.setValue('driverId', dispatchPrefill.driverId, { shouldValidate: true })
+          dispatchPrefillRef.current = null
+          return
+        }
+
         const selectedTruck = trucks.find(t => t.id === data.truckId)
         if (selectedTruck?.driverId) {
           const driver = drivers.find(d => d.id === selectedTruck.driverId)
@@ -922,6 +931,19 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
     return cargoItems.reduce((sum, item) => sum + (item.total || 0), 0)
   }, [cargoItems])
 
+  const dispatchCargo = React.useMemo(() => {
+    const usableItems = cargoItems.filter((item) => item.quantity > 0 && item.unit)
+    if (usableItems.length === 0) return { quantity: null, cargoUnit: null }
+
+    const units = new Set(usableItems.map((item) => item.unit))
+    if (units.size !== 1) return { quantity: null, cargoUnit: null }
+
+    return {
+      quantity: usableItems.reduce((sum, item) => sum + item.quantity, 0),
+      cargoUnit: usableItems[0].unit,
+    }
+  }, [cargoItems])
+
   // Delivery destination helpers
   const deliveryDestTotal = React.useMemo(() => {
     return deliveryDestinations.reduce((sum, dest) => sum + (dest.zoneRate || 0), 0)
@@ -1066,6 +1088,27 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
             {/* 1. Assignment (Truck & Driver) */}
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Assignment</h3>
+              <DispatchCopilotPanel
+                tripId={trip?.id ?? null}
+                departureTime={form.watch('departureTime') || null}
+                destinationZoneId={form.watch('destinationZoneId') || null}
+                quantity={dispatchCargo.quantity}
+                cargoUnit={dispatchCargo.cargoUnit}
+                driverOptions={drivers.map((driver) => ({
+                  id: driver.id,
+                  label: `${driver.firstName} ${driver.lastName}`,
+                }))}
+                truckOptions={trucks.map((truck) => ({
+                  id: truck.id,
+                  label: `${truck.plateNumber} (${truck.make} ${truck.model})`,
+                }))}
+                disabled={submitting || loadingOptions}
+                onUseRecommendation={({ truckId, driverId }) => {
+                  dispatchPrefillRef.current = { truckId, driverId }
+                  form.setValue('truckId', truckId, { shouldValidate: true })
+                  form.setValue('driverId', driverId, { shouldValidate: true })
+                }}
+              />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
