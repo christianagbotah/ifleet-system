@@ -29,6 +29,15 @@ const trip = {
   internalNotes: "sensitive",
 }
 
+type ExplanationProvenanceProbe = {
+  provider?: string | null
+  model?: string | null
+}
+
+function provenanceOf(value: unknown): ExplanationProvenanceProbe {
+  return value as ExplanationProvenanceProbe
+}
+
 describe("dispatch explanation client", () => {
   test("sends only the sanitized deterministic payload and returns provider/model provenance without score authority", async () => {
     let sentBody = ""
@@ -55,13 +64,14 @@ describe("dispatch explanation client", () => {
       fetcher,
       timeoutMs: 1000,
     })
+    const provenance = provenanceOf(result)
 
     expect(sentBody).not.toContain("+233000000000")
     expect(sentBody).not.toContain("sensitive")
     expect(sentBody).toContain("driver-1")
     expect(result.explanationSource).toBe("ai")
-    expect(result.provider).toBe("groq")
-    expect(result.model).toBe("llama-test")
+    expect(provenance.provider).toBe("groq")
+    expect(provenance.model).toBe("llama-test")
     expect(result.candidates[0].score).toBe(86.25)
     expect(result.candidates[0].explanation).toBe("Strong compliant choice.")
   })
@@ -81,10 +91,11 @@ describe("dispatch explanation client", () => {
       fetcher,
       timeoutMs: 1000,
     })
+    const provenance = provenanceOf(result)
 
     expect(result.explanationSource).toBe("deterministic")
-    expect(result.provider).toBeNull()
-    expect(result.model).toBeNull()
+    expect(provenance.provider).toBeNull()
+    expect(provenance.model).toBeNull()
     expect(result.candidates[0].score).toBe(86.25)
   })
 
@@ -98,10 +109,11 @@ describe("dispatch explanation client", () => {
       fetcher: failingFetch,
       timeoutMs: 5,
     })
+    const provenance = provenanceOf(result)
 
     expect(result.explanationSource).toBe("deterministic")
-    expect(result.provider).toBeNull()
-    expect(result.model).toBeNull()
+    expect(provenance.provider).toBeNull()
+    expect(provenance.model).toBeNull()
     expect(result.candidates[0].score).toBe(86.25)
   })
 })
