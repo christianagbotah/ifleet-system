@@ -102,7 +102,7 @@ describe("dispatch copilot service", () => {
   })
 
   test("sources candidates internally, excludes blocked resources, ranks deterministically and persists provenance", async () => {
-    let persisted: Record<string, unknown> | null = null
+    const captured: { value?: Record<string, unknown> } = {}
     const deps = dependencies({
       candidateSource: {
         loadDrivers: async () => [
@@ -117,7 +117,7 @@ describe("dispatch copilot service", () => {
     })
     const originalCreate = deps.recommendationStore.create
     deps.recommendationStore.create = async (data) => {
-      persisted = data as unknown as Record<string, unknown>
+      captured.value = data as unknown as Record<string, unknown>
       return originalCreate(data)
     }
 
@@ -130,14 +130,14 @@ describe("dispatch copilot service", () => {
     expect(result.ranked[0]).toMatchObject({ driverId: "driver-1", truckId: "truck-1" })
     expect(result.blockedDrivers.map((row) => row.id)).toContain("driver-expired")
     expect(result.blockedTrucks.map((row) => row.id)).toContain("truck-maint")
-    expect(persisted).toMatchObject({
+    expect(captured.value).toMatchObject({
       requestedBy: actor.userId,
       rulesetVersion: "dispatch-v1",
       status: "pending",
     })
-    expect(String(persisted?.inputHash)).toHaveLength(64)
-    expect(String(persisted?.inputSnapshot)).not.toContain("phone")
-    expect(String(persisted?.rankedOutput)).toContain("driver-1")
+    expect(String(captured.value?.["inputHash"])).toHaveLength(64)
+    expect(String(captured.value?.["inputSnapshot"])).not.toContain("phone")
+    expect(String(captured.value?.["rankedOutput"])).toContain("driver-1")
   })
 
   test("returns structured blocked reasons when there is no eligible pair", async () => {
