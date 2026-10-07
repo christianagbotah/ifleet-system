@@ -1,4 +1,6 @@
 import { describe, expect, test } from "bun:test"
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 import { assertSafeIntegrationDatabase } from "./run-integration-tests"
 
 describe("integration database safety", () => {
@@ -31,5 +33,15 @@ describe("integration database safety", () => {
   test("accepts an isolated CI database", () => {
     const url = "mysql://ci@127.0.0.1:3306/ifleet_ci"
     expect(assertSafeIntegrationDatabase({ NODE_ENV: "test", TEST_DATABASE_URL: url } as NodeJS.ProcessEnv)).toBe(url)
+  })
+
+  test("runs core integrity and fuel anomaly intelligence suites sequentially under one guarded database", () => {
+    const source = readFileSync(join(import.meta.dir, "run-integration-tests.ts"), "utf8")
+    const core = source.indexOf("tests/integration/core-integrity.test.ts")
+    const fuel = source.indexOf("tests/integration/fuel-anomaly-intelligence.test.ts")
+    expect(core).toBeGreaterThanOrEqual(0)
+    expect(fuel).toBeGreaterThan(core)
+    expect(source).toContain("DATABASE_URL: testUrl")
+    expect(source).toContain("NODE_ENV: \"test\"")
   })
 })

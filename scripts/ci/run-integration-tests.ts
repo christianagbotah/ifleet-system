@@ -26,13 +26,20 @@ export function assertSafeIntegrationDatabase(env: NodeJS.ProcessEnv = process.e
 
 export function runIntegrationTests(env: NodeJS.ProcessEnv = process.env): number {
   const testUrl = assertSafeIntegrationDatabase(env)
-  const result = Bun.spawnSync(["bun", "test", "tests/integration/core-integrity.test.ts"], {
-    cwd: process.cwd(),
-    env: { ...env, DATABASE_URL: testUrl, NODE_ENV: "test" },
-    stdout: "inherit",
-    stderr: "inherit",
-  })
-  return result.exitCode ?? 1
+  const suites = [
+    "tests/integration/core-integrity.test.ts",
+    "tests/integration/fuel-anomaly-intelligence.test.ts",
+  ] as const
+  for (const suite of suites) {
+    const result = Bun.spawnSync(["bun", "test", suite], {
+      cwd: process.cwd(),
+      env: { ...env, DATABASE_URL: testUrl, NODE_ENV: "test" },
+      stdout: "inherit",
+      stderr: "inherit",
+    })
+    if ((result.exitCode ?? 1) !== 0) return result.exitCode ?? 1
+  }
+  return 0
 }
 
 if (import.meta.main) {
