@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { evaluateDriverEligibility, evaluateTruckEligibility } from "./eligibility"
+import type { DriverEligibilityCandidate, TruckEligibilityCandidate } from "./types"
 
 const departureTime = new Date("2026-10-08T08:00:00Z")
 
-function driver(overrides: Record<string, unknown> = {}) {
+function driver(overrides: Partial<DriverEligibilityCandidate> = {}): DriverEligibilityCandidate {
   return {
     id: "driver-1",
     name: "Eligible Driver",
@@ -15,7 +16,7 @@ function driver(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function truck(overrides: Record<string, unknown> = {}) {
+function truck(overrides: Partial<TruckEligibilityCandidate> = {}): TruckEligibilityCandidate {
   return {
     id: "truck-1",
     plateNumber: "GT-1000-26",
@@ -75,7 +76,7 @@ describe("evaluateDriverEligibility", () => {
   })
 
   test("always blocks explicitly rejected or expired verification", () => {
-    for (const verificationStatus of ["rejected", "expired"]) {
+    for (const verificationStatus of ["rejected", "expired"] as const) {
       const result = evaluateDriverEligibility(
         driver({ verificationStatus }),
         { departureTime, policy: { requireVerifiedDriver: false } },
