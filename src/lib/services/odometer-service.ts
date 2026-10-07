@@ -85,9 +85,8 @@ async function recordInTransaction(
     },
   })
 
-  const isVerifiedAdjustment = verificationStatus === "verified" && input.readingType === "manual_adjustment" && input.allowAdjustment
   const isNewerVerifiedReading = verificationStatus === "verified" && (latest == null || input.reading > latest.reading)
-  if (isVerifiedAdjustment || isNewerVerifiedReading) {
+  if (isNewerVerifiedReading) {
     await tx.truck.update({ where: { id: input.truckId }, data: { currentMileage: input.reading } })
   }
 
