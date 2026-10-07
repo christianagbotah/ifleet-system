@@ -35,6 +35,8 @@ export type FuelLogAvgAggregateOutputType = {
   totalCost: runtime.Decimal | null
   endMileage: number | null
   distanceCovered: number | null
+  latitude: number | null
+  longitude: number | null
 }
 
 export type FuelLogSumAggregateOutputType = {
@@ -46,6 +48,8 @@ export type FuelLogSumAggregateOutputType = {
   totalCost: runtime.Decimal | null
   endMileage: number | null
   distanceCovered: number | null
+  latitude: number | null
+  longitude: number | null
 }
 
 export type FuelLogMinAggregateOutputType = {
@@ -67,6 +71,14 @@ export type FuelLogMinAggregateOutputType = {
   images: string | null
   distanceCovered: number | null
   notes: string | null
+  eventType: $Enums.FuelEventType | null
+  source: $Enums.ObservationSource | null
+  verificationStatus: $Enums.VerificationStatus | null
+  capturedBy: string | null
+  latitude: number | null
+  longitude: number | null
+  paymentSource: string | null
+  reversalOfId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -90,6 +102,14 @@ export type FuelLogMaxAggregateOutputType = {
   images: string | null
   distanceCovered: number | null
   notes: string | null
+  eventType: $Enums.FuelEventType | null
+  source: $Enums.ObservationSource | null
+  verificationStatus: $Enums.VerificationStatus | null
+  capturedBy: string | null
+  latitude: number | null
+  longitude: number | null
+  paymentSource: string | null
+  reversalOfId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -113,6 +133,14 @@ export type FuelLogCountAggregateOutputType = {
   images: number
   distanceCovered: number
   notes: number
+  eventType: number
+  source: number
+  verificationStatus: number
+  capturedBy: number
+  latitude: number
+  longitude: number
+  paymentSource: number
+  reversalOfId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -128,6 +156,8 @@ export type FuelLogAvgAggregateInputType = {
   totalCost?: true
   endMileage?: true
   distanceCovered?: true
+  latitude?: true
+  longitude?: true
 }
 
 export type FuelLogSumAggregateInputType = {
@@ -139,6 +169,8 @@ export type FuelLogSumAggregateInputType = {
   totalCost?: true
   endMileage?: true
   distanceCovered?: true
+  latitude?: true
+  longitude?: true
 }
 
 export type FuelLogMinAggregateInputType = {
@@ -160,6 +192,14 @@ export type FuelLogMinAggregateInputType = {
   images?: true
   distanceCovered?: true
   notes?: true
+  eventType?: true
+  source?: true
+  verificationStatus?: true
+  capturedBy?: true
+  latitude?: true
+  longitude?: true
+  paymentSource?: true
+  reversalOfId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -183,6 +223,14 @@ export type FuelLogMaxAggregateInputType = {
   images?: true
   distanceCovered?: true
   notes?: true
+  eventType?: true
+  source?: true
+  verificationStatus?: true
+  capturedBy?: true
+  latitude?: true
+  longitude?: true
+  paymentSource?: true
+  reversalOfId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -206,6 +254,14 @@ export type FuelLogCountAggregateInputType = {
   images?: true
   distanceCovered?: true
   notes?: true
+  eventType?: true
+  source?: true
+  verificationStatus?: true
+  capturedBy?: true
+  latitude?: true
+  longitude?: true
+  paymentSource?: true
+  reversalOfId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -316,6 +372,14 @@ export type FuelLogGroupByOutputType = {
   images: string | null
   distanceCovered: number | null
   notes: string | null
+  eventType: $Enums.FuelEventType
+  source: $Enums.ObservationSource
+  verificationStatus: $Enums.VerificationStatus
+  capturedBy: string | null
+  latitude: number | null
+  longitude: number | null
+  paymentSource: string | null
+  reversalOfId: string | null
   createdAt: Date
   updatedAt: Date
   _count: FuelLogCountAggregateOutputType | null
@@ -362,10 +426,20 @@ export type FuelLogWhereInput = {
   images?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   distanceCovered?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   notes?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  eventType?: Prisma.EnumFuelEventTypeFilter<"FuelLog"> | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFilter<"FuelLog"> | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFilter<"FuelLog"> | $Enums.VerificationStatus
+  capturedBy?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  paymentSource?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  reversalOfId?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
+  reversalOf?: Prisma.XOR<Prisma.FuelLogNullableScalarRelationFilter, Prisma.FuelLogWhereInput> | null
+  reversals?: Prisma.FuelLogListRelationFilter
 }
 
 export type FuelLogOrderByWithRelationInput = {
@@ -387,10 +461,20 @@ export type FuelLogOrderByWithRelationInput = {
   images?: Prisma.SortOrderInput | Prisma.SortOrder
   distanceCovered?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  capturedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentSource?: Prisma.SortOrderInput | Prisma.SortOrder
+  reversalOfId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   trip?: Prisma.TripOrderByWithRelationInput
   truck?: Prisma.TruckOrderByWithRelationInput
+  reversalOf?: Prisma.FuelLogOrderByWithRelationInput
+  reversals?: Prisma.FuelLogOrderByRelationAggregateInput
   _relevance?: Prisma.FuelLogOrderByRelevanceInput
 }
 
@@ -416,10 +500,20 @@ export type FuelLogWhereUniqueInput = Prisma.AtLeast<{
   images?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   distanceCovered?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
   notes?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  eventType?: Prisma.EnumFuelEventTypeFilter<"FuelLog"> | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFilter<"FuelLog"> | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFilter<"FuelLog"> | $Enums.VerificationStatus
+  capturedBy?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  paymentSource?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  reversalOfId?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
+  reversalOf?: Prisma.XOR<Prisma.FuelLogNullableScalarRelationFilter, Prisma.FuelLogWhereInput> | null
+  reversals?: Prisma.FuelLogListRelationFilter
 }, "id">
 
 export type FuelLogOrderByWithAggregationInput = {
@@ -441,6 +535,14 @@ export type FuelLogOrderByWithAggregationInput = {
   images?: Prisma.SortOrderInput | Prisma.SortOrder
   distanceCovered?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  capturedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentSource?: Prisma.SortOrderInput | Prisma.SortOrder
+  reversalOfId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.FuelLogCountOrderByAggregateInput
@@ -472,6 +574,14 @@ export type FuelLogScalarWhereWithAggregatesInput = {
   images?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
   distanceCovered?: Prisma.FloatNullableWithAggregatesFilter<"FuelLog"> | number | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
+  eventType?: Prisma.EnumFuelEventTypeWithAggregatesFilter<"FuelLog"> | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceWithAggregatesFilter<"FuelLog"> | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusWithAggregatesFilter<"FuelLog"> | $Enums.VerificationStatus
+  capturedBy?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
+  latitude?: Prisma.FloatNullableWithAggregatesFilter<"FuelLog"> | number | null
+  longitude?: Prisma.FloatNullableWithAggregatesFilter<"FuelLog"> | number | null
+  paymentSource?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
+  reversalOfId?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FuelLog"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FuelLog"> | Date | string
 }
@@ -493,10 +603,19 @@ export type FuelLogCreateInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutFuelLogInput
   truck: Prisma.TruckCreateNestedOneWithoutFuelLogInput
+  reversalOf?: Prisma.FuelLogCreateNestedOneWithoutReversalsInput
+  reversals?: Prisma.FuelLogCreateNestedManyWithoutReversalOfInput
 }
 
 export type FuelLogUncheckedCreateInput = {
@@ -518,8 +637,17 @@ export type FuelLogUncheckedCreateInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reversals?: Prisma.FuelLogUncheckedCreateNestedManyWithoutReversalOfInput
 }
 
 export type FuelLogUpdateInput = {
@@ -539,10 +667,19 @@ export type FuelLogUpdateInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutFuelLogNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutFuelLogNestedInput
+  reversalOf?: Prisma.FuelLogUpdateOneWithoutReversalsNestedInput
+  reversals?: Prisma.FuelLogUpdateManyWithoutReversalOfNestedInput
 }
 
 export type FuelLogUncheckedUpdateInput = {
@@ -564,8 +701,17 @@ export type FuelLogUncheckedUpdateInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reversals?: Prisma.FuelLogUncheckedUpdateManyWithoutReversalOfNestedInput
 }
 
 export type FuelLogCreateManyInput = {
@@ -587,6 +733,14 @@ export type FuelLogCreateManyInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -608,6 +762,13 @@ export type FuelLogUpdateManyMutationInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -631,8 +792,31 @@ export type FuelLogUncheckedUpdateManyInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FuelLogNullableScalarRelationFilter = {
+  is?: Prisma.FuelLogWhereInput | null
+  isNot?: Prisma.FuelLogWhereInput | null
+}
+
+export type FuelLogListRelationFilter = {
+  every?: Prisma.FuelLogWhereInput
+  some?: Prisma.FuelLogWhereInput
+  none?: Prisma.FuelLogWhereInput
+}
+
+export type FuelLogOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type FuelLogOrderByRelevanceInput = {
@@ -660,6 +844,14 @@ export type FuelLogCountOrderByAggregateInput = {
   images?: Prisma.SortOrder
   distanceCovered?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  capturedBy?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  paymentSource?: Prisma.SortOrder
+  reversalOfId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -673,6 +865,8 @@ export type FuelLogAvgOrderByAggregateInput = {
   totalCost?: Prisma.SortOrder
   endMileage?: Prisma.SortOrder
   distanceCovered?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type FuelLogMaxOrderByAggregateInput = {
@@ -694,6 +888,14 @@ export type FuelLogMaxOrderByAggregateInput = {
   images?: Prisma.SortOrder
   distanceCovered?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  capturedBy?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  paymentSource?: Prisma.SortOrder
+  reversalOfId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -717,6 +919,14 @@ export type FuelLogMinOrderByAggregateInput = {
   images?: Prisma.SortOrder
   distanceCovered?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  capturedBy?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  paymentSource?: Prisma.SortOrder
+  reversalOfId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -730,16 +940,78 @@ export type FuelLogSumOrderByAggregateInput = {
   totalCost?: Prisma.SortOrder
   endMileage?: Prisma.SortOrder
   distanceCovered?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
-export type FuelLogListRelationFilter = {
-  every?: Prisma.FuelLogWhereInput
-  some?: Prisma.FuelLogWhereInput
-  none?: Prisma.FuelLogWhereInput
+export type FuelLogCreateNestedOneWithoutReversalsInput = {
+  create?: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalsInput, Prisma.FuelLogUncheckedCreateWithoutReversalsInput>
+  connectOrCreate?: Prisma.FuelLogCreateOrConnectWithoutReversalsInput
+  connect?: Prisma.FuelLogWhereUniqueInput
 }
 
-export type FuelLogOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type FuelLogCreateNestedManyWithoutReversalOfInput = {
+  create?: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalOfInput, Prisma.FuelLogUncheckedCreateWithoutReversalOfInput> | Prisma.FuelLogCreateWithoutReversalOfInput[] | Prisma.FuelLogUncheckedCreateWithoutReversalOfInput[]
+  connectOrCreate?: Prisma.FuelLogCreateOrConnectWithoutReversalOfInput | Prisma.FuelLogCreateOrConnectWithoutReversalOfInput[]
+  createMany?: Prisma.FuelLogCreateManyReversalOfInputEnvelope
+  connect?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+}
+
+export type FuelLogUncheckedCreateNestedManyWithoutReversalOfInput = {
+  create?: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalOfInput, Prisma.FuelLogUncheckedCreateWithoutReversalOfInput> | Prisma.FuelLogCreateWithoutReversalOfInput[] | Prisma.FuelLogUncheckedCreateWithoutReversalOfInput[]
+  connectOrCreate?: Prisma.FuelLogCreateOrConnectWithoutReversalOfInput | Prisma.FuelLogCreateOrConnectWithoutReversalOfInput[]
+  createMany?: Prisma.FuelLogCreateManyReversalOfInputEnvelope
+  connect?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+}
+
+export type EnumFuelEventTypeFieldUpdateOperationsInput = {
+  set?: $Enums.FuelEventType
+}
+
+export type EnumObservationSourceFieldUpdateOperationsInput = {
+  set?: $Enums.ObservationSource
+}
+
+export type EnumVerificationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.VerificationStatus
+}
+
+export type FuelLogUpdateOneWithoutReversalsNestedInput = {
+  create?: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalsInput, Prisma.FuelLogUncheckedCreateWithoutReversalsInput>
+  connectOrCreate?: Prisma.FuelLogCreateOrConnectWithoutReversalsInput
+  upsert?: Prisma.FuelLogUpsertWithoutReversalsInput
+  disconnect?: Prisma.FuelLogWhereInput | boolean
+  delete?: Prisma.FuelLogWhereInput | boolean
+  connect?: Prisma.FuelLogWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FuelLogUpdateToOneWithWhereWithoutReversalsInput, Prisma.FuelLogUpdateWithoutReversalsInput>, Prisma.FuelLogUncheckedUpdateWithoutReversalsInput>
+}
+
+export type FuelLogUpdateManyWithoutReversalOfNestedInput = {
+  create?: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalOfInput, Prisma.FuelLogUncheckedCreateWithoutReversalOfInput> | Prisma.FuelLogCreateWithoutReversalOfInput[] | Prisma.FuelLogUncheckedCreateWithoutReversalOfInput[]
+  connectOrCreate?: Prisma.FuelLogCreateOrConnectWithoutReversalOfInput | Prisma.FuelLogCreateOrConnectWithoutReversalOfInput[]
+  upsert?: Prisma.FuelLogUpsertWithWhereUniqueWithoutReversalOfInput | Prisma.FuelLogUpsertWithWhereUniqueWithoutReversalOfInput[]
+  createMany?: Prisma.FuelLogCreateManyReversalOfInputEnvelope
+  set?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  disconnect?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  delete?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  connect?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  update?: Prisma.FuelLogUpdateWithWhereUniqueWithoutReversalOfInput | Prisma.FuelLogUpdateWithWhereUniqueWithoutReversalOfInput[]
+  updateMany?: Prisma.FuelLogUpdateManyWithWhereWithoutReversalOfInput | Prisma.FuelLogUpdateManyWithWhereWithoutReversalOfInput[]
+  deleteMany?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
+}
+
+export type FuelLogUncheckedUpdateManyWithoutReversalOfNestedInput = {
+  create?: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalOfInput, Prisma.FuelLogUncheckedCreateWithoutReversalOfInput> | Prisma.FuelLogCreateWithoutReversalOfInput[] | Prisma.FuelLogUncheckedCreateWithoutReversalOfInput[]
+  connectOrCreate?: Prisma.FuelLogCreateOrConnectWithoutReversalOfInput | Prisma.FuelLogCreateOrConnectWithoutReversalOfInput[]
+  upsert?: Prisma.FuelLogUpsertWithWhereUniqueWithoutReversalOfInput | Prisma.FuelLogUpsertWithWhereUniqueWithoutReversalOfInput[]
+  createMany?: Prisma.FuelLogCreateManyReversalOfInputEnvelope
+  set?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  disconnect?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  delete?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  connect?: Prisma.FuelLogWhereUniqueInput | Prisma.FuelLogWhereUniqueInput[]
+  update?: Prisma.FuelLogUpdateWithWhereUniqueWithoutReversalOfInput | Prisma.FuelLogUpdateWithWhereUniqueWithoutReversalOfInput[]
+  updateMany?: Prisma.FuelLogUpdateManyWithWhereWithoutReversalOfInput | Prisma.FuelLogUpdateManyWithWhereWithoutReversalOfInput[]
+  deleteMany?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
 }
 
 export type FuelLogCreateNestedManyWithoutTripInput = {
@@ -826,6 +1098,268 @@ export type FuelLogUncheckedUpdateManyWithoutTruckNestedInput = {
   deleteMany?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
 }
 
+export type FuelLogCreateWithoutReversalsInput = {
+  id?: string
+  date?: Date | string
+  odometer?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  litersFilled: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: string | null
+  fuelType?: string
+  receiptNumber?: string | null
+  endMileage?: number | null
+  endMileageImage?: string | null
+  images?: string | null
+  distanceCovered?: number | null
+  notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  trip: Prisma.TripCreateNestedOneWithoutFuelLogInput
+  truck: Prisma.TruckCreateNestedOneWithoutFuelLogInput
+  reversalOf?: Prisma.FuelLogCreateNestedOneWithoutReversalsInput
+}
+
+export type FuelLogUncheckedCreateWithoutReversalsInput = {
+  id?: string
+  tripId: string
+  truckId: string
+  date?: Date | string
+  odometer?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  litersFilled: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: string | null
+  fuelType?: string
+  receiptNumber?: string | null
+  endMileage?: number | null
+  endMileageImage?: string | null
+  images?: string | null
+  distanceCovered?: number | null
+  notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FuelLogCreateOrConnectWithoutReversalsInput = {
+  where: Prisma.FuelLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalsInput, Prisma.FuelLogUncheckedCreateWithoutReversalsInput>
+}
+
+export type FuelLogCreateWithoutReversalOfInput = {
+  id?: string
+  date?: Date | string
+  odometer?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  litersFilled: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: string | null
+  fuelType?: string
+  receiptNumber?: string | null
+  endMileage?: number | null
+  endMileageImage?: string | null
+  images?: string | null
+  distanceCovered?: number | null
+  notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  trip: Prisma.TripCreateNestedOneWithoutFuelLogInput
+  truck: Prisma.TruckCreateNestedOneWithoutFuelLogInput
+  reversals?: Prisma.FuelLogCreateNestedManyWithoutReversalOfInput
+}
+
+export type FuelLogUncheckedCreateWithoutReversalOfInput = {
+  id?: string
+  tripId: string
+  truckId: string
+  date?: Date | string
+  odometer?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  litersFilled: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: string | null
+  fuelType?: string
+  receiptNumber?: string | null
+  endMileage?: number | null
+  endMileageImage?: string | null
+  images?: string | null
+  distanceCovered?: number | null
+  notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reversals?: Prisma.FuelLogUncheckedCreateNestedManyWithoutReversalOfInput
+}
+
+export type FuelLogCreateOrConnectWithoutReversalOfInput = {
+  where: Prisma.FuelLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalOfInput, Prisma.FuelLogUncheckedCreateWithoutReversalOfInput>
+}
+
+export type FuelLogCreateManyReversalOfInputEnvelope = {
+  data: Prisma.FuelLogCreateManyReversalOfInput | Prisma.FuelLogCreateManyReversalOfInput[]
+  skipDuplicates?: boolean
+}
+
+export type FuelLogUpsertWithoutReversalsInput = {
+  update: Prisma.XOR<Prisma.FuelLogUpdateWithoutReversalsInput, Prisma.FuelLogUncheckedUpdateWithoutReversalsInput>
+  create: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalsInput, Prisma.FuelLogUncheckedCreateWithoutReversalsInput>
+  where?: Prisma.FuelLogWhereInput
+}
+
+export type FuelLogUpdateToOneWithWhereWithoutReversalsInput = {
+  where?: Prisma.FuelLogWhereInput
+  data: Prisma.XOR<Prisma.FuelLogUpdateWithoutReversalsInput, Prisma.FuelLogUncheckedUpdateWithoutReversalsInput>
+}
+
+export type FuelLogUpdateWithoutReversalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trip?: Prisma.TripUpdateOneRequiredWithoutFuelLogNestedInput
+  truck?: Prisma.TruckUpdateOneRequiredWithoutFuelLogNestedInput
+  reversalOf?: Prisma.FuelLogUpdateOneWithoutReversalsNestedInput
+}
+
+export type FuelLogUncheckedUpdateWithoutReversalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FuelLogUpsertWithWhereUniqueWithoutReversalOfInput = {
+  where: Prisma.FuelLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.FuelLogUpdateWithoutReversalOfInput, Prisma.FuelLogUncheckedUpdateWithoutReversalOfInput>
+  create: Prisma.XOR<Prisma.FuelLogCreateWithoutReversalOfInput, Prisma.FuelLogUncheckedCreateWithoutReversalOfInput>
+}
+
+export type FuelLogUpdateWithWhereUniqueWithoutReversalOfInput = {
+  where: Prisma.FuelLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.FuelLogUpdateWithoutReversalOfInput, Prisma.FuelLogUncheckedUpdateWithoutReversalOfInput>
+}
+
+export type FuelLogUpdateManyWithWhereWithoutReversalOfInput = {
+  where: Prisma.FuelLogScalarWhereInput
+  data: Prisma.XOR<Prisma.FuelLogUpdateManyMutationInput, Prisma.FuelLogUncheckedUpdateManyWithoutReversalOfInput>
+}
+
+export type FuelLogScalarWhereInput = {
+  AND?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
+  OR?: Prisma.FuelLogScalarWhereInput[]
+  NOT?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
+  id?: Prisma.StringFilter<"FuelLog"> | string
+  tripId?: Prisma.StringFilter<"FuelLog"> | string
+  truckId?: Prisma.StringFilter<"FuelLog"> | string
+  date?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
+  odometer?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  fuelLevelBefore?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  fuelLevelAfter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  litersFilled?: Prisma.FloatFilter<"FuelLog"> | number
+  costPerLiter?: Prisma.DecimalNullableFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  fuelType?: Prisma.StringFilter<"FuelLog"> | string
+  receiptNumber?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  endMileage?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  endMileageImage?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  images?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  distanceCovered?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  notes?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  eventType?: Prisma.EnumFuelEventTypeFilter<"FuelLog"> | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFilter<"FuelLog"> | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFilter<"FuelLog"> | $Enums.VerificationStatus
+  capturedBy?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
+  paymentSource?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  reversalOfId?: Prisma.StringNullableFilter<"FuelLog"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
+}
+
 export type FuelLogCreateWithoutTripInput = {
   id?: string
   date?: Date | string
@@ -843,9 +1377,18 @@ export type FuelLogCreateWithoutTripInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   truck: Prisma.TruckCreateNestedOneWithoutFuelLogInput
+  reversalOf?: Prisma.FuelLogCreateNestedOneWithoutReversalsInput
+  reversals?: Prisma.FuelLogCreateNestedManyWithoutReversalOfInput
 }
 
 export type FuelLogUncheckedCreateWithoutTripInput = {
@@ -866,8 +1409,17 @@ export type FuelLogUncheckedCreateWithoutTripInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reversals?: Prisma.FuelLogUncheckedCreateNestedManyWithoutReversalOfInput
 }
 
 export type FuelLogCreateOrConnectWithoutTripInput = {
@@ -896,32 +1448,6 @@ export type FuelLogUpdateManyWithWhereWithoutTripInput = {
   data: Prisma.XOR<Prisma.FuelLogUpdateManyMutationInput, Prisma.FuelLogUncheckedUpdateManyWithoutTripInput>
 }
 
-export type FuelLogScalarWhereInput = {
-  AND?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
-  OR?: Prisma.FuelLogScalarWhereInput[]
-  NOT?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
-  id?: Prisma.StringFilter<"FuelLog"> | string
-  tripId?: Prisma.StringFilter<"FuelLog"> | string
-  truckId?: Prisma.StringFilter<"FuelLog"> | string
-  date?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
-  odometer?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  fuelLevelBefore?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  fuelLevelAfter?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  litersFilled?: Prisma.FloatFilter<"FuelLog"> | number
-  costPerLiter?: Prisma.DecimalNullableFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  totalCost?: Prisma.DecimalFilter<"FuelLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  stationName?: Prisma.StringNullableFilter<"FuelLog"> | string | null
-  fuelType?: Prisma.StringFilter<"FuelLog"> | string
-  receiptNumber?: Prisma.StringNullableFilter<"FuelLog"> | string | null
-  endMileage?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  endMileageImage?: Prisma.StringNullableFilter<"FuelLog"> | string | null
-  images?: Prisma.StringNullableFilter<"FuelLog"> | string | null
-  distanceCovered?: Prisma.FloatNullableFilter<"FuelLog"> | number | null
-  notes?: Prisma.StringNullableFilter<"FuelLog"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
-}
-
 export type FuelLogCreateWithoutTruckInput = {
   id?: string
   date?: Date | string
@@ -939,9 +1465,18 @@ export type FuelLogCreateWithoutTruckInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutFuelLogInput
+  reversalOf?: Prisma.FuelLogCreateNestedOneWithoutReversalsInput
+  reversals?: Prisma.FuelLogCreateNestedManyWithoutReversalOfInput
 }
 
 export type FuelLogUncheckedCreateWithoutTruckInput = {
@@ -962,8 +1497,17 @@ export type FuelLogUncheckedCreateWithoutTruckInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reversals?: Prisma.FuelLogUncheckedCreateNestedManyWithoutReversalOfInput
 }
 
 export type FuelLogCreateOrConnectWithoutTruckInput = {
@@ -992,6 +1536,128 @@ export type FuelLogUpdateManyWithWhereWithoutTruckInput = {
   data: Prisma.XOR<Prisma.FuelLogUpdateManyMutationInput, Prisma.FuelLogUncheckedUpdateManyWithoutTruckInput>
 }
 
+export type FuelLogCreateManyReversalOfInput = {
+  id?: string
+  tripId: string
+  truckId: string
+  date?: Date | string
+  odometer?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  litersFilled: number
+  costPerLiter?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: string | null
+  fuelType?: string
+  receiptNumber?: string | null
+  endMileage?: number | null
+  endMileageImage?: string | null
+  images?: string | null
+  distanceCovered?: number | null
+  notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FuelLogUpdateWithoutReversalOfInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trip?: Prisma.TripUpdateOneRequiredWithoutFuelLogNestedInput
+  truck?: Prisma.TruckUpdateOneRequiredWithoutFuelLogNestedInput
+  reversals?: Prisma.FuelLogUpdateManyWithoutReversalOfNestedInput
+}
+
+export type FuelLogUncheckedUpdateWithoutReversalOfInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reversals?: Prisma.FuelLogUncheckedUpdateManyWithoutReversalOfNestedInput
+}
+
+export type FuelLogUncheckedUpdateManyWithoutReversalOfInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  litersFilled?: Prisma.FloatFieldUpdateOperationsInput | number
+  costPerLiter?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  stationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type FuelLogCreateManyTripInput = {
   id?: string
   truckId: string
@@ -1010,6 +1676,14 @@ export type FuelLogCreateManyTripInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1031,9 +1705,18 @@ export type FuelLogUpdateWithoutTripInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   truck?: Prisma.TruckUpdateOneRequiredWithoutFuelLogNestedInput
+  reversalOf?: Prisma.FuelLogUpdateOneWithoutReversalsNestedInput
+  reversals?: Prisma.FuelLogUpdateManyWithoutReversalOfNestedInput
 }
 
 export type FuelLogUncheckedUpdateWithoutTripInput = {
@@ -1054,8 +1737,17 @@ export type FuelLogUncheckedUpdateWithoutTripInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reversals?: Prisma.FuelLogUncheckedUpdateManyWithoutReversalOfNestedInput
 }
 
 export type FuelLogUncheckedUpdateManyWithoutTripInput = {
@@ -1076,6 +1768,14 @@ export type FuelLogUncheckedUpdateManyWithoutTripInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1098,6 +1798,14 @@ export type FuelLogCreateManyTruckInput = {
   images?: string | null
   distanceCovered?: number | null
   notes?: string | null
+  eventType?: $Enums.FuelEventType
+  source?: $Enums.ObservationSource
+  verificationStatus?: $Enums.VerificationStatus
+  capturedBy?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  paymentSource?: string | null
+  reversalOfId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1119,9 +1827,18 @@ export type FuelLogUpdateWithoutTruckInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutFuelLogNestedInput
+  reversalOf?: Prisma.FuelLogUpdateOneWithoutReversalsNestedInput
+  reversals?: Prisma.FuelLogUpdateManyWithoutReversalOfNestedInput
 }
 
 export type FuelLogUncheckedUpdateWithoutTruckInput = {
@@ -1142,8 +1859,17 @@ export type FuelLogUncheckedUpdateWithoutTruckInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reversals?: Prisma.FuelLogUncheckedUpdateManyWithoutReversalOfNestedInput
 }
 
 export type FuelLogUncheckedUpdateManyWithoutTruckInput = {
@@ -1164,10 +1890,47 @@ export type FuelLogUncheckedUpdateManyWithoutTruckInput = {
   images?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   distanceCovered?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventType?: Prisma.EnumFuelEventTypeFieldUpdateOperationsInput | $Enums.FuelEventType
+  source?: Prisma.EnumObservationSourceFieldUpdateOperationsInput | $Enums.ObservationSource
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  capturedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reversalOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type FuelLogCountOutputType
+ */
+
+export type FuelLogCountOutputType = {
+  reversals: number
+}
+
+export type FuelLogCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reversals?: boolean | FuelLogCountOutputTypeCountReversalsArgs
+}
+
+/**
+ * FuelLogCountOutputType without action
+ */
+export type FuelLogCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FuelLogCountOutputType
+   */
+  select?: Prisma.FuelLogCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * FuelLogCountOutputType without action
+ */
+export type FuelLogCountOutputTypeCountReversalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FuelLogWhereInput
+}
 
 
 export type FuelLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1189,10 +1952,21 @@ export type FuelLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   images?: boolean
   distanceCovered?: boolean
   notes?: boolean
+  eventType?: boolean
+  source?: boolean
+  verificationStatus?: boolean
+  capturedBy?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  paymentSource?: boolean
+  reversalOfId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
+  reversalOf?: boolean | Prisma.FuelLog$reversalOfArgs<ExtArgs>
+  reversals?: boolean | Prisma.FuelLog$reversalsArgs<ExtArgs>
+  _count?: boolean | Prisma.FuelLogCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fuelLog"]>
 
 
@@ -1216,14 +1990,25 @@ export type FuelLogSelectScalar = {
   images?: boolean
   distanceCovered?: boolean
   notes?: boolean
+  eventType?: boolean
+  source?: boolean
+  verificationStatus?: boolean
+  capturedBy?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  paymentSource?: boolean
+  reversalOfId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FuelLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "truckId" | "date" | "odometer" | "fuelLevelBefore" | "fuelLevelAfter" | "litersFilled" | "costPerLiter" | "totalCost" | "stationName" | "fuelType" | "receiptNumber" | "endMileage" | "endMileageImage" | "images" | "distanceCovered" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelLog"]>
+export type FuelLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "truckId" | "date" | "odometer" | "fuelLevelBefore" | "fuelLevelAfter" | "litersFilled" | "costPerLiter" | "totalCost" | "stationName" | "fuelType" | "receiptNumber" | "endMileage" | "endMileageImage" | "images" | "distanceCovered" | "notes" | "eventType" | "source" | "verificationStatus" | "capturedBy" | "latitude" | "longitude" | "paymentSource" | "reversalOfId" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelLog"]>
 export type FuelLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
+  reversalOf?: boolean | Prisma.FuelLog$reversalOfArgs<ExtArgs>
+  reversals?: boolean | Prisma.FuelLog$reversalsArgs<ExtArgs>
+  _count?: boolean | Prisma.FuelLogCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $FuelLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1231,6 +2016,8 @@ export type $FuelLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     trip: Prisma.$TripPayload<ExtArgs>
     truck: Prisma.$TruckPayload<ExtArgs>
+    reversalOf: Prisma.$FuelLogPayload<ExtArgs> | null
+    reversals: Prisma.$FuelLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1251,6 +2038,14 @@ export type $FuelLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     images: string | null
     distanceCovered: number | null
     notes: string | null
+    eventType: $Enums.FuelEventType
+    source: $Enums.ObservationSource
+    verificationStatus: $Enums.VerificationStatus
+    capturedBy: string | null
+    latitude: number | null
+    longitude: number | null
+    paymentSource: string | null
+    reversalOfId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["fuelLog"]>
@@ -1595,6 +2390,8 @@ export interface Prisma__FuelLogClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   trip<T extends Prisma.TripDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripDefaultArgs<ExtArgs>>): Prisma.Prisma__TripClient<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   truck<T extends Prisma.TruckDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TruckDefaultArgs<ExtArgs>>): Prisma.Prisma__TruckClient<runtime.Types.Result.GetResult<Prisma.$TruckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  reversalOf<T extends Prisma.FuelLog$reversalOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FuelLog$reversalOfArgs<ExtArgs>>): Prisma.Prisma__FuelLogClient<runtime.Types.Result.GetResult<Prisma.$FuelLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  reversals<T extends Prisma.FuelLog$reversalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FuelLog$reversalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FuelLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1642,6 +2439,14 @@ export interface FuelLogFieldRefs {
   readonly images: Prisma.FieldRef<"FuelLog", 'String'>
   readonly distanceCovered: Prisma.FieldRef<"FuelLog", 'Float'>
   readonly notes: Prisma.FieldRef<"FuelLog", 'String'>
+  readonly eventType: Prisma.FieldRef<"FuelLog", 'FuelEventType'>
+  readonly source: Prisma.FieldRef<"FuelLog", 'ObservationSource'>
+  readonly verificationStatus: Prisma.FieldRef<"FuelLog", 'VerificationStatus'>
+  readonly capturedBy: Prisma.FieldRef<"FuelLog", 'String'>
+  readonly latitude: Prisma.FieldRef<"FuelLog", 'Float'>
+  readonly longitude: Prisma.FieldRef<"FuelLog", 'Float'>
+  readonly paymentSource: Prisma.FieldRef<"FuelLog", 'String'>
+  readonly reversalOfId: Prisma.FieldRef<"FuelLog", 'String'>
   readonly createdAt: Prisma.FieldRef<"FuelLog", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FuelLog", 'DateTime'>
 }
@@ -1989,6 +2794,49 @@ export type FuelLogDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many FuelLogs to delete.
    */
   limit?: number
+}
+
+/**
+ * FuelLog.reversalOf
+ */
+export type FuelLog$reversalOfArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FuelLog
+   */
+  select?: Prisma.FuelLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FuelLog
+   */
+  omit?: Prisma.FuelLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FuelLogInclude<ExtArgs> | null
+  where?: Prisma.FuelLogWhereInput
+}
+
+/**
+ * FuelLog.reversals
+ */
+export type FuelLog$reversalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FuelLog
+   */
+  select?: Prisma.FuelLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FuelLog
+   */
+  omit?: Prisma.FuelLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FuelLogInclude<ExtArgs> | null
+  where?: Prisma.FuelLogWhereInput
+  orderBy?: Prisma.FuelLogOrderByWithRelationInput | Prisma.FuelLogOrderByWithRelationInput[]
+  cursor?: Prisma.FuelLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FuelLogScalarFieldEnum | Prisma.FuelLogScalarFieldEnum[]
 }
 
 /**

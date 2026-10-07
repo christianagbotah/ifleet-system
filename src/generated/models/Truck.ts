@@ -342,6 +342,7 @@ export type TruckWhereInput = {
   Expense?: Prisma.ExpenseListRelationFilter
   FuelBudget?: Prisma.FuelBudgetListRelationFilter
   FuelLog?: Prisma.FuelLogListRelationFilter
+  OdometerReading?: Prisma.OdometerReadingListRelationFilter
   Insurance?: Prisma.InsuranceListRelationFilter
   InsuranceClaim?: Prisma.InsuranceClaimListRelationFilter
   LoadBoard?: Prisma.LoadBoardListRelationFilter
@@ -383,6 +384,7 @@ export type TruckOrderByWithRelationInput = {
   Expense?: Prisma.ExpenseOrderByRelationAggregateInput
   FuelBudget?: Prisma.FuelBudgetOrderByRelationAggregateInput
   FuelLog?: Prisma.FuelLogOrderByRelationAggregateInput
+  OdometerReading?: Prisma.OdometerReadingOrderByRelationAggregateInput
   Insurance?: Prisma.InsuranceOrderByRelationAggregateInput
   InsuranceClaim?: Prisma.InsuranceClaimOrderByRelationAggregateInput
   LoadBoard?: Prisma.LoadBoardOrderByRelationAggregateInput
@@ -428,6 +430,7 @@ export type TruckWhereUniqueInput = Prisma.AtLeast<{
   Expense?: Prisma.ExpenseListRelationFilter
   FuelBudget?: Prisma.FuelBudgetListRelationFilter
   FuelLog?: Prisma.FuelLogListRelationFilter
+  OdometerReading?: Prisma.OdometerReadingListRelationFilter
   Insurance?: Prisma.InsuranceListRelationFilter
   InsuranceClaim?: Prisma.InsuranceClaimListRelationFilter
   LoadBoard?: Prisma.LoadBoardListRelationFilter
@@ -520,6 +523,7 @@ export type TruckCreateInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -561,6 +565,7 @@ export type TruckUncheckedCreateInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -600,6 +605,7 @@ export type TruckUpdateInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -641,6 +647,7 @@ export type TruckUncheckedUpdateInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -1130,6 +1137,20 @@ export type TruckUpdateOneRequiredWithoutVehicleInspectionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TruckUpdateToOneWithWhereWithoutVehicleInspectionInput, Prisma.TruckUpdateWithoutVehicleInspectionInput>, Prisma.TruckUncheckedUpdateWithoutVehicleInspectionInput>
 }
 
+export type TruckCreateNestedOneWithoutOdometerReadingInput = {
+  create?: Prisma.XOR<Prisma.TruckCreateWithoutOdometerReadingInput, Prisma.TruckUncheckedCreateWithoutOdometerReadingInput>
+  connectOrCreate?: Prisma.TruckCreateOrConnectWithoutOdometerReadingInput
+  connect?: Prisma.TruckWhereUniqueInput
+}
+
+export type TruckUpdateOneRequiredWithoutOdometerReadingNestedInput = {
+  create?: Prisma.XOR<Prisma.TruckCreateWithoutOdometerReadingInput, Prisma.TruckUncheckedCreateWithoutOdometerReadingInput>
+  connectOrCreate?: Prisma.TruckCreateOrConnectWithoutOdometerReadingInput
+  upsert?: Prisma.TruckUpsertWithoutOdometerReadingInput
+  connect?: Prisma.TruckWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TruckUpdateToOneWithWhereWithoutOdometerReadingInput, Prisma.TruckUpdateWithoutOdometerReadingInput>, Prisma.TruckUncheckedUpdateWithoutOdometerReadingInput>
+}
+
 export type TruckCreateWithoutBorderCrossingInput = {
   id?: string
   plateNumber: string
@@ -1154,6 +1175,7 @@ export type TruckCreateWithoutBorderCrossingInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -1194,6 +1216,7 @@ export type TruckUncheckedCreateWithoutBorderCrossingInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -1248,6 +1271,7 @@ export type TruckUpdateWithoutBorderCrossingInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -1288,6 +1312,7 @@ export type TruckUncheckedUpdateWithoutBorderCrossingInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -1326,6 +1351,7 @@ export type TruckCreateWithoutDepotQueueInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -1366,6 +1392,7 @@ export type TruckUncheckedCreateWithoutDepotQueueInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -1420,6 +1447,7 @@ export type TruckUpdateWithoutDepotQueueInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -1460,6 +1488,7 @@ export type TruckUncheckedUpdateWithoutDepotQueueInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -1499,6 +1528,7 @@ export type TruckCreateWithoutDriverInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -1538,6 +1568,7 @@ export type TruckUncheckedCreateWithoutDriverInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -1627,6 +1658,7 @@ export type TruckCreateWithoutDvlaRegistrationInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -1667,6 +1699,7 @@ export type TruckUncheckedCreateWithoutDvlaRegistrationInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -1721,6 +1754,7 @@ export type TruckUpdateWithoutDvlaRegistrationInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -1761,6 +1795,7 @@ export type TruckUncheckedUpdateWithoutDvlaRegistrationInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -1799,6 +1834,7 @@ export type TruckCreateWithoutExpenseInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -1839,6 +1875,7 @@ export type TruckUncheckedCreateWithoutExpenseInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -1893,6 +1930,7 @@ export type TruckUpdateWithoutExpenseInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -1933,6 +1971,7 @@ export type TruckUncheckedUpdateWithoutExpenseInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -1971,6 +2010,7 @@ export type TruckCreateWithoutFuelBudgetInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationCreateNestedManyWithoutTruckInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -2011,6 +2051,7 @@ export type TruckUncheckedCreateWithoutFuelBudgetInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUncheckedCreateNestedManyWithoutTruckInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -2065,6 +2106,7 @@ export type TruckUpdateWithoutFuelBudgetInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUpdateManyWithoutTruckNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -2105,6 +2147,7 @@ export type TruckUncheckedUpdateWithoutFuelBudgetInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUncheckedUpdateManyWithoutTruckNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -2143,6 +2186,7 @@ export type TruckCreateWithoutFuelLogInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationCreateNestedManyWithoutTruckInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -2183,6 +2227,7 @@ export type TruckUncheckedCreateWithoutFuelLogInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUncheckedCreateNestedManyWithoutTruckInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -2237,6 +2282,7 @@ export type TruckUpdateWithoutFuelLogInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUpdateManyWithoutTruckNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -2277,6 +2323,7 @@ export type TruckUncheckedUpdateWithoutFuelLogInput = {
   DvlaRegistration?: Prisma.DvlaRegistrationUncheckedUpdateManyWithoutTruckNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -2316,6 +2363,7 @@ export type TruckCreateWithoutInsuranceInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
   MaintenanceRecord?: Prisma.MaintenanceRecordCreateNestedManyWithoutTruckInput
@@ -2356,6 +2404,7 @@ export type TruckUncheckedCreateWithoutInsuranceInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedCreateNestedManyWithoutTruckInput
@@ -2410,6 +2459,7 @@ export type TruckUpdateWithoutInsuranceInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUpdateManyWithoutTruckNestedInput
@@ -2450,6 +2500,7 @@ export type TruckUncheckedUpdateWithoutInsuranceInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedUpdateManyWithoutTruckNestedInput
@@ -2488,6 +2539,7 @@ export type TruckCreateWithoutInsuranceClaimInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
   MaintenanceRecord?: Prisma.MaintenanceRecordCreateNestedManyWithoutTruckInput
@@ -2528,6 +2580,7 @@ export type TruckUncheckedCreateWithoutInsuranceClaimInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedCreateNestedManyWithoutTruckInput
@@ -2582,6 +2635,7 @@ export type TruckUpdateWithoutInsuranceClaimInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUpdateManyWithoutTruckNestedInput
@@ -2622,6 +2676,7 @@ export type TruckUncheckedUpdateWithoutInsuranceClaimInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedUpdateManyWithoutTruckNestedInput
@@ -2660,6 +2715,7 @@ export type TruckCreateWithoutLoadBoardInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   MaintenanceRecord?: Prisma.MaintenanceRecordCreateNestedManyWithoutTruckInput
@@ -2700,6 +2756,7 @@ export type TruckUncheckedCreateWithoutLoadBoardInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedCreateNestedManyWithoutTruckInput
@@ -2754,6 +2811,7 @@ export type TruckUpdateWithoutLoadBoardInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUpdateManyWithoutTruckNestedInput
@@ -2794,6 +2852,7 @@ export type TruckUncheckedUpdateWithoutLoadBoardInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedUpdateManyWithoutTruckNestedInput
@@ -2832,6 +2891,7 @@ export type TruckCreateWithoutMaintenanceRecordInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -2872,6 +2932,7 @@ export type TruckUncheckedCreateWithoutMaintenanceRecordInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -2926,6 +2987,7 @@ export type TruckUpdateWithoutMaintenanceRecordInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -2966,6 +3028,7 @@ export type TruckUncheckedUpdateWithoutMaintenanceRecordInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -3004,6 +3067,7 @@ export type TruckCreateWithoutRoadworthyInspectionInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -3044,6 +3108,7 @@ export type TruckUncheckedCreateWithoutRoadworthyInspectionInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -3098,6 +3163,7 @@ export type TruckUpdateWithoutRoadworthyInspectionInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -3138,6 +3204,7 @@ export type TruckUncheckedUpdateWithoutRoadworthyInspectionInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -3176,6 +3243,7 @@ export type TruckCreateWithoutTollRecordInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -3216,6 +3284,7 @@ export type TruckUncheckedCreateWithoutTollRecordInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -3270,6 +3339,7 @@ export type TruckUpdateWithoutTollRecordInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -3310,6 +3380,7 @@ export type TruckUncheckedUpdateWithoutTollRecordInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -3348,6 +3419,7 @@ export type TruckCreateWithoutTrackingAlertInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -3388,6 +3460,7 @@ export type TruckUncheckedCreateWithoutTrackingAlertInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -3442,6 +3515,7 @@ export type TruckUpdateWithoutTrackingAlertInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -3482,6 +3556,7 @@ export type TruckUncheckedUpdateWithoutTrackingAlertInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -3520,6 +3595,7 @@ export type TruckCreateWithoutTrackingConfigInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -3560,6 +3636,7 @@ export type TruckUncheckedCreateWithoutTrackingConfigInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -3614,6 +3691,7 @@ export type TruckUpdateWithoutTrackingConfigInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -3654,6 +3732,7 @@ export type TruckUncheckedUpdateWithoutTrackingConfigInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -3692,6 +3771,7 @@ export type TruckCreateWithoutTripInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -3732,6 +3812,7 @@ export type TruckUncheckedCreateWithoutTripInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -3786,6 +3867,7 @@ export type TruckUpdateWithoutTripInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -3826,6 +3908,7 @@ export type TruckUncheckedUpdateWithoutTripInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -3864,6 +3947,7 @@ export type TruckCreateWithoutTruckLocationInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -3904,6 +3988,7 @@ export type TruckUncheckedCreateWithoutTruckLocationInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -3958,6 +4043,7 @@ export type TruckUpdateWithoutTruckLocationInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -3998,6 +4084,7 @@ export type TruckUncheckedUpdateWithoutTruckLocationInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -4036,6 +4123,7 @@ export type TruckCreateWithoutTyreInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -4076,6 +4164,7 @@ export type TruckUncheckedCreateWithoutTyreInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -4130,6 +4219,7 @@ export type TruckUpdateWithoutTyreInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -4170,6 +4260,7 @@ export type TruckUncheckedUpdateWithoutTyreInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -4208,6 +4299,7 @@ export type TruckCreateWithoutVehicleInspectionInput = {
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
@@ -4248,6 +4340,7 @@ export type TruckUncheckedCreateWithoutVehicleInspectionInput = {
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
   FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTruckInput
   Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
@@ -4302,6 +4395,7 @@ export type TruckUpdateWithoutVehicleInspectionInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -4342,6 +4436,7 @@ export type TruckUncheckedUpdateWithoutVehicleInspectionInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -4353,6 +4448,182 @@ export type TruckUncheckedUpdateWithoutVehicleInspectionInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutTruckNestedInput
   TruckLocation?: Prisma.TruckLocationUncheckedUpdateManyWithoutTruckNestedInput
   Tyre?: Prisma.TyreUncheckedUpdateManyWithoutTruckNestedInput
+}
+
+export type TruckCreateWithoutOdometerReadingInput = {
+  id?: string
+  plateNumber: string
+  make: string
+  model: string
+  year: number
+  vinNumber?: string | null
+  engineNumber?: string | null
+  chassisNumber?: string | null
+  color?: string | null
+  fuelType?: string
+  tankCapacity?: number | null
+  status?: $Enums.TruckStatus
+  currentMileage?: number
+  notes?: string | null
+  insuranceStatus?: $Enums.TruckInsuranceStatus
+  nextServiceDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingCreateNestedManyWithoutTruckInput
+  DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTruckInput
+  DvlaRegistration?: Prisma.DvlaRegistrationCreateNestedManyWithoutTruckInput
+  Expense?: Prisma.ExpenseCreateNestedManyWithoutTruckInput
+  FuelBudget?: Prisma.FuelBudgetCreateNestedManyWithoutTruckInput
+  FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTruckInput
+  Insurance?: Prisma.InsuranceCreateNestedManyWithoutTruckInput
+  InsuranceClaim?: Prisma.InsuranceClaimCreateNestedManyWithoutTruckInput
+  LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutTruckInput
+  MaintenanceRecord?: Prisma.MaintenanceRecordCreateNestedManyWithoutTruckInput
+  RoadworthyInspection?: Prisma.RoadworthyInspectionCreateNestedManyWithoutTruckInput
+  TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTruckInput
+  TrackingAlert?: Prisma.TrackingAlertCreateNestedManyWithoutTruckInput
+  TrackingConfig?: Prisma.TrackingConfigCreateNestedOneWithoutTruckInput
+  Trip?: Prisma.TripCreateNestedManyWithoutTruckInput
+  driver?: Prisma.DriverCreateNestedOneWithoutTruckInput
+  TruckLocation?: Prisma.TruckLocationCreateNestedManyWithoutTruckInput
+  Tyre?: Prisma.TyreCreateNestedManyWithoutTruckInput
+  VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutTruckInput
+}
+
+export type TruckUncheckedCreateWithoutOdometerReadingInput = {
+  id?: string
+  plateNumber: string
+  make: string
+  model: string
+  year: number
+  vinNumber?: string | null
+  engineNumber?: string | null
+  chassisNumber?: string | null
+  color?: string | null
+  fuelType?: string
+  tankCapacity?: number | null
+  status?: $Enums.TruckStatus
+  currentMileage?: number
+  driverId?: string | null
+  notes?: string | null
+  insuranceStatus?: $Enums.TruckInsuranceStatus
+  nextServiceDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedCreateNestedManyWithoutTruckInput
+  DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTruckInput
+  DvlaRegistration?: Prisma.DvlaRegistrationUncheckedCreateNestedManyWithoutTruckInput
+  Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTruckInput
+  FuelBudget?: Prisma.FuelBudgetUncheckedCreateNestedManyWithoutTruckInput
+  FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTruckInput
+  Insurance?: Prisma.InsuranceUncheckedCreateNestedManyWithoutTruckInput
+  InsuranceClaim?: Prisma.InsuranceClaimUncheckedCreateNestedManyWithoutTruckInput
+  LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutTruckInput
+  MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedCreateNestedManyWithoutTruckInput
+  RoadworthyInspection?: Prisma.RoadworthyInspectionUncheckedCreateNestedManyWithoutTruckInput
+  TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTruckInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedCreateNestedManyWithoutTruckInput
+  TrackingConfig?: Prisma.TrackingConfigUncheckedCreateNestedOneWithoutTruckInput
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutTruckInput
+  TruckLocation?: Prisma.TruckLocationUncheckedCreateNestedManyWithoutTruckInput
+  Tyre?: Prisma.TyreUncheckedCreateNestedManyWithoutTruckInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutTruckInput
+}
+
+export type TruckCreateOrConnectWithoutOdometerReadingInput = {
+  where: Prisma.TruckWhereUniqueInput
+  create: Prisma.XOR<Prisma.TruckCreateWithoutOdometerReadingInput, Prisma.TruckUncheckedCreateWithoutOdometerReadingInput>
+}
+
+export type TruckUpsertWithoutOdometerReadingInput = {
+  update: Prisma.XOR<Prisma.TruckUpdateWithoutOdometerReadingInput, Prisma.TruckUncheckedUpdateWithoutOdometerReadingInput>
+  create: Prisma.XOR<Prisma.TruckCreateWithoutOdometerReadingInput, Prisma.TruckUncheckedCreateWithoutOdometerReadingInput>
+  where?: Prisma.TruckWhereInput
+}
+
+export type TruckUpdateToOneWithWhereWithoutOdometerReadingInput = {
+  where?: Prisma.TruckWhereInput
+  data: Prisma.XOR<Prisma.TruckUpdateWithoutOdometerReadingInput, Prisma.TruckUncheckedUpdateWithoutOdometerReadingInput>
+}
+
+export type TruckUpdateWithoutOdometerReadingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  plateNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  make?: Prisma.StringFieldUpdateOperationsInput | string
+  model?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  vinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  engineNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
+  currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
+  nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUpdateManyWithoutTruckNestedInput
+  DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTruckNestedInput
+  DvlaRegistration?: Prisma.DvlaRegistrationUpdateManyWithoutTruckNestedInput
+  Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
+  FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
+  FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
+  InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
+  LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
+  MaintenanceRecord?: Prisma.MaintenanceRecordUpdateManyWithoutTruckNestedInput
+  RoadworthyInspection?: Prisma.RoadworthyInspectionUpdateManyWithoutTruckNestedInput
+  TollRecord?: Prisma.TollRecordUpdateManyWithoutTruckNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUpdateManyWithoutTruckNestedInput
+  TrackingConfig?: Prisma.TrackingConfigUpdateOneWithoutTruckNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutTruckNestedInput
+  driver?: Prisma.DriverUpdateOneWithoutTruckNestedInput
+  TruckLocation?: Prisma.TruckLocationUpdateManyWithoutTruckNestedInput
+  Tyre?: Prisma.TyreUpdateManyWithoutTruckNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutTruckNestedInput
+}
+
+export type TruckUncheckedUpdateWithoutOdometerReadingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  plateNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  make?: Prisma.StringFieldUpdateOperationsInput | string
+  model?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  vinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  engineNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fuelType?: Prisma.StringFieldUpdateOperationsInput | string
+  tankCapacity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTruckStatusFieldUpdateOperationsInput | $Enums.TruckStatus
+  currentMileage?: Prisma.FloatFieldUpdateOperationsInput | number
+  driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  insuranceStatus?: Prisma.EnumTruckInsuranceStatusFieldUpdateOperationsInput | $Enums.TruckInsuranceStatus
+  nextServiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedUpdateManyWithoutTruckNestedInput
+  DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTruckNestedInput
+  DvlaRegistration?: Prisma.DvlaRegistrationUncheckedUpdateManyWithoutTruckNestedInput
+  Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
+  FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
+  FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
+  InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
+  LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
+  MaintenanceRecord?: Prisma.MaintenanceRecordUncheckedUpdateManyWithoutTruckNestedInput
+  RoadworthyInspection?: Prisma.RoadworthyInspectionUncheckedUpdateManyWithoutTruckNestedInput
+  TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTruckNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedUpdateManyWithoutTruckNestedInput
+  TrackingConfig?: Prisma.TrackingConfigUncheckedUpdateOneWithoutTruckNestedInput
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutTruckNestedInput
+  TruckLocation?: Prisma.TruckLocationUncheckedUpdateManyWithoutTruckNestedInput
+  Tyre?: Prisma.TyreUncheckedUpdateManyWithoutTruckNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutTruckNestedInput
 }
 
 export type TruckCreateManyDriverInput = {
@@ -4401,6 +4672,7 @@ export type TruckUpdateWithoutDriverInput = {
   Expense?: Prisma.ExpenseUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutTruckNestedInput
@@ -4440,6 +4712,7 @@ export type TruckUncheckedUpdateWithoutDriverInput = {
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTruckNestedInput
   FuelBudget?: Prisma.FuelBudgetUncheckedUpdateManyWithoutTruckNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTruckNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTruckNestedInput
   Insurance?: Prisma.InsuranceUncheckedUpdateManyWithoutTruckNestedInput
   InsuranceClaim?: Prisma.InsuranceClaimUncheckedUpdateManyWithoutTruckNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutTruckNestedInput
@@ -4487,6 +4760,7 @@ export type TruckCountOutputType = {
   Expense: number
   FuelBudget: number
   FuelLog: number
+  OdometerReading: number
   Insurance: number
   InsuranceClaim: number
   LoadBoard: number
@@ -4507,6 +4781,7 @@ export type TruckCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   Expense?: boolean | TruckCountOutputTypeCountExpenseArgs
   FuelBudget?: boolean | TruckCountOutputTypeCountFuelBudgetArgs
   FuelLog?: boolean | TruckCountOutputTypeCountFuelLogArgs
+  OdometerReading?: boolean | TruckCountOutputTypeCountOdometerReadingArgs
   Insurance?: boolean | TruckCountOutputTypeCountInsuranceArgs
   InsuranceClaim?: boolean | TruckCountOutputTypeCountInsuranceClaimArgs
   LoadBoard?: boolean | TruckCountOutputTypeCountLoadBoardArgs
@@ -4570,6 +4845,13 @@ export type TruckCountOutputTypeCountFuelBudgetArgs<ExtArgs extends runtime.Type
  */
 export type TruckCountOutputTypeCountFuelLogArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FuelLogWhereInput
+}
+
+/**
+ * TruckCountOutputType without action
+ */
+export type TruckCountOutputTypeCountOdometerReadingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OdometerReadingWhereInput
 }
 
 /**
@@ -4676,6 +4958,7 @@ export type TruckSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   Expense?: boolean | Prisma.Truck$ExpenseArgs<ExtArgs>
   FuelBudget?: boolean | Prisma.Truck$FuelBudgetArgs<ExtArgs>
   FuelLog?: boolean | Prisma.Truck$FuelLogArgs<ExtArgs>
+  OdometerReading?: boolean | Prisma.Truck$OdometerReadingArgs<ExtArgs>
   Insurance?: boolean | Prisma.Truck$InsuranceArgs<ExtArgs>
   InsuranceClaim?: boolean | Prisma.Truck$InsuranceClaimArgs<ExtArgs>
   LoadBoard?: boolean | Prisma.Truck$LoadBoardArgs<ExtArgs>
@@ -4724,6 +5007,7 @@ export type TruckInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   Expense?: boolean | Prisma.Truck$ExpenseArgs<ExtArgs>
   FuelBudget?: boolean | Prisma.Truck$FuelBudgetArgs<ExtArgs>
   FuelLog?: boolean | Prisma.Truck$FuelLogArgs<ExtArgs>
+  OdometerReading?: boolean | Prisma.Truck$OdometerReadingArgs<ExtArgs>
   Insurance?: boolean | Prisma.Truck$InsuranceArgs<ExtArgs>
   InsuranceClaim?: boolean | Prisma.Truck$InsuranceClaimArgs<ExtArgs>
   LoadBoard?: boolean | Prisma.Truck$LoadBoardArgs<ExtArgs>
@@ -4749,6 +5033,7 @@ export type $TruckPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     Expense: Prisma.$ExpensePayload<ExtArgs>[]
     FuelBudget: Prisma.$FuelBudgetPayload<ExtArgs>[]
     FuelLog: Prisma.$FuelLogPayload<ExtArgs>[]
+    OdometerReading: Prisma.$OdometerReadingPayload<ExtArgs>[]
     Insurance: Prisma.$InsurancePayload<ExtArgs>[]
     InsuranceClaim: Prisma.$InsuranceClaimPayload<ExtArgs>[]
     LoadBoard: Prisma.$LoadBoardPayload<ExtArgs>[]
@@ -5129,6 +5414,7 @@ export interface Prisma__TruckClient<T, Null = never, ExtArgs extends runtime.Ty
   Expense<T extends Prisma.Truck$ExpenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$ExpenseArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   FuelBudget<T extends Prisma.Truck$FuelBudgetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$FuelBudgetArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FuelBudgetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   FuelLog<T extends Prisma.Truck$FuelLogArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$FuelLogArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FuelLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  OdometerReading<T extends Prisma.Truck$OdometerReadingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$OdometerReadingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OdometerReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Insurance<T extends Prisma.Truck$InsuranceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$InsuranceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsurancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   InsuranceClaim<T extends Prisma.Truck$InsuranceClaimArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$InsuranceClaimArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceClaimPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   LoadBoard<T extends Prisma.Truck$LoadBoardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Truck$LoadBoardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadBoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5679,6 +5965,30 @@ export type Truck$FuelLogArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.FuelLogScalarFieldEnum | Prisma.FuelLogScalarFieldEnum[]
+}
+
+/**
+ * Truck.OdometerReading
+ */
+export type Truck$OdometerReadingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OdometerReading
+   */
+  select?: Prisma.OdometerReadingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OdometerReading
+   */
+  omit?: Prisma.OdometerReadingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OdometerReadingInclude<ExtArgs> | null
+  where?: Prisma.OdometerReadingWhereInput
+  orderBy?: Prisma.OdometerReadingOrderByWithRelationInput | Prisma.OdometerReadingOrderByWithRelationInput[]
+  cursor?: Prisma.OdometerReadingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OdometerReadingScalarFieldEnum | Prisma.OdometerReadingScalarFieldEnum[]
 }
 
 /**

@@ -442,6 +442,9 @@ export const ModelName = {
   Tyre: 'Tyre',
   VehicleInspection: 'VehicleInspection',
   WarehouseItem: 'WarehouseItem',
+  TripSequence: 'TripSequence',
+  OdometerReading: 'OdometerReading',
+  TripReconciliation: 'TripReconciliation',
   WeightVerification: 'WeightVerification',
   ZoneRate: 'ZoneRate',
   DvlaRenewalHistory: 'DvlaRenewalHistory',
@@ -461,7 +464,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
+    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "truck" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "tripSequence" | "odometerReading" | "tripReconciliation" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4293,6 +4296,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TripSequence: {
+      payload: Prisma.$TripSequencePayload<ExtArgs>
+      fields: Prisma.TripSequenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripSequenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripSequenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>
+        }
+        findFirst: {
+          args: Prisma.TripSequenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripSequenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>
+        }
+        findMany: {
+          args: Prisma.TripSequenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>[]
+        }
+        create: {
+          args: Prisma.TripSequenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>
+        }
+        createMany: {
+          args: Prisma.TripSequenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TripSequenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>
+        }
+        update: {
+          args: Prisma.TripSequenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>
+        }
+        deleteMany: {
+          args: Prisma.TripSequenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripSequenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TripSequenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripSequencePayload>
+        }
+        aggregate: {
+          args: Prisma.TripSequenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripSequence>
+        }
+        groupBy: {
+          args: Prisma.TripSequenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripSequenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripSequenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripSequenceCountAggregateOutputType> | number
+        }
+      }
+    }
+    OdometerReading: {
+      payload: Prisma.$OdometerReadingPayload<ExtArgs>
+      fields: Prisma.OdometerReadingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OdometerReadingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OdometerReadingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>
+        }
+        findFirst: {
+          args: Prisma.OdometerReadingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OdometerReadingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>
+        }
+        findMany: {
+          args: Prisma.OdometerReadingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>[]
+        }
+        create: {
+          args: Prisma.OdometerReadingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>
+        }
+        createMany: {
+          args: Prisma.OdometerReadingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.OdometerReadingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>
+        }
+        update: {
+          args: Prisma.OdometerReadingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>
+        }
+        deleteMany: {
+          args: Prisma.OdometerReadingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OdometerReadingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.OdometerReadingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OdometerReadingPayload>
+        }
+        aggregate: {
+          args: Prisma.OdometerReadingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOdometerReading>
+        }
+        groupBy: {
+          args: Prisma.OdometerReadingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OdometerReadingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OdometerReadingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OdometerReadingCountAggregateOutputType> | number
+        }
+      }
+    }
+    TripReconciliation: {
+      payload: Prisma.$TripReconciliationPayload<ExtArgs>
+      fields: Prisma.TripReconciliationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripReconciliationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripReconciliationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        findFirst: {
+          args: Prisma.TripReconciliationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripReconciliationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        findMany: {
+          args: Prisma.TripReconciliationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>[]
+        }
+        create: {
+          args: Prisma.TripReconciliationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        createMany: {
+          args: Prisma.TripReconciliationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TripReconciliationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        update: {
+          args: Prisma.TripReconciliationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TripReconciliationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripReconciliationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TripReconciliationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        aggregate: {
+          args: Prisma.TripReconciliationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripReconciliation>
+        }
+        groupBy: {
+          args: Prisma.TripReconciliationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripReconciliationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripReconciliationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripReconciliationCountAggregateOutputType> | number
+        }
+      }
+    }
     WeightVerification: {
       payload: Prisma.$WeightVerificationPayload<ExtArgs>
       fields: Prisma.WeightVerificationFieldRefs
@@ -5038,6 +5239,14 @@ export const FuelLogScalarFieldEnum = {
   images: 'images',
   distanceCovered: 'distanceCovered',
   notes: 'notes',
+  eventType: 'eventType',
+  source: 'source',
+  verificationStatus: 'verificationStatus',
+  capturedBy: 'capturedBy',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  paymentSource: 'paymentSource',
+  reversalOfId: 'reversalOfId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -5864,6 +6073,61 @@ export const WarehouseItemScalarFieldEnum = {
 export type WarehouseItemScalarFieldEnum = (typeof WarehouseItemScalarFieldEnum)[keyof typeof WarehouseItemScalarFieldEnum]
 
 
+export const TripSequenceScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  lastValue: 'lastValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripSequenceScalarFieldEnum = (typeof TripSequenceScalarFieldEnum)[keyof typeof TripSequenceScalarFieldEnum]
+
+
+export const OdometerReadingScalarFieldEnum = {
+  id: 'id',
+  truckId: 'truckId',
+  tripId: 'tripId',
+  reading: 'reading',
+  recordedAt: 'recordedAt',
+  readingType: 'readingType',
+  source: 'source',
+  verificationStatus: 'verificationStatus',
+  evidence: 'evidence',
+  capturedBy: 'capturedBy',
+  adjustmentReason: 'adjustmentReason',
+  supersedesId: 'supersedesId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OdometerReadingScalarFieldEnum = (typeof OdometerReadingScalarFieldEnum)[keyof typeof OdometerReadingScalarFieldEnum]
+
+
+export const TripReconciliationScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  distanceKm: 'distanceKm',
+  fuelAddedLiters: 'fuelAddedLiters',
+  consumedLiters: 'consumedLiters',
+  consumptionBasis: 'consumptionBasis',
+  fuelCost: 'fuelCost',
+  kmPerLiter: 'kmPerLiter',
+  litersPer100Km: 'litersPer100Km',
+  fuelCostPerKm: 'fuelCostPerKm',
+  expenseCost: 'expenseCost',
+  revenue: 'revenue',
+  exceptionCount: 'exceptionCount',
+  exceptions: 'exceptions',
+  reconciledAt: 'reconciledAt',
+  reconciledBy: 'reconciledBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripReconciliationScalarFieldEnum = (typeof TripReconciliationScalarFieldEnum)[keyof typeof TripReconciliationScalarFieldEnum]
+
+
 export const WeightVerificationScalarFieldEnum = {
   id: 'id',
   tripId: 'tripId',
@@ -5873,6 +6137,7 @@ export const WeightVerificationScalarFieldEnum = {
   variance: 'variance',
   variancePercent: 'variancePercent',
   status: 'status',
+  varianceClass: 'varianceClass',
   verifiedBy: 'verifiedBy',
   verifiedByName: 'verifiedByName',
   notes: 'notes',
@@ -6234,7 +6499,10 @@ export const FuelLogOrderByRelevanceFieldEnum = {
   receiptNumber: 'receiptNumber',
   endMileageImage: 'endMileageImage',
   images: 'images',
-  notes: 'notes'
+  notes: 'notes',
+  capturedBy: 'capturedBy',
+  paymentSource: 'paymentSource',
+  reversalOfId: 'reversalOfId'
 } as const
 
 export type FuelLogOrderByRelevanceFieldEnum = (typeof FuelLogOrderByRelevanceFieldEnum)[keyof typeof FuelLogOrderByRelevanceFieldEnum]
@@ -6779,6 +7047,37 @@ export const WarehouseItemOrderByRelevanceFieldEnum = {
 export type WarehouseItemOrderByRelevanceFieldEnum = (typeof WarehouseItemOrderByRelevanceFieldEnum)[keyof typeof WarehouseItemOrderByRelevanceFieldEnum]
 
 
+export const TripSequenceOrderByRelevanceFieldEnum = {
+  id: 'id'
+} as const
+
+export type TripSequenceOrderByRelevanceFieldEnum = (typeof TripSequenceOrderByRelevanceFieldEnum)[keyof typeof TripSequenceOrderByRelevanceFieldEnum]
+
+
+export const OdometerReadingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  truckId: 'truckId',
+  tripId: 'tripId',
+  evidence: 'evidence',
+  capturedBy: 'capturedBy',
+  adjustmentReason: 'adjustmentReason',
+  supersedesId: 'supersedesId'
+} as const
+
+export type OdometerReadingOrderByRelevanceFieldEnum = (typeof OdometerReadingOrderByRelevanceFieldEnum)[keyof typeof OdometerReadingOrderByRelevanceFieldEnum]
+
+
+export const TripReconciliationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  consumptionBasis: 'consumptionBasis',
+  exceptions: 'exceptions',
+  reconciledBy: 'reconciledBy'
+} as const
+
+export type TripReconciliationOrderByRelevanceFieldEnum = (typeof TripReconciliationOrderByRelevanceFieldEnum)[keyof typeof TripReconciliationOrderByRelevanceFieldEnum]
+
+
 export const WeightVerificationOrderByRelevanceFieldEnum = {
   id: 'id',
   tripId: 'tripId',
@@ -6948,6 +7247,27 @@ export type EnumExpenseApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'FuelEventType'
+ */
+export type EnumFuelEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FuelEventType'>
+    
+
+
+/**
+ * Reference to a field of type 'ObservationSource'
+ */
+export type EnumObservationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObservationSource'>
+    
+
+
+/**
+ * Reference to a field of type 'VerificationStatus'
+ */
+export type EnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationStatus'>
+    
+
+
+/**
  * Reference to a field of type 'InsuranceStatus'
  */
 export type EnumInsuranceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsuranceStatus'>
@@ -7060,9 +7380,23 @@ export type EnumWarehouseItemStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'OdometerReadingType'
+ */
+export type EnumOdometerReadingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OdometerReadingType'>
+    
+
+
+/**
  * Reference to a field of type 'WeightVerificationStatus'
  */
 export type EnumWeightVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeightVerificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WeightVarianceClass'
+ */
+export type EnumWeightVarianceClassFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeightVarianceClass'>
     
 
 /**
@@ -7233,6 +7567,9 @@ export type GlobalOmitConfig = {
   tyre?: Prisma.TyreOmit
   vehicleInspection?: Prisma.VehicleInspectionOmit
   warehouseItem?: Prisma.WarehouseItemOmit
+  tripSequence?: Prisma.TripSequenceOmit
+  odometerReading?: Prisma.OdometerReadingOmit
+  tripReconciliation?: Prisma.TripReconciliationOmit
   weightVerification?: Prisma.WeightVerificationOmit
   zoneRate?: Prisma.ZoneRateOmit
   dvlaRenewalHistory?: Prisma.DvlaRenewalHistoryOmit

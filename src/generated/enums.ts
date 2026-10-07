@@ -271,6 +271,63 @@ export const WeightVerificationStatus = {
 export type WeightVerificationStatus = (typeof WeightVerificationStatus)[keyof typeof WeightVerificationStatus]
 
 
+export const OdometerReadingType = {
+  trip_start: 'trip_start',
+  trip_end: 'trip_end',
+  fuel: 'fuel',
+  maintenance: 'maintenance',
+  inspection: 'inspection',
+  manual_adjustment: 'manual_adjustment',
+  import: 'import'
+} as const
+
+export type OdometerReadingType = (typeof OdometerReadingType)[keyof typeof OdometerReadingType]
+
+
+export const ObservationSource = {
+  manual: 'manual',
+  driver_app: 'driver_app',
+  admin: 'admin',
+  gps: 'gps',
+  import: 'import',
+  integration: 'integration',
+  system: 'system'
+} as const
+
+export type ObservationSource = (typeof ObservationSource)[keyof typeof ObservationSource]
+
+
+export const VerificationStatus = {
+  pending: 'pending',
+  verified: 'verified',
+  rejected: 'rejected',
+  superseded: 'superseded'
+} as const
+
+export type VerificationStatus = (typeof VerificationStatus)[keyof typeof VerificationStatus]
+
+
+export const FuelEventType = {
+  purchase: 'purchase',
+  company_issue: 'company_issue',
+  external_issue: 'external_issue',
+  emergency: 'emergency',
+  tank_observation: 'tank_observation',
+  reversal: 'reversal'
+} as const
+
+export type FuelEventType = (typeof FuelEventType)[keyof typeof FuelEventType]
+
+
+export const WeightVarianceClass = {
+  within_tolerance: 'within_tolerance',
+  over: 'over',
+  under: 'under'
+} as const
+
+export type WeightVarianceClass = (typeof WeightVarianceClass)[keyof typeof WeightVarianceClass]
+
+
 export const TyreCondition = {
   new: 'new',
   good: 'good',

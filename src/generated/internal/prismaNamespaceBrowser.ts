@@ -109,6 +109,9 @@ export const ModelName = {
   Tyre: 'Tyre',
   VehicleInspection: 'VehicleInspection',
   WarehouseItem: 'WarehouseItem',
+  TripSequence: 'TripSequence',
+  OdometerReading: 'OdometerReading',
+  TripReconciliation: 'TripReconciliation',
   WeightVerification: 'WeightVerification',
   ZoneRate: 'ZoneRate',
   DvlaRenewalHistory: 'DvlaRenewalHistory',
@@ -573,6 +576,14 @@ export const FuelLogScalarFieldEnum = {
   images: 'images',
   distanceCovered: 'distanceCovered',
   notes: 'notes',
+  eventType: 'eventType',
+  source: 'source',
+  verificationStatus: 'verificationStatus',
+  capturedBy: 'capturedBy',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  paymentSource: 'paymentSource',
+  reversalOfId: 'reversalOfId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1399,6 +1410,61 @@ export const WarehouseItemScalarFieldEnum = {
 export type WarehouseItemScalarFieldEnum = (typeof WarehouseItemScalarFieldEnum)[keyof typeof WarehouseItemScalarFieldEnum]
 
 
+export const TripSequenceScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  lastValue: 'lastValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripSequenceScalarFieldEnum = (typeof TripSequenceScalarFieldEnum)[keyof typeof TripSequenceScalarFieldEnum]
+
+
+export const OdometerReadingScalarFieldEnum = {
+  id: 'id',
+  truckId: 'truckId',
+  tripId: 'tripId',
+  reading: 'reading',
+  recordedAt: 'recordedAt',
+  readingType: 'readingType',
+  source: 'source',
+  verificationStatus: 'verificationStatus',
+  evidence: 'evidence',
+  capturedBy: 'capturedBy',
+  adjustmentReason: 'adjustmentReason',
+  supersedesId: 'supersedesId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OdometerReadingScalarFieldEnum = (typeof OdometerReadingScalarFieldEnum)[keyof typeof OdometerReadingScalarFieldEnum]
+
+
+export const TripReconciliationScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  distanceKm: 'distanceKm',
+  fuelAddedLiters: 'fuelAddedLiters',
+  consumedLiters: 'consumedLiters',
+  consumptionBasis: 'consumptionBasis',
+  fuelCost: 'fuelCost',
+  kmPerLiter: 'kmPerLiter',
+  litersPer100Km: 'litersPer100Km',
+  fuelCostPerKm: 'fuelCostPerKm',
+  expenseCost: 'expenseCost',
+  revenue: 'revenue',
+  exceptionCount: 'exceptionCount',
+  exceptions: 'exceptions',
+  reconciledAt: 'reconciledAt',
+  reconciledBy: 'reconciledBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripReconciliationScalarFieldEnum = (typeof TripReconciliationScalarFieldEnum)[keyof typeof TripReconciliationScalarFieldEnum]
+
+
 export const WeightVerificationScalarFieldEnum = {
   id: 'id',
   tripId: 'tripId',
@@ -1408,6 +1474,7 @@ export const WeightVerificationScalarFieldEnum = {
   variance: 'variance',
   variancePercent: 'variancePercent',
   status: 'status',
+  varianceClass: 'varianceClass',
   verifiedBy: 'verifiedBy',
   verifiedByName: 'verifiedByName',
   notes: 'notes',
@@ -1769,7 +1836,10 @@ export const FuelLogOrderByRelevanceFieldEnum = {
   receiptNumber: 'receiptNumber',
   endMileageImage: 'endMileageImage',
   images: 'images',
-  notes: 'notes'
+  notes: 'notes',
+  capturedBy: 'capturedBy',
+  paymentSource: 'paymentSource',
+  reversalOfId: 'reversalOfId'
 } as const
 
 export type FuelLogOrderByRelevanceFieldEnum = (typeof FuelLogOrderByRelevanceFieldEnum)[keyof typeof FuelLogOrderByRelevanceFieldEnum]
@@ -2312,6 +2382,37 @@ export const WarehouseItemOrderByRelevanceFieldEnum = {
 } as const
 
 export type WarehouseItemOrderByRelevanceFieldEnum = (typeof WarehouseItemOrderByRelevanceFieldEnum)[keyof typeof WarehouseItemOrderByRelevanceFieldEnum]
+
+
+export const TripSequenceOrderByRelevanceFieldEnum = {
+  id: 'id'
+} as const
+
+export type TripSequenceOrderByRelevanceFieldEnum = (typeof TripSequenceOrderByRelevanceFieldEnum)[keyof typeof TripSequenceOrderByRelevanceFieldEnum]
+
+
+export const OdometerReadingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  truckId: 'truckId',
+  tripId: 'tripId',
+  evidence: 'evidence',
+  capturedBy: 'capturedBy',
+  adjustmentReason: 'adjustmentReason',
+  supersedesId: 'supersedesId'
+} as const
+
+export type OdometerReadingOrderByRelevanceFieldEnum = (typeof OdometerReadingOrderByRelevanceFieldEnum)[keyof typeof OdometerReadingOrderByRelevanceFieldEnum]
+
+
+export const TripReconciliationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  consumptionBasis: 'consumptionBasis',
+  exceptions: 'exceptions',
+  reconciledBy: 'reconciledBy'
+} as const
+
+export type TripReconciliationOrderByRelevanceFieldEnum = (typeof TripReconciliationOrderByRelevanceFieldEnum)[keyof typeof TripReconciliationOrderByRelevanceFieldEnum]
 
 
 export const WeightVerificationOrderByRelevanceFieldEnum = {

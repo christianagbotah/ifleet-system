@@ -662,6 +662,8 @@ export type TripWhereInput = {
   DepotQueue?: Prisma.DepotQueueListRelationFilter
   Expense?: Prisma.ExpenseListRelationFilter
   FuelLog?: Prisma.FuelLogListRelationFilter
+  OdometerReading?: Prisma.OdometerReadingListRelationFilter
+  TripReconciliation?: Prisma.XOR<Prisma.TripReconciliationNullableScalarRelationFilter, Prisma.TripReconciliationWhereInput> | null
   Invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
   RoadConditionReport?: Prisma.RoadConditionReportListRelationFilter
   SettlementLine?: Prisma.SettlementLineListRelationFilter
@@ -743,6 +745,8 @@ export type TripOrderByWithRelationInput = {
   DepotQueue?: Prisma.DepotQueueOrderByRelationAggregateInput
   Expense?: Prisma.ExpenseOrderByRelationAggregateInput
   FuelLog?: Prisma.FuelLogOrderByRelationAggregateInput
+  OdometerReading?: Prisma.OdometerReadingOrderByRelationAggregateInput
+  TripReconciliation?: Prisma.TripReconciliationOrderByWithRelationInput
   Invoice?: Prisma.InvoiceOrderByWithRelationInput
   RoadConditionReport?: Prisma.RoadConditionReportOrderByRelationAggregateInput
   SettlementLine?: Prisma.SettlementLineOrderByRelationAggregateInput
@@ -828,6 +832,8 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   DepotQueue?: Prisma.DepotQueueListRelationFilter
   Expense?: Prisma.ExpenseListRelationFilter
   FuelLog?: Prisma.FuelLogListRelationFilter
+  OdometerReading?: Prisma.OdometerReadingListRelationFilter
+  TripReconciliation?: Prisma.XOR<Prisma.TripReconciliationNullableScalarRelationFilter, Prisma.TripReconciliationWhereInput> | null
   Invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
   RoadConditionReport?: Prisma.RoadConditionReportListRelationFilter
   SettlementLine?: Prisma.SettlementLineListRelationFilter
@@ -1019,6 +1025,8 @@ export type TripCreateInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -1100,6 +1108,8 @@ export type TripUncheckedCreateInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -1165,6 +1175,8 @@ export type TripUpdateInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -1246,6 +1258,8 @@ export type TripUncheckedUpdateInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -2246,6 +2260,36 @@ export type TripUpdateOneWithoutVehicleInspectionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutVehicleInspectionInput, Prisma.TripUpdateWithoutVehicleInspectionInput>, Prisma.TripUncheckedUpdateWithoutVehicleInspectionInput>
 }
 
+export type TripCreateNestedOneWithoutOdometerReadingInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutOdometerReadingInput, Prisma.TripUncheckedCreateWithoutOdometerReadingInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutOdometerReadingInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneWithoutOdometerReadingNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutOdometerReadingInput, Prisma.TripUncheckedCreateWithoutOdometerReadingInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutOdometerReadingInput
+  upsert?: Prisma.TripUpsertWithoutOdometerReadingInput
+  disconnect?: Prisma.TripWhereInput | boolean
+  delete?: Prisma.TripWhereInput | boolean
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutOdometerReadingInput, Prisma.TripUpdateWithoutOdometerReadingInput>, Prisma.TripUncheckedUpdateWithoutOdometerReadingInput>
+}
+
+export type TripCreateNestedOneWithoutTripReconciliationInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutTripReconciliationInput, Prisma.TripUncheckedCreateWithoutTripReconciliationInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripReconciliationInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneRequiredWithoutTripReconciliationNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutTripReconciliationInput, Prisma.TripUncheckedCreateWithoutTripReconciliationInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripReconciliationInput
+  upsert?: Prisma.TripUpsertWithoutTripReconciliationInput
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutTripReconciliationInput, Prisma.TripUpdateWithoutTripReconciliationInput>, Prisma.TripUncheckedUpdateWithoutTripReconciliationInput>
+}
+
 export type TripCreateNestedOneWithoutWeightVerificationInput = {
   create?: Prisma.XOR<Prisma.TripCreateWithoutWeightVerificationInput, Prisma.TripUncheckedCreateWithoutWeightVerificationInput>
   connectOrCreate?: Prisma.TripCreateOrConnectWithoutWeightVerificationInput
@@ -2310,6 +2354,8 @@ export type TripCreateWithoutBorderCrossingInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -2390,6 +2436,8 @@ export type TripUncheckedCreateWithoutBorderCrossingInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -2470,6 +2518,8 @@ export type TripUpdateWithoutBorderCrossingInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -2550,6 +2600,8 @@ export type TripUncheckedUpdateWithoutBorderCrossingInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -2614,6 +2666,8 @@ export type TripCreateWithoutCashAdvanceInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -2694,6 +2748,8 @@ export type TripUncheckedCreateWithoutCashAdvanceInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -2774,6 +2830,8 @@ export type TripUpdateWithoutCashAdvanceInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -2854,6 +2912,8 @@ export type TripUncheckedUpdateWithoutCashAdvanceInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -2919,6 +2979,8 @@ export type TripCreateWithoutClientInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -2998,6 +3060,8 @@ export type TripUncheckedCreateWithoutClientInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -3146,6 +3210,8 @@ export type TripCreateWithoutDeliveryStopsInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -3226,6 +3292,8 @@ export type TripUncheckedCreateWithoutDeliveryStopsInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -3306,6 +3374,8 @@ export type TripUpdateWithoutDeliveryStopsInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -3386,6 +3456,8 @@ export type TripUncheckedUpdateWithoutDeliveryStopsInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -3450,6 +3522,8 @@ export type TripCreateWithoutDepotQueueInput = {
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -3530,6 +3604,8 @@ export type TripUncheckedCreateWithoutDepotQueueInput = {
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -3610,6 +3686,8 @@ export type TripUpdateWithoutDepotQueueInput = {
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -3690,6 +3768,8 @@ export type TripUncheckedUpdateWithoutDepotQueueInput = {
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -3755,6 +3835,8 @@ export type TripCreateWithoutDestinationCityInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -3834,6 +3916,8 @@ export type TripUncheckedCreateWithoutDestinationCityInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -3925,6 +4009,8 @@ export type TripCreateWithoutDestinationZoneInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -4004,6 +4090,8 @@ export type TripUncheckedCreateWithoutDestinationZoneInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -4095,6 +4183,8 @@ export type TripCreateWithoutDriverInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -4174,6 +4264,8 @@ export type TripUncheckedCreateWithoutDriverInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -4264,6 +4356,8 @@ export type TripCreateWithoutExpenseInput = {
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutTripInput
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -4344,6 +4438,8 @@ export type TripUncheckedCreateWithoutExpenseInput = {
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutTripInput
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -4424,6 +4520,8 @@ export type TripUpdateWithoutExpenseInput = {
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutTripNestedInput
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -4504,6 +4602,8 @@ export type TripUncheckedUpdateWithoutExpenseInput = {
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutTripNestedInput
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -4568,6 +4668,8 @@ export type TripCreateWithoutFuelLogInput = {
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutTripInput
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -4648,6 +4750,8 @@ export type TripUncheckedCreateWithoutFuelLogInput = {
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutTripInput
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -4728,6 +4832,8 @@ export type TripUpdateWithoutFuelLogInput = {
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutTripNestedInput
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -4808,6 +4914,8 @@ export type TripUncheckedUpdateWithoutFuelLogInput = {
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutTripNestedInput
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -4873,6 +4981,8 @@ export type TripCreateWithoutInvoiceInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTripInput
@@ -4953,6 +5063,8 @@ export type TripUncheckedCreateWithoutInvoiceInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTripInput
@@ -5033,6 +5145,8 @@ export type TripUpdateWithoutInvoiceInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
   TollRecord?: Prisma.TollRecordUpdateManyWithoutTripNestedInput
@@ -5113,6 +5227,8 @@ export type TripUncheckedUpdateWithoutInvoiceInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTripNestedInput
@@ -5177,6 +5293,8 @@ export type TripCreateWithoutItemInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -5256,6 +5374,8 @@ export type TripUncheckedCreateWithoutItemInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -5347,6 +5467,8 @@ export type TripCreateWithoutLoadingCityInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -5426,6 +5548,8 @@ export type TripUncheckedCreateWithoutLoadingCityInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -5517,6 +5641,8 @@ export type TripCreateWithoutLoadingPointInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -5596,6 +5722,8 @@ export type TripUncheckedCreateWithoutLoadingPointInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -5687,6 +5815,8 @@ export type TripCreateWithoutRoadConditionReportInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTripInput
@@ -5767,6 +5897,8 @@ export type TripUncheckedCreateWithoutRoadConditionReportInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTripInput
@@ -5847,6 +5979,8 @@ export type TripUpdateWithoutRoadConditionReportInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
   TollRecord?: Prisma.TollRecordUpdateManyWithoutTripNestedInput
@@ -5927,6 +6061,8 @@ export type TripUncheckedUpdateWithoutRoadConditionReportInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTripNestedInput
@@ -5991,6 +6127,8 @@ export type TripCreateWithoutSettlementLineInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTripInput
@@ -6071,6 +6209,8 @@ export type TripUncheckedCreateWithoutSettlementLineInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTripInput
@@ -6151,6 +6291,8 @@ export type TripUpdateWithoutSettlementLineInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   TollRecord?: Prisma.TollRecordUpdateManyWithoutTripNestedInput
@@ -6231,6 +6373,8 @@ export type TripUncheckedUpdateWithoutSettlementLineInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTripNestedInput
@@ -6295,6 +6439,8 @@ export type TripCreateWithoutTollRecordInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -6375,6 +6521,8 @@ export type TripUncheckedCreateWithoutTollRecordInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -6455,6 +6603,8 @@ export type TripUpdateWithoutTollRecordInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -6535,6 +6685,8 @@ export type TripUncheckedUpdateWithoutTollRecordInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -6599,6 +6751,8 @@ export type TripCreateWithoutTrackingAlertInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -6679,6 +6833,8 @@ export type TripUncheckedCreateWithoutTrackingAlertInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -6759,6 +6915,8 @@ export type TripUpdateWithoutTrackingAlertInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -6839,6 +6997,8 @@ export type TripUncheckedUpdateWithoutTrackingAlertInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -6903,6 +7063,8 @@ export type TripCreateWithoutTripCommentInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -6983,6 +7145,8 @@ export type TripUncheckedCreateWithoutTripCommentInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -7063,6 +7227,8 @@ export type TripUpdateWithoutTripCommentInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -7143,6 +7309,8 @@ export type TripUncheckedUpdateWithoutTripCommentInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -7207,6 +7375,8 @@ export type TripCreateWithoutTripDeliveryDestinationInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -7287,6 +7457,8 @@ export type TripUncheckedCreateWithoutTripDeliveryDestinationInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -7367,6 +7539,8 @@ export type TripUpdateWithoutTripDeliveryDestinationInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -7447,6 +7621,8 @@ export type TripUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -7511,6 +7687,8 @@ export type TripCreateWithoutTripEventInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -7591,6 +7769,8 @@ export type TripUncheckedCreateWithoutTripEventInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -7671,6 +7851,8 @@ export type TripUpdateWithoutTripEventInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -7751,6 +7933,8 @@ export type TripUncheckedUpdateWithoutTripEventInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -7815,6 +7999,8 @@ export type TripCreateWithoutTripItemInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -7895,6 +8081,8 @@ export type TripUncheckedCreateWithoutTripItemInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -7975,6 +8163,8 @@ export type TripUpdateWithoutTripItemInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -8055,6 +8245,8 @@ export type TripUncheckedUpdateWithoutTripItemInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -8119,6 +8311,8 @@ export type TripCreateWithoutTruckInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -8198,6 +8392,8 @@ export type TripUncheckedCreateWithoutTruckInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -8289,6 +8485,8 @@ export type TripCreateWithoutTruckLocationInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -8369,6 +8567,8 @@ export type TripUncheckedCreateWithoutTruckLocationInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -8449,6 +8649,8 @@ export type TripUpdateWithoutTruckLocationInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -8529,6 +8731,8 @@ export type TripUncheckedUpdateWithoutTruckLocationInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -8593,6 +8797,8 @@ export type TripCreateWithoutVehicleInspectionInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -8673,6 +8879,8 @@ export type TripUncheckedCreateWithoutVehicleInspectionInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -8753,6 +8961,8 @@ export type TripUpdateWithoutVehicleInspectionInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -8833,6 +9043,8 @@ export type TripUncheckedUpdateWithoutVehicleInspectionInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -8843,6 +9055,630 @@ export type TripUncheckedUpdateWithoutVehicleInspectionInput = {
   TripEvent?: Prisma.TripEventUncheckedUpdateManyWithoutTripNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripNestedInput
   TruckLocation?: Prisma.TruckLocationUncheckedUpdateManyWithoutTripNestedInput
+  WeightVerification?: Prisma.WeightVerificationUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutOdometerReadingInput = {
+  id?: string
+  tripNumber: string
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingCreateNestedManyWithoutTripInput
+  CashAdvance?: Prisma.CashAdvanceCreateNestedManyWithoutTripInput
+  deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutTripInput
+  DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
+  Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
+  Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
+  RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
+  SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
+  TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTripInput
+  TrackingAlert?: Prisma.TrackingAlertCreateNestedManyWithoutTripInput
+  client?: Prisma.ClientCreateNestedOneWithoutTripInput
+  destinationCity?: Prisma.DestinationCityCreateNestedOneWithoutTripInput
+  destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripInput
+  driver: Prisma.DriverCreateNestedOneWithoutTripInput
+  item?: Prisma.ItemCreateNestedOneWithoutTripInput
+  loadingCity?: Prisma.LoadingCityCreateNestedOneWithoutTripInput
+  loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
+  truck: Prisma.TruckCreateNestedOneWithoutTripInput
+  TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
+  TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
+  TripItem?: Prisma.TripItemCreateNestedManyWithoutTripInput
+  TruckLocation?: Prisma.TruckLocationCreateNestedManyWithoutTripInput
+  VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutTripInput
+  WeightVerification?: Prisma.WeightVerificationCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutOdometerReadingInput = {
+  id?: string
+  tripNumber: string
+  truckId: string
+  driverId: string
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemId?: string | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  loadingCityId?: string | null
+  loadingPointId?: string | null
+  destinationCityId?: string | null
+  destinationZoneId?: string | null
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  clientId?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedCreateNestedManyWithoutTripInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedCreateNestedManyWithoutTripInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutTripInput
+  DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
+  Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
+  Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
+  RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
+  SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
+  TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTripInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedCreateNestedManyWithoutTripInput
+  TripComment?: Prisma.TripCommentUncheckedCreateNestedManyWithoutTripInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutTripInput
+  TripEvent?: Prisma.TripEventUncheckedCreateNestedManyWithoutTripInput
+  TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripInput
+  TruckLocation?: Prisma.TruckLocationUncheckedCreateNestedManyWithoutTripInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutTripInput
+  WeightVerification?: Prisma.WeightVerificationUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutOdometerReadingInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutOdometerReadingInput, Prisma.TripUncheckedCreateWithoutOdometerReadingInput>
+}
+
+export type TripUpsertWithoutOdometerReadingInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutOdometerReadingInput, Prisma.TripUncheckedUpdateWithoutOdometerReadingInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutOdometerReadingInput, Prisma.TripUncheckedCreateWithoutOdometerReadingInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutOdometerReadingInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutOdometerReadingInput, Prisma.TripUncheckedUpdateWithoutOdometerReadingInput>
+}
+
+export type TripUpdateWithoutOdometerReadingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUpdateManyWithoutTripNestedInput
+  CashAdvance?: Prisma.CashAdvanceUpdateManyWithoutTripNestedInput
+  deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutTripNestedInput
+  DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
+  Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
+  Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
+  RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
+  SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
+  TollRecord?: Prisma.TollRecordUpdateManyWithoutTripNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUpdateManyWithoutTripNestedInput
+  client?: Prisma.ClientUpdateOneWithoutTripNestedInput
+  destinationCity?: Prisma.DestinationCityUpdateOneWithoutTripNestedInput
+  destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripNestedInput
+  driver?: Prisma.DriverUpdateOneRequiredWithoutTripNestedInput
+  item?: Prisma.ItemUpdateOneWithoutTripNestedInput
+  loadingCity?: Prisma.LoadingCityUpdateOneWithoutTripNestedInput
+  loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
+  truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
+  TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
+  TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
+  TripItem?: Prisma.TripItemUpdateManyWithoutTripNestedInput
+  TruckLocation?: Prisma.TruckLocationUpdateManyWithoutTripNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutTripNestedInput
+  WeightVerification?: Prisma.WeightVerificationUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutOdometerReadingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedUpdateManyWithoutTripNestedInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedUpdateManyWithoutTripNestedInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutTripNestedInput
+  DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
+  Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+  FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
+  Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
+  RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
+  SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
+  TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTripNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedUpdateManyWithoutTripNestedInput
+  TripComment?: Prisma.TripCommentUncheckedUpdateManyWithoutTripNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutTripNestedInput
+  TripEvent?: Prisma.TripEventUncheckedUpdateManyWithoutTripNestedInput
+  TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripNestedInput
+  TruckLocation?: Prisma.TruckLocationUncheckedUpdateManyWithoutTripNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutTripNestedInput
+  WeightVerification?: Prisma.WeightVerificationUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutTripReconciliationInput = {
+  id?: string
+  tripNumber: string
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingCreateNestedManyWithoutTripInput
+  CashAdvance?: Prisma.CashAdvanceCreateNestedManyWithoutTripInput
+  deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutTripInput
+  DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
+  Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
+  RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
+  SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
+  TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTripInput
+  TrackingAlert?: Prisma.TrackingAlertCreateNestedManyWithoutTripInput
+  client?: Prisma.ClientCreateNestedOneWithoutTripInput
+  destinationCity?: Prisma.DestinationCityCreateNestedOneWithoutTripInput
+  destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripInput
+  driver: Prisma.DriverCreateNestedOneWithoutTripInput
+  item?: Prisma.ItemCreateNestedOneWithoutTripInput
+  loadingCity?: Prisma.LoadingCityCreateNestedOneWithoutTripInput
+  loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
+  truck: Prisma.TruckCreateNestedOneWithoutTripInput
+  TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
+  TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
+  TripItem?: Prisma.TripItemCreateNestedManyWithoutTripInput
+  TruckLocation?: Prisma.TruckLocationCreateNestedManyWithoutTripInput
+  VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutTripInput
+  WeightVerification?: Prisma.WeightVerificationCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutTripReconciliationInput = {
+  id?: string
+  tripNumber: string
+  truckId: string
+  driverId: string
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemId?: string | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  loadingCityId?: string | null
+  loadingPointId?: string | null
+  destinationCityId?: string | null
+  destinationZoneId?: string | null
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  clientId?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedCreateNestedManyWithoutTripInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedCreateNestedManyWithoutTripInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutTripInput
+  DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
+  Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
+  RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
+  SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
+  TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTripInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedCreateNestedManyWithoutTripInput
+  TripComment?: Prisma.TripCommentUncheckedCreateNestedManyWithoutTripInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutTripInput
+  TripEvent?: Prisma.TripEventUncheckedCreateNestedManyWithoutTripInput
+  TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripInput
+  TruckLocation?: Prisma.TruckLocationUncheckedCreateNestedManyWithoutTripInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutTripInput
+  WeightVerification?: Prisma.WeightVerificationUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutTripReconciliationInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutTripReconciliationInput, Prisma.TripUncheckedCreateWithoutTripReconciliationInput>
+}
+
+export type TripUpsertWithoutTripReconciliationInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutTripReconciliationInput, Prisma.TripUncheckedUpdateWithoutTripReconciliationInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutTripReconciliationInput, Prisma.TripUncheckedCreateWithoutTripReconciliationInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutTripReconciliationInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutTripReconciliationInput, Prisma.TripUncheckedUpdateWithoutTripReconciliationInput>
+}
+
+export type TripUpdateWithoutTripReconciliationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUpdateManyWithoutTripNestedInput
+  CashAdvance?: Prisma.CashAdvanceUpdateManyWithoutTripNestedInput
+  deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutTripNestedInput
+  DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
+  Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
+  RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
+  SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
+  TollRecord?: Prisma.TollRecordUpdateManyWithoutTripNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUpdateManyWithoutTripNestedInput
+  client?: Prisma.ClientUpdateOneWithoutTripNestedInput
+  destinationCity?: Prisma.DestinationCityUpdateOneWithoutTripNestedInput
+  destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripNestedInput
+  driver?: Prisma.DriverUpdateOneRequiredWithoutTripNestedInput
+  item?: Prisma.ItemUpdateOneWithoutTripNestedInput
+  loadingCity?: Prisma.LoadingCityUpdateOneWithoutTripNestedInput
+  loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
+  truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
+  TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
+  TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
+  TripItem?: Prisma.TripItemUpdateManyWithoutTripNestedInput
+  TruckLocation?: Prisma.TruckLocationUpdateManyWithoutTripNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutTripNestedInput
+  WeightVerification?: Prisma.WeightVerificationUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutTripReconciliationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedUpdateManyWithoutTripNestedInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedUpdateManyWithoutTripNestedInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutTripNestedInput
+  DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
+  Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+  FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
+  RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
+  SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
+  TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTripNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedUpdateManyWithoutTripNestedInput
+  TripComment?: Prisma.TripCommentUncheckedUpdateManyWithoutTripNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutTripNestedInput
+  TripEvent?: Prisma.TripEventUncheckedUpdateManyWithoutTripNestedInput
+  TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripNestedInput
+  TruckLocation?: Prisma.TruckLocationUncheckedUpdateManyWithoutTripNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutTripNestedInput
   WeightVerification?: Prisma.WeightVerificationUncheckedUpdateManyWithoutTripNestedInput
 }
 
@@ -8897,6 +9733,8 @@ export type TripCreateWithoutWeightVerificationInput = {
   DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
@@ -8977,6 +9815,8 @@ export type TripUncheckedCreateWithoutWeightVerificationInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
   Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedCreateNestedManyWithoutTripInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedCreateNestedOneWithoutTripInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
   SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
@@ -9057,6 +9897,8 @@ export type TripUpdateWithoutWeightVerificationInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -9137,6 +9979,8 @@ export type TripUncheckedUpdateWithoutWeightVerificationInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -9255,6 +10099,8 @@ export type TripUpdateWithoutClientInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -9334,6 +10180,8 @@ export type TripUncheckedUpdateWithoutClientInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -9507,6 +10355,8 @@ export type TripUpdateWithoutDestinationCityInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -9586,6 +10436,8 @@ export type TripUncheckedUpdateWithoutDestinationCityInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -9759,6 +10611,8 @@ export type TripUpdateWithoutDestinationZoneInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -9838,6 +10692,8 @@ export type TripUncheckedUpdateWithoutDestinationZoneInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -10011,6 +10867,8 @@ export type TripUpdateWithoutDriverInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -10090,6 +10948,8 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -10263,6 +11123,8 @@ export type TripUpdateWithoutItemInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -10342,6 +11204,8 @@ export type TripUncheckedUpdateWithoutItemInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -10515,6 +11379,8 @@ export type TripUpdateWithoutLoadingCityInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -10594,6 +11460,8 @@ export type TripUncheckedUpdateWithoutLoadingCityInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -10767,6 +11635,8 @@ export type TripUpdateWithoutLoadingPointInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -10846,6 +11716,8 @@ export type TripUncheckedUpdateWithoutLoadingPointInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -11019,6 +11891,8 @@ export type TripUpdateWithoutTruckInput = {
   DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
@@ -11098,6 +11972,8 @@ export type TripUncheckedUpdateWithoutTruckInput = {
   DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
   Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  OdometerReading?: Prisma.OdometerReadingUncheckedUpdateManyWithoutTripNestedInput
+  TripReconciliation?: Prisma.TripReconciliationUncheckedUpdateOneWithoutTripNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
   RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
   SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
@@ -11178,6 +12054,7 @@ export type TripCountOutputType = {
   DepotQueue: number
   Expense: number
   FuelLog: number
+  OdometerReading: number
   RoadConditionReport: number
   SettlementLine: number
   TollRecord: number
@@ -11198,6 +12075,7 @@ export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   DepotQueue?: boolean | TripCountOutputTypeCountDepotQueueArgs
   Expense?: boolean | TripCountOutputTypeCountExpenseArgs
   FuelLog?: boolean | TripCountOutputTypeCountFuelLogArgs
+  OdometerReading?: boolean | TripCountOutputTypeCountOdometerReadingArgs
   RoadConditionReport?: boolean | TripCountOutputTypeCountRoadConditionReportArgs
   SettlementLine?: boolean | TripCountOutputTypeCountSettlementLineArgs
   TollRecord?: boolean | TripCountOutputTypeCountTollRecordArgs
@@ -11261,6 +12139,13 @@ export type TripCountOutputTypeCountExpenseArgs<ExtArgs extends runtime.Types.Ex
  */
 export type TripCountOutputTypeCountFuelLogArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FuelLogWhereInput
+}
+
+/**
+ * TripCountOutputType without action
+ */
+export type TripCountOutputTypeCountOdometerReadingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OdometerReadingWhereInput
 }
 
 /**
@@ -11400,6 +12285,8 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   DepotQueue?: boolean | Prisma.Trip$DepotQueueArgs<ExtArgs>
   Expense?: boolean | Prisma.Trip$ExpenseArgs<ExtArgs>
   FuelLog?: boolean | Prisma.Trip$FuelLogArgs<ExtArgs>
+  OdometerReading?: boolean | Prisma.Trip$OdometerReadingArgs<ExtArgs>
+  TripReconciliation?: boolean | Prisma.Trip$TripReconciliationArgs<ExtArgs>
   Invoice?: boolean | Prisma.Trip$InvoiceArgs<ExtArgs>
   RoadConditionReport?: boolean | Prisma.Trip$RoadConditionReportArgs<ExtArgs>
   SettlementLine?: boolean | Prisma.Trip$SettlementLineArgs<ExtArgs>
@@ -11488,6 +12375,8 @@ export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   DepotQueue?: boolean | Prisma.Trip$DepotQueueArgs<ExtArgs>
   Expense?: boolean | Prisma.Trip$ExpenseArgs<ExtArgs>
   FuelLog?: boolean | Prisma.Trip$FuelLogArgs<ExtArgs>
+  OdometerReading?: boolean | Prisma.Trip$OdometerReadingArgs<ExtArgs>
+  TripReconciliation?: boolean | Prisma.Trip$TripReconciliationArgs<ExtArgs>
   Invoice?: boolean | Prisma.Trip$InvoiceArgs<ExtArgs>
   RoadConditionReport?: boolean | Prisma.Trip$RoadConditionReportArgs<ExtArgs>
   SettlementLine?: boolean | Prisma.Trip$SettlementLineArgs<ExtArgs>
@@ -11520,6 +12409,8 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     DepotQueue: Prisma.$DepotQueuePayload<ExtArgs>[]
     Expense: Prisma.$ExpensePayload<ExtArgs>[]
     FuelLog: Prisma.$FuelLogPayload<ExtArgs>[]
+    OdometerReading: Prisma.$OdometerReadingPayload<ExtArgs>[]
+    TripReconciliation: Prisma.$TripReconciliationPayload<ExtArgs> | null
     Invoice: Prisma.$InvoicePayload<ExtArgs> | null
     RoadConditionReport: Prisma.$RoadConditionReportPayload<ExtArgs>[]
     SettlementLine: Prisma.$SettlementLinePayload<ExtArgs>[]
@@ -11940,6 +12831,8 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   DepotQueue<T extends Prisma.Trip$DepotQueueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$DepotQueueArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DepotQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Expense<T extends Prisma.Trip$ExpenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$ExpenseArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   FuelLog<T extends Prisma.Trip$FuelLogArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$FuelLogArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FuelLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  OdometerReading<T extends Prisma.Trip$OdometerReadingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$OdometerReadingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OdometerReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  TripReconciliation<T extends Prisma.Trip$TripReconciliationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$TripReconciliationArgs<ExtArgs>>): Prisma.Prisma__TripReconciliationClient<runtime.Types.Result.GetResult<Prisma.$TripReconciliationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   Invoice<T extends Prisma.Trip$InvoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$InvoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   RoadConditionReport<T extends Prisma.Trip$RoadConditionReportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$RoadConditionReportArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoadConditionReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   SettlementLine<T extends Prisma.Trip$SettlementLineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$SettlementLineArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SettlementLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12530,6 +13423,49 @@ export type Trip$FuelLogArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.FuelLogScalarFieldEnum | Prisma.FuelLogScalarFieldEnum[]
+}
+
+/**
+ * Trip.OdometerReading
+ */
+export type Trip$OdometerReadingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OdometerReading
+   */
+  select?: Prisma.OdometerReadingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OdometerReading
+   */
+  omit?: Prisma.OdometerReadingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OdometerReadingInclude<ExtArgs> | null
+  where?: Prisma.OdometerReadingWhereInput
+  orderBy?: Prisma.OdometerReadingOrderByWithRelationInput | Prisma.OdometerReadingOrderByWithRelationInput[]
+  cursor?: Prisma.OdometerReadingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OdometerReadingScalarFieldEnum | Prisma.OdometerReadingScalarFieldEnum[]
+}
+
+/**
+ * Trip.TripReconciliation
+ */
+export type Trip$TripReconciliationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TripReconciliation
+   */
+  select?: Prisma.TripReconciliationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TripReconciliation
+   */
+  omit?: Prisma.TripReconciliationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TripReconciliationInclude<ExtArgs> | null
+  where?: Prisma.TripReconciliationWhereInput
 }
 
 /**

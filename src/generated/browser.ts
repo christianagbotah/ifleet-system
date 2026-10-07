@@ -308,6 +308,21 @@ export type VehicleInspection = Prisma.VehicleInspectionModel
  */
 export type WarehouseItem = Prisma.WarehouseItemModel
 /**
+ * Model TripSequence
+ * 
+ */
+export type TripSequence = Prisma.TripSequenceModel
+/**
+ * Model OdometerReading
+ * 
+ */
+export type OdometerReading = Prisma.OdometerReadingModel
+/**
+ * Model TripReconciliation
+ * 
+ */
+export type TripReconciliation = Prisma.TripReconciliationModel
+/**
  * Model WeightVerification
  * 
  */

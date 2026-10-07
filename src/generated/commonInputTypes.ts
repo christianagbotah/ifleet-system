@@ -497,6 +497,57 @@ export type EnumExpenseApprovalStatusWithAggregatesFilter<$PrismaModel = never> 
   _max?: Prisma.NestedEnumExpenseApprovalStatusFilter<$PrismaModel>
 }
 
+export type EnumFuelEventTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.FuelEventType | Prisma.EnumFuelEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.FuelEventType[]
+  notIn?: $Enums.FuelEventType[]
+  not?: Prisma.NestedEnumFuelEventTypeFilter<$PrismaModel> | $Enums.FuelEventType
+}
+
+export type EnumObservationSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservationSource | Prisma.EnumObservationSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservationSource[]
+  notIn?: $Enums.ObservationSource[]
+  not?: Prisma.NestedEnumObservationSourceFilter<$PrismaModel> | $Enums.ObservationSource
+}
+
+export type EnumVerificationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationStatus | Prisma.EnumVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VerificationStatus[]
+  notIn?: $Enums.VerificationStatus[]
+  not?: Prisma.NestedEnumVerificationStatusFilter<$PrismaModel> | $Enums.VerificationStatus
+}
+
+export type EnumFuelEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FuelEventType | Prisma.EnumFuelEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.FuelEventType[]
+  notIn?: $Enums.FuelEventType[]
+  not?: Prisma.NestedEnumFuelEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.FuelEventType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFuelEventTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFuelEventTypeFilter<$PrismaModel>
+}
+
+export type EnumObservationSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservationSource | Prisma.EnumObservationSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservationSource[]
+  notIn?: $Enums.ObservationSource[]
+  not?: Prisma.NestedEnumObservationSourceWithAggregatesFilter<$PrismaModel> | $Enums.ObservationSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumObservationSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumObservationSourceFilter<$PrismaModel>
+}
+
+export type EnumVerificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationStatus | Prisma.EnumVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VerificationStatus[]
+  notIn?: $Enums.VerificationStatus[]
+  not?: Prisma.NestedEnumVerificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.VerificationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVerificationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVerificationStatusFilter<$PrismaModel>
+}
+
 export type EnumInsuranceStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.InsuranceStatus | Prisma.EnumInsuranceStatusFieldRefInput<$PrismaModel>
   in?: $Enums.InsuranceStatus[]
@@ -769,11 +820,35 @@ export type EnumWarehouseItemStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumWarehouseItemStatusFilter<$PrismaModel>
 }
 
+export type EnumOdometerReadingTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.OdometerReadingType | Prisma.EnumOdometerReadingTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OdometerReadingType[]
+  notIn?: $Enums.OdometerReadingType[]
+  not?: Prisma.NestedEnumOdometerReadingTypeFilter<$PrismaModel> | $Enums.OdometerReadingType
+}
+
+export type EnumOdometerReadingTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OdometerReadingType | Prisma.EnumOdometerReadingTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OdometerReadingType[]
+  notIn?: $Enums.OdometerReadingType[]
+  not?: Prisma.NestedEnumOdometerReadingTypeWithAggregatesFilter<$PrismaModel> | $Enums.OdometerReadingType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOdometerReadingTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOdometerReadingTypeFilter<$PrismaModel>
+}
+
 export type EnumWeightVerificationStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.WeightVerificationStatus | Prisma.EnumWeightVerificationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.WeightVerificationStatus[]
   notIn?: $Enums.WeightVerificationStatus[]
   not?: Prisma.NestedEnumWeightVerificationStatusFilter<$PrismaModel> | $Enums.WeightVerificationStatus
+}
+
+export type EnumWeightVarianceClassFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeightVarianceClass | Prisma.EnumWeightVarianceClassFieldRefInput<$PrismaModel>
+  in?: $Enums.WeightVarianceClass[]
+  notIn?: $Enums.WeightVarianceClass[]
+  not?: Prisma.NestedEnumWeightVarianceClassFilter<$PrismaModel> | $Enums.WeightVarianceClass
 }
 
 export type EnumWeightVerificationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -784,6 +859,16 @@ export type EnumWeightVerificationStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumWeightVerificationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumWeightVerificationStatusFilter<$PrismaModel>
+}
+
+export type EnumWeightVarianceClassWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeightVarianceClass | Prisma.EnumWeightVarianceClassFieldRefInput<$PrismaModel>
+  in?: $Enums.WeightVarianceClass[]
+  notIn?: $Enums.WeightVarianceClass[]
+  not?: Prisma.NestedEnumWeightVarianceClassWithAggregatesFilter<$PrismaModel> | $Enums.WeightVarianceClass
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWeightVarianceClassFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWeightVarianceClassFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -1264,6 +1349,57 @@ export type NestedEnumExpenseApprovalStatusWithAggregatesFilter<$PrismaModel = n
   _max?: Prisma.NestedEnumExpenseApprovalStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumFuelEventTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.FuelEventType | Prisma.EnumFuelEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.FuelEventType[]
+  notIn?: $Enums.FuelEventType[]
+  not?: Prisma.NestedEnumFuelEventTypeFilter<$PrismaModel> | $Enums.FuelEventType
+}
+
+export type NestedEnumObservationSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservationSource | Prisma.EnumObservationSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservationSource[]
+  notIn?: $Enums.ObservationSource[]
+  not?: Prisma.NestedEnumObservationSourceFilter<$PrismaModel> | $Enums.ObservationSource
+}
+
+export type NestedEnumVerificationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationStatus | Prisma.EnumVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VerificationStatus[]
+  notIn?: $Enums.VerificationStatus[]
+  not?: Prisma.NestedEnumVerificationStatusFilter<$PrismaModel> | $Enums.VerificationStatus
+}
+
+export type NestedEnumFuelEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FuelEventType | Prisma.EnumFuelEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.FuelEventType[]
+  notIn?: $Enums.FuelEventType[]
+  not?: Prisma.NestedEnumFuelEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.FuelEventType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFuelEventTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFuelEventTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumObservationSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ObservationSource | Prisma.EnumObservationSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ObservationSource[]
+  notIn?: $Enums.ObservationSource[]
+  not?: Prisma.NestedEnumObservationSourceWithAggregatesFilter<$PrismaModel> | $Enums.ObservationSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumObservationSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumObservationSourceFilter<$PrismaModel>
+}
+
+export type NestedEnumVerificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationStatus | Prisma.EnumVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VerificationStatus[]
+  notIn?: $Enums.VerificationStatus[]
+  not?: Prisma.NestedEnumVerificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.VerificationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVerificationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVerificationStatusFilter<$PrismaModel>
+}
+
 export type NestedEnumInsuranceStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.InsuranceStatus | Prisma.EnumInsuranceStatusFieldRefInput<$PrismaModel>
   in?: $Enums.InsuranceStatus[]
@@ -1536,11 +1672,35 @@ export type NestedEnumWarehouseItemStatusWithAggregatesFilter<$PrismaModel = nev
   _max?: Prisma.NestedEnumWarehouseItemStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumOdometerReadingTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.OdometerReadingType | Prisma.EnumOdometerReadingTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OdometerReadingType[]
+  notIn?: $Enums.OdometerReadingType[]
+  not?: Prisma.NestedEnumOdometerReadingTypeFilter<$PrismaModel> | $Enums.OdometerReadingType
+}
+
+export type NestedEnumOdometerReadingTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OdometerReadingType | Prisma.EnumOdometerReadingTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OdometerReadingType[]
+  notIn?: $Enums.OdometerReadingType[]
+  not?: Prisma.NestedEnumOdometerReadingTypeWithAggregatesFilter<$PrismaModel> | $Enums.OdometerReadingType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOdometerReadingTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOdometerReadingTypeFilter<$PrismaModel>
+}
+
 export type NestedEnumWeightVerificationStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.WeightVerificationStatus | Prisma.EnumWeightVerificationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.WeightVerificationStatus[]
   notIn?: $Enums.WeightVerificationStatus[]
   not?: Prisma.NestedEnumWeightVerificationStatusFilter<$PrismaModel> | $Enums.WeightVerificationStatus
+}
+
+export type NestedEnumWeightVarianceClassFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeightVarianceClass | Prisma.EnumWeightVarianceClassFieldRefInput<$PrismaModel>
+  in?: $Enums.WeightVarianceClass[]
+  notIn?: $Enums.WeightVarianceClass[]
+  not?: Prisma.NestedEnumWeightVarianceClassFilter<$PrismaModel> | $Enums.WeightVarianceClass
 }
 
 export type NestedEnumWeightVerificationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -1551,6 +1711,16 @@ export type NestedEnumWeightVerificationStatusWithAggregatesFilter<$PrismaModel 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumWeightVerificationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumWeightVerificationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumWeightVarianceClassWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeightVarianceClass | Prisma.EnumWeightVarianceClassFieldRefInput<$PrismaModel>
+  in?: $Enums.WeightVarianceClass[]
+  notIn?: $Enums.WeightVarianceClass[]
+  not?: Prisma.NestedEnumWeightVarianceClassWithAggregatesFilter<$PrismaModel> | $Enums.WeightVarianceClass
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWeightVarianceClassFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWeightVarianceClassFilter<$PrismaModel>
 }
 
 

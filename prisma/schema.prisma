@@ -201,6 +201,48 @@ enum WeightVerificationStatus {
   variance_detected
 }
 
+enum OdometerReadingType {
+  trip_start
+  trip_end
+  fuel
+  maintenance
+  inspection
+  manual_adjustment
+  import
+}
+
+enum ObservationSource {
+  manual
+  driver_app
+  admin
+  gps
+  import
+  integration
+  system
+}
+
+enum VerificationStatus {
+  pending
+  verified
+  rejected
+  superseded
+}
+
+enum FuelEventType {
+  purchase
+  company_issue
+  external_issue
+  emergency
+  tank_observation
+  reversal
+}
+
+enum WeightVarianceClass {
+  within_tolerance
+  over
+  under
+}
+
 enum TyreCondition {
   new
   good
@@ -273,12 +315,12 @@ model User {
 }
 
 model AuditLog {
-  id                      String                    @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
   action    String
   entity    String
   entityId  String?
-  details   String? 
+  details   String?
   ipAddress String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -289,15 +331,15 @@ model AuditLog {
 }
 
 model BorderCrossing {
-  id                      String                    @id @default(cuid())
+  id             String               @id @default(cuid())
   tripId         String
   truckId        String
   driverId       String
   borderName     String
   country        String
   direction      String
-  status         BorderCrossingStatus    @default(queued)
-  queuedAt       DateTime  @default(now())
+  status         BorderCrossingStatus @default(queued)
+  queuedAt       DateTime             @default(now())
   processingAt   DateTime?
   clearedAt      DateTime?
   estimatedWait  Int?
@@ -306,12 +348,12 @@ model BorderCrossing {
   documentStatus String?
   notes          String?
   createdBy      String
-  createdAt      DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user           User      @relation(fields: [createdBy], references: [id])
-  driver         Driver    @relation(fields: [driverId], references: [id])
-  trip           Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  truck          Truck     @relation(fields: [truckId], references: [id])
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  user           User                 @relation(fields: [createdBy], references: [id])
+  driver         Driver               @relation(fields: [driverId], references: [id])
+  trip           Trip                 @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  truck          Truck                @relation(fields: [truckId], references: [id])
 
   @@index([borderName])
   @@index([country])
@@ -325,28 +367,28 @@ model BorderCrossing {
 }
 
 model CashAdvance {
-  id                      String                    @id @default(cuid())
+  id                 String            @id @default(cuid())
   driverId           String
   tripId             String?
   amount             Decimal
   purpose            String
-  paymentMethod      String    @default("cash")
+  paymentMethod      String            @default("cash")
   mobileMoneyRef     String?
   mobileMoneyNetwork String?
-  status             CashAdvanceStatus    @default(pending)
+  status             CashAdvanceStatus @default(pending)
   approvedBy         String?
   approvedAt         DateTime?
   rejectionReason    String?
   disbursedBy        String?
   disbursedAt        DateTime?
-  totalDeducted      Decimal     @default(0)
-  remainingBalance   Decimal     @default(0)
-  requestDate        DateTime  @default(now())
+  totalDeducted      Decimal           @default(0)
+  remainingBalance   Decimal           @default(0)
+  requestDate        DateTime          @default(now())
   notes              String?
-  createdAt          DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  driver             Driver    @relation(fields: [driverId], references: [id])
-  trip               Trip?     @relation(fields: [tripId], references: [id])
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  driver             Driver            @relation(fields: [driverId], references: [id])
+  trip               Trip?             @relation(fields: [tripId], references: [id])
 
   @@index([driverId, status])
   @@index([requestDate])
@@ -366,7 +408,7 @@ model Client {
   notes                   String?
   isActive                Boolean                   @default(true)
   createdAt               DateTime                  @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt               DateTime                  @updatedAt
   ClientZone              ClientZone[]
   Invoice                 Invoice[]
   LoadBoard               LoadBoard[]
@@ -377,7 +419,7 @@ model Client {
 }
 
 model ClientZone {
-  id                      String                    @id @default(cuid())
+  id                String          @id @default(cuid())
   clientId          String
   destinationZoneId String
   branchName        String?
@@ -395,7 +437,7 @@ model ClientZone {
 }
 
 model Currency {
-  id                      String                    @id @default(cuid())
+  id        String   @id @default(cuid())
   code      String   @unique
   name      String
   symbol    String
@@ -407,7 +449,7 @@ model Currency {
 }
 
 model DeliveryStop {
-  id                      String                    @id @default(cuid())
+  id               String             @id @default(cuid())
   tripId           String
   stopOrder        Int
   destination      String
@@ -418,41 +460,41 @@ model DeliveryStop {
   customerPhone    String?
   expectedQty      Float
   actualQty        Float?
-  unit             String    @default("bags")
-  status           DeliveryStopStatus    @default(pending)
+  unit             String             @default("bags")
+  status           DeliveryStopStatus @default(pending)
   arrivalTime      DateTime?
   offloadStarted   DateTime?
   offloadCompleted DateTime?
   notes            String?
-  createdAt        DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  trip             Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  trip             Trip               @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@index([tripId, stopOrder])
 }
 
 model DepotQueue {
-  id                      String                    @id @default(cuid())
+  id            String           @id @default(cuid())
   truckId       String
   driverId      String?
   tripId        String?
   depotName     String
   queueType     String
-  status        DepotQueueStatus    @default(waiting)
+  status        DepotQueueStatus @default(waiting)
   position      Int?
   estimatedWait Int?
   actualWait    Int?
-  joinedAt      DateTime  @default(now())
+  joinedAt      DateTime         @default(now())
   startedAt     DateTime?
   completedAt   DateTime?
   notes         String?
   createdBy     String
-  createdAt     DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user          User      @relation(fields: [createdBy], references: [id])
-  driver        Driver?   @relation(fields: [driverId], references: [id])
-  trip          Trip?     @relation(fields: [tripId], references: [id])
-  truck         Truck     @relation(fields: [truckId], references: [id])
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  user          User             @relation(fields: [createdBy], references: [id])
+  driver        Driver?          @relation(fields: [driverId], references: [id])
+  trip          Trip?            @relation(fields: [tripId], references: [id])
+  truck         Truck            @relation(fields: [truckId], references: [id])
 
   @@index([createdBy], map: "DepotQueue_createdBy_fkey")
   @@index([depotName])
@@ -465,12 +507,12 @@ model DepotQueue {
 }
 
 model DestinationCity {
-  id                      String                    @id @default(cuid())
+  id              String            @id @default(cuid())
   name            String            @unique
   region          String?
   isActive        Boolean           @default(true)
   createdAt       DateTime          @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt       DateTime          @updatedAt
   DestinationZone DestinationZone[]
   Trip            Trip[]
 
@@ -497,7 +539,7 @@ model DestinationZone {
 }
 
 model Document {
-  id                      String                    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?  @db.Text
   category    String
@@ -509,7 +551,7 @@ model Document {
   mimeType    String
   uploadedBy  String?
   createdAt   DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt   DateTime @updatedAt
 
   @@index([category])
   @@index([entityType, entityId])
@@ -517,19 +559,19 @@ model Document {
 }
 
 model Driver {
-  id                      String                    @id @default(cuid())
-  userId              String?             @unique
+  id                  String                   @id @default(cuid())
+  userId              String?                  @unique
   firstName           String
   lastName            String
-  phone               String              @unique
-  email               String?             @unique
+  phone               String                   @unique
+  email               String?                  @unique
   dateOfBirth         DateTime?
   address             String?
   photo               String?
-  employeeId          String              @unique
-  ghanaCardNumber     String?             @unique
+  employeeId          String                   @unique
+  ghanaCardNumber     String?                  @unique
   ghanaCardExpiry     DateTime?
-  licenseNumber       String              @unique
+  licenseNumber       String                   @unique
   licenseExpiry       DateTime
   licenseClass        String
   licenseImage        String?
@@ -537,24 +579,24 @@ model Driver {
   ghanaCardBackImage  String?
   emergencyName       String?
   emergencyPhone      String?
-  verificationStatus  DriverVerificationStatus              @default(pending)
+  verificationStatus  DriverVerificationStatus @default(pending)
   verifiedBy          String?
   verifiedAt          DateTime?
   verificationNotes   String?
-  notifySMS           Boolean             @default(true)
-  notifyEmail         Boolean             @default(true)
-  notifyPush          Boolean             @default(true)
-  rating              Float               @default(5)
-  status              DriverStatus              @default(active)
-  totalTrips          Int                 @default(0)
-  totalMileage        Float               @default(0)
-  hireDate            DateTime            @default(now())
-  createdAt           DateTime            @default(now())
-  updatedAt DateTime @updatedAt
+  notifySMS           Boolean                  @default(true)
+  notifyEmail         Boolean                  @default(true)
+  notifyPush          Boolean                  @default(true)
+  rating              Float                    @default(5)
+  status              DriverStatus             @default(active)
+  totalTrips          Int                      @default(0)
+  totalMileage        Float                    @default(0)
+  hireDate            DateTime                 @default(now())
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
   BorderCrossing      BorderCrossing[]
   CashAdvance         CashAdvance[]
   DepotQueue          DepotQueue[]
-  user                User?               @relation(fields: [userId], references: [id])
+  user                User?                    @relation(fields: [userId], references: [id])
   DriverIncentive     DriverIncentive[]
   DriverSettlement    DriverSettlement[]
   DriverWallet        DriverWallet?
@@ -567,26 +609,26 @@ model Driver {
 }
 
 model DriverIncentive {
-  id                      String                    @id @default(cuid())
+  id                                    String          @id @default(cuid())
   driverId                              String
   type                                  String
   title                                 String
-  description                           String?  @db.Text
+  description                           String?         @db.Text
   amount                                Decimal
   period                                String
   periodStart                           DateTime?
   periodEnd                             DateTime?
-  status                                IncentiveStatus    @default(pending)
+  status                                IncentiveStatus @default(pending)
   approvedBy                            String?
   approvedAt                            DateTime?
   paidAt                                DateTime?
   metrics                               String?
   createdBy                             String
-  createdAt                             DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user_DriverIncentive_approvedByToUser User?     @relation("DriverIncentive_approvedByToUser", fields: [approvedBy], references: [id])
-  user_DriverIncentive_createdByToUser  User      @relation("DriverIncentive_createdByToUser", fields: [createdBy], references: [id])
-  driver                                Driver    @relation(fields: [driverId], references: [id])
+  createdAt                             DateTime        @default(now())
+  updatedAt                             DateTime        @updatedAt
+  user_DriverIncentive_approvedByToUser User?           @relation("DriverIncentive_approvedByToUser", fields: [approvedBy], references: [id])
+  user_DriverIncentive_createdByToUser  User            @relation("DriverIncentive_createdByToUser", fields: [createdBy], references: [id])
+  driver                                Driver          @relation(fields: [driverId], references: [id])
 
   @@index([amount])
   @@index([approvedBy], map: "DriverIncentive_approvedBy_fkey")
@@ -598,7 +640,7 @@ model DriverIncentive {
 }
 
 model DriverSettlement {
-  id                      String                    @id @default(cuid())
+  id                String           @id @default(cuid())
   driverId          String
   period            String
   periodStart       DateTime
@@ -608,13 +650,13 @@ model DriverSettlement {
   expenseDeductions Decimal
   bonusAmount       Decimal
   netPay            Decimal
-  status            SettlementStatus           @default(pending)
+  status            SettlementStatus @default(pending)
   approvedBy        String?
   approvedAt        DateTime?
   paidAt            DateTime?
   notes             String?
   createdAt         DateTime         @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt         DateTime         @updatedAt
   driver            Driver           @relation(fields: [driverId], references: [id])
   SettlementLine    SettlementLine[]
 
@@ -625,28 +667,28 @@ model DriverSettlement {
 }
 
 model DriverWallet {
-  id                      String                    @id @default(cuid())
+  id                       String    @id @default(cuid())
   driverId                 String    @unique
-  availableBalance         Decimal     @default(0)
-  totalAdvances            Decimal     @default(0)
-  totalDeducted            Decimal     @default(0)
-  totalSettled             Decimal     @default(0)
+  availableBalance         Decimal   @default(0)
+  totalAdvances            Decimal   @default(0)
+  totalDeducted            Decimal   @default(0)
+  totalSettled             Decimal   @default(0)
   monthlyAdvanceLimit      Decimal?
-  monthlyAdvancesThisMonth Decimal     @default(0)
+  monthlyAdvancesThisMonth Decimal   @default(0)
   lastAdvanceDate          DateTime?
   mobileMoneyNumber        String?
   mobileMoneyNetwork       String?
   preferredPaymentMethod   String    @default("cash")
   createdAt                DateTime  @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt                DateTime  @updatedAt
   driver                   Driver    @relation(fields: [driverId], references: [id])
 }
 
 model DvlaRegistration {
-  id                      String                    @id @default(cuid())
+  id                 String                 @id @default(cuid())
   truckId            String
-  registrationNumber String    @unique
-  certificateNumber  String    @unique
+  registrationNumber String                 @unique
+  certificateNumber  String                 @unique
   vehicleClass       String
   bodyType           String?
   axleConfiguration  String?
@@ -666,14 +708,14 @@ model DvlaRegistration {
   nextRenewalDue     DateTime?
   registrationFee    Decimal?
   renewalFee         Decimal?
-  status             DvlaRegistrationStatus    @default(active)
+  status             DvlaRegistrationStatus @default(active)
   documentUrl        String?
-  transferHistory    String?   @db.Text
+  transferHistory    String?                @db.Text
   notes              String?
-  reminderSent       Boolean   @default(false)
-  createdAt          DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
+  reminderSent       Boolean                @default(false)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  truck              Truck                  @relation(fields: [truckId], references: [id], onDelete: Cascade)
   DvlaRenewalHistory DvlaRenewalHistory[]
 
   @@index([expiryDate])
@@ -683,7 +725,7 @@ model DvlaRegistration {
 }
 
 model Expense {
-  id                      String                    @id @default(cuid())
+  id              String           @id @default(cuid())
   truckId         String
   category        String
   description     String
@@ -692,11 +734,11 @@ model Expense {
   paymentMethod   String           @default("cash")
   reference       String?
   approvedBy      String?
-  status          ExpenseStatus           @default(approved)
+  status          ExpenseStatus    @default(approved)
   receiptUrl      String?
   tripId          String?
   createdAt       DateTime         @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt       DateTime         @updatedAt
   trip            Trip?            @relation(fields: [tripId], references: [id], onDelete: Cascade)
   truck           Truck            @relation(fields: [truckId], references: [id])
   ExpenseApproval ExpenseApproval?
@@ -709,22 +751,22 @@ model Expense {
 }
 
 model ExpenseApproval {
-  id                      String                    @id @default(cuid())
-  expenseId                                String    @unique
-  status                                   ExpenseApprovalStatus    @default(pending)
+  id                                       String                @id @default(cuid())
+  expenseId                                String                @unique
+  status                                   ExpenseApprovalStatus @default(pending)
   requestedById                            String
   approvedById                             String?
-  approvalLevel                            Int       @default(1)
+  approvalLevel                            Int                   @default(1)
   amount                                   Decimal
   approvedAmount                           Decimal?
   notes                                    String?
   rejectionReason                          String?
   reviewedAt                               DateTime?
-  createdAt                                DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user_ExpenseApproval_approvedByIdToUser  User?     @relation("ExpenseApproval_approvedByIdToUser", fields: [approvedById], references: [id])
-  expense                                  Expense   @relation(fields: [expenseId], references: [id], onDelete: Cascade)
-  user_ExpenseApproval_requestedByIdToUser User      @relation("ExpenseApproval_requestedByIdToUser", fields: [requestedById], references: [id])
+  createdAt                                DateTime              @default(now())
+  updatedAt                                DateTime              @updatedAt
+  user_ExpenseApproval_approvedByIdToUser  User?                 @relation("ExpenseApproval_approvedByIdToUser", fields: [approvedById], references: [id])
+  expense                                  Expense               @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user_ExpenseApproval_requestedByIdToUser User                  @relation("ExpenseApproval_requestedByIdToUser", fields: [requestedById], references: [id])
 
   @@index([approvedById])
   @@index([createdAt])
@@ -734,17 +776,17 @@ model ExpenseApproval {
 }
 
 model FuelBudget {
-  id                      String                    @id @default(cuid())
+  id           String   @id @default(cuid())
   truckId      String?
   month        Int
   year         Int
   budgetLimit  Decimal
   litersLimit  Float?
-  actualSpend  Decimal    @default(0)
+  actualSpend  Decimal  @default(0)
   actualLiters Float    @default(0)
   notes        String?
   createdAt    DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt    DateTime @updatedAt
   createdBy    String?
   truck        Truck?   @relation(fields: [truckId], references: [id])
 
@@ -755,37 +797,52 @@ model FuelBudget {
 }
 
 model FuelLog {
-  id                      String                    @id @default(cuid())
-  tripId          String
-  truckId         String
-  date            DateTime @default(now())
-  odometer        Float?
-  fuelLevelBefore Float?
-  fuelLevelAfter  Float?
-  litersFilled    Float
-  costPerLiter    Decimal?
-  totalCost       Decimal
-  stationName     String?
-  fuelType        String   @default("Diesel")
-  receiptNumber   String?
-  endMileage      Float?
-  endMileageImage String?   @db.Text
-  images          String?   @db.Text // JSON array of uploaded image URLs (receipts, fuel logs, mileage photos)
-  distanceCovered Float?
-  notes           String?
-  createdAt       DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trip            Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  truck           Truck    @relation(fields: [truckId], references: [id])
+  id                 String             @id @default(cuid())
+  tripId             String
+  truckId            String
+  date               DateTime           @default(now())
+  odometer           Float?
+  fuelLevelBefore    Float?
+  fuelLevelAfter     Float?
+  litersFilled       Float
+  costPerLiter       Decimal?
+  totalCost          Decimal
+  stationName        String?
+  fuelType           String             @default("Diesel")
+  receiptNumber      String?
+  endMileage         Float?
+  endMileageImage    String?            @db.Text
+  images             String?            @db.Text // JSON array of uploaded image URLs (receipts, fuel logs, mileage photos)
+  distanceCovered    Float?
+  notes              String?
+  eventType          FuelEventType      @default(purchase)
+  source             ObservationSource  @default(manual)
+  verificationStatus VerificationStatus @default(pending)
+  capturedBy         String?
+  latitude           Float?
+  longitude          Float?
+  paymentSource      String?
+  reversalOfId       String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  trip               Trip               @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  truck              Truck              @relation(fields: [truckId], references: [id])
+  reversalOf         FuelLog?           @relation("FuelReversal", fields: [reversalOfId], references: [id], onDelete: SetNull)
+  reversals          FuelLog[]          @relation("FuelReversal")
 
   @@index([date])
+  @@index([eventType])
+  @@index([verificationStatus])
+  @@index([reversalOfId])
   @@index([fuelType])
   @@index([tripId])
+  @@index([tripId, date])
   @@index([truckId])
+  @@index([truckId, date])
 }
 
 model FuelPrice {
-  id                      String                    @id @default(cuid())
+  id            String      @id @default(cuid())
   stationId     String
   fuelType      String
   pricePerLiter Decimal
@@ -794,7 +851,7 @@ model FuelPrice {
   verified      Boolean     @default(false)
   notes         String?
   createdAt     DateTime    @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt     DateTime    @updatedAt
   fuelStation   FuelStation @relation(fields: [stationId], references: [id])
 
   @@unique([stationId, fuelType, effectiveDate])
@@ -803,7 +860,7 @@ model FuelPrice {
 }
 
 model FuelStation {
-  id                      String                    @id @default(cuid())
+  id                    String      @id @default(cuid())
   name                  String
   brand                 String
   stationCode           String?     @unique
@@ -827,7 +884,7 @@ model FuelStation {
   isActive              Boolean     @default(true)
   notes                 String?
   createdAt             DateTime    @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt             DateTime    @updatedAt
   FuelPrice             FuelPrice[]
 
   @@index([brand])
@@ -836,7 +893,7 @@ model FuelStation {
 }
 
 model GeofenceZone {
-  id                      String                    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String
   latitude      Float
   longitude     Float
@@ -844,7 +901,7 @@ model GeofenceZone {
   type          String          @default("depot")
   address       String?
   createdAt     DateTime        @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt     DateTime        @updatedAt
   TrackingAlert TrackingAlert[]
 
   @@index([type])
@@ -852,22 +909,22 @@ model GeofenceZone {
 
 model Insurance {
   id                      String                    @id @default(cuid())
-  truckId             String
-  provider            String
-  policyNumber        String           @unique
-  type                String
-  coverAmount         Decimal?
-  premium             Decimal
-  startDate           DateTime
-  endDate             DateTime
-  status              InsuranceStatus           @default(active)
-  renewalReminderSent Boolean          @default(false)
-  documentUrl         String?
-  notes               String?
-  createdAt           DateTime         @default(now())
-  updatedAt DateTime @updatedAt
-  truck               Truck            @relation(fields: [truckId], references: [id])
-  InsuranceClaim      InsuranceClaim[]
+  truckId                 String
+  provider                String
+  policyNumber            String                    @unique
+  type                    String
+  coverAmount             Decimal?
+  premium                 Decimal
+  startDate               DateTime
+  endDate                 DateTime
+  status                  InsuranceStatus           @default(active)
+  renewalReminderSent     Boolean                   @default(false)
+  documentUrl             String?
+  notes                   String?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  truck                   Truck                     @relation(fields: [truckId], references: [id])
+  InsuranceClaim          InsuranceClaim[]
   InsuranceRenewalHistory InsuranceRenewalHistory[]
 
   @@index([endDate])
@@ -875,36 +932,36 @@ model Insurance {
 }
 
 model InsuranceClaim {
-  id                      String                    @id @default(cuid())
+  id                String      @id @default(cuid())
   insuranceId       String
   truckId           String
-  claimNumber       String    @unique
+  claimNumber       String      @unique
   claimType         String
   incidentDate      DateTime
   incidentLocation  String
-  description       String    @db.Text
-  status            ClaimStatus    @default(draft)
+  description       String      @db.Text
+  status            ClaimStatus @default(draft)
   claimAmount       Decimal
   approvedAmount    Decimal?
   deductible        Decimal?
   assignedAdjuster  String?
-  policeReport      String?   @db.Text
-  thirdPartyDetails String?   @db.Text
-  damagePhotos      String?   @db.Text
+  policeReport      String?     @db.Text
+  thirdPartyDetails String?     @db.Text
+  damagePhotos      String?     @db.Text
   repairEstimate    Decimal?
   submittedAt       DateTime?
   reviewedAt        DateTime?
   approvedAt        DateTime?
   paidAt            DateTime?
   closedAt          DateTime?
-  notes             String?   @db.Text
-  assessorNotes     String?   @db.Text
+  notes             String?     @db.Text
+  assessorNotes     String?     @db.Text
   createdBy         String
-  createdAt         DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user              User      @relation(fields: [createdBy], references: [id])
-  insurance         Insurance @relation(fields: [insuranceId], references: [id])
-  truck             Truck     @relation(fields: [truckId], references: [id])
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  user              User        @relation(fields: [createdBy], references: [id])
+  insurance         Insurance   @relation(fields: [insuranceId], references: [id])
+  truck             Truck       @relation(fields: [truckId], references: [id])
 
   @@index([claimAmount])
   @@index([claimType])
@@ -916,22 +973,22 @@ model InsuranceClaim {
 }
 
 model Invoice {
-  id                      String                    @id @default(cuid())
+  id            String        @id @default(cuid())
   invoiceNumber String        @unique
   clientId      String
   tripId        String?       @unique
   issueDate     DateTime      @default(now())
   dueDate       DateTime
-  status        InvoiceStatus        @default(draft)
+  status        InvoiceStatus @default(draft)
   subtotal      Decimal
-  taxAmount     Decimal         @default(0)
-  taxRate       Decimal         @default(0)
+  taxAmount     Decimal       @default(0)
+  taxRate       Decimal       @default(0)
   totalAmount   Decimal
-  paidAmount    Decimal         @default(0)
+  paidAmount    Decimal       @default(0)
   notes         String?
   terms         String?
   createdAt     DateTime      @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt     DateTime      @updatedAt
   client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   trip          Trip?         @relation(fields: [tripId], references: [id])
   InvoiceItem   InvoiceItem[]
@@ -943,9 +1000,9 @@ model Invoice {
 }
 
 model InvoiceItem {
-  id                      String                    @id @default(cuid())
+  id          String  @id @default(cuid())
   invoiceId   String
-  description String    @db.Text
+  description String  @db.Text
   quantity    Decimal
   unitPrice   Decimal
   total       Decimal
@@ -956,13 +1013,13 @@ model InvoiceItem {
 }
 
 model Item {
-  id                      String                    @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String     @unique
-  description String?   @db.Text
+  description String?    @db.Text
   unit        String     @default("bags")
   isActive    Boolean    @default(true)
   createdAt   DateTime   @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt   DateTime   @updatedAt
   supplierId  String?
   supplier    Supplier?  @relation(fields: [supplierId], references: [id])
   Trip        Trip[]
@@ -973,7 +1030,7 @@ model Item {
 }
 
 model LoadBoard {
-  id                      String                    @id @default(cuid())
+  id               String          @id @default(cuid())
   clientId         String?
   title            String
   pickupLocation   String
@@ -983,25 +1040,25 @@ model LoadBoard {
   commodityType    String
   weight           Float?
   truckType        String?
-  truckCount       Int       @default(1)
+  truckCount       Int             @default(1)
   offeredRate      Decimal?
   budgetMin        Decimal?
   budgetMax        Decimal?
   pickupDate       DateTime?
   deliveryDate     DateTime?
-  status           LoadBoardStatus    @default(open)
+  status           LoadBoardStatus @default(open)
   requirements     String?
   contactName      String?
   contactPhone     String?
   assignedTruckId  String?
   assignedDriverId String?
   createdBy        String
-  createdAt        DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  driver           Driver?   @relation(fields: [assignedDriverId], references: [id])
-  truck            Truck?    @relation(fields: [assignedTruckId], references: [id])
-  client           Client?   @relation(fields: [clientId], references: [id])
-  user             User      @relation(fields: [createdBy], references: [id])
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  driver           Driver?         @relation(fields: [assignedDriverId], references: [id])
+  truck            Truck?          @relation(fields: [assignedTruckId], references: [id])
+  client           Client?         @relation(fields: [clientId], references: [id])
+  user             User            @relation(fields: [createdBy], references: [id])
 
   @@index([assignedDriverId], map: "LoadBoard_assignedDriverId_fkey")
   @@index([assignedTruckId], map: "LoadBoard_assignedTruckId_fkey")
@@ -1017,12 +1074,12 @@ model LoadBoard {
 }
 
 model LoadingCity {
-  id                      String                    @id @default(cuid())
+  id           String         @id @default(cuid())
   name         String         @unique
   region       String?
   isActive     Boolean        @default(true)
   createdAt    DateTime       @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt    DateTime       @updatedAt
   LoadingPoint LoadingPoint[]
   Trip         Trip[]
 
@@ -1030,7 +1087,7 @@ model LoadingCity {
 }
 
 model LoadingPoint {
-  id                      String                    @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String
   loadingCityId String
   address       String?
@@ -1038,7 +1095,7 @@ model LoadingPoint {
   contactPhone  String?
   isActive      Boolean     @default(true)
   createdAt     DateTime    @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt     DateTime    @updatedAt
   supplierId    String?
   loadingCity   LoadingCity @relation(fields: [loadingCityId], references: [id])
   supplier      Supplier?   @relation(fields: [supplierId], references: [id])
@@ -1052,30 +1109,30 @@ model LoadingPoint {
 }
 
 model MaintenanceRecord {
-  id                      String                    @id @default(cuid())
+  id             String            @id @default(cuid())
   truckId        String
   type           String
   title          String
-  description    String?   @db.Text
+  description    String?           @db.Text
   odometer       Float?
   cost           Decimal?
   performedBy    String?
-  performedAt    DateTime  @default(now())
+  performedAt    DateTime          @default(now())
   nextDueDate    DateTime?
   nextDueMileage Float?
-  status         MaintenanceStatus    @default(completed)
-  partsUsed      String?   @db.Text
+  status         MaintenanceStatus @default(completed)
+  partsUsed      String?           @db.Text
   invoiceUrl     String?
-  createdAt      DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  truck          Truck     @relation(fields: [truckId], references: [id])
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  truck          Truck             @relation(fields: [truckId], references: [id])
 
   @@index([nextDueDate])
   @@index([truckId, status])
 }
 
 model Notification {
-  id                      String                    @id @default(cuid())
+  id          String    @id @default(cuid())
   userId      String
   type        String
   title       String
@@ -1093,7 +1150,7 @@ model Notification {
   emailError  String?
   pushSent    Boolean   @default(false)
   pushSentAt  DateTime?
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime  @default(now())
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([createdAt])
@@ -1103,7 +1160,7 @@ model Notification {
 }
 
 model PasswordResetToken {
-  id                      String                    @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
   token     String    @unique
   expiresAt DateTime
@@ -1117,28 +1174,28 @@ model PasswordResetToken {
 }
 
 model Payroll {
-  id                      String                    @id @default(cuid())
+  id          String        @id @default(cuid())
   driverId    String
   month       Int
   year        Int
   baseSalary  Decimal
-  tripBonus   Decimal     @default(0)
-  overtimePay Decimal     @default(0)
-  deductions  Decimal     @default(0)
+  tripBonus   Decimal       @default(0)
+  overtimePay Decimal       @default(0)
+  deductions  Decimal       @default(0)
   netPay      Decimal
-  status      PaymentStatus    @default(pending)
+  status      PaymentStatus @default(pending)
   paidAt      DateTime?
   approvedBy  String?
   notes       String?
-  createdAt   DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  driver      Driver    @relation(fields: [driverId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  driver      Driver        @relation(fields: [driverId], references: [id])
 
   @@unique([driverId, month, year])
 }
 
 model PerformanceBenchmark {
-  id                      String                    @id @default(cuid())
+  id                 String          @id @default(cuid())
   destinationZoneId  String
   expectedMinMileage Float
   expectedMaxMileage Float
@@ -1150,7 +1207,7 @@ model PerformanceBenchmark {
   warningMaxFuel     Float?
   isActive           Boolean         @default(true)
   createdAt          DateTime        @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt          DateTime        @updatedAt
   destinationZone    DestinationZone @relation(fields: [destinationZoneId], references: [id])
 
   @@index([destinationZoneId])
@@ -1158,29 +1215,29 @@ model PerformanceBenchmark {
 }
 
 model Pricing {
-  id                      String                    @id @default(cuid())
+  id            String   @id @default(cuid())
   itemName      String
   destination   String
-  transportRate Decimal    @default(0)
+  transportRate Decimal  @default(0)
   effectiveDate DateTime @default(now())
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt     DateTime @updatedAt
 
   @@unique([itemName, destination])
 }
 
 model ReportHistory {
-  id                      String                    @id @default(cuid())
+  id          String              @id @default(cuid())
   type        String
   title       String
   format      String
-  parameters  String? 
+  parameters  String?
   generatedBy String
   fileSize    Int?
-  status      ReportHistoryStatus   @default(completed)
+  status      ReportHistoryStatus @default(completed)
   error       String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime            @default(now())
 
   @@index([createdAt])
   @@index([generatedBy])
@@ -1188,25 +1245,25 @@ model ReportHistory {
 }
 
 model RoadConditionReport {
-  id                      String                    @id @default(cuid())
+  id          String              @id @default(cuid())
   reporterId  String
   roadName    String
   region      String
   condition   String
   hazardType  String
-  description String?   @db.Text
+  description String?             @db.Text
   severity    String
   latitude    Float?
   longitude   Float?
-  reportedAt  DateTime  @default(now())
+  reportedAt  DateTime            @default(now())
   resolvedAt  DateTime?
-  status      RoadConditionStatus    @default(active)
-  imageUrl    String?   @db.Text
+  status      RoadConditionStatus @default(active)
+  imageUrl    String?             @db.Text
   tripId      String?
-  createdAt   DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user        User      @relation(fields: [reporterId], references: [id])
-  trip        Trip?     @relation(fields: [tripId], references: [id])
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  user        User                @relation(fields: [reporterId], references: [id])
+  trip        Trip?               @relation(fields: [tripId], references: [id])
 
   @@index([condition])
   @@index([hazardType])
@@ -1219,9 +1276,9 @@ model RoadConditionReport {
 }
 
 model RoadworthyInspection {
-  id                      String                    @id @default(cuid())
+  id                 String            @id @default(cuid())
   truckId            String
-  certificateNumber  String    @unique
+  certificateNumber  String            @unique
   inspectionType     String
   inspectionDate     DateTime
   inspectionStation  String?
@@ -1229,28 +1286,28 @@ model RoadworthyInspection {
   inspectorId        String?
   inspectorSignature String?
   result             String
-  vehicleFitness     String    @default("fit")
-  brakesCheck        String    @default("pass")
-  lightsCheck        String    @default("pass")
-  tyresCheck         String    @default("pass")
-  emissionsCheck     String    @default("pass")
-  steeringCheck      String    @default("pass")
-  suspensionCheck    String    @default("pass")
-  bodyCheck          String    @default("pass")
-  electricalCheck    String    @default("pass")
+  vehicleFitness     String            @default("fit")
+  brakesCheck        String            @default("pass")
+  lightsCheck        String            @default("pass")
+  tyresCheck         String            @default("pass")
+  emissionsCheck     String            @default("pass")
+  steeringCheck      String            @default("pass")
+  suspensionCheck    String            @default("pass")
+  bodyCheck          String            @default("pass")
+  electricalCheck    String            @default("pass")
   odometerReading    Float?
-  defectsFound       String?   @db.Text
-  advisories         String?   @db.Text
-  recommendations    String?   @db.Text  
-  certificateIssued  Boolean   @default(false)
+  defectsFound       String?           @db.Text
+  advisories         String?           @db.Text
+  recommendations    String?           @db.Text
+  certificateIssued  Boolean           @default(false)
   certificateExpiry  DateTime?
   certificateUrl     String?
   inspectionFee      Decimal?
   nextInspectionDue  DateTime?
-  status             MaintenanceStatus    @default(completed)
-  createdAt          DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  truck              Truck     @relation(fields: [truckId], references: [id], onDelete: Cascade)
+  status             MaintenanceStatus @default(completed)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  truck              Truck             @relation(fields: [truckId], references: [id], onDelete: Cascade)
 
   @@index([certificateExpiry])
   @@index([inspectionDate])
@@ -1260,18 +1317,18 @@ model RoadworthyInspection {
 }
 
 model Role {
-  id                      String                    @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String   @unique
   description String?
-  permissions String    @db.Text
+  permissions String   @db.Text
   isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt   DateTime @updatedAt
   User        User[]
 }
 
 model SettlementLine {
-  id                      String                    @id @default(cuid())
+  id               String           @id @default(cuid())
   settlementId     String
   tripId           String?
   description      String
@@ -1285,7 +1342,7 @@ model SettlementLine {
 }
 
 model Supplier {
-  id                      String                    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String         @unique
   contactPerson String?
   contactPhone  String?
@@ -1294,7 +1351,7 @@ model Supplier {
   notes         String?
   isActive      Boolean        @default(true)
   createdAt     DateTime       @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt     DateTime       @updatedAt
   Item          Item[]
   LoadingPoint  LoadingPoint[]
   TripItem      TripItem[]
@@ -1303,8 +1360,8 @@ model Supplier {
 }
 
 model SystemSettings {
-  id                      String                    @id @default(cuid())
-  isDefault               Boolean                   @unique @default(true)
+  id                      String   @id @default(cuid())
+  isDefault               Boolean  @unique @default(true)
   companyName             String   @default("iFleetPro Ltd.")
   companyEmail            String   @default("info@fleetpro.com.gh")
   companyPhone            String   @default("+233 30 277 8899")
@@ -1354,38 +1411,38 @@ model SystemSettings {
   driverIdCounter         Int      @default(1)
   driverIdPadding         Int      @default(3)
   createdAt               DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt               DateTime @updatedAt
 }
 
 model TollRecord {
-  id                      String                    @id @default(cuid())
+  id              String           @id @default(cuid())
   truckId         String
   driverId        String?
   tripId          String?
   tollPoint       String
-  tollType        String    @default("toll")
+  tollType        String           @default("toll")
   location        String?
   route           String?
   latitude        Float?
   longitude       Float?
   amount          Decimal
-  paymentMethod   String    @default("cash")
+  paymentMethod   String           @default("cash")
   referenceNumber String?
   tollDate        DateTime
   direction       String?
-  status          TollRecordStatus    @default(verified)
+  status          TollRecordStatus @default(verified)
   disputeReason   String?
   resolvedBy      String?
   resolvedAt      DateTime?
   vehicleWeight   Float?
-  overloaded      Boolean   @default(false)
+  overloaded      Boolean          @default(false)
   overloadFine    Decimal?
   notes           String?
-  createdAt       DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  driver          Driver?   @relation(fields: [driverId], references: [id])
-  trip            Trip?     @relation(fields: [tripId], references: [id])
-  truck           Truck     @relation(fields: [truckId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  driver          Driver?          @relation(fields: [driverId], references: [id])
+  trip            Trip?            @relation(fields: [tripId], references: [id])
+  truck           Truck            @relation(fields: [truckId], references: [id])
 
   @@index([driverId])
   @@index([route])
@@ -1396,7 +1453,7 @@ model TollRecord {
 }
 
 model TrackingAlert {
-  id                      String                    @id @default(cuid())
+  id             String        @id @default(cuid())
   truckId        String
   tripId         String?
   geofenceZoneId String?
@@ -1419,14 +1476,14 @@ model TrackingAlert {
 }
 
 model TrackingConfig {
-  id                      String                    @id @default(cuid())
+  id             String   @id @default(cuid())
   truckId        String   @unique
   enablePhoneGps Boolean  @default(true)
   enableHardware Boolean  @default(false)
   updateInterval Int      @default(5)
   geofenceRadius Int      @default(500)
   isActive       Boolean  @default(true)
-  updatedAt DateTime @updatedAt
+  updatedAt      DateTime @updatedAt
   createdAt      DateTime @default(now())
   truck          Truck    @relation(fields: [truckId], references: [id])
 }
@@ -1463,13 +1520,13 @@ model Trip {
   fuelLevelAfter          Float?
   fuelUsed                Float?
   fuelCost                Decimal?
-  startMileageImage       String?   @db.Text
+  startMileageImage       String?                   @db.Text
   deliveryType            String                    @default("SINGLE")
   loadingCityId           String?
   loadingPointId          String?
   destinationCityId       String?
   destinationZoneId       String?
-  status                  TripStatus                    @default(scheduled)
+  status                  TripStatus                @default(scheduled)
   waitingReason           String?
   waitingSince            DateTime?
   loadingStartedAt        DateTime?
@@ -1483,13 +1540,15 @@ model Trip {
   clientId                String?
   notes                   String?
   createdAt               DateTime                  @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt               DateTime                  @updatedAt
   BorderCrossing          BorderCrossing[]
   CashAdvance             CashAdvance[]
-  deliveryStops            DeliveryStop[]
+  deliveryStops           DeliveryStop[]
   DepotQueue              DepotQueue[]
   Expense                 Expense[]
   FuelLog                 FuelLog[]
+  OdometerReading         OdometerReading[]
+  TripReconciliation      TripReconciliation?
   Invoice                 Invoice?
   RoadConditionReport     RoadConditionReport[]
   SettlementLine          SettlementLine[]
@@ -1526,7 +1585,7 @@ model Trip {
 }
 
 model TripComment {
-  id                      String                    @id @default(cuid())
+  id        String   @id @default(cuid())
   tripId    String
   userId    String
   message   String
@@ -1540,23 +1599,23 @@ model TripComment {
 }
 
 model TripDeliveryDestination {
-  id                      String                    @id @default(cuid())
+  id                String                        @id @default(cuid())
   tripId            String
   destinationZoneId String?
   clientId          String?
   customerName      String
   customerPhone     String?
   stopOrder         Int
-  status            TripDeliveryDestinationStatus           @default(pending)
-  createdAt         DateTime         @default(now())
-  updatedAt DateTime @updatedAt
+  status            TripDeliveryDestinationStatus @default(pending)
+  createdAt         DateTime                      @default(now())
+  updatedAt         DateTime                      @updatedAt
   actualQty         Float?
   address           String?
   notes             String?
   zoneRate          Decimal?
-  client            Client?          @relation(fields: [clientId], references: [id])
-  destinationZone   DestinationZone? @relation(fields: [destinationZoneId], references: [id])
-  trip              Trip             @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  client            Client?                       @relation(fields: [clientId], references: [id])
+  destinationZone   DestinationZone?              @relation(fields: [destinationZoneId], references: [id])
+  trip              Trip                          @relation(fields: [tripId], references: [id], onDelete: Cascade)
   TripItem          TripItem[]
 
   @@index([clientId])
@@ -1567,14 +1626,14 @@ model TripDeliveryDestination {
 }
 
 model TripEvent {
-  id                      String                    @id @default(cuid())
+  id         String   @id @default(cuid())
   tripId     String
   fromStatus String?
   toStatus   String
   userId     String?
   notes      String?
   location   String?
-  metadata   String?   @db.Text
+  metadata   String?  @db.Text
   createdAt  DateTime @default(now())
   trip       Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
@@ -1582,7 +1641,7 @@ model TripEvent {
 }
 
 model TripItem {
-  id                      String                    @id @default(cuid())
+  id                      String                   @id @default(cuid())
   tripId                  String
   supplierId              String?
   loadingPointId          String?
@@ -1595,7 +1654,7 @@ model TripItem {
   sortOrder               Int                      @default(0)
   deliveryDestinationId   String?
   createdAt               DateTime                 @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt               DateTime                 @updatedAt
   tripDeliveryDestination TripDeliveryDestination? @relation(fields: [deliveryDestinationId], references: [id])
   item                    Item?                    @relation(fields: [itemId], references: [id])
   loadingPoint            LoadingPoint?            @relation(fields: [loadingPointId], references: [id])
@@ -1610,7 +1669,7 @@ model TripItem {
 }
 
 model Truck {
-  id                      String                    @id @default(cuid())
+  id                   String                 @id @default(cuid())
   plateNumber          String                 @unique
   make                 String
   model                String
@@ -1621,20 +1680,21 @@ model Truck {
   color                String?
   fuelType             String                 @default("Diesel")
   tankCapacity         Float?
-  status               TruckStatus                 @default(active)
+  status               TruckStatus            @default(active)
   currentMileage       Float                  @default(0)
   driverId             String?
   notes                String?
-  insuranceStatus      TruckInsuranceStatus                 @default(none)
+  insuranceStatus      TruckInsuranceStatus   @default(none)
   nextServiceDate      DateTime?
   createdAt            DateTime               @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt            DateTime               @updatedAt
   BorderCrossing       BorderCrossing[]
   DepotQueue           DepotQueue[]
   DvlaRegistration     DvlaRegistration[]
   Expense              Expense[]
   FuelBudget           FuelBudget[]
   FuelLog              FuelLog[]
+  OdometerReading      OdometerReading[]
   Insurance            Insurance[]
   InsuranceClaim       InsuranceClaim[]
   LoadBoard            LoadBoard[]
@@ -1653,7 +1713,7 @@ model Truck {
 }
 
 model TruckLocation {
-  id                      String                    @id @default(cuid())
+  id        String   @id @default(cuid())
   truckId   String
   tripId    String?
   latitude  Float
@@ -1672,56 +1732,56 @@ model TruckLocation {
 }
 
 model Tyre {
-  id                      String                    @id @default(cuid())
+  id             String        @id @default(cuid())
   truckId        String
-  serialNumber   String    @unique
+  serialNumber   String        @unique
   brand          String
   purchaseDate   DateTime
   purchasePrice  Decimal
-  condition      TyreCondition    @default(new)
+  condition      TyreCondition @default(new)
   lastInspection DateTime?
   retiredDate    DateTime?
   retiredReason  String?
   notes          String?
-  createdAt      DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  truck          Truck     @relation(fields: [truckId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  truck          Truck         @relation(fields: [truckId], references: [id])
 
   @@index([truckId])
 }
 
 model VehicleInspection {
-  id                      String                    @id @default(cuid())
+  id                  String                  @id @default(cuid())
   truckId             String
   driverId            String?
   tripId              String?
   type                String
-  inspectionDate      DateTime  @default(now())
+  inspectionDate      DateTime                @default(now())
   odometerReading     Float?
-  result              VehicleInspectionResult    @default(pass)
+  result              VehicleInspectionResult @default(pass)
   overallNotes        String?
   checkItems          String
-  totalChecks         Int       @default(0)
-  passCount           Int       @default(0)
-  warningCount        Int       @default(0)
-  failCount           Int       @default(0)
-  defectsFound        Boolean   @default(false)
-  defectDetails       String?  
-  photos              String?  
+  totalChecks         Int                     @default(0)
+  passCount           Int                     @default(0)
+  warningCount        Int                     @default(0)
+  failCount           Int                     @default(0)
+  defectsFound        Boolean                 @default(false)
+  defectDetails       String?
+  photos              String?
   inspectedBy         String?
   inspectorName       String?
   signature           String?
   location            String?
   latitude            Float?
   longitude           Float?
-  requiresFollowUp    Boolean   @default(false)
+  requiresFollowUp    Boolean                 @default(false)
   followUpNotes       String?
   followUpCompletedAt DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  driver              Driver?   @relation(fields: [driverId], references: [id])
-  trip                Trip?     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  truck               Truck     @relation(fields: [truckId], references: [id])
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  driver              Driver?                 @relation(fields: [driverId], references: [id])
+  trip                Trip?                   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  truck               Truck                   @relation(fields: [truckId], references: [id])
 
   @@index([driverId])
   @@index([result])
@@ -1731,25 +1791,25 @@ model VehicleInspection {
 }
 
 model WarehouseItem {
-  id                      String                    @id @default(cuid())
+  id            String              @id @default(cuid())
   name          String
   category      String
-  sku           String    @unique
-  quantity      Int       @default(0)
-  minStock      Int       @default(5)
+  sku           String              @unique
+  quantity      Int                 @default(0)
+  minStock      Int                 @default(5)
   unitPrice     Decimal
-  unit          String    @default("pcs")
-  warehouse     String    @default("Main Depot")
+  unit          String              @default("pcs")
+  warehouse     String              @default("Main Depot")
   location      String?
   supplier      String?
   lastRestocked DateTime?
   expiryDate    DateTime?
-  status        WarehouseItemStatus    @default(in_stock)
+  status        WarehouseItemStatus @default(in_stock)
   notes         String?
   createdBy     String
-  createdAt     DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  user          User      @relation(fields: [createdBy], references: [id])
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  user          User                @relation(fields: [createdBy], references: [id])
 
   @@index([category])
   @@index([createdBy], map: "WarehouseItem_createdBy_fkey")
@@ -1759,31 +1819,91 @@ model WarehouseItem {
   @@index([warehouse])
 }
 
+model TripSequence {
+  id        String   @id @default(cuid())
+  year      Int      @unique
+  lastValue Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OdometerReading {
+  id                 String              @id @default(cuid())
+  truckId            String
+  tripId             String?
+  reading            Float
+  recordedAt         DateTime            @default(now())
+  readingType        OdometerReadingType
+  source             ObservationSource   @default(manual)
+  verificationStatus VerificationStatus  @default(pending)
+  evidence           String?             @db.Text
+  capturedBy         String?
+  adjustmentReason   String?             @db.Text
+  supersedesId       String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  truck              Truck               @relation(fields: [truckId], references: [id], onDelete: Cascade)
+  trip               Trip?               @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  supersedes         OdometerReading?    @relation("OdometerSupersession", fields: [supersedesId], references: [id], onDelete: SetNull)
+  supersededBy       OdometerReading[]   @relation("OdometerSupersession")
+
+  @@index([truckId, recordedAt])
+  @@index([tripId, recordedAt])
+  @@index([verificationStatus])
+  @@index([supersedesId])
+}
+
+model TripReconciliation {
+  id               String   @id @default(cuid())
+  tripId           String   @unique
+  distanceKm       Float?
+  fuelAddedLiters  Float    @default(0)
+  consumedLiters   Float?
+  consumptionBasis String?
+  fuelCost         Decimal  @default(0)
+  kmPerLiter       Float?
+  litersPer100Km   Float?
+  fuelCostPerKm    Decimal?
+  expenseCost      Decimal  @default(0)
+  revenue          Decimal?
+  exceptionCount   Int      @default(0)
+  exceptions       String?  @db.Text
+  reconciledAt     DateTime @default(now())
+  reconciledBy     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  trip             Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@index([reconciledAt])
+}
+
 model WeightVerification {
-  id                      String                    @id @default(cuid())
+  id              String                   @id @default(cuid())
   tripId          String
   checkpointType  String
   verifiedWeight  Float
   declaredWeight  Float?
   variance        Float?
   variancePercent Float?
-  status          WeightVerificationStatus   @default(verified)
+  status          WeightVerificationStatus @default(verified)
+  varianceClass   WeightVarianceClass      @default(within_tolerance)
   verifiedBy      String?
   verifiedByName  String?
   notes           String?
   location        String?
-  createdAt       DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trip            Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  trip            Trip                     @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@index([checkpointType])
   @@index([createdAt])
   @@index([status])
+  @@index([varianceClass])
   @@index([tripId])
 }
 
 model ZoneRate {
-  id                      String                    @id @default(cuid())
+  id                      String          @id @default(cuid())
   destinationZoneId       String
   rateAmount              Decimal
   minMileage              Float?
@@ -1792,7 +1912,7 @@ model ZoneRate {
   effectiveDate           DateTime        @default(now())
   isActive                Boolean         @default(true)
   createdAt               DateTime        @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt               DateTime        @updatedAt
   destinationZone         DestinationZone @relation(fields: [destinationZoneId], references: [id])
 
   @@index([destinationZoneId])
@@ -1800,28 +1920,28 @@ model ZoneRate {
 }
 
 model DvlaRenewalHistory {
-  id                  String                    @id @default(cuid())
-  dvlaRegistrationId  String
-  previousData        String                    @db.Text
-  renewalFee          Decimal?
-  renewedByName       String?
-  notes               String?
-  createdAt           DateTime                  @default(now())
-  dvlaRegistration    DvlaRegistration         @relation(fields: [dvlaRegistrationId], references: [id], onDelete: Cascade)
+  id                 String           @id @default(cuid())
+  dvlaRegistrationId String
+  previousData       String           @db.Text
+  renewalFee         Decimal?
+  renewedByName      String?
+  notes              String?
+  createdAt          DateTime         @default(now())
+  dvlaRegistration   DvlaRegistration @relation(fields: [dvlaRegistrationId], references: [id], onDelete: Cascade)
 
   @@index([dvlaRegistrationId])
   @@index([createdAt])
 }
 
 model InsuranceRenewalHistory {
-  id                  String                    @id @default(cuid())
-  insuranceId         String
-  previousData        String                    @db.Text
-  renewalFee          Decimal?
-  renewedByName       String?
-  notes               String?
-  createdAt           DateTime                  @default(now())
-  insurance           Insurance                 @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
+  id            String    @id @default(cuid())
+  insuranceId   String
+  previousData  String    @db.Text
+  renewalFee    Decimal?
+  renewedByName String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  insurance     Insurance @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
 
   @@index([insuranceId])
   @@index([createdAt])
