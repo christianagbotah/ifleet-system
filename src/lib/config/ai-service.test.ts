@@ -2,25 +2,34 @@ import { describe, expect, test } from "bun:test"
 import { readFileSync } from "node:fs"
 import { getAiServiceConfig } from "./ai-service"
 
+function testEnv(overrides: Record<string, string | undefined> = {}): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    AI_SERVICE_URL: undefined,
+    INTERNAL_API_KEY: undefined,
+    ...overrides,
+  }
+}
+
 describe("AI service configuration", () => {
   test("returns explicit configuration and normalizes a trailing slash", () => {
-    expect(getAiServiceConfig({
+    expect(getAiServiceConfig(testEnv({
       AI_SERVICE_URL: "http://127.0.0.1:3007/",
       INTERNAL_API_KEY: "test-internal-key",
-    } as NodeJS.ProcessEnv)).toEqual({
+    }))).toEqual({
       url: "http://127.0.0.1:3007",
       internalApiKey: "test-internal-key",
     })
   })
 
   test("fails closed when AI_SERVICE_URL is missing or blank", () => {
-    expect(() => getAiServiceConfig({ INTERNAL_API_KEY: "key" } as NodeJS.ProcessEnv)).toThrow("AI_SERVICE_URL")
-    expect(() => getAiServiceConfig({ AI_SERVICE_URL: "   ", INTERNAL_API_KEY: "key" } as NodeJS.ProcessEnv)).toThrow("AI_SERVICE_URL")
+    expect(() => getAiServiceConfig(testEnv({ INTERNAL_API_KEY: "key" }))).toThrow("AI_SERVICE_URL")
+    expect(() => getAiServiceConfig(testEnv({ AI_SERVICE_URL: "   ", INTERNAL_API_KEY: "key" }))).toThrow("AI_SERVICE_URL")
   })
 
   test("fails closed when INTERNAL_API_KEY is missing or blank", () => {
-    expect(() => getAiServiceConfig({ AI_SERVICE_URL: "http://127.0.0.1:3007" } as NodeJS.ProcessEnv)).toThrow("INTERNAL_API_KEY")
-    expect(() => getAiServiceConfig({ AI_SERVICE_URL: "http://127.0.0.1:3007", INTERNAL_API_KEY: "   " } as NodeJS.ProcessEnv)).toThrow("INTERNAL_API_KEY")
+    expect(() => getAiServiceConfig(testEnv({ AI_SERVICE_URL: "http://127.0.0.1:3007" }))).toThrow("INTERNAL_API_KEY")
+    expect(() => getAiServiceConfig(testEnv({ AI_SERVICE_URL: "http://127.0.0.1:3007", INTERNAL_API_KEY: "   " }))).toThrow("INTERNAL_API_KEY")
   })
 
   test("dispatch route and AI mini-service contain no fallback internal credential", () => {
