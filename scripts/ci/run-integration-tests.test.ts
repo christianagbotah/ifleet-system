@@ -37,6 +37,7 @@ describe("integration database safety", () => {
     expect(INTEGRATION_TEST_FILES).toEqual([
       "tests/integration/core-integrity.test.ts",
       "tests/integration/dispatch-copilot.test.ts",
+      "tests/integration/dispatch-copilot-stale-maintenance.test.ts",
     ])
   })
 })
