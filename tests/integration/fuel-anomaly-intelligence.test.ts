@@ -168,7 +168,7 @@ describe("fuel anomaly intelligence on disposable MariaDB", () => {
   test("reversal clusters remain review indicators rather than source mutations", async () => {
     const { driver, truck, zoneId } = await baseFixture()
     const trip = await tripFixture({ truckId: truck.id, driverId: driver.id, zoneId, distanceKm: 100, consumedLiters: 30, fuelAddedLiters: 30, fuelCost: 360 })
-    const originals = []
+    const originals: Array<Awaited<ReturnType<typeof verifiedFuel>>> = []
     for (let i = 0; i < 3; i += 1) originals.push(await verifiedFuel({ tripId: trip.id, truckId: truck.id, date: new Date(Date.UTC(2026, 9, 7, 8 + i)), liters: 20 + i, receipt: `REV-O-${i}` }))
     for (let i = 0; i < 3; i += 1) await verifiedFuel({ tripId: trip.id, truckId: truck.id, date: new Date(Date.UTC(2026, 9, 7, 12 + i)), liters: originals[i].litersFilled, eventType: "reversal", reversalOfId: originals[i].id, receipt: `REV-R-${i}` })
     const assessment = await assessFuelAnomaly({ tripId: trip.id }, actor)
