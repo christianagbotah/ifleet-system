@@ -25,7 +25,10 @@ import Groq from 'groq-sdk'
 const PORT = 3007
 
 // API key for authenticating backend requests
-const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
+const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY?.trim()
+if (!INTERNAL_API_KEY) {
+  throw new Error('[AI Service] INTERNAL_API_KEY is required; refusing to start without service authentication')
+}
 
 // Groq API key
 const GROQ_API_KEY = process.env.GROQ_API_KEY || ''
