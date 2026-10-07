@@ -1,51 +1,51 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/auth-server'
-import { getAiServiceConfig } from '@/lib/config/ai-service'
+import { NextRequest, NextResponse } from "next/server"
+import { requireRole, ROLES } from "@/lib/auth-server"
+import { assessFuelAnomaly, getFuelAnomalyAssessment, recordFuelAnomalyExplanation } from "@/lib/services/fuel-anomaly-assessment-service"
+import { explainFuelAnomalyAssessment } from "@/lib/ai/fuel-anomaly/explainer-client"
+import { parseFuelAnomalySubject } from "./request-schema"
 
 export async function POST(request: NextRequest) {
+  const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
+  if (auth instanceof NextResponse) return auth
+
+  let subject
   try {
-    const auth = requireAuth(request)
-    if (auth instanceof NextResponse) return auth
+    subject = parseFuelAnomalySubject(await request.json())
+  } catch {
+    return NextResponse.json({ error: "Invalid fuel anomaly assessment request" }, { status: 400 })
+  }
 
-    const body = await request.json()
-    const { fuelLogs, vehicleInfo } = body
-
-    if (!fuelLogs || !Array.isArray(fuelLogs) || fuelLogs.length === 0) {
-      return NextResponse.json(
-        { error: 'fuelLogs array is required and must not be empty' },
-        { status: 400 }
-      )
-    }
-
-    const ai = getAiServiceConfig()
-    // Legacy route remains non-authoritative; the mini-service rejects raw candidate evidence.
-    const response = await fetch(`${ai.url}/api/fuel-anomaly`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-internal-api-key': ai.internalApiKey,
-      },
-      body: JSON.stringify({
-        fuelLogs,
-        vehicleInfo,
+  try {
+    const assessment = await assessFuelAnomaly(subject, { userId: auth.userId, roleName: auth.roleName })
+    const explanation = await explainFuelAnomalyAssessment(assessment)
+    const persisted = await recordFuelAnomalyExplanation(assessment.id, {
+      source: explanation.source,
+      provider: explanation.provider,
+      model: explanation.model,
+      output: JSON.stringify({
+        summary: explanation.summary,
+        findingExplanations: explanation.findingExplanations,
+        investigationQuestions: explanation.investigationQuestions,
       }),
     })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: data.error || 'AI service error' },
-        { status: response.status }
-      )
-    }
-
-    return NextResponse.json(data)
+    return NextResponse.json({ assessment: persisted })
   } catch (error) {
-    console.error('[AI Fuel Anomaly] Error:', error)
-    return NextResponse.json(
-      { error: 'Failed to communicate with AI service' },
-      { status: 500 }
-    )
+    console.error("[FuelAnomaly] assessment request failed", error instanceof Error ? error.message : "unknown")
+    return NextResponse.json({ error: "Fuel anomaly assessment failed" }, { status: 500 })
+  }
+}
+
+export async function GET(request: NextRequest) {
+  const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
+  if (auth instanceof NextResponse) return auth
+  const id = new URL(request.url).searchParams.get("id")?.trim()
+  if (!id) return NextResponse.json({ error: "Assessment id is required" }, { status: 400 })
+  try {
+    const assessment = await getFuelAnomalyAssessment(id)
+    if (!assessment) return NextResponse.json({ error: "Fuel anomaly assessment not found" }, { status: 404 })
+    return NextResponse.json({ assessment })
+  } catch (error) {
+    console.error("[FuelAnomaly] assessment retrieval failed", error instanceof Error ? error.message : "unknown")
+    return NextResponse.json({ error: "Failed to load fuel anomaly assessment" }, { status: 500 })
   }
 }

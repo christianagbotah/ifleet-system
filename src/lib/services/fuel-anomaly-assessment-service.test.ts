@@ -7,6 +7,7 @@ import {
   canonicalFuelEvidence,
   getFuelAnomalyAssessment,
   recordFuelAnomalyReview,
+  recordFuelAnomalyExplanation,
   type FuelAnomalyAssessmentCreateInput,
   type FuelAnomalyAssessmentDependencies,
   type FuelAnomalyAssessmentStore,
@@ -69,6 +70,17 @@ function memoryStore() {
       return row
     },
     async getById(id) { return rows.get(id) ?? null },
+    async recordExplanation(input) {
+      const current = rows.get(input.assessmentId)
+      if (!current) throw new Error("missing")
+      const updated: FuelAnomalyStoredAssessment = {
+        ...current, explanationSource: input.source, explanationProvider: input.provider,
+        explanationModel: input.model, explanationOutput: input.output, explanationAt: input.explainedAt,
+        updatedAt: input.explainedAt,
+      }
+      rows.set(current.id, updated)
+      return updated
+    },
     async transitionReview(input) {
       const current = rows.get(input.assessmentId)
       if (!current) throw new Error("missing")
@@ -181,6 +193,21 @@ describe("fuel anomaly assessment service", () => {
     expect(reopened.reviewEvents).toHaveLength(4)
     expect(reopened.reviewEvents.at(-1)?.fromStatus).toBe("resolved")
     expect(reopened.outcomeCode).toBeNull()
+  })
+
+  test("persists optional AI explanation audit without changing deterministic assessment authority", async () => {
+    const mem = memoryStore()
+    const harness = deps(mem.store)
+    const created = await assessFuelAnomaly({ tripId: "trip-1" }, actor, harness.dependencies)
+    const updated = await recordFuelAnomalyExplanation(created.id, {
+      source: "ai", provider: "groq", model: "model-x",
+      output: JSON.stringify({ summary: "Review the variance." }),
+    }, harness.dependencies)
+    expect(updated.explanationSource).toBe("ai")
+    expect(updated.explanationProvider).toBe("groq")
+    expect(updated.explanationModel).toBe("model-x")
+    expect(updated.overallRiskScore).toBe(created.overallRiskScore)
+    expect(updated.findings.map((item) => item.code)).toEqual(created.findings.map((item) => item.code))
   })
 
   test("retrieves persisted assessment detail without recomputation", async () => {

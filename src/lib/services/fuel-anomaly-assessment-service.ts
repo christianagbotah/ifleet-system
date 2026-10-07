@@ -115,10 +115,20 @@ export type FuelAnomalyReviewTransitionInput = {
   reviewedAt: Date
 }
 
+export type FuelAnomalyExplanationAuditInput = {
+  assessmentId: string
+  source: "ai" | "deterministic_fallback"
+  provider: string | null
+  model: string | null
+  output: string
+  explainedAt: Date
+}
+
 export type FuelAnomalyAssessmentStore = {
   findByIdentity(identity: FuelAnomalyAssessmentIdentity): Promise<FuelAnomalyStoredAssessment | null>
   create(input: FuelAnomalyAssessmentCreateInput): Promise<FuelAnomalyStoredAssessment>
   getById(id: string): Promise<FuelAnomalyStoredAssessment | null>
+  recordExplanation(input: FuelAnomalyExplanationAuditInput): Promise<FuelAnomalyStoredAssessment>
   transitionReview(input: FuelAnomalyReviewTransitionInput): Promise<FuelAnomalyStoredAssessment>
 }
 
@@ -303,6 +313,20 @@ async function createDefaultStore(): Promise<FuelAnomalyAssessmentStore> {
       const row = await db.fuelAnomalyAssessment.findUnique({ where: { id }, include })
       return row ? mapPrismaAssessment(row) : null
     },
+    async recordExplanation(input) {
+      const row = await db.fuelAnomalyAssessment.update({
+        where: { id: input.assessmentId },
+        data: {
+          explanationSource: input.source,
+          explanationProvider: input.provider,
+          explanationModel: input.model,
+          explanationOutput: input.output,
+          explanationAt: input.explainedAt,
+        },
+        include,
+      })
+      return mapPrismaAssessment(row)
+    },
     async transitionReview(input) {
       return db.$transaction(async (tx) => {
         const current = await tx.fuelAnomalyAssessment.findUnique({ where: { id: input.assessmentId } })
@@ -418,6 +442,28 @@ export async function getFuelAnomalyAssessment(
 ): Promise<FuelAnomalyAssessmentDetail | null> {
   const deps = provided ?? await createDefaultDependencies()
   return deps.store.getById(id)
+}
+
+export async function recordFuelAnomalyExplanation(
+  assessmentId: string,
+  input: Omit<FuelAnomalyExplanationAuditInput, "assessmentId" | "explainedAt">,
+  provided?: FuelAnomalyAssessmentDependencies,
+): Promise<FuelAnomalyStoredAssessment> {
+  const deps = provided ?? await createDefaultDependencies()
+  const current = await deps.store.getById(assessmentId)
+  if (!current) throw new Error("ASSESSMENT_NOT_FOUND")
+  const updated = await deps.store.recordExplanation({
+    assessmentId,
+    source: input.source,
+    provider: input.provider,
+    model: input.model,
+    output: input.output,
+    explainedAt: deps.now(),
+  })
+  deps.logger.info("explanation_recorded", {
+    assessmentId, source: input.source, provider: input.provider, model: input.model,
+  })
+  return updated
 }
 
 export async function recordFuelAnomalyReview(
