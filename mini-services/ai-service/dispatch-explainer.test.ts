@@ -65,10 +65,12 @@ describe("dispatch explanation-only mini-service contract", () => {
     })).toThrow("caller-supplied candidate")
   })
 
-  test("wires the HTTP endpoint through the explanation-only validator and parser", () => {
+  test("wires the HTTP endpoint through the explanation-only validator, parser and provider provenance", () => {
     const service = readFileSync("mini-services/ai-service/index.ts", "utf8")
     expect(service).toContain("buildDispatchExplanationRequest(body)")
     expect(service).toContain("parseDispatchExplanationResponse(")
+    expect(service).toContain("provider: 'groq'")
+    expect(service).toContain("model: GROQ_MODEL")
     expect(service).not.toContain("const { tripDetails, availableDrivers, availableTrucks } = body")
     expect(service).not.toContain("callGroq(DISPATCH_PROMPT")
   })
