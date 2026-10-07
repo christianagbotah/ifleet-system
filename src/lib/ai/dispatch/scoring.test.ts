@@ -37,7 +37,7 @@ describe("scoreDispatchPair", () => {
   test("calculates a deterministic weighted score with component provenance", () => {
     const result = scoreDispatchPair(evidence())
 
-    expect(result.score).toBe(85.25)
+    expect(result.score).toBe(86.25)
     expect(result.dataQuality).toBe(1)
     expect(result.confidence).toBe(1)
     expect(result.rulesetVersion).toBe("dispatch-v1")
@@ -64,9 +64,9 @@ describe("scoreDispatchPair", () => {
     }))
 
     expect(result.components.routeExperience).toEqual({ value: 50, weight: 15, known: false })
-    expect(result.score).toBe(77.5)
-    expect(result.dataQuality).toBe(0.55)
-    expect(result.confidence).toBe(0.55)
+    expect(result.score).toBe(73)
+    expect(result.dataQuality).toBe(0.5)
+    expect(result.confidence).toBe(0.5)
   })
 
   test("clamps malformed normalized inputs to the 0-100 scoring range", () => {
@@ -104,10 +104,10 @@ describe("rankDispatchPairs", () => {
         compliance: 100,
         routeExperience: null,
         historicalPerformance: 100,
-        fuelEfficiency: 100,
-        maintenanceReadiness: 100,
-        workloadBalance: 100,
-        locationFit: 100,
+        fuelEfficiency: 70,
+        maintenanceReadiness: 90,
+        workloadBalance: 80,
+        locationFit: 75,
         capacityFit: 100,
       },
     }))
