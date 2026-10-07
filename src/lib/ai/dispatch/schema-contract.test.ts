@@ -12,7 +12,7 @@ function modelBlock(name: string): string {
 }
 
 describe("dispatch recommendation provenance schema", () => {
-  test("stores immutable recommendation provenance and human decision metadata", () => {
+  test("stores immutable recommendation provenance, explanation audit and human decision metadata", () => {
     const block = modelBlock("DispatchRecommendation")
 
     expect(block).not.toBe("")
@@ -23,6 +23,8 @@ describe("dispatch recommendation provenance schema", () => {
     expect(block).toContain("rulesetVersion")
     expect(block).toContain("provider")
     expect(block).toContain("model")
+    expect(block).toContain("explanationSource")
+    expect(block).toContain("explanationOutput")
     expect(block).toContain("inputHash")
     expect(block).toContain("inputSnapshot")
     expect(block).toContain("rankedOutput")
