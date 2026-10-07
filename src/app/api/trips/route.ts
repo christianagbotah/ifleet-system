@@ -6,6 +6,8 @@ import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { APP_NAME } from '@/lib/constants'
 import { validateBody, tripCreateSchema } from '@/lib/validations'
+import { createTrip, TripDomainError } from '@/lib/services/trip-service'
+import { OdometerDomainError } from '@/lib/services/odometer-service'
 
 // Fields that drivers should NOT see in trip responses
 const DRIVER_EXCLUDE_FIELDS = {
@@ -41,7 +43,7 @@ export async function GET(request: NextRequest) {
     // Drivers can only see their own trips
     const isDriver = auth.roleName === ROLES.DRIVER
     if (isDriver) {
-      driverId = auth.driverId || undefined
+      driverId = auth.driverId
     }
 
     const where: Record<string, unknown> = {}
@@ -137,286 +139,14 @@ export async function POST(request: NextRequest) {
     const writeGuard = requireWriteAccess(auth)
     if (writeGuard instanceof NextResponse) return writeGuard
 
-    const body = await request.json()
-    const validation = validateBody(tripCreateSchema, body)
+    const validation = validateBody(tripCreateSchema, await request.json())
     if (!validation.success) return validation.response
 
-    let {
-      truckId,
-      driverId,
-      waybillNumber,
-      loadingLocation,
-      loadingAddress,
-      destination,
-      destinationAddress,
-      itemName,
-      quantity,
-      unit,
-      unitPrice,
-      totalRevenue,
-      departureTime,
-      customerName,
-      customerPhone,
-      customerRef,
-      notes,
-      startMileage,
-      fuelLevelBefore,
-      destinationZoneId,
-      loadingPointId,
-      loadingCityId,
-      destinationCityId,
-      deliveryType,
-      startMileageImage,
-      markCompleted,
-    } = body
-    const isMarkCompleted = markCompleted === true
+    const result = await createTrip(validation.data, auth)
+    const { trip, truck, driver, loadingLocation, destination } = result
+    const input = validation.data
 
-    if (!truckId || !driverId || !departureTime) {
-      return NextResponse.json(
-        { error: 'truckId, driverId, and departureTime are required' },
-        { status: 400 }
-      )
-    }
-
-    // Generate trip number
-    const year = new Date().getFullYear()
-    const tripCount = await db.trip.count({
-      where: {
-        tripNumber: { startsWith: `TRP-${year}` },
-      },
-    })
-    const tripNumber = `TRP-${year}-${String(tripCount + 1).padStart(3, '0')}`
-
-    // Verify truck and driver exist
-    const [truck, driver] = await Promise.all([
-      db.truck.findUnique({ where: { id: truckId } }),
-      db.driver.findUnique({
-        where: { id: driverId },
-        select: { id: true, firstName: true, lastName: true, phone: true, userId: true },
-      }),
-    ])
-
-    if (!truck) {
-      return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
-    }
-    if (!driver) {
-      return NextResponse.json({ error: 'Driver not found' }, { status: 404 })
-    }
-
-    // Auto-lookup zone rate for totalRevenue
-    let autoRate: number | null = null
-    if (destinationZoneId) {
-      const zoneRate = await db.zoneRate.findFirst({
-        where: { destinationZoneId, isActive: true },
-        orderBy: { effectiveDate: 'desc' },
-      })
-      if (zoneRate) autoRate = zoneRate.rateAmount
-    }
-
-    // Auto-populate loadingLocation from loading point
-    if (loadingPointId) {
-      const lp = await db.loadingPoint.findUnique({ where: { id: loadingPointId }, select: { name: true } })
-      if (lp) loadingLocation = lp.name
-    }
-
-    // Auto-populate destination from destination zone
-    if (destinationZoneId) {
-      const dz = await db.destinationZone.findUnique({
-        where: { id: destinationZoneId },
-        select: { name: true, destinationCity: { select: { name: true } } },
-      })
-      if (dz) destination = `${dz.name}, ${dz.destinationCity.name}`
-    }
-
-    // Validate that we have loadingLocation and destination after lookups
-    if (!loadingLocation || !destination) {
-      return NextResponse.json(
-        { error: 'loadingLocation (or loadingPointId) and destination (or destinationZoneId) are required' },
-        { status: 400 }
-      )
-    }
-
-    const trip = await db.trip.create({
-      data: {
-        tripNumber,
-        truckId,
-        driverId,
-        waybillNumber,
-        loadingLocation,
-        loadingAddress,
-        destination,
-        destinationAddress,
-        itemName,
-        quantity: parseFloat(quantity) || 0,
-        unit: unit || 'bags',
-        unitPrice: unitPrice ? parseFloat(unitPrice) : null,
-        totalRevenue: totalRevenue ? parseFloat(totalRevenue) : (autoRate || null),
-        departureTime: new Date(departureTime),
-        ...(destinationZoneId && { destinationZoneId }),
-        ...(loadingCityId && { loadingCityId }),
-        ...(loadingPointId && { loadingPointId }),
-        ...(destinationCityId && { destinationCityId }),
-        ...(deliveryType && { deliveryType }),
-        ...(startMileageImage && { startMileageImage }),
-        customerName,
-        customerPhone,
-        customerRef,
-        notes,
-        startMileage: startMileage ? parseFloat(startMileage) : null,
-        fuelLevelBefore: fuelLevelBefore ? parseFloat(fuelLevelBefore) : null,
-        // Mark as completed: set status and all lifecycle timestamps
-        ...(isMarkCompleted && {
-          status: 'completed',
-          loadingStartedAt: new Date(departureTime),
-          loadingCompletedAt: new Date(departureTime),
-          offloadingStartedAt: new Date(),
-          offloadingCompletedAt: new Date(),
-          arrivalTime: new Date(),
-        }),
-      },
-      include: {
-        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
-        driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
-        loadingCity: { select: { id: true, name: true } },
-        loadingPoint: { select: { id: true, name: true } },
-        destinationCity: { select: { id: true, name: true } },
-        destinationZone: { select: { id: true, name: true } },
-      },
-    })
-
-    // Create trip items if provided
-    if (body.tripItems && Array.isArray(body.tripItems) && body.tripItems.length > 0) {
-      await db.tripItem.createMany({
-        data: body.tripItems.map((ti: Record<string, unknown>, index: number) => ({
-          tripId: trip.id,
-          supplierId: (ti.supplierId as string) || null,
-          loadingPointId: (ti.loadingPointId as string) || null,
-          itemId: (ti.itemId as string) || null,
-          itemName: (ti.itemName as string) || 'Unknown',
-          unit: (ti.unit as string) || 'bags',
-          quantity: parseFloat(String(ti.quantity || 0)),
-          rate: ti.rate ? parseFloat(String(ti.rate)) : null,
-          total: ti.total ? parseFloat(String(ti.total)) : null,
-          sortOrder: index,
-        })),
-      })
-    }
-
-    // Create delivery destinations if provided (multi-customer delivery)
-    if (body.deliveryDestinations && Array.isArray(body.deliveryDestinations) && body.deliveryDestinations.length > 0) {
-      // Pre-fetch zone rates for all destinations that have a destinationZoneId
-      const zoneIds = [...new Set(
-        body.deliveryDestinations
-          .filter((dd: Record<string, unknown>) => dd.destinationZoneId)
-          .map((dd: Record<string, unknown>) => dd.destinationZoneId as string)
-      )]
-      const zoneRatesMap: Record<string, number | null> = {}
-      if (zoneIds.length > 0) {
-        const zoneRates = await db.zoneRate.findMany({
-          where: { destinationZoneId: { in: zoneIds }, isActive: true },
-          orderBy: { effectiveDate: 'desc' },
-        })
-        // For each zone, take the most recent active rate
-        const seen: Set<string> = new Set()
-        for (const zr of zoneRates) {
-          if (!seen.has(zr.destinationZoneId)) {
-            zoneRatesMap[zr.destinationZoneId] = zr.rateAmount
-            seen.add(zr.destinationZoneId)
-          }
-        }
-        // Ensure all requested zone IDs have an entry (null if no rate found)
-        for (const zid of zoneIds) {
-          if (!(zid in zoneRatesMap)) zoneRatesMap[zid] = null
-        }
-      }
-
-      // Build map from temp client-side IDs to DB UUIDs for tripItems linking
-      const ddIdMap: Record<string, string> = {}
-      for (const dd of body.deliveryDestinations) {
-        const generatedId = crypto.randomUUID()
-        const ddData = dd as Record<string, unknown>
-        ddIdMap[(ddData._tempId as string) || ddData.id] = generatedId
-      }
-
-      await db.tripDeliveryDestination.createMany({
-        data: body.deliveryDestinations.map((dd: Record<string, unknown>, index: number) => {
-          const zoneId = dd.destinationZoneId as string | undefined
-          return {
-            id: ddIdMap[(dd._tempId as string) || dd.id] || crypto.randomUUID(),
-            tripId: trip.id,
-            stopOrder: dd.stopOrder !== undefined ? parseInt(String(dd.stopOrder)) : (dd.sortOrder !== undefined ? parseInt(String(dd.sortOrder)) : index),
-            clientId: (dd.clientId as string) || null,
-            customerName: (dd.customerName as string) || '',
-            customerPhone: (dd.customerPhone as string) || null,
-            destinationZoneId: zoneId || null,
-            zoneRate: zoneId ? (zoneRatesMap[zoneId] ?? (dd.zoneRate ? parseFloat(String(dd.zoneRate)) : null)) : (dd.zoneRate ? parseFloat(String(dd.zoneRate)) : null),
-            address: (dd.address as string) || null,
-            notes: (dd.notes as string) || null,
-            status: (dd.status as string) || 'pending',
-            actualQty: dd.actualQty ? parseFloat(String(dd.actualQty)) : null,
-          }
-        }),
-      })
-
-      // Update tripItems that have a deliveryDestinationId reference
-      const itemsWithDest = body.tripItems?.filter((ti: Record<string, unknown>) => ti.deliveryDestinationId) || []
-      if (itemsWithDest.length > 0) {
-        // We need to update individual tripItems since createMany doesn't return IDs
-        // Find the tripItems we just created by tripId
-        const createdItems = await db.tripItem.findMany({
-          where: { tripId: trip.id },
-          select: { id: true, itemName: true, sortOrder: true },
-          orderBy: { sortOrder: 'asc' },
-        })
-        for (let i = 0; i < body.tripItems.length; i++) {
-          const ti = body.tripItems[i] as Record<string, unknown>
-          if (ti.deliveryDestinationId && createdItems[i]) {
-            const mappedDestId = ddIdMap[(ti.deliveryDestinationId as string) || '']
-            if (mappedDestId) {
-              await db.tripItem.update({
-                where: { id: createdItems[i].id },
-                data: { deliveryDestinationId: mappedDestId },
-              })
-            }
-          }
-        }
-      }
-    }
-
-    // ── If markCompleted, create TripEvent entries for all stages and update driver stats ──
-    if (isMarkCompleted) {
-      // Create TripEvent entries for every stage in the lifecycle
-      const eventStages: { from: string; to: string }[] = []
-      eventStages.push({ from: 'scheduled', to: 'loading' })
-      eventStages.push({ from: 'loading', to: 'loaded' })
-      eventStages.push({ from: 'loaded', to: 'departed_depot' })
-      eventStages.push({ from: 'departed_depot', to: 'in_transit' })
-      eventStages.push({ from: 'in_transit', to: 'arrived_destination' })
-      eventStages.push({ from: 'arrived_destination', to: 'offloading' })
-      eventStages.push({ from: 'offloading', to: 'offloaded' })
-      eventStages.push({ from: 'offloaded', to: 'return_journey' })
-      eventStages.push({ from: 'return_journey', to: 'arrived_depot' })
-      eventStages.push({ from: 'arrived_depot', to: 'completed' })
-
-      await db.tripEvent.createMany({
-        data: eventStages.map((stage) => ({
-          tripId: trip.id,
-          fromStatus: stage.from,
-          toStatus: stage.to,
-          notes: 'Trip marked as completed on creation',
-        })),
-      })
-
-      // Increment driver stats
-      await db.driver.update({
-        where: { id: driverId },
-        data: {
-          totalTrips: { increment: 1 },
-        },
-      })
-    }
-
-    // Audit log: trip created (fire-and-forget)
+    // Post-commit audit: a failure here must never roll back the committed trip.
     createAuditLog({
       userId: auth.userId,
       action: 'create',
@@ -426,12 +156,11 @@ export async function POST(request: NextRequest) {
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
-    // ── Auto-generate draft invoice for the trip ──
+    // Post-commit invoice generation. This is intentionally outside the trip DB transaction.
     let generatedInvoice: Record<string, unknown> | null = null
     try {
       const invoice = await generateInvoiceForTrip(trip.id, auth.userId)
       if (invoice) {
-        // Fetch full invoice with relations
         const full = await db.invoice.findUnique({
           where: { id: invoice.id },
           include: {
@@ -446,70 +175,64 @@ export async function POST(request: NextRequest) {
           }
         }
       }
-    } catch (err) {
-      console.warn('[Trip] Auto-invoice generation failed (non-blocking):', err)
+    } catch (error) {
+      console.warn('[Trip] Auto-invoice generation failed (non-blocking):', error)
     }
 
-    // ── Fire-and-forget: notify admins and driver about new trip ──
-    const newTripId = trip.id
-    const driverPhone = driver.phone
-    const tripNum = trip.tripNumber
-    const departureStr = new Date(departureTime).toLocaleString('en-GB', { timeZone: 'Africa/Accra' })
-    const adminInAppMsg = `New Trip Scheduled: ${tripNum} — ${itemName} from ${loadingLocation} to ${destination}. Departure: ${departureStr}. Assigned to ${driver.firstName} ${driver.lastName}.`
-    const smsMsg = `${APP_NAME}: New trip ${tripNum}, ${itemName}. ${loadingLocation} to ${destination}. Departure: ${departureStr}. Truck: ${truck.plateNumber}.`
+    const itemName = input.itemName || 'Goods'
+    const departureStr = input.departureTime.toLocaleString('en-GB', { timeZone: 'Africa/Accra' })
+    const adminInAppMsg = `New Trip Scheduled: ${trip.tripNumber} — ${itemName} from ${loadingLocation} to ${destination}. Departure: ${departureStr}. Assigned to ${driver.firstName} ${driver.lastName}.`
+    const smsMsg = `${APP_NAME}: New trip ${trip.tripNumber}, ${itemName}. ${loadingLocation} to ${destination}. Departure: ${departureStr}. Truck: ${truck.plateNumber}.`
+    const rawRevenue = input.totalRevenue === undefined ? null : Number(input.totalRevenue)
+    const notificationRevenue = rawRevenue !== null && Number.isFinite(rawRevenue) ? rawRevenue : null
 
+    // Post-commit notifications. Driver payload intentionally excludes customer/financial fields.
     ;(async () => {
       try {
-        // Collect all admin/manager user IDs
         const adminUsers = await db.user.findMany({
           where: { role: { name: { in: ['Admin', 'Manager'] } } },
           select: { id: true },
         })
-        const adminIds = new Set(adminUsers.map((u) => u.id))
-
-        // Deduplicate: skip driver if their user is already in admin set
+        const adminIds = new Set(adminUsers.map((user) => user.id))
         const driverAlreadyNotified = driver.userId ? adminIds.has(driver.userId) : false
 
-        // Dispatch to all admin/manager users (in_app + push)
         await Promise.allSettled(
-          adminUsers.map((u) =>
+          adminUsers.map((user) =>
             dispatchNotification({
-              userId: u.id,
+              userId: user.id,
               type: 'trip_started',
-              title: `New Trip: ${tripNum}`,
+              title: `New Trip: ${trip.tripNumber}`,
               message: adminInAppMsg,
               channels: ['in_app', 'push'],
-              link: `trips/${newTripId}`,
-              tripId: newTripId,
+              link: `trips/${trip.id}`,
+              tripId: trip.id,
               metadata: {
-                tripNumber: tripNum,
+                tripNumber: trip.tripNumber,
                 driverName: `${driver.firstName} ${driver.lastName}`,
                 truckPlate: truck.plateNumber,
                 origin: loadingLocation,
                 destination,
                 cargo: itemName,
-                totalRevenue: totalRevenue ? parseFloat(totalRevenue) : null,
-                customerName,
+                totalRevenue: notificationRevenue,
+                customerName: input.customerName,
               },
-            })
-          )
+            }),
+          ),
         )
 
-        // Dispatch to driver only if NOT already notified as admin
-        // Do NOT include financial metadata (totalRevenue, customerName) in driver notifications
-        if (!driverAlreadyNotified && driverPhone) {
+        if (!driverAlreadyNotified && driver.phone) {
           await dispatchNotification({
-            userId: driver.userId || driverId,
-            driverId,
+            userId: driver.userId || driver.id,
+            driverId: driver.id,
             type: 'trip_started',
-            title: `New Trip Assigned: ${tripNum}`,
-            message: `New trip assigned: ${tripNum} — ${loadingLocation} → ${destination} on ${departureStr}. Truck: ${truck.plateNumber}.`,
+            title: `New Trip Assigned: ${trip.tripNumber}`,
+            message: `New trip assigned: ${trip.tripNumber} — ${loadingLocation} → ${destination} on ${departureStr}. Truck: ${truck.plateNumber}.`,
             channels: ['in_app', 'sms', 'push'],
             smsMessage: smsMsg,
-            link: `trips/${newTripId}`,
-            tripId: newTripId,
+            link: `trips/${trip.id}`,
+            tripId: trip.id,
             metadata: {
-              tripNumber: tripNum,
+              tripNumber: trip.tripNumber,
               driverName: `${driver.firstName} ${driver.lastName}`,
               truckPlate: truck.plateNumber,
               origin: loadingLocation,
@@ -518,13 +241,37 @@ export async function POST(request: NextRequest) {
             },
           })
         }
-      } catch (err) {
-        console.error('[Notification] Failed to dispatch trip creation notifications:', err)
+      } catch (error) {
+        console.error('[Notification] Failed to dispatch trip creation notifications:', error)
       }
-    })().catch(() => { /* fire-and-forget */ })
+    })().catch(() => {})
 
-    return NextResponse.json({ ...trip, invoice: generatedInvoice }, { status: 201 })
+    // Return current committed state including nested records created transactionally.
+    const fullTrip = await db.trip.findUnique({
+      where: { id: trip.id },
+      include: {
+        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+        driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
+        loadingCity: { select: { id: true, name: true } },
+        loadingPoint: { select: { id: true, name: true } },
+        destinationCity: { select: { id: true, name: true } },
+        destinationZone: { select: { id: true, name: true } },
+        TripItem: { orderBy: { sortOrder: 'asc' } },
+        TripDeliveryDestination: { orderBy: { stopOrder: 'asc' } },
+      },
+    })
+
+    return NextResponse.json({ ...(fullTrip || trip), invoice: generatedInvoice }, { status: 201 })
   } catch (error) {
+    if (error instanceof TripDomainError) {
+      const status = error.code === 'TRUCK_NOT_FOUND' || error.code === 'DRIVER_NOT_FOUND' ? 404 : 400
+      return NextResponse.json({ error: error.message, code: error.code }, { status })
+    }
+    if (error instanceof OdometerDomainError) {
+      const status = error.code === 'TRIP_NOT_FOUND' ? 404 : error.code === 'TRIP_TRUCK_MISMATCH' ? 409 : 400
+      return NextResponse.json({ error: error.message, code: error.code }, { status })
+    }
+
     console.error('Trip create error:', error)
     return NextResponse.json({ error: 'Failed to create trip' }, { status: 500 })
   }
