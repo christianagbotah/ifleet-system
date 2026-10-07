@@ -1,12 +1,8 @@
 import { createHash } from "node:crypto"
 import { db } from "@/lib/db"
-import {
-  rankEligibleDispatchCandidates,
-  type DispatchDriverEvidence,
-  type DispatchTruckEvidence,
-} from "@/lib/ai/dispatch/candidate-ranking"
+import { rankEligibleDispatchCandidates, type DispatchDriverEvidence, type DispatchTruckEvidence } from "@/lib/ai/dispatch/candidate-ranking"
 import { DISPATCH_RULESET_VERSION, type DispatchPairScore } from "@/lib/ai/dispatch/scoring"
-import type { ComplianceEvidenceState } from "@/lib/ai/dispatch/types"
+import { loadDispatchCandidateEvidence, type DispatchEvidenceRequest } from "@/lib/services/dispatch-evidence-service"
 
 export const DISPATCH_DRIVER_SELECT = {
   id: true,
@@ -16,15 +12,14 @@ export const DISPATCH_DRIVER_SELECT = {
   verificationStatus: true,
   licenseExpiry: true,
   rating: true,
-  totalTrips: true,
 } as const
 
 export const DISPATCH_TRUCK_SELECT = {
   id: true,
   plateNumber: true,
   status: true,
-  insuranceStatus: true,
   currentMileage: true,
+  nextServiceDate: true,
 } as const
 
 const ACTIVE_TRIP_STATUSES = [
@@ -41,10 +36,7 @@ const ACTIVE_TRIP_STATUSES = [
   "delayed",
 ] as const
 
-export type DispatchActor = {
-  userId: string
-  role: string
-}
+export type DispatchActor = { userId: string; role: string }
 
 export type DispatchTripDraft = {
   departureTime: Date | string
@@ -99,10 +91,12 @@ export type DispatchDecisionRecord = {
   status: string
 }
 
+type CandidateQuery = DispatchEvidenceRequest
+
 export type DispatchCopilotDependencies = {
   candidateSource: {
-    loadDrivers(input: { departureTime: Date; destinationZoneId?: string | null }): Promise<DispatchDriverEvidence[]>
-    loadTrucks(input: { departureTime: Date; destinationZoneId?: string | null; quantity?: number | null; cargoUnit?: string | null }): Promise<DispatchTruckEvidence[]>
+    loadDrivers(input: CandidateQuery): Promise<DispatchDriverEvidence[]>
+    loadTrucks(input: CandidateQuery): Promise<DispatchTruckEvidence[]>
   }
   recommendationStore: {
     create(data: DispatchRecommendationCreate): Promise<DispatchRecommendationRecord>
@@ -110,7 +104,7 @@ export type DispatchCopilotDependencies = {
     recordDecision(id: string, data: DispatchDecisionRecord): Promise<DispatchRecommendationRecord>
   }
   availability: {
-    isPairAvailable(driverId: string, truckId: string, departureTime: Date): Promise<boolean>
+    isPairAvailable(driverId: string, truckId: string, departureTime: Date, excludeTripId?: string | null): Promise<boolean>
   }
   tripSource?: {
     resolveTrip(id: string): Promise<DispatchTripDraft | null>
@@ -137,108 +131,37 @@ function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex")
 }
 
-function complianceFromStatus(status: string | null | undefined, expiresAt: Date | null | undefined, departure: Date): ComplianceEvidenceState {
-  if (!status) return "missing"
-  if (expiresAt && expiresAt.getTime() <= departure.getTime()) return "expired"
-  if (["expired", "cancelled", "suspended", "failed"].includes(status)) return "expired"
-  if (["active", "completed", "pass", "conditional_pass"].includes(status)) return "valid"
-  return "unknown"
-}
-
 function stableCandidates<T extends { id: string }>(rows: T[]): T[] {
   return [...rows].sort((a, b) => a.id.localeCompare(b.id))
 }
 
-async function loadDefaultDrivers(input: { departureTime: Date }): Promise<DispatchDriverEvidence[]> {
-  const [rows, activeTrips] = await Promise.all([
-    db.driver.findMany({ where: { status: "active" }, select: DISPATCH_DRIVER_SELECT }),
-    db.trip.findMany({
-      where: { status: { in: [...ACTIVE_TRIP_STATUSES] } },
-      select: { driverId: true },
-    }),
-  ])
+function createDefaultCandidateSource(): DispatchCopilotDependencies["candidateSource"] {
+  let cacheKey = ""
+  let pending: Promise<{ drivers: DispatchDriverEvidence[]; trucks: DispatchTruckEvidence[] }> | null = null
 
-  const workload = new Map<string, number>()
-  for (const trip of activeTrips) workload.set(trip.driverId, (workload.get(trip.driverId) ?? 0) + 1)
-
-  return stableCandidates(rows.map((row) => ({
-    id: row.id,
-    name: `${row.firstName} ${row.lastName}`.trim(),
-    status: row.status,
-    verificationStatus: row.verificationStatus,
-    licenseExpiry: row.licenseExpiry,
-    hasConflictingTrip: (workload.get(row.id) ?? 0) > 0,
-    currentWorkload: workload.get(row.id) ?? 0,
-    routeExperienceScore: null,
-    historicalPerformanceScore: Number.isFinite(row.rating) ? Math.max(0, Math.min(100, row.rating * 20)) : null,
-    locationFitScore: null,
-  })))
-}
-
-async function loadDefaultTrucks(input: { departureTime: Date }): Promise<DispatchTruckEvidence[]> {
-  const rows = await db.truck.findMany({ where: { status: "active" }, select: DISPATCH_TRUCK_SELECT })
-  const ids = rows.map((row) => row.id)
-  if (ids.length === 0) return []
-
-  const [activeTrips, insuranceRows, roadworthyRows, dvlaRows, maintenanceRows] = await Promise.all([
-    db.trip.findMany({
-      where: { status: { in: [...ACTIVE_TRIP_STATUSES] }, truckId: { in: ids } },
-      select: { truckId: true },
-    }),
-    db.insurance.findMany({
-      where: { truckId: { in: ids } },
-      orderBy: { startDate: "desc" },
-      select: { truckId: true, status: true, endDate: true },
-    }),
-    db.roadworthyInspection.findMany({
-      where: { truckId: { in: ids } },
-      orderBy: { inspectionDate: "desc" },
-      select: { truckId: true, status: true, result: true, certificateExpiry: true },
-    }),
-    db.dvlaRegistration.findMany({
-      where: { truckId: { in: ids } },
-      orderBy: { registrationDate: "desc" },
-      select: { truckId: true, status: true, expiryDate: true },
-    }),
-    db.maintenanceRecord.findMany({
-      where: { truckId: { in: ids }, status: { in: ["scheduled", "in_progress"] } },
-      select: { truckId: true },
-    }),
-  ])
-
-  const conflictIds = new Set(activeTrips.map((row) => row.truckId))
-  const maintenanceIds = new Set(maintenanceRows.map((row) => row.truckId))
-  const firstByTruck = <T extends { truckId: string }>(records: T[]) => {
-    const map = new Map<string, T>()
-    for (const row of records) if (!map.has(row.truckId)) map.set(row.truckId, row)
-    return map
-  }
-  const insurance = firstByTruck(insuranceRows)
-  const roadworthy = firstByTruck(roadworthyRows)
-  const dvla = firstByTruck(dvlaRows)
-
-  return stableCandidates(rows.map((row) => {
-    const insuranceRow = insurance.get(row.id)
-    const roadworthyRow = roadworthy.get(row.id)
-    const dvlaRow = dvla.get(row.id)
-
-    return {
-      id: row.id,
-      plateNumber: row.plateNumber,
-      status: row.status,
-      hasConflictingTrip: conflictIds.has(row.id),
-      maintenanceBlocking: maintenanceIds.has(row.id),
-      compliance: {
-        insurance: complianceFromStatus(insuranceRow?.status ?? row.insuranceStatus, insuranceRow?.endDate, input.departureTime),
-        roadworthy: complianceFromStatus(roadworthyRow?.result ?? roadworthyRow?.status, roadworthyRow?.certificateExpiry, input.departureTime),
-        dvla: complianceFromStatus(dvlaRow?.status, dvlaRow?.expiryDate, input.departureTime),
-      },
-      fuelEfficiencyScore: null,
-      maintenanceReadinessScore: maintenanceIds.has(row.id) ? 0 : 100,
-      locationFitScore: null,
-      capacityFitScore: null,
+  function load(input: CandidateQuery) {
+    const key = JSON.stringify({
+      departureTime: input.departureTime.toISOString(),
+      destinationZoneId: input.destinationZoneId ?? null,
+      cargoUnit: input.cargoUnit ?? null,
+      quantity: input.quantity ?? null,
+      excludeTripId: input.excludeTripId ?? null,
+    })
+    if (!pending || cacheKey !== key) {
+      cacheKey = key
+      pending = loadDispatchCandidateEvidence(input)
     }
-  }))
+    return pending
+  }
+
+  return {
+    async loadDrivers(input) {
+      return (await load(input)).drivers
+    },
+    async loadTrucks(input) {
+      return (await load(input)).trucks
+    },
+  }
 }
 
 type RuntimeDispatchDatabase = {
@@ -252,29 +175,27 @@ type RuntimeDispatchDatabase = {
 const dispatchDb = db as unknown as RuntimeDispatchDatabase
 
 const defaultDependencies: DispatchCopilotDependencies = {
-  candidateSource: {
-    loadDrivers: loadDefaultDrivers,
-    loadTrucks: loadDefaultTrucks,
-  },
+  candidateSource: createDefaultCandidateSource(),
   recommendationStore: {
     create: (data) => dispatchDb.dispatchRecommendation.create({ data }),
     findById: (id) => dispatchDb.dispatchRecommendation.findUnique({ where: { id } }),
     recordDecision: (id, data) => dispatchDb.dispatchRecommendation.update({ where: { id }, data }),
   },
   availability: {
-    async isPairAvailable(driverId, truckId, departureTime) {
+    async isPairAvailable(driverId, truckId, departureTime, excludeTripId) {
+      const conflictWhere: Record<string, unknown> = {
+        status: { in: [...ACTIVE_TRIP_STATUSES] },
+        OR: [{ driverId }, { truckId }],
+      }
+      if (excludeTripId) conflictWhere.id = { not: excludeTripId }
+
       const [driver, truck, conflictCount] = await Promise.all([
         db.driver.findUnique({
           where: { id: driverId },
           select: { status: true, verificationStatus: true, licenseExpiry: true },
         }),
         db.truck.findUnique({ where: { id: truckId }, select: { status: true } }),
-        db.trip.count({
-          where: {
-            status: { in: [...ACTIVE_TRIP_STATUSES] },
-            OR: [{ driverId }, { truckId }],
-          },
-        }),
+        db.trip.count({ where: conflictWhere }),
       ])
 
       return Boolean(
@@ -306,7 +227,10 @@ const defaultDependencies: DispatchCopilotDependencies = {
   now: () => new Date(),
 }
 
-async function resolveDraft(input: DispatchRequest, deps: DispatchCopilotDependencies): Promise<{ tripId: string | null; draft: DispatchTripDraft }> {
+async function resolveDraft(
+  input: DispatchRequest,
+  deps: DispatchCopilotDependencies,
+): Promise<{ tripId: string | null; draft: DispatchTripDraft }> {
   if ("tripDraft" in input && input.tripDraft) return { tripId: null, draft: input.tripDraft }
   if (!("tripId" in input) || !input.tripId) throw new Error("tripId or tripDraft is required")
   if (!deps.tripSource) throw new Error("Trip source is unavailable")
@@ -322,11 +246,12 @@ export async function getDispatchRecommendations(
 ): Promise<DispatchRecommendationResult> {
   const { tripId, draft } = await resolveDraft(input, deps)
   const departureTime = asDate(draft.departureTime)
-  const query = {
+  const query: CandidateQuery = {
     departureTime,
     destinationZoneId: draft.destinationZoneId,
     quantity: draft.quantity,
     cargoUnit: draft.cargoUnit,
+    excludeTripId: tripId,
   }
 
   const [drivers, trucks] = await Promise.all([
@@ -335,12 +260,21 @@ export async function getDispatchRecommendations(
   ])
   const ranking = rankEligibleDispatchCandidates(drivers, trucks, { departureTime })
 
-  const safeDrivers = stableCandidates(drivers).map(({ id, name, status, verificationStatus, licenseExpiry, hasConflictingTrip, currentWorkload, routeExperienceScore, historicalPerformanceScore, locationFitScore }) => ({
-    id, name, status, verificationStatus, licenseExpiry, hasConflictingTrip, currentWorkload, routeExperienceScore, historicalPerformanceScore, locationFitScore,
+  const safeDrivers = stableCandidates(drivers).map(({
+    id, name, status, verificationStatus, licenseExpiry, hasConflictingTrip,
+    currentWorkload, routeExperienceScore, historicalPerformanceScore, locationFitScore,
+  }) => ({
+    id, name, status, verificationStatus, licenseExpiry, hasConflictingTrip,
+    currentWorkload, routeExperienceScore, historicalPerformanceScore, locationFitScore,
   }))
-  const safeTrucks = stableCandidates(trucks).map(({ id, plateNumber, status, hasConflictingTrip, maintenanceBlocking, compliance, fuelEfficiencyScore, maintenanceReadinessScore, locationFitScore, capacityFitScore }) => ({
-    id, plateNumber, status, hasConflictingTrip, maintenanceBlocking, compliance, fuelEfficiencyScore, maintenanceReadinessScore, locationFitScore, capacityFitScore,
+  const safeTrucks = stableCandidates(trucks).map(({
+    id, plateNumber, status, hasConflictingTrip, maintenanceBlocking, capacitySufficient,
+    compliance, fuelEfficiencyScore, maintenanceReadinessScore, locationFitScore, capacityFitScore,
+  }) => ({
+    id, plateNumber, status, hasConflictingTrip, maintenanceBlocking, capacitySufficient,
+    compliance, fuelEfficiencyScore, maintenanceReadinessScore, locationFitScore, capacityFitScore,
   }))
+
   const snapshot = JSON.stringify({
     tripId,
     tripDraft: { ...draft, departureTime: departureTime.toISOString() },
@@ -401,9 +335,17 @@ export async function recordDispatchDecision(
 
     selectedDriverId = decision.selectedDriverId
     selectedTruckId = decision.selectedTruckId
-    const inputSnapshot = JSON.parse(recommendation.inputSnapshot) as { tripDraft?: { departureTime?: string } }
+    const inputSnapshot = JSON.parse(recommendation.inputSnapshot) as {
+      tripId?: string | null
+      tripDraft?: { departureTime?: string }
+    }
     const departureTime = asDate(inputSnapshot.tripDraft?.departureTime ?? recommendation.requestedAt)
-    stale = !(await deps.availability.isPairAvailable(selectedDriverId, selectedTruckId, departureTime))
+    stale = !(await deps.availability.isPairAvailable(
+      selectedDriverId,
+      selectedTruckId,
+      departureTime,
+      inputSnapshot.tripId ?? recommendation.tripId,
+    ))
   }
 
   const saved = await deps.recommendationStore.recordDecision(recommendationId, {
