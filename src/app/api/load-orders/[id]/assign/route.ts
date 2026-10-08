@@ -28,6 +28,17 @@ function settings(value: string | null | undefined): Record<string, unknown> {
   }
 }
 
+class AssignmentConflictError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'AssignmentConflictError'
+  }
+}
+
+function isSerializableWriteConflict(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'code' in error && (error as { code?: unknown }).code === 'P2034'
+}
+
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = requireAuth(request)
@@ -185,7 +196,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const currentAllocation = allocateLoadOrderQuantity(
       { lines: order.LoadOrderLine.map((line) => ({ id: line.id, quantity: line.orderedQuantity })) },
-      order.Trip.map((trip) => ({ status: trip.status, items: trip.TripItem.map((item) => ({ loadOrderLineId: item.loadOrderLineId, quantity: item.quantity })) }))
+      order.Trip.filter((trip) => trip.id !== existingTripId).map((trip) => ({ status: trip.status, items: trip.TripItem.map((item) => ({ loadOrderLineId: item.loadOrderLineId, quantity: item.quantity })) }))
     )
     const remainingByLine = new Map(currentAllocation.lines.map((line) => [line.lineId, line.remaining]))
     const requested = Array.isArray(body.allocations) ? body.allocations as Array<Record<string, unknown>> : []
@@ -212,12 +223,75 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (Number.isNaN(departureTime.getTime())) return NextResponse.json({ error: 'Invalid departureTime' }, { status: 400 })
 
     const trip = await db.$transaction(async (tx) => {
-      let tripId = existingTripId
-      const tripNumber = existingTripId
-        ? order.Trip.find((candidate) => candidate.id === existingTripId)?.tripNumber
-        : `TRP-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`
-      if (!tripNumber) throw new Error('Existing trip is not part of this load order')
+      const [liveOrder, liveDriverConflict, liveTractorConflict, liveCouplings] = await Promise.all([
+        tx.loadOrder.findUnique({
+          where: { id: order.id },
+          include: { LoadOrderLine: true, Trip: { include: { TripItem: true } } },
+        }),
+        tx.trip.findFirst({
+          where: { driverId, id: existingTripId ? { not: existingTripId } : undefined, status: { notIn: ['completed', 'cancelled'] } },
+          select: { id: true, tripNumber: true },
+        }),
+        tx.trip.findFirst({
+          where: { truckId: tractorId, id: existingTripId ? { not: existingTripId } : undefined, status: { notIn: ['completed', 'cancelled'] } },
+          select: { id: true, tripNumber: true },
+        }),
+        trailerId
+          ? tx.trailerCoupling.findMany({
+              where: { decoupledAt: null, OR: [{ trailerId }, { tractorId }] },
+              select: { id: true, tractorId: true, trailerId: true, coupledAt: true, decoupledAt: true },
+            })
+          : Promise.resolve([]),
+      ])
 
+      if (!liveOrder) throw new AssignmentConflictError('Load order no longer exists')
+      if (['completed', 'cancelled'].includes(liveOrder.status)) {
+        throw new AssignmentConflictError(`Load order is ${liveOrder.status} and cannot be assigned`)
+      }
+      if (liveDriverConflict) throw new AssignmentConflictError(`Driver already has active trip ${liveDriverConflict.tripNumber}`)
+      if (liveTractorConflict) throw new AssignmentConflictError(`Tractor already has active trip ${liveTractorConflict.tripNumber}`)
+
+      if (trailer) {
+        const liveCoupling = validateCoupling(
+          { tractorId, trailer: { id: trailer.id, status: trailer.status }, requiresTrailer: true },
+          liveCouplings
+        )
+        if (!liveCoupling.valid) {
+          throw new AssignmentConflictError(`Trailer coupling conflict: ${liveCoupling.blocking.join(', ')}`)
+        }
+      }
+
+      const liveAllocation = allocateLoadOrderQuantity(
+        { lines: liveOrder.LoadOrderLine.map((line) => ({ id: line.id, quantity: line.orderedQuantity })) },
+        liveOrder.Trip
+          .filter((candidate) => candidate.id !== existingTripId)
+          .map((candidate) => ({
+            status: candidate.status,
+            items: candidate.TripItem.map((item) => ({ loadOrderLineId: item.loadOrderLineId, quantity: item.quantity })),
+          }))
+      )
+      const liveRemainingByLine = new Map(liveAllocation.lines.map((line) => [line.lineId, line.remaining]))
+      const liveLineById = new Map(liveOrder.LoadOrderLine.map((line) => [line.id, line]))
+      for (const allocation of allocations) {
+        const line = liveLineById.get(allocation.lineId)
+        const remaining = liveRemainingByLine.get(allocation.lineId)
+        if (!line || remaining == null || allocation.quantity > remaining + 0.000001) {
+          throw new AssignmentConflictError(`Load allocation changed for ${line?.itemName ?? allocation.lineId}; refresh and retry`)
+        }
+      }
+
+      let tripId = existingTripId
+      const existing = existingTripId ? liveOrder.Trip.find((candidate) => candidate.id === existingTripId) : null
+      const tripNumber = existingTripId
+        ? existing?.tripNumber
+        : `TRP-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`
+      if (!tripNumber) throw new AssignmentConflictError('Existing trip is not part of this load order')
+      if (existing && !['draft', 'scheduled'].includes(existing.status)) {
+        throw new AssignmentConflictError('Existing trip must be draft or scheduled')
+      }
+
+      const firstLiveAllocationLine = liveLineById.get(allocations[0].lineId)
+      if (!firstLiveAllocationLine) throw new AssignmentConflictError('Selected load line no longer exists')
       const baseData = {
         truckId: tractorId,
         driverId,
@@ -227,10 +301,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         loadingAddress: null,
         destination: firstDestination?.name ?? 'Destination pending',
         destinationAddress: firstDestination?.address ?? null,
-        itemId: firstAllocationLine.itemId,
-        itemName: allocations.length === 1 ? firstAllocationLine.itemName : `Multi-line load (${allocations.length} items)`,
+        itemId: firstLiveAllocationLine.itemId,
+        itemName: allocations.length === 1 ? firstLiveAllocationLine.itemName : `Multi-line load (${allocations.length} items)`,
         quantity: allocations[0].quantity,
-        unit: firstAllocationLine.unit,
+        unit: firstLiveAllocationLine.unit,
         totalRevenue: order.offeredRate,
         departureTime,
         deliveryType: order.LoadOrderDestination.length > 1 ? 'MULTI' : 'SINGLE',
@@ -243,8 +317,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       }
 
       if (tripId) {
-        const existing = order.Trip.find((candidate) => candidate.id === tripId)
-        if (!existing || !['draft', 'scheduled'].includes(existing.status)) throw new Error('Existing trip must be draft or scheduled')
         await tx.tripItem.deleteMany({ where: { tripId } })
         await tx.tripDeliveryDestination.deleteMany({ where: { tripId } })
         await tx.trip.update({ where: { id: tripId }, data: baseData })
@@ -273,7 +345,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       }
 
       for (const allocation of allocations) {
-        const line = lineById.get(allocation.lineId)!
+        const line = liveLineById.get(allocation.lineId)!
         await tx.tripItem.create({
           data: {
             tripId: tripId!,
@@ -289,7 +361,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       }
 
       const sameCoupling = trailerId
-        ? activeCouplings.find((coupling) => coupling.tractorId === tractorId && coupling.trailerId === trailerId)
+        ? liveCouplings.find((coupling) => coupling.tractorId === tractorId && coupling.trailerId === trailerId)
         : null
       if (trailerId && !sameCoupling) {
         await tx.trailerCoupling.create({
@@ -300,7 +372,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       await tx.tripEvent.create({
         data: {
           tripId: tripId!,
-          fromStatus: existingTripId ? order.Trip.find((candidate) => candidate.id === existingTripId)?.status ?? 'scheduled' : 'scheduled',
+          fromStatus: existing?.status ?? 'scheduled',
           toStatus: 'assigned',
           userId: auth.userId,
           notes: eligibility.overrideApplied ? `Assignment approved with override: ${overrideReason}` : 'Eligibility-approved assignment',
@@ -309,7 +381,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       })
 
       const selected = new Map(allocations.map((allocation) => [allocation.lineId, allocation.quantity]))
-      const fullyAllocated = currentAllocation.lines.every((line) => line.remaining - (selected.get(line.lineId) ?? 0) <= 0.000001)
+      const fullyAllocated = liveAllocation.lines.every((line) => line.remaining - (selected.get(line.lineId) ?? 0) <= 0.000001)
       await tx.loadOrder.update({ where: { id: order.id }, data: { status: fullyAllocated ? 'allocated' : 'partially_allocated' } })
 
       return tx.trip.findUniqueOrThrow({
@@ -343,6 +415,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     return NextResponse.json({ trip, eligibility }, { status: existingTripId ? 200 : 201 })
   } catch (error) {
+    if (error instanceof AssignmentConflictError || isSerializableWriteConflict(error)) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Dispatch state changed; refresh and retry' },
+        { status: 409 }
+      )
+    }
     console.error('Load order assignment error:', error)
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to assign load order' }, { status: 500 })
   }
