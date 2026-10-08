@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { WeighingPanel } from '@/components/factory-ops/WeighingPanel'
 import { apiFetch } from '@/lib/api'
 import { useAuthStore } from '@/lib/store/auth'
 
@@ -208,6 +209,8 @@ export function FactoryOperationsView() {
           </Table>
         </CardContent>
       </Card>
+
+      {tripId && <WeighingPanel tripId={tripId} />}
     </div>
   )
 }
