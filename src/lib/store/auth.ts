@@ -1,4 +1,5 @@
 import type { DemoProfileId } from '@/lib/auth/demo-profiles'
+import { canDemoAccessNav } from '@/lib/auth/demo-access'
 import { create } from 'zustand'
 
 export interface AuthUser {
@@ -230,6 +231,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   canSeeFinancialData: (): boolean => {
     const { user } = get()
     if (!user) return false
+    if (user.isDemo) return false
     return user.role === 'Admin' || user.role === 'Manager'
   },
 
@@ -302,9 +304,10 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
 }
 
 export function canAccessNav(itemId: string): boolean {
+  const store = useAuthStore.getState()
+  if (store.user?.isDemo && !canDemoAccessNav(itemId)) return false
   const required = NAV_PERMISSIONS[itemId]
   if (!required) return true
-  const store = useAuthStore.getState()
   return store.hasAnyPermission(required)
 }
 

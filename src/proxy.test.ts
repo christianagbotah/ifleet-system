@@ -60,7 +60,17 @@ describe('API authentication proxy', () => {
     })
   })
 
-  it('allows authenticated demo sessions to browse GET APIs', async () => {
+  it('blocks sensitive read namespaces from demo sessions', async () => {
+    const token = await demoToken()
+    const response = await proxy(request('/api/payroll', { method: 'GET', token }))
+
+    expect(response.status).toBe(403)
+    await expect(response.json()).resolves.toEqual({
+      error: 'This area is not available in public demo mode.',
+    })
+  })
+
+  it('allows authenticated demo sessions to browse safe GET APIs', async () => {
     const token = await demoToken()
     const response = await proxy(request('/api/dashboard', { method: 'GET', token }))
 
