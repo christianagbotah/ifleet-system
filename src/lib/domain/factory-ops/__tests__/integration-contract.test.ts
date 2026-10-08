@@ -55,6 +55,6 @@ describe('factory operations integration contract', () => {
     expect(wrapper).toContain("@/components/operations/LegacyDepotQueueView")
     expect(wrapper).toContain('Factory Operations')
     expect(wrapper).toContain('Legacy Queue')
-    expect(legacy).toContain('/api/depot-queue')
+    expect(legacy).toContain('fetchDepotQueue')
   })
 })
