@@ -490,6 +490,7 @@ model DestinationZone {
   Trip                    Trip[]
   TripDeliveryDestination TripDeliveryDestination[]
   ZoneRate                ZoneRate[]
+  TransportRateCard       TransportRateCard[]
 
   @@unique([name, destinationCityId])
   @@index([destinationCityId])
@@ -967,6 +968,7 @@ model Item {
   supplier    Supplier?  @relation(fields: [supplierId], references: [id])
   Trip        Trip[]
   TripItem    TripItem[]
+  TransportRateCard TransportRateCard[]
 
   @@index([isActive])
   @@index([supplierId])
@@ -1044,6 +1046,7 @@ model LoadingPoint {
   supplier      Supplier?   @relation(fields: [supplierId], references: [id])
   Trip          Trip[]
   TripItem      TripItem[]
+  TransportRateCard TransportRateCard[]
 
   @@unique([name, loadingCityId])
   @@index([isActive])
@@ -1609,6 +1612,133 @@ model TripItem {
   @@index([tripId])
 }
 
+model Organization {
+  id                 String              @id @default(cuid())
+  code               String              @unique
+  name               String
+  organizationType   String              @default("operator")
+  registrationNumber String?
+  taxId              String?
+  email              String?
+  phone              String?
+  address            String?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  Transporter        Transporter[]
+  VehicleOwner       VehicleOwner[]
+  TransportContract  TransportContract[]
+
+  @@index([isActive])
+  @@index([organizationType])
+}
+
+model Transporter {
+  id                String              @id @default(cuid())
+  organizationId    String?
+  code              String              @unique
+  name              String
+  registrationNumber String?
+  contactPerson     String?
+  phone             String?
+  email             String?
+  address           String?
+  isInternal        Boolean             @default(false)
+  isActive          Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  organization      Organization?       @relation(fields: [organizationId], references: [id])
+  Truck             Truck[]
+  TransportContract TransportContract[]
+  TransportRateCard TransportRateCard[]
+
+  @@index([organizationId])
+  @@index([isActive])
+}
+
+model VehicleOwner {
+  id                 String        @id @default(cuid())
+  organizationId     String?
+  code               String        @unique
+  name               String
+  ownerType          String        @default("company")
+  registrationNumber String?
+  contactPerson      String?
+  phone              String?
+  email              String?
+  address            String?
+  isInternal         Boolean       @default(false)
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  organization       Organization? @relation(fields: [organizationId], references: [id])
+  Truck              Truck[]
+
+  @@index([organizationId])
+  @@index([isActive])
+}
+
+model TransportContract {
+  id               String              @id @default(cuid())
+  organizationId   String?
+  transporterId    String?
+  shipperProfileId String?
+  contractNumber   String              @unique
+  name             String
+  currency         String              @default("GHS")
+  startDate        DateTime
+  endDate          DateTime?
+  isActive         Boolean             @default(true)
+  notes            String?             @db.Text
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  organization     Organization?       @relation(fields: [organizationId], references: [id])
+  transporter      Transporter?        @relation(fields: [transporterId], references: [id])
+  TransportRateCard TransportRateCard[]
+
+  @@index([organizationId])
+  @@index([transporterId])
+  @@index([shipperProfileId])
+  @@index([isActive, startDate])
+}
+
+model TransportRateCard {
+  id                String             @id @default(cuid())
+  contractId        String?
+  transporterId     String?
+  shipperProfileId  String?
+  loadingPointId    String?
+  destinationZoneId String?
+  itemId            String?
+  unit              String?
+  rateAmount        Decimal
+  rateType          String             @default("per_unit")
+  currency          String             @default("GHS")
+  effectiveFrom     DateTime           @default(now())
+  effectiveTo       DateTime?
+  priority          Int                @default(0)
+  isActive          Boolean            @default(true)
+  sourceType        String?
+  sourceId          String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  contract          TransportContract? @relation(fields: [contractId], references: [id])
+  transporter       Transporter?       @relation(fields: [transporterId], references: [id])
+  loadingPoint      LoadingPoint?      @relation(fields: [loadingPointId], references: [id])
+  destinationZone   DestinationZone?   @relation(fields: [destinationZoneId], references: [id])
+  item              Item?              @relation(fields: [itemId], references: [id])
+
+  @@unique([sourceType, sourceId])
+  @@index([contractId])
+  @@index([transporterId])
+  @@index([shipperProfileId])
+  @@index([loadingPointId])
+  @@index([destinationZoneId])
+  @@index([itemId])
+  @@index([unit])
+  @@index([isActive, effectiveFrom])
+}
+
 model Truck {
   id                      String                    @id @default(cuid())
   plateNumber          String                 @unique
@@ -1624,6 +1754,8 @@ model Truck {
   status               TruckStatus                 @default(active)
   currentMileage       Float                  @default(0)
   driverId             String?
+  transporterId        String?
+  vehicleOwnerId       String?
   notes                String?
   insuranceStatus      TruckInsuranceStatus                 @default(none)
   nextServiceDate      DateTime?
@@ -1648,8 +1780,12 @@ model Truck {
   TruckLocation        TruckLocation[]
   Tyre                 Tyre[]
   VehicleInspection    VehicleInspection[]
+  transporter          Transporter?           @relation(fields: [transporterId], references: [id])
+  vehicleOwner         VehicleOwner?          @relation(fields: [vehicleOwnerId], references: [id])
 
   @@index([driverId], map: "Truck_driverId_fkey")
+  @@index([transporterId])
+  @@index([vehicleOwnerId])
 }
 
 model TruckLocation {
