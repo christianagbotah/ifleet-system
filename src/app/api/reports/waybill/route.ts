@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { buildElectronicWaybillPdf } from '@/lib/reports/electronic-waybill-pdf'
+import { jsPdfToBuffer } from '@/lib/reports/pdf-buffer'
 
 export async function GET(request: NextRequest) {
   const auth = requireAuth(request)
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
 
     const pdf = await buildElectronicWaybillPdf(tripId)
-    const buffer = pdf.toBuffer()
+    const buffer = jsPdfToBuffer(pdf)
 
     await db.reportHistory.create({
       data: {

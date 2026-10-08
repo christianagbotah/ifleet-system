@@ -1,6 +1,7 @@
 import { APP_NAME } from '@/lib/constants'
 import { db } from '@/lib/db'
 import { getTripNotificationSpec } from '@/lib/domain/dispatch/trip-notification'
+import { planDriverNotification } from '@/lib/domain/dispatch/notification-target'
 import type { TripStatusValue } from '@/lib/domain/dispatch/trip-state-machine'
 import { dispatchNotification } from '@/lib/services/notification-dispatcher'
 
@@ -42,14 +43,20 @@ export async function dispatchTripStatusNotification(tripId: string, status: Tri
     metadata: { tripNumber: trip.tripNumber, status, driverName, truckPlate: trip.truck.plateNumber },
   })))
 
-  if (!trip.driver.userId || !adminIds.has(trip.driver.userId)) {
+  const driverPlan = planDriverNotification({
+    userId: trip.driver.userId,
+    driverId: trip.driverId,
+    hasPhone: Boolean(trip.driver.phone),
+    userAlreadyNotified: Boolean(trip.driver.userId && adminIds.has(trip.driver.userId)),
+  })
+  if (driverPlan) {
     await dispatchNotification({
-      userId: trip.driver.userId || trip.driverId,
-      driverId: trip.driverId,
+      userId: driverPlan.userId ?? undefined,
+      driverId: driverPlan.driverId,
       type: spec.type,
       title: spec.title,
       message,
-      channels: trip.driver.phone ? ['in_app', 'sms', 'push'] : ['in_app', 'push'],
+      channels: driverPlan.channels,
       smsMessage,
       link: `trips/${trip.id}`,
       tripId: trip.id,

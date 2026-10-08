@@ -29,8 +29,8 @@ const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key
 export type NotificationChannel = 'in_app' | 'sms' | 'email' | 'push'
 
 interface DispatchParams {
-  /** The user to notify (for in_app + email) */
-  userId: string
+  /** The user to notify (for in_app + push). Optional for SMS-only driver delivery. */
+  userId?: string
   /** The driver to notify (for SMS — driver's phone is used) */
   driverId?: string
   /** Notification type key (e.g., trip_started, maintenance_due) */
@@ -142,22 +142,24 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     errors: [],
   }
 
-  console.log(`[Notification] Dispatching "${type}" for user ${userId}${driverId ? ` / driver ${driverId}` : ''}`)
+  console.log(`[Notification] Dispatching "${type}" for ${userId ? `user ${userId}` : 'unlinked user'}${driverId ? ` / driver ${driverId}` : ''}`)
 
   // Check SystemSettings before dispatching
   const enabled = await isNotificationEnabled(type)
   if (!enabled) {
     console.log(`[Notification] Type "${type}" is disabled in SystemSettings. Skipping.`)
-    // Still save in_app but mark as suppressed
-    await saveInAppNotification({
-      userId,
-      type,
-      title: `[Suppressed] ${title}`,
-      message,
-      link,
-      metadata: { ...metadata, suppressed: true, reason: 'disabled_in_settings' },
-    })
-    result.inApp = true
+    // Still save an in-app suppression marker when a real user account exists.
+    if (userId) {
+      await saveInAppNotification({
+        userId,
+        type,
+        title: `[Suppressed] ${title}`,
+        message,
+        link,
+        metadata: { ...metadata, suppressed: true, reason: 'disabled_in_settings' },
+      })
+      result.inApp = true
+    }
     return result
   }
 
@@ -169,22 +171,24 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     channels: channels,
   }
 
-  // ── 1. Always save in_app notification ──
+  // ── 1. Save in_app notification only when a real user account exists ──
   let savedNotificationId: string | null = null
-  try {
-    savedNotificationId = await saveInAppNotification({
-      userId,
-      type,
-      title,
-      message,
-      link,
-      metadata: fullMetadata,
-    })
-    result.inApp = true
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : 'Unknown error'
-    console.error(`[Notification] Failed to save in_app notification: ${errorMsg}`)
-    result.errors.push(`in_app: ${errorMsg}`)
+  if (userId && channels.includes('in_app')) {
+    try {
+      savedNotificationId = await saveInAppNotification({
+        userId,
+        type,
+        title,
+        message,
+        link,
+        metadata: fullMetadata,
+      })
+      result.inApp = true
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error'
+      console.error(`[Notification] Failed to save in_app notification: ${errorMsg}`)
+      result.errors.push(`in_app: ${errorMsg}`)
+    }
   }
 
   // ── 2. SMS channel ──
@@ -243,7 +247,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
   }
 
   // ── 4. Push channel (Socket.IO real-time) ──
-  if (channels.includes('push')) {
+  if (channels.includes('push') && userId) {
     try {
       const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify`, {
         method: 'POST',
@@ -326,7 +330,7 @@ async function saveInAppNotification(params: {
  * Resolve a phone number for SMS delivery.
  * Checks the user's phone first, then the driver's phone if driverId is provided.
  */
-async function resolvePhone(userId: string, driverId?: string): Promise<string | null> {
+async function resolvePhone(userId?: string, driverId?: string): Promise<string | null> {
   // If we have a driverId, try the driver's phone first (more reliable for SMS)
   if (driverId) {
     const driver = await db.driver.findUnique({
@@ -336,7 +340,8 @@ async function resolvePhone(userId: string, driverId?: string): Promise<string |
     if (driver?.phone) return driver.phone
   }
 
-  // Fall back to user's phone
+  // Fall back to user's phone when a linked user exists.
+  if (!userId) return null
   const user = await db.user.findUnique({
     where: { id: userId },
     select: { phone: true },
@@ -348,13 +353,15 @@ async function resolvePhone(userId: string, driverId?: string): Promise<string |
  * Resolve an email address for email delivery.
  * Checks the user's email first, then the driver's email if driverId is provided.
  */
-async function resolveEmail(userId: string, driverId?: string): Promise<string | null> {
-  // User email is usually the primary contact
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { email: true },
-  })
-  if (user?.email) return user.email
+async function resolveEmail(userId?: string, driverId?: string): Promise<string | null> {
+  // User email is usually the primary contact when a linked user exists.
+  if (userId) {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { email: true },
+    })
+    if (user?.email) return user.email
+  }
 
   // Fall back to driver's email
   if (driverId) {
