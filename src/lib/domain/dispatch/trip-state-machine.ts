@@ -64,6 +64,10 @@ export function canonicalTripStatus(status: TripStatusValue): TripStatusValue {
   return legacyMap[status] ?? status
 }
 
+export function requiresDispatchClearance(status: TripStatusValue): boolean {
+  return canonicalTripStatus(status) === 'departed_loading_point'
+}
+
 export function canTransition(from: TripStatusValue, to: TripStatusValue): TransitionDecision {
   const canonicalFrom = canonicalTripStatus(from)
   const canonicalTo = canonicalTripStatus(to)
