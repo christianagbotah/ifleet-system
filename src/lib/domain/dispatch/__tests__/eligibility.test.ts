@@ -98,6 +98,15 @@ describe('evaluateAssignmentEligibility', () => {
     expect(result.blocking).toContain('document_expired:ghana_card')
   })
 
+  it('requires explicit validity for statutory documents instead of accepting an unversioned upload', () => {
+    const result = evaluateAssignmentEligibility(input({
+      requirements: { ...input().requirements, requiredDocuments: ['ghana_card'] },
+      documents: [{ category: 'ghana_card' }],
+    }))
+    expect(result.passed).toBe(false)
+    expect(result.blocking).toContain('document_validity_missing:ghana_card')
+  })
+
   it('blocks an inactive trailer when a trailer is required', () => {
     const result = evaluateAssignmentEligibility(input({
       trailer: { id: 'trailer-1', status: 'maintenance', trailerType: 'flatbed' },

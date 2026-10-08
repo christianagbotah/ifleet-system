@@ -151,6 +151,10 @@ export function evaluateAssignmentEligibility(input: EligibilityInput): Eligibil
       blocking.push(`missing_document:${category}`)
       continue
     }
+    if (STATUTORY_DOCUMENT_CATEGORIES.has(token(category)) && !document.validUntil) {
+      blocking.push(`document_validity_missing:${category}`)
+      continue
+    }
     if (document.validUntil) {
       inspectExpiry(document.validUntil, now, `document_expired:${category}`, `document_expiring_soon:${category}`, blocking, warnings)
     }
