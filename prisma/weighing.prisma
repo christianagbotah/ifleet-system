@@ -1,0 +1,63 @@
+model WeighingEvent {
+  id                         String        @id @default(cuid())
+  tripId                     String
+  tractorId                  String?
+  trailerId                  String?
+  driverId                   String?
+  legacyWeightVerificationId String?
+  stage                      String
+  source                     String        @default("MANUAL")
+  status                     String        @default("recorded")
+  grossWeightKg              Float?
+  tareWeightKg               Float?
+  netWeightKg                Float?
+  varianceKg                 Float?
+  variancePercent            Float?
+  requiredAxleCount          Int           @default(0)
+  tolerancePercent           Float         @default(0)
+  ruleSetSnapshot            String?       @db.Text
+  clearancePassed            Boolean?
+  clearanceDetails           String?       @db.Text
+  weighbridgeName            String?
+  location                   String?
+  latitude                   Float?
+  longitude                  Float?
+  ticketNumber               String?
+  certificateNumber          String?
+  evidenceUrl                String?       @db.Text
+  operatorId                 String?
+  operatorName               String?
+  recordedAt                 DateTime      @default(now())
+  supersedesEventId          String?
+  notes                      String?       @db.Text
+  createdAt                  DateTime      @default(now())
+  updatedAt                  DateTime      @updatedAt
+  axleReadings               AxleReading[]
+
+  @@index([tripId, recordedAt])
+  @@index([tripId, stage])
+  @@index([tractorId])
+  @@index([trailerId])
+  @@index([legacyWeightVerificationId])
+  @@index([supersedesEventId])
+  @@index([clearancePassed])
+  @@index([ticketNumber])
+}
+
+model AxleReading {
+  id             String        @id @default(cuid())
+  weighingEventId String
+  axleNumber     Int
+  axleGroup      String?
+  weightKg       Float
+  legalLimitKg   Float?
+  toleranceKg    Float?
+  exceeded       Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  weighingEvent  WeighingEvent @relation(fields: [weighingEventId], references: [id], onDelete: Cascade)
+
+  @@unique([weighingEventId, axleNumber])
+  @@index([axleGroup])
+  @@index([exceeded])
+}

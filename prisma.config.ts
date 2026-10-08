@@ -35,7 +35,7 @@ const databaseUrl = resolvePrismaCliDatabaseUrl(
 
 export default defineConfig({
   earlyAccess: true,
-  schema: path.join(__dirname, 'prisma/schema.prisma'),
+  schema: path.join(__dirname, 'prisma'),
   datasource: {
     url: databaseUrl,
   },

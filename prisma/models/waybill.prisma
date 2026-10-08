@@ -1,0 +1,54 @@
+model ElectronicWaybill {
+  id                String                     @id @default(cuid())
+  tripId            String                     @unique
+  waybillNumber     String                     @unique
+  verificationToken String                     @unique
+  currentVersion    Int                        @default(1)
+  status            String                     @default("finalized")
+  finalizedAt       DateTime
+  createdAt         DateTime                   @default(now())
+  updatedAt         DateTime                   @updatedAt
+  versions          ElectronicWaybillVersion[]
+  seals             WaybillSeal[]
+
+  @@index([status])
+  @@index([finalizedAt])
+}
+
+model ElectronicWaybillVersion {
+  id                 String            @id @default(cuid())
+  waybillId          String
+  version            Int
+  snapshot           String            @db.LongText
+  contentHash        String
+  supersedesVersion  Int?
+  correctionReason   String?           @db.Text
+  finalizedBy        String
+  finalizedAt        DateTime
+  createdAt          DateTime          @default(now())
+  waybill            ElectronicWaybill @relation(fields: [waybillId], references: [id], onDelete: Cascade)
+
+  @@unique([waybillId, version])
+  @@index([contentHash])
+  @@index([finalizedAt])
+}
+
+model WaybillSeal {
+  id         String            @id @default(cuid())
+  waybillId  String
+  version    Int
+  sealNumber String
+  sealType   String?
+  appliedAt  DateTime          @default(now())
+  appliedBy  String?
+  status     String            @default("applied")
+  removedAt  DateTime?
+  notes      String?           @db.Text
+  createdAt  DateTime          @default(now())
+  waybill    ElectronicWaybill @relation(fields: [waybillId], references: [id], onDelete: Cascade)
+
+  @@unique([waybillId, version, sealNumber])
+  @@index([sealNumber])
+  @@index([status])
+  @@index([waybillId, version])
+}
