@@ -10,6 +10,13 @@ describe('demo access policy', () => {
     expect(canDemoAccessApi('/api/audit-logs', 'GET')).toBe(false)
     expect(canDemoAccessApi('/api/payroll', 'GET')).toBe(false)
     expect(canDemoAccessApi('/api/invoices', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/tracking', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/drivers', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/clients', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/pricing', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/fuel-budgets', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/trip-expenses', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/tolls/analytics', 'GET')).toBe(false)
   })
 
   it('blocks every mutating API method for demo sessions', () => {
@@ -20,7 +27,9 @@ describe('demo access policy', () => {
 
   it('hides sensitive navigation while keeping operational modules visible', () => {
     expect(canDemoAccessNav('dashboard')).toBe(true)
-    expect(canDemoAccessNav('tracking')).toBe(true)
+    expect(canDemoAccessNav('tracking')).toBe(false)
+    expect(canDemoAccessNav('drivers')).toBe(false)
+    expect(canDemoAccessNav('clients')).toBe(false)
     expect(canDemoAccessNav('payroll')).toBe(false)
     expect(canDemoAccessNav('users')).toBe(false)
     expect(canDemoAccessNav('audit-log')).toBe(false)

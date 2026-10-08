@@ -1,4 +1,11 @@
 const DEMO_SENSITIVE_API_PREFIXES = [
+  '/api/tolls',
+  '/api/trip-expenses',
+  '/api/fuel-budgets',
+  '/api/pricing',
+  '/api/clients',
+  '/api/drivers',
+  '/api/tracking',
   '/api/users',
   '/api/roles',
   '/api/audit-logs',
@@ -20,6 +27,12 @@ const DEMO_SENSITIVE_API_PREFIXES = [
 ] as const
 
 const DEMO_BLOCKED_NAV_ITEMS = new Set([
+  'clients',
+  'safety-scoring',
+  'driver-performance',
+  'drivers',
+  'driver-tracking',
+  'tracking',
   'analytics',
   'cost-analytics',
   'truck-financials',

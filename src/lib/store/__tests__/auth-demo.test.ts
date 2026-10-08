@@ -52,4 +52,30 @@ describe('demo authentication', () => {
     })
     expect(JSON.parse(localStorage.getItem('fleetpro-auth') || '{}').user.isDemo).toBe(true)
   })
+
+  it('keeps demo role permissions read-only even for Admin and Manager', () => {
+    useAuthStore.setState({
+      user: {
+        id: 'demo-admin',
+        email: 'demo.admin@ifleetpro.local',
+        name: 'Demo Administrator',
+        phone: null,
+        avatar: null,
+        role: 'Admin',
+        permissions: ['dashboard.view', 'trips.view', 'trips.create', 'trips.update', 'expenses.approve'],
+        driverId: null,
+        isActive: true,
+        isDemo: true,
+        demoProfile: 'admin',
+      },
+      isAuthenticated: true,
+      token: 'demo-token',
+    })
+
+    expect(useAuthStore.getState().hasPermission('trips.view')).toBe(true)
+    expect(useAuthStore.getState().hasPermission('trips.create')).toBe(false)
+    expect(useAuthStore.getState().hasPermission('trips.update')).toBe(false)
+    expect(useAuthStore.getState().hasPermission('expenses.approve')).toBe(false)
+    expect(useAuthStore.getState().hasAnyPermission(['trips.create', 'trips.update'])).toBe(false)
+  })
 })

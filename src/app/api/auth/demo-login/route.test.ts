@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { NextRequest } from 'next/server'
 import jwt from 'jsonwebtoken'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   roleFindUnique: vi.fn(),
@@ -62,6 +62,11 @@ beforeEach(() => {
   })
 })
 
+afterEach(() => {
+  vi.unstubAllEnvs()
+  delete process.env.DEMO_LOGIN_ALLOW_PRODUCTION
+})
+
 describe('GET /api/auth/demo-login', () => {
   it('reports demo access disabled unless explicitly enabled', async () => {
     delete process.env.DEMO_LOGIN_ENABLED
@@ -76,9 +81,28 @@ describe('GET /api/auth/demo-login', () => {
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toEqual({ enabled: true })
   })
+
+  it('requires a second explicit opt-in before exposing demo access in production', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    process.env.DEMO_LOGIN_ENABLED = 'true'
+    delete process.env.DEMO_LOGIN_ALLOW_PRODUCTION
+
+    const response = await GET()
+    await expect(response.json()).resolves.toEqual({ enabled: false })
+  })
 })
 
 describe('POST /api/auth/demo-login', () => {
+  it('rejects demo login in production without the production opt-in', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    process.env.DEMO_LOGIN_ENABLED = 'true'
+    delete process.env.DEMO_LOGIN_ALLOW_PRODUCTION
+
+    const response = await POST(request('manager'))
+    expect(response.status).toBe(403)
+    expect(mocks.roleFindUnique).not.toHaveBeenCalled()
+  })
+
   it('rejects unknown demo profiles without touching the database', async () => {
     const response = await POST(request('owner'))
     expect(response.status).toBe(400)

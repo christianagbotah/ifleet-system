@@ -218,7 +218,7 @@ export async function proxy(request: NextRequest) {
 
   if (!pathname.startsWith('/api/')) return applySecurityHeaders(NextResponse.next())
 
-  if (PUBLIC_API_ROUTES.some((route) => pathname.startsWith(route))) {
+  if (PUBLIC_API_ROUTES.includes(pathname)) {
     return applySecurityHeaders(NextResponse.next())
   }
 
