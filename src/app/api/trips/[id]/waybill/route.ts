@@ -11,6 +11,7 @@ import {
   type WaybillSealInput,
   type WaybillSnapshot,
 } from '@/lib/domain/waybills/electronic-waybill'
+import { assertWaybillFinalizableStatus, isWaybillWriteConflict } from '@/lib/domain/waybills/write-safety'
 
 class WaybillConflictError extends Error {}
 
@@ -180,6 +181,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         },
       })
       if (!trip) throw new WaybillConflictError('Trip not found')
+      assertWaybillFinalizableStatus(trip.status)
 
       const weighingEvents = await tx.weighingEvent.findMany({
         where: { tripId: id },
@@ -291,7 +293,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     return NextResponse.json({ electronicWaybill: finalized.root, version: finalized.domain }, { status: 201 })
   } catch (error) {
-    if (error instanceof WaybillConflictError || error instanceof Error && /waybill|weighing|seal|weight/i.test(error.message)) {
+    if (error instanceof WaybillConflictError || isWaybillWriteConflict(error) || error instanceof Error && /waybill|weighing|seal|weight/i.test(error.message)) {
       return NextResponse.json({ error: error.message }, { status: 409 })
     }
     console.error('Waybill finalize error:', error)
@@ -379,7 +381,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json({ electronicWaybill: corrected.root, version: corrected.version })
   } catch (error) {
-    if (error instanceof WaybillConflictError || error instanceof Error && /waybill|correction/i.test(error.message)) {
+    if (error instanceof WaybillConflictError || isWaybillWriteConflict(error) || error instanceof Error && /waybill|correction/i.test(error.message)) {
       return NextResponse.json({ error: error.message }, { status: 409 })
     }
     console.error('Waybill correction error:', error)
