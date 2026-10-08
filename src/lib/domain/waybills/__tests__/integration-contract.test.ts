@@ -50,9 +50,12 @@ describe('electronic waybill persistence and verification integration', () => {
     expect(service).not.toContain('const waybillFinalized = Boolean(trip.waybillNumber)')
   })
 
-  it('updates the PDF generator from the current finalized electronic waybill snapshot', () => {
-    const pdf = read('src/lib/reports/waybill-pdf.ts')
-    expect(pdf).toContain('electronicWaybill')
-    expect(pdf).toContain('verificationToken')
+  it('routes PDF generation through the current finalized electronic waybill wrapper', () => {
+    const wrapper = read('src/lib/reports/electronic-waybill-pdf.ts')
+    const reportRoute = read('src/app/api/reports/waybill/route.ts')
+    expect(wrapper).toContain('electronicWaybill')
+    expect(wrapper).toContain('verificationToken')
+    expect(wrapper).toContain('storedElectronicWaybillToDomain')
+    expect(reportRoute).toContain('buildElectronicWaybillPdf')
   })
 })
