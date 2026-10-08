@@ -10,6 +10,30 @@ Pre-flight shared interfaces:
 - Task 3 weighing clearance feeds Task 4.
 - Task 5 e-waybill finalization feeds Task 4.
 
-Task 1: RED contract committed at `57feab0` for gate sequencing, duplicate scan idempotency, unauthorized vehicle rejection, queue progression and detention calculation.
+## Task 1 — Factory gate and queue operations
 
-Ruling: Keep legacy `DepotQueue` intact and layer site-aware immutable `GateEvent` evidence plus additive queue metadata. This preserves existing history while allowing the new factory workflow.
+Status: complete on branch.
+
+RED evidence:
+- Gate/queue domain contract: unauthorized gate rejection, gate sequencing, duplicate scan idempotency, queue progression and detention calculation.
+- Persisted-service contract: duplicate scans do not write twice, rejected gate events never persist, queue changes use domain transition rules.
+- Integration contract: Prisma discovery, authenticated/audited APIs, legacy queue compatibility and operator UI.
+
+Implementation rulings:
+- Keep legacy `DepotQueue` data and API intact.
+- Add immutable `GateEvent` plus `FactoryQueueEntry` overlay models in a multi-file Prisma domain schema.
+- New queue creation writes both the legacy row and factory overlay in one serializable transaction.
+- New queue transitions update both representations transactionally.
+- Reuse the existing Depot Queue navigation entry as the Factory Operations shell instead of creating a duplicate menu. The new Factory Operations view is the default; the exact old `DepotQueueView` blob is preserved as `LegacyDepotQueueView` behind a one-click fallback.
+- Require an assigned trip whose truck/loading point match the gate site before accepting a gate event or factory queue entry.
+
+Verification:
+- CI #146: 109/109 tests passed.
+- Secret scan passed.
+- Full ESLint passed.
+- Prisma Client generated from the multi-file schema.
+- Production Next.js build passed.
+
+## Task 2 — Versioned compliance rule engine
+
+Status: starting RED contract.
