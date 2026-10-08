@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-server'
 import { db } from '@/lib/db'
-import { buildWaybillPdf } from '@/lib/reports/waybill-pdf'
+import { buildElectronicWaybillPdf } from '@/lib/reports/electronic-waybill-pdf'
 
 export async function GET(request: NextRequest) {
   const auth = requireAuth(request)
@@ -15,7 +15,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Verify trip exists
     const trip = await db.trip.findUnique({
       where: { id: tripId },
       include: { driver: true, truck: true, client: true },
@@ -25,10 +24,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
     }
 
-    const pdf = await buildWaybillPdf(tripId)
+    const pdf = await buildElectronicWaybillPdf(tripId)
     const buffer = pdf.toBuffer()
 
-    // Save report history
     await db.reportHistory.create({
       data: {
         type: 'waybill_report',
