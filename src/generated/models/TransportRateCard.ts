@@ -334,6 +334,7 @@ export type TransportRateCardWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   contract?: Prisma.XOR<Prisma.TransportContractNullableScalarRelationFilter, Prisma.TransportContractWhereInput> | null
   transporter?: Prisma.XOR<Prisma.TransporterNullableScalarRelationFilter, Prisma.TransporterWhereInput> | null
+  shipperProfile?: Prisma.XOR<Prisma.ShipperProfileNullableScalarRelationFilter, Prisma.ShipperProfileWhereInput> | null
   loadingPoint?: Prisma.XOR<Prisma.LoadingPointNullableScalarRelationFilter, Prisma.LoadingPointWhereInput> | null
   destinationZone?: Prisma.XOR<Prisma.DestinationZoneNullableScalarRelationFilter, Prisma.DestinationZoneWhereInput> | null
   item?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
@@ -361,6 +362,7 @@ export type TransportRateCardOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   contract?: Prisma.TransportContractOrderByWithRelationInput
   transporter?: Prisma.TransporterOrderByWithRelationInput
+  shipperProfile?: Prisma.ShipperProfileOrderByWithRelationInput
   loadingPoint?: Prisma.LoadingPointOrderByWithRelationInput
   destinationZone?: Prisma.DestinationZoneOrderByWithRelationInput
   item?: Prisma.ItemOrderByWithRelationInput
@@ -393,6 +395,7 @@ export type TransportRateCardWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   contract?: Prisma.XOR<Prisma.TransportContractNullableScalarRelationFilter, Prisma.TransportContractWhereInput> | null
   transporter?: Prisma.XOR<Prisma.TransporterNullableScalarRelationFilter, Prisma.TransporterWhereInput> | null
+  shipperProfile?: Prisma.XOR<Prisma.ShipperProfileNullableScalarRelationFilter, Prisma.ShipperProfileWhereInput> | null
   loadingPoint?: Prisma.XOR<Prisma.LoadingPointNullableScalarRelationFilter, Prisma.LoadingPointWhereInput> | null
   destinationZone?: Prisma.XOR<Prisma.DestinationZoneNullableScalarRelationFilter, Prisma.DestinationZoneWhereInput> | null
   item?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
@@ -452,7 +455,6 @@ export type TransportRateCardScalarWhereWithAggregatesInput = {
 
 export type TransportRateCardCreateInput = {
   id?: string
-  shipperProfileId?: string | null
   unit?: string | null
   rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: string
@@ -467,6 +469,7 @@ export type TransportRateCardCreateInput = {
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportRateCardInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTransportRateCardInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTransportRateCardInput
   item?: Prisma.ItemCreateNestedOneWithoutTransportRateCardInput
@@ -496,7 +499,6 @@ export type TransportRateCardUncheckedCreateInput = {
 
 export type TransportRateCardUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -511,6 +513,7 @@ export type TransportRateCardUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
   transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportRateCardNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTransportRateCardNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTransportRateCardNestedInput
   item?: Prisma.ItemUpdateOneWithoutTransportRateCardNestedInput
@@ -562,7 +565,6 @@ export type TransportRateCardCreateManyInput = {
 
 export type TransportRateCardUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -906,9 +908,50 @@ export type TransportRateCardUncheckedUpdateManyWithoutContractNestedInput = {
   deleteMany?: Prisma.TransportRateCardScalarWhereInput | Prisma.TransportRateCardScalarWhereInput[]
 }
 
+export type TransportRateCardCreateNestedManyWithoutShipperProfileInput = {
+  create?: Prisma.XOR<Prisma.TransportRateCardCreateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportRateCardCreateWithoutShipperProfileInput[] | Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput | Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportRateCardCreateManyShipperProfileInputEnvelope
+  connect?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+}
+
+export type TransportRateCardUncheckedCreateNestedManyWithoutShipperProfileInput = {
+  create?: Prisma.XOR<Prisma.TransportRateCardCreateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportRateCardCreateWithoutShipperProfileInput[] | Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput | Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportRateCardCreateManyShipperProfileInputEnvelope
+  connect?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+}
+
+export type TransportRateCardUpdateManyWithoutShipperProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TransportRateCardCreateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportRateCardCreateWithoutShipperProfileInput[] | Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput | Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput[]
+  upsert?: Prisma.TransportRateCardUpsertWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportRateCardUpsertWithWhereUniqueWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportRateCardCreateManyShipperProfileInputEnvelope
+  set?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  disconnect?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  delete?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  connect?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  update?: Prisma.TransportRateCardUpdateWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportRateCardUpdateWithWhereUniqueWithoutShipperProfileInput[]
+  updateMany?: Prisma.TransportRateCardUpdateManyWithWhereWithoutShipperProfileInput | Prisma.TransportRateCardUpdateManyWithWhereWithoutShipperProfileInput[]
+  deleteMany?: Prisma.TransportRateCardScalarWhereInput | Prisma.TransportRateCardScalarWhereInput[]
+}
+
+export type TransportRateCardUncheckedUpdateManyWithoutShipperProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TransportRateCardCreateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportRateCardCreateWithoutShipperProfileInput[] | Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput | Prisma.TransportRateCardCreateOrConnectWithoutShipperProfileInput[]
+  upsert?: Prisma.TransportRateCardUpsertWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportRateCardUpsertWithWhereUniqueWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportRateCardCreateManyShipperProfileInputEnvelope
+  set?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  disconnect?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  delete?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  connect?: Prisma.TransportRateCardWhereUniqueInput | Prisma.TransportRateCardWhereUniqueInput[]
+  update?: Prisma.TransportRateCardUpdateWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportRateCardUpdateWithWhereUniqueWithoutShipperProfileInput[]
+  updateMany?: Prisma.TransportRateCardUpdateManyWithWhereWithoutShipperProfileInput | Prisma.TransportRateCardUpdateManyWithWhereWithoutShipperProfileInput[]
+  deleteMany?: Prisma.TransportRateCardScalarWhereInput | Prisma.TransportRateCardScalarWhereInput[]
+}
+
 export type TransportRateCardCreateWithoutDestinationZoneInput = {
   id?: string
-  shipperProfileId?: string | null
   unit?: string | null
   rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: string
@@ -923,6 +966,7 @@ export type TransportRateCardCreateWithoutDestinationZoneInput = {
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportRateCardInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTransportRateCardInput
   item?: Prisma.ItemCreateNestedOneWithoutTransportRateCardInput
 }
@@ -1001,7 +1045,6 @@ export type TransportRateCardScalarWhereInput = {
 
 export type TransportRateCardCreateWithoutItemInput = {
   id?: string
-  shipperProfileId?: string | null
   unit?: string | null
   rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: string
@@ -1016,6 +1059,7 @@ export type TransportRateCardCreateWithoutItemInput = {
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportRateCardInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTransportRateCardInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTransportRateCardInput
 }
@@ -1069,7 +1113,6 @@ export type TransportRateCardUpdateManyWithWhereWithoutItemInput = {
 
 export type TransportRateCardCreateWithoutLoadingPointInput = {
   id?: string
-  shipperProfileId?: string | null
   unit?: string | null
   rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: string
@@ -1084,6 +1127,7 @@ export type TransportRateCardCreateWithoutLoadingPointInput = {
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportRateCardInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTransportRateCardInput
   item?: Prisma.ItemCreateNestedOneWithoutTransportRateCardInput
 }
@@ -1137,7 +1181,6 @@ export type TransportRateCardUpdateManyWithWhereWithoutLoadingPointInput = {
 
 export type TransportRateCardCreateWithoutTransporterInput = {
   id?: string
-  shipperProfileId?: string | null
   unit?: string | null
   rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: string
@@ -1151,6 +1194,7 @@ export type TransportRateCardCreateWithoutTransporterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportRateCardInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTransportRateCardInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTransportRateCardInput
   item?: Prisma.ItemCreateNestedOneWithoutTransportRateCardInput
@@ -1205,7 +1249,6 @@ export type TransportRateCardUpdateManyWithWhereWithoutTransporterInput = {
 
 export type TransportRateCardCreateWithoutContractInput = {
   id?: string
-  shipperProfileId?: string | null
   unit?: string | null
   rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: string
@@ -1219,6 +1262,7 @@ export type TransportRateCardCreateWithoutContractInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportRateCardInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTransportRateCardInput
   destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTransportRateCardInput
   item?: Prisma.ItemCreateNestedOneWithoutTransportRateCardInput
@@ -1271,6 +1315,74 @@ export type TransportRateCardUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.TransportRateCardUpdateManyMutationInput, Prisma.TransportRateCardUncheckedUpdateManyWithoutContractInput>
 }
 
+export type TransportRateCardCreateWithoutShipperProfileInput = {
+  id?: string
+  unit?: string | null
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rateType?: string
+  currency?: string
+  effectiveFrom?: Date | string
+  effectiveTo?: Date | string | null
+  priority?: number
+  isActive?: boolean
+  sourceType?: string | null
+  sourceId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
+  transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
+  loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTransportRateCardInput
+  destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTransportRateCardInput
+  item?: Prisma.ItemCreateNestedOneWithoutTransportRateCardInput
+}
+
+export type TransportRateCardUncheckedCreateWithoutShipperProfileInput = {
+  id?: string
+  contractId?: string | null
+  transporterId?: string | null
+  loadingPointId?: string | null
+  destinationZoneId?: string | null
+  itemId?: string | null
+  unit?: string | null
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rateType?: string
+  currency?: string
+  effectiveFrom?: Date | string
+  effectiveTo?: Date | string | null
+  priority?: number
+  isActive?: boolean
+  sourceType?: string | null
+  sourceId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TransportRateCardCreateOrConnectWithoutShipperProfileInput = {
+  where: Prisma.TransportRateCardWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransportRateCardCreateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput>
+}
+
+export type TransportRateCardCreateManyShipperProfileInputEnvelope = {
+  data: Prisma.TransportRateCardCreateManyShipperProfileInput | Prisma.TransportRateCardCreateManyShipperProfileInput[]
+  skipDuplicates?: boolean
+}
+
+export type TransportRateCardUpsertWithWhereUniqueWithoutShipperProfileInput = {
+  where: Prisma.TransportRateCardWhereUniqueInput
+  update: Prisma.XOR<Prisma.TransportRateCardUpdateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedUpdateWithoutShipperProfileInput>
+  create: Prisma.XOR<Prisma.TransportRateCardCreateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedCreateWithoutShipperProfileInput>
+}
+
+export type TransportRateCardUpdateWithWhereUniqueWithoutShipperProfileInput = {
+  where: Prisma.TransportRateCardWhereUniqueInput
+  data: Prisma.XOR<Prisma.TransportRateCardUpdateWithoutShipperProfileInput, Prisma.TransportRateCardUncheckedUpdateWithoutShipperProfileInput>
+}
+
+export type TransportRateCardUpdateManyWithWhereWithoutShipperProfileInput = {
+  where: Prisma.TransportRateCardScalarWhereInput
+  data: Prisma.XOR<Prisma.TransportRateCardUpdateManyMutationInput, Prisma.TransportRateCardUncheckedUpdateManyWithoutShipperProfileInput>
+}
+
 export type TransportRateCardCreateManyDestinationZoneInput = {
   id?: string
   contractId?: string | null
@@ -1294,7 +1406,6 @@ export type TransportRateCardCreateManyDestinationZoneInput = {
 
 export type TransportRateCardUpdateWithoutDestinationZoneInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1309,6 +1420,7 @@ export type TransportRateCardUpdateWithoutDestinationZoneInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
   transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportRateCardNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTransportRateCardNestedInput
   item?: Prisma.ItemUpdateOneWithoutTransportRateCardNestedInput
 }
@@ -1378,7 +1490,6 @@ export type TransportRateCardCreateManyItemInput = {
 
 export type TransportRateCardUpdateWithoutItemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1393,6 +1504,7 @@ export type TransportRateCardUpdateWithoutItemInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
   transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportRateCardNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTransportRateCardNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTransportRateCardNestedInput
 }
@@ -1462,7 +1574,6 @@ export type TransportRateCardCreateManyLoadingPointInput = {
 
 export type TransportRateCardUpdateWithoutLoadingPointInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1477,6 +1588,7 @@ export type TransportRateCardUpdateWithoutLoadingPointInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
   transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportRateCardNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTransportRateCardNestedInput
   item?: Prisma.ItemUpdateOneWithoutTransportRateCardNestedInput
 }
@@ -1546,7 +1658,6 @@ export type TransportRateCardCreateManyTransporterInput = {
 
 export type TransportRateCardUpdateWithoutTransporterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1560,6 +1671,7 @@ export type TransportRateCardUpdateWithoutTransporterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportRateCardNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTransportRateCardNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTransportRateCardNestedInput
   item?: Prisma.ItemUpdateOneWithoutTransportRateCardNestedInput
@@ -1630,7 +1742,6 @@ export type TransportRateCardCreateManyContractInput = {
 
 export type TransportRateCardUpdateWithoutContractInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   rateType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1644,6 +1755,7 @@ export type TransportRateCardUpdateWithoutContractInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportRateCardNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTransportRateCardNestedInput
   destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTransportRateCardNestedInput
   item?: Prisma.ItemUpdateOneWithoutTransportRateCardNestedInput
@@ -1691,6 +1803,90 @@ export type TransportRateCardUncheckedUpdateManyWithoutContractInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type TransportRateCardCreateManyShipperProfileInput = {
+  id?: string
+  contractId?: string | null
+  transporterId?: string | null
+  loadingPointId?: string | null
+  destinationZoneId?: string | null
+  itemId?: string | null
+  unit?: string | null
+  rateAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rateType?: string
+  currency?: string
+  effectiveFrom?: Date | string
+  effectiveTo?: Date | string | null
+  priority?: number
+  isActive?: boolean
+  sourceType?: string | null
+  sourceId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TransportRateCardUpdateWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rateType?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  effectiveFrom?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  effectiveTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
+  transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
+  loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTransportRateCardNestedInput
+  destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTransportRateCardNestedInput
+  item?: Prisma.ItemUpdateOneWithoutTransportRateCardNestedInput
+}
+
+export type TransportRateCardUncheckedUpdateWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contractId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transporterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rateType?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  effectiveFrom?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  effectiveTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransportRateCardUncheckedUpdateManyWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contractId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transporterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rateAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rateType?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  effectiveFrom?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  effectiveTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 
 
 export type TransportRateCardSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1715,6 +1911,7 @@ export type TransportRateCardSelect<ExtArgs extends runtime.Types.Extensions.Int
   updatedAt?: boolean
   contract?: boolean | Prisma.TransportRateCard$contractArgs<ExtArgs>
   transporter?: boolean | Prisma.TransportRateCard$transporterArgs<ExtArgs>
+  shipperProfile?: boolean | Prisma.TransportRateCard$shipperProfileArgs<ExtArgs>
   loadingPoint?: boolean | Prisma.TransportRateCard$loadingPointArgs<ExtArgs>
   destinationZone?: boolean | Prisma.TransportRateCard$destinationZoneArgs<ExtArgs>
   item?: boolean | Prisma.TransportRateCard$itemArgs<ExtArgs>
@@ -1748,6 +1945,7 @@ export type TransportRateCardOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type TransportRateCardInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contract?: boolean | Prisma.TransportRateCard$contractArgs<ExtArgs>
   transporter?: boolean | Prisma.TransportRateCard$transporterArgs<ExtArgs>
+  shipperProfile?: boolean | Prisma.TransportRateCard$shipperProfileArgs<ExtArgs>
   loadingPoint?: boolean | Prisma.TransportRateCard$loadingPointArgs<ExtArgs>
   destinationZone?: boolean | Prisma.TransportRateCard$destinationZoneArgs<ExtArgs>
   item?: boolean | Prisma.TransportRateCard$itemArgs<ExtArgs>
@@ -1758,6 +1956,7 @@ export type $TransportRateCardPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     contract: Prisma.$TransportContractPayload<ExtArgs> | null
     transporter: Prisma.$TransporterPayload<ExtArgs> | null
+    shipperProfile: Prisma.$ShipperProfilePayload<ExtArgs> | null
     loadingPoint: Prisma.$LoadingPointPayload<ExtArgs> | null
     destinationZone: Prisma.$DestinationZonePayload<ExtArgs> | null
     item: Prisma.$ItemPayload<ExtArgs> | null
@@ -2124,6 +2323,7 @@ export interface Prisma__TransportRateCardClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   contract<T extends Prisma.TransportRateCard$contractArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportRateCard$contractArgs<ExtArgs>>): Prisma.Prisma__TransportContractClient<runtime.Types.Result.GetResult<Prisma.$TransportContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transporter<T extends Prisma.TransportRateCard$transporterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportRateCard$transporterArgs<ExtArgs>>): Prisma.Prisma__TransporterClient<runtime.Types.Result.GetResult<Prisma.$TransporterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  shipperProfile<T extends Prisma.TransportRateCard$shipperProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportRateCard$shipperProfileArgs<ExtArgs>>): Prisma.Prisma__ShipperProfileClient<runtime.Types.Result.GetResult<Prisma.$ShipperProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   loadingPoint<T extends Prisma.TransportRateCard$loadingPointArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportRateCard$loadingPointArgs<ExtArgs>>): Prisma.Prisma__LoadingPointClient<runtime.Types.Result.GetResult<Prisma.$LoadingPointPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   destinationZone<T extends Prisma.TransportRateCard$destinationZoneArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportRateCard$destinationZoneArgs<ExtArgs>>): Prisma.Prisma__DestinationZoneClient<runtime.Types.Result.GetResult<Prisma.$DestinationZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   item<T extends Prisma.TransportRateCard$itemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportRateCard$itemArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2558,6 +2758,25 @@ export type TransportRateCard$transporterArgs<ExtArgs extends runtime.Types.Exte
    */
   include?: Prisma.TransporterInclude<ExtArgs> | null
   where?: Prisma.TransporterWhereInput
+}
+
+/**
+ * TransportRateCard.shipperProfile
+ */
+export type TransportRateCard$shipperProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ShipperProfile
+   */
+  select?: Prisma.ShipperProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ShipperProfile
+   */
+  omit?: Prisma.ShipperProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShipperProfileInclude<ExtArgs> | null
+  where?: Prisma.ShipperProfileWhereInput
 }
 
 /**

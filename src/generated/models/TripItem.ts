@@ -53,6 +53,7 @@ export type TripItemMinAggregateOutputType = {
   total: runtime.Decimal | null
   sortOrder: number | null
   deliveryDestinationId: string | null
+  loadOrderLineId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +71,7 @@ export type TripItemMaxAggregateOutputType = {
   total: runtime.Decimal | null
   sortOrder: number | null
   deliveryDestinationId: string | null
+  loadOrderLineId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,6 +89,7 @@ export type TripItemCountAggregateOutputType = {
   total: number
   sortOrder: number
   deliveryDestinationId: number
+  loadOrderLineId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -120,6 +123,7 @@ export type TripItemMinAggregateInputType = {
   total?: true
   sortOrder?: true
   deliveryDestinationId?: true
+  loadOrderLineId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -137,6 +141,7 @@ export type TripItemMaxAggregateInputType = {
   total?: true
   sortOrder?: true
   deliveryDestinationId?: true
+  loadOrderLineId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +159,7 @@ export type TripItemCountAggregateInputType = {
   total?: true
   sortOrder?: true
   deliveryDestinationId?: true
+  loadOrderLineId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -258,6 +264,7 @@ export type TripItemGroupByOutputType = {
   total: runtime.Decimal | null
   sortOrder: number
   deliveryDestinationId: string | null
+  loadOrderLineId: string | null
   createdAt: Date
   updatedAt: Date
   _count: TripItemCountAggregateOutputType | null
@@ -298,11 +305,13 @@ export type TripItemWhereInput = {
   total?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableFilter<"TripItem"> | string | null
+  loadOrderLineId?: Prisma.StringNullableFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
   tripDeliveryDestination?: Prisma.XOR<Prisma.TripDeliveryDestinationNullableScalarRelationFilter, Prisma.TripDeliveryDestinationWhereInput> | null
   item?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
   loadingPoint?: Prisma.XOR<Prisma.LoadingPointNullableScalarRelationFilter, Prisma.LoadingPointWhereInput> | null
+  loadOrderLine?: Prisma.XOR<Prisma.LoadOrderLineNullableScalarRelationFilter, Prisma.LoadOrderLineWhereInput> | null
   supplier?: Prisma.XOR<Prisma.SupplierNullableScalarRelationFilter, Prisma.SupplierWhereInput> | null
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
 }
@@ -320,11 +329,13 @@ export type TripItemOrderByWithRelationInput = {
   total?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   deliveryDestinationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  loadOrderLineId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationOrderByWithRelationInput
   item?: Prisma.ItemOrderByWithRelationInput
   loadingPoint?: Prisma.LoadingPointOrderByWithRelationInput
+  loadOrderLine?: Prisma.LoadOrderLineOrderByWithRelationInput
   supplier?: Prisma.SupplierOrderByWithRelationInput
   trip?: Prisma.TripOrderByWithRelationInput
   _relevance?: Prisma.TripItemOrderByRelevanceInput
@@ -346,11 +357,13 @@ export type TripItemWhereUniqueInput = Prisma.AtLeast<{
   total?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableFilter<"TripItem"> | string | null
+  loadOrderLineId?: Prisma.StringNullableFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
   tripDeliveryDestination?: Prisma.XOR<Prisma.TripDeliveryDestinationNullableScalarRelationFilter, Prisma.TripDeliveryDestinationWhereInput> | null
   item?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
   loadingPoint?: Prisma.XOR<Prisma.LoadingPointNullableScalarRelationFilter, Prisma.LoadingPointWhereInput> | null
+  loadOrderLine?: Prisma.XOR<Prisma.LoadOrderLineNullableScalarRelationFilter, Prisma.LoadOrderLineWhereInput> | null
   supplier?: Prisma.XOR<Prisma.SupplierNullableScalarRelationFilter, Prisma.SupplierWhereInput> | null
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
 }, "id">
@@ -368,6 +381,7 @@ export type TripItemOrderByWithAggregationInput = {
   total?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   deliveryDestinationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  loadOrderLineId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TripItemCountOrderByAggregateInput
@@ -393,6 +407,7 @@ export type TripItemScalarWhereWithAggregatesInput = {
   total?: Prisma.DecimalNullableWithAggregatesFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableWithAggregatesFilter<"TripItem"> | string | null
+  loadOrderLineId?: Prisma.StringNullableWithAggregatesFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TripItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TripItem"> | Date | string
 }
@@ -410,6 +425,7 @@ export type TripItemCreateInput = {
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedOneWithoutTripItemInput
   item?: Prisma.ItemCreateNestedOneWithoutTripItemInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripItemInput
+  loadOrderLine?: Prisma.LoadOrderLineCreateNestedOneWithoutTripItemInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutTripItemInput
   trip: Prisma.TripCreateNestedOneWithoutTripItemInput
 }
@@ -427,6 +443,7 @@ export type TripItemUncheckedCreateInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -444,6 +461,7 @@ export type TripItemUpdateInput = {
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateOneWithoutTripItemNestedInput
   item?: Prisma.ItemUpdateOneWithoutTripItemNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripItemNestedInput
+  loadOrderLine?: Prisma.LoadOrderLineUpdateOneWithoutTripItemNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutTripItemNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripItemNestedInput
 }
@@ -461,6 +479,7 @@ export type TripItemUncheckedUpdateInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -478,6 +497,7 @@ export type TripItemCreateManyInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -507,6 +527,7 @@ export type TripItemUncheckedUpdateManyInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -540,6 +561,7 @@ export type TripItemCountOrderByAggregateInput = {
   total?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   deliveryDestinationId?: Prisma.SortOrder
+  loadOrderLineId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -564,6 +586,7 @@ export type TripItemMaxOrderByAggregateInput = {
   total?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   deliveryDestinationId?: Prisma.SortOrder
+  loadOrderLineId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -581,6 +604,7 @@ export type TripItemMinOrderByAggregateInput = {
   total?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   deliveryDestinationId?: Prisma.SortOrder
+  loadOrderLineId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -802,6 +826,48 @@ export type TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationNestedInput
   deleteMany?: Prisma.TripItemScalarWhereInput | Prisma.TripItemScalarWhereInput[]
 }
 
+export type TripItemCreateNestedManyWithoutLoadOrderLineInput = {
+  create?: Prisma.XOR<Prisma.TripItemCreateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput> | Prisma.TripItemCreateWithoutLoadOrderLineInput[] | Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput[]
+  connectOrCreate?: Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput | Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput[]
+  createMany?: Prisma.TripItemCreateManyLoadOrderLineInputEnvelope
+  connect?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+}
+
+export type TripItemUncheckedCreateNestedManyWithoutLoadOrderLineInput = {
+  create?: Prisma.XOR<Prisma.TripItemCreateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput> | Prisma.TripItemCreateWithoutLoadOrderLineInput[] | Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput[]
+  connectOrCreate?: Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput | Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput[]
+  createMany?: Prisma.TripItemCreateManyLoadOrderLineInputEnvelope
+  connect?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+}
+
+export type TripItemUpdateManyWithoutLoadOrderLineNestedInput = {
+  create?: Prisma.XOR<Prisma.TripItemCreateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput> | Prisma.TripItemCreateWithoutLoadOrderLineInput[] | Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput[]
+  connectOrCreate?: Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput | Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput[]
+  upsert?: Prisma.TripItemUpsertWithWhereUniqueWithoutLoadOrderLineInput | Prisma.TripItemUpsertWithWhereUniqueWithoutLoadOrderLineInput[]
+  createMany?: Prisma.TripItemCreateManyLoadOrderLineInputEnvelope
+  set?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  disconnect?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  delete?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  connect?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  update?: Prisma.TripItemUpdateWithWhereUniqueWithoutLoadOrderLineInput | Prisma.TripItemUpdateWithWhereUniqueWithoutLoadOrderLineInput[]
+  updateMany?: Prisma.TripItemUpdateManyWithWhereWithoutLoadOrderLineInput | Prisma.TripItemUpdateManyWithWhereWithoutLoadOrderLineInput[]
+  deleteMany?: Prisma.TripItemScalarWhereInput | Prisma.TripItemScalarWhereInput[]
+}
+
+export type TripItemUncheckedUpdateManyWithoutLoadOrderLineNestedInput = {
+  create?: Prisma.XOR<Prisma.TripItemCreateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput> | Prisma.TripItemCreateWithoutLoadOrderLineInput[] | Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput[]
+  connectOrCreate?: Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput | Prisma.TripItemCreateOrConnectWithoutLoadOrderLineInput[]
+  upsert?: Prisma.TripItemUpsertWithWhereUniqueWithoutLoadOrderLineInput | Prisma.TripItemUpsertWithWhereUniqueWithoutLoadOrderLineInput[]
+  createMany?: Prisma.TripItemCreateManyLoadOrderLineInputEnvelope
+  set?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  disconnect?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  delete?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  connect?: Prisma.TripItemWhereUniqueInput | Prisma.TripItemWhereUniqueInput[]
+  update?: Prisma.TripItemUpdateWithWhereUniqueWithoutLoadOrderLineInput | Prisma.TripItemUpdateWithWhereUniqueWithoutLoadOrderLineInput[]
+  updateMany?: Prisma.TripItemUpdateManyWithWhereWithoutLoadOrderLineInput | Prisma.TripItemUpdateManyWithWhereWithoutLoadOrderLineInput[]
+  deleteMany?: Prisma.TripItemScalarWhereInput | Prisma.TripItemScalarWhereInput[]
+}
+
 export type TripItemCreateWithoutItemInput = {
   id?: string
   itemName: string
@@ -814,6 +880,7 @@ export type TripItemCreateWithoutItemInput = {
   updatedAt?: Date | string
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedOneWithoutTripItemInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripItemInput
+  loadOrderLine?: Prisma.LoadOrderLineCreateNestedOneWithoutTripItemInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutTripItemInput
   trip: Prisma.TripCreateNestedOneWithoutTripItemInput
 }
@@ -830,6 +897,7 @@ export type TripItemUncheckedCreateWithoutItemInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -876,6 +944,7 @@ export type TripItemScalarWhereInput = {
   total?: Prisma.DecimalNullableFilter<"TripItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFilter<"TripItem"> | number
   deliveryDestinationId?: Prisma.StringNullableFilter<"TripItem"> | string | null
+  loadOrderLineId?: Prisma.StringNullableFilter<"TripItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TripItem"> | Date | string
 }
@@ -892,6 +961,7 @@ export type TripItemCreateWithoutLoadingPointInput = {
   updatedAt?: Date | string
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedOneWithoutTripItemInput
   item?: Prisma.ItemCreateNestedOneWithoutTripItemInput
+  loadOrderLine?: Prisma.LoadOrderLineCreateNestedOneWithoutTripItemInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutTripItemInput
   trip: Prisma.TripCreateNestedOneWithoutTripItemInput
 }
@@ -908,6 +978,7 @@ export type TripItemUncheckedCreateWithoutLoadingPointInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -951,6 +1022,7 @@ export type TripItemCreateWithoutSupplierInput = {
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedOneWithoutTripItemInput
   item?: Prisma.ItemCreateNestedOneWithoutTripItemInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripItemInput
+  loadOrderLine?: Prisma.LoadOrderLineCreateNestedOneWithoutTripItemInput
   trip: Prisma.TripCreateNestedOneWithoutTripItemInput
 }
 
@@ -966,6 +1038,7 @@ export type TripItemUncheckedCreateWithoutSupplierInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1009,6 +1082,7 @@ export type TripItemCreateWithoutTripInput = {
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedOneWithoutTripItemInput
   item?: Prisma.ItemCreateNestedOneWithoutTripItemInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripItemInput
+  loadOrderLine?: Prisma.LoadOrderLineCreateNestedOneWithoutTripItemInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutTripItemInput
 }
 
@@ -1024,6 +1098,7 @@ export type TripItemUncheckedCreateWithoutTripInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1066,6 +1141,7 @@ export type TripItemCreateWithoutTripDeliveryDestinationInput = {
   updatedAt?: Date | string
   item?: Prisma.ItemCreateNestedOneWithoutTripItemInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripItemInput
+  loadOrderLine?: Prisma.LoadOrderLineCreateNestedOneWithoutTripItemInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutTripItemInput
   trip: Prisma.TripCreateNestedOneWithoutTripItemInput
 }
@@ -1082,6 +1158,7 @@ export type TripItemUncheckedCreateWithoutTripDeliveryDestinationInput = {
   rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1112,6 +1189,66 @@ export type TripItemUpdateManyWithWhereWithoutTripDeliveryDestinationInput = {
   data: Prisma.XOR<Prisma.TripItemUpdateManyMutationInput, Prisma.TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationInput>
 }
 
+export type TripItemCreateWithoutLoadOrderLineInput = {
+  id?: string
+  itemName: string
+  unit?: string
+  quantity: number
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedOneWithoutTripItemInput
+  item?: Prisma.ItemCreateNestedOneWithoutTripItemInput
+  loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripItemInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutTripItemInput
+  trip: Prisma.TripCreateNestedOneWithoutTripItemInput
+}
+
+export type TripItemUncheckedCreateWithoutLoadOrderLineInput = {
+  id?: string
+  tripId: string
+  supplierId?: string | null
+  loadingPointId?: string | null
+  itemId?: string | null
+  itemName: string
+  unit?: string
+  quantity: number
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sortOrder?: number
+  deliveryDestinationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TripItemCreateOrConnectWithoutLoadOrderLineInput = {
+  where: Prisma.TripItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripItemCreateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput>
+}
+
+export type TripItemCreateManyLoadOrderLineInputEnvelope = {
+  data: Prisma.TripItemCreateManyLoadOrderLineInput | Prisma.TripItemCreateManyLoadOrderLineInput[]
+  skipDuplicates?: boolean
+}
+
+export type TripItemUpsertWithWhereUniqueWithoutLoadOrderLineInput = {
+  where: Prisma.TripItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.TripItemUpdateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedUpdateWithoutLoadOrderLineInput>
+  create: Prisma.XOR<Prisma.TripItemCreateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedCreateWithoutLoadOrderLineInput>
+}
+
+export type TripItemUpdateWithWhereUniqueWithoutLoadOrderLineInput = {
+  where: Prisma.TripItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.TripItemUpdateWithoutLoadOrderLineInput, Prisma.TripItemUncheckedUpdateWithoutLoadOrderLineInput>
+}
+
+export type TripItemUpdateManyWithWhereWithoutLoadOrderLineInput = {
+  where: Prisma.TripItemScalarWhereInput
+  data: Prisma.XOR<Prisma.TripItemUpdateManyMutationInput, Prisma.TripItemUncheckedUpdateManyWithoutLoadOrderLineInput>
+}
+
 export type TripItemCreateManyItemInput = {
   id?: string
   tripId: string
@@ -1124,6 +1261,7 @@ export type TripItemCreateManyItemInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1140,6 +1278,7 @@ export type TripItemUpdateWithoutItemInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateOneWithoutTripItemNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripItemNestedInput
+  loadOrderLine?: Prisma.LoadOrderLineUpdateOneWithoutTripItemNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutTripItemNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripItemNestedInput
 }
@@ -1156,6 +1295,7 @@ export type TripItemUncheckedUpdateWithoutItemInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1172,6 +1312,7 @@ export type TripItemUncheckedUpdateManyWithoutItemInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1188,6 +1329,7 @@ export type TripItemCreateManyLoadingPointInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1204,6 +1346,7 @@ export type TripItemUpdateWithoutLoadingPointInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateOneWithoutTripItemNestedInput
   item?: Prisma.ItemUpdateOneWithoutTripItemNestedInput
+  loadOrderLine?: Prisma.LoadOrderLineUpdateOneWithoutTripItemNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutTripItemNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripItemNestedInput
 }
@@ -1220,6 +1363,7 @@ export type TripItemUncheckedUpdateWithoutLoadingPointInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1236,6 +1380,7 @@ export type TripItemUncheckedUpdateManyWithoutLoadingPointInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1252,6 +1397,7 @@ export type TripItemCreateManySupplierInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1269,6 +1415,7 @@ export type TripItemUpdateWithoutSupplierInput = {
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateOneWithoutTripItemNestedInput
   item?: Prisma.ItemUpdateOneWithoutTripItemNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripItemNestedInput
+  loadOrderLine?: Prisma.LoadOrderLineUpdateOneWithoutTripItemNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripItemNestedInput
 }
 
@@ -1284,6 +1431,7 @@ export type TripItemUncheckedUpdateWithoutSupplierInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1300,6 +1448,7 @@ export type TripItemUncheckedUpdateManyWithoutSupplierInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1316,6 +1465,7 @@ export type TripItemCreateManyTripInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
   deliveryDestinationId?: string | null
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1333,6 +1483,7 @@ export type TripItemUpdateWithoutTripInput = {
   tripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateOneWithoutTripItemNestedInput
   item?: Prisma.ItemUpdateOneWithoutTripItemNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripItemNestedInput
+  loadOrderLine?: Prisma.LoadOrderLineUpdateOneWithoutTripItemNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutTripItemNestedInput
 }
 
@@ -1348,6 +1499,7 @@ export type TripItemUncheckedUpdateWithoutTripInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1364,6 +1516,7 @@ export type TripItemUncheckedUpdateManyWithoutTripInput = {
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1380,6 +1533,7 @@ export type TripItemCreateManyTripDeliveryDestinationInput = {
   rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: number
+  loadOrderLineId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1396,6 +1550,7 @@ export type TripItemUpdateWithoutTripDeliveryDestinationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   item?: Prisma.ItemUpdateOneWithoutTripItemNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripItemNestedInput
+  loadOrderLine?: Prisma.LoadOrderLineUpdateOneWithoutTripItemNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutTripItemNestedInput
   trip?: Prisma.TripUpdateOneRequiredWithoutTripItemNestedInput
 }
@@ -1412,6 +1567,7 @@ export type TripItemUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1428,6 +1584,75 @@ export type TripItemUncheckedUpdateManyWithoutTripDeliveryDestinationInput = {
   rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  loadOrderLineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TripItemCreateManyLoadOrderLineInput = {
+  id?: string
+  tripId: string
+  supplierId?: string | null
+  loadingPointId?: string | null
+  itemId?: string | null
+  itemName: string
+  unit?: string
+  quantity: number
+  rate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sortOrder?: number
+  deliveryDestinationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TripItemUpdateWithoutLoadOrderLineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateOneWithoutTripItemNestedInput
+  item?: Prisma.ItemUpdateOneWithoutTripItemNestedInput
+  loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripItemNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutTripItemNestedInput
+  trip?: Prisma.TripUpdateOneRequiredWithoutTripItemNestedInput
+}
+
+export type TripItemUncheckedUpdateWithoutLoadOrderLineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TripItemUncheckedUpdateManyWithoutLoadOrderLineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  rate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  total?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  deliveryDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1447,11 +1672,13 @@ export type TripItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   total?: boolean
   sortOrder?: boolean
   deliveryDestinationId?: boolean
+  loadOrderLineId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tripDeliveryDestination?: boolean | Prisma.TripItem$tripDeliveryDestinationArgs<ExtArgs>
   item?: boolean | Prisma.TripItem$itemArgs<ExtArgs>
   loadingPoint?: boolean | Prisma.TripItem$loadingPointArgs<ExtArgs>
+  loadOrderLine?: boolean | Prisma.TripItem$loadOrderLineArgs<ExtArgs>
   supplier?: boolean | Prisma.TripItem$supplierArgs<ExtArgs>
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tripItem"]>
@@ -1471,15 +1698,17 @@ export type TripItemSelectScalar = {
   total?: boolean
   sortOrder?: boolean
   deliveryDestinationId?: boolean
+  loadOrderLineId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TripItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "supplierId" | "loadingPointId" | "itemId" | "itemName" | "unit" | "quantity" | "rate" | "total" | "sortOrder" | "deliveryDestinationId" | "createdAt" | "updatedAt", ExtArgs["result"]["tripItem"]>
+export type TripItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "supplierId" | "loadingPointId" | "itemId" | "itemName" | "unit" | "quantity" | "rate" | "total" | "sortOrder" | "deliveryDestinationId" | "loadOrderLineId" | "createdAt" | "updatedAt", ExtArgs["result"]["tripItem"]>
 export type TripItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tripDeliveryDestination?: boolean | Prisma.TripItem$tripDeliveryDestinationArgs<ExtArgs>
   item?: boolean | Prisma.TripItem$itemArgs<ExtArgs>
   loadingPoint?: boolean | Prisma.TripItem$loadingPointArgs<ExtArgs>
+  loadOrderLine?: boolean | Prisma.TripItem$loadOrderLineArgs<ExtArgs>
   supplier?: boolean | Prisma.TripItem$supplierArgs<ExtArgs>
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }
@@ -1490,6 +1719,7 @@ export type $TripItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     tripDeliveryDestination: Prisma.$TripDeliveryDestinationPayload<ExtArgs> | null
     item: Prisma.$ItemPayload<ExtArgs> | null
     loadingPoint: Prisma.$LoadingPointPayload<ExtArgs> | null
+    loadOrderLine: Prisma.$LoadOrderLinePayload<ExtArgs> | null
     supplier: Prisma.$SupplierPayload<ExtArgs> | null
     trip: Prisma.$TripPayload<ExtArgs>
   }
@@ -1506,6 +1736,7 @@ export type $TripItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     total: runtime.Decimal | null
     sortOrder: number
     deliveryDestinationId: string | null
+    loadOrderLineId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["tripItem"]>
@@ -1851,6 +2082,7 @@ export interface Prisma__TripItemClient<T, Null = never, ExtArgs extends runtime
   tripDeliveryDestination<T extends Prisma.TripItem$tripDeliveryDestinationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripItem$tripDeliveryDestinationArgs<ExtArgs>>): Prisma.Prisma__TripDeliveryDestinationClient<runtime.Types.Result.GetResult<Prisma.$TripDeliveryDestinationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   item<T extends Prisma.TripItem$itemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripItem$itemArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   loadingPoint<T extends Prisma.TripItem$loadingPointArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripItem$loadingPointArgs<ExtArgs>>): Prisma.Prisma__LoadingPointClient<runtime.Types.Result.GetResult<Prisma.$LoadingPointPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  loadOrderLine<T extends Prisma.TripItem$loadOrderLineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripItem$loadOrderLineArgs<ExtArgs>>): Prisma.Prisma__LoadOrderLineClient<runtime.Types.Result.GetResult<Prisma.$LoadOrderLinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   supplier<T extends Prisma.TripItem$supplierArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripItem$supplierArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   trip<T extends Prisma.TripDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripDefaultArgs<ExtArgs>>): Prisma.Prisma__TripClient<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1894,6 +2126,7 @@ export interface TripItemFieldRefs {
   readonly total: Prisma.FieldRef<"TripItem", 'Decimal'>
   readonly sortOrder: Prisma.FieldRef<"TripItem", 'Int'>
   readonly deliveryDestinationId: Prisma.FieldRef<"TripItem", 'String'>
+  readonly loadOrderLineId: Prisma.FieldRef<"TripItem", 'String'>
   readonly createdAt: Prisma.FieldRef<"TripItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TripItem", 'DateTime'>
 }
@@ -2298,6 +2531,25 @@ export type TripItem$loadingPointArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.LoadingPointInclude<ExtArgs> | null
   where?: Prisma.LoadingPointWhereInput
+}
+
+/**
+ * TripItem.loadOrderLine
+ */
+export type TripItem$loadOrderLineArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrderLine
+   */
+  select?: Prisma.LoadOrderLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrderLine
+   */
+  omit?: Prisma.LoadOrderLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderLineInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderLineWhereInput
 }
 
 /**

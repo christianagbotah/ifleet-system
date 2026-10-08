@@ -197,6 +197,7 @@ export type DestinationZoneWhereInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationListRelationFilter
   ZoneRate?: Prisma.ZoneRateListRelationFilter
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
+  LoadOrderDestination?: Prisma.LoadOrderDestinationListRelationFilter
 }
 
 export type DestinationZoneOrderByWithRelationInput = {
@@ -213,6 +214,7 @@ export type DestinationZoneOrderByWithRelationInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationOrderByRelationAggregateInput
   ZoneRate?: Prisma.ZoneRateOrderByRelationAggregateInput
   TransportRateCard?: Prisma.TransportRateCardOrderByRelationAggregateInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationOrderByRelationAggregateInput
   _relevance?: Prisma.DestinationZoneOrderByRelevanceInput
 }
 
@@ -234,6 +236,7 @@ export type DestinationZoneWhereUniqueInput = Prisma.AtLeast<{
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationListRelationFilter
   ZoneRate?: Prisma.ZoneRateListRelationFilter
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
+  LoadOrderDestination?: Prisma.LoadOrderDestinationListRelationFilter
 }, "id" | "name_destinationCityId">
 
 export type DestinationZoneOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type DestinationZoneCreateInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateInput = {
@@ -288,6 +292,7 @@ export type DestinationZoneUncheckedCreateInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUpdateInput = {
@@ -303,6 +308,7 @@ export type DestinationZoneUpdateInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateInput = {
@@ -318,6 +324,7 @@ export type DestinationZoneUncheckedUpdateInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateManyInput = {
@@ -522,6 +529,22 @@ export type DestinationZoneUpdateOneWithoutTransportRateCardNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DestinationZoneUpdateToOneWithWhereWithoutTransportRateCardInput, Prisma.DestinationZoneUpdateWithoutTransportRateCardInput>, Prisma.DestinationZoneUncheckedUpdateWithoutTransportRateCardInput>
 }
 
+export type DestinationZoneCreateNestedOneWithoutLoadOrderDestinationInput = {
+  create?: Prisma.XOR<Prisma.DestinationZoneCreateWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUncheckedCreateWithoutLoadOrderDestinationInput>
+  connectOrCreate?: Prisma.DestinationZoneCreateOrConnectWithoutLoadOrderDestinationInput
+  connect?: Prisma.DestinationZoneWhereUniqueInput
+}
+
+export type DestinationZoneUpdateOneWithoutLoadOrderDestinationNestedInput = {
+  create?: Prisma.XOR<Prisma.DestinationZoneCreateWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUncheckedCreateWithoutLoadOrderDestinationInput>
+  connectOrCreate?: Prisma.DestinationZoneCreateOrConnectWithoutLoadOrderDestinationInput
+  upsert?: Prisma.DestinationZoneUpsertWithoutLoadOrderDestinationInput
+  disconnect?: Prisma.DestinationZoneWhereInput | boolean
+  delete?: Prisma.DestinationZoneWhereInput | boolean
+  connect?: Prisma.DestinationZoneWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DestinationZoneUpdateToOneWithWhereWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUpdateWithoutLoadOrderDestinationInput>, Prisma.DestinationZoneUncheckedUpdateWithoutLoadOrderDestinationInput>
+}
+
 export type DestinationZoneCreateNestedOneWithoutZoneRateInput = {
   create?: Prisma.XOR<Prisma.DestinationZoneCreateWithoutZoneRateInput, Prisma.DestinationZoneUncheckedCreateWithoutZoneRateInput>
   connectOrCreate?: Prisma.DestinationZoneCreateOrConnectWithoutZoneRateInput
@@ -548,6 +571,7 @@ export type DestinationZoneCreateWithoutClientZoneInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutClientZoneInput = {
@@ -562,6 +586,7 @@ export type DestinationZoneUncheckedCreateWithoutClientZoneInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutClientZoneInput = {
@@ -592,6 +617,7 @@ export type DestinationZoneUpdateWithoutClientZoneInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutClientZoneInput = {
@@ -606,6 +632,7 @@ export type DestinationZoneUncheckedUpdateWithoutClientZoneInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateWithoutDestinationCityInput = {
@@ -620,6 +647,7 @@ export type DestinationZoneCreateWithoutDestinationCityInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutDestinationCityInput = {
@@ -634,6 +662,7 @@ export type DestinationZoneUncheckedCreateWithoutDestinationCityInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutDestinationCityInput = {
@@ -686,6 +715,7 @@ export type DestinationZoneCreateWithoutPerformanceBenchmarkInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutPerformanceBenchmarkInput = {
@@ -700,6 +730,7 @@ export type DestinationZoneUncheckedCreateWithoutPerformanceBenchmarkInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutPerformanceBenchmarkInput = {
@@ -730,6 +761,7 @@ export type DestinationZoneUpdateWithoutPerformanceBenchmarkInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutPerformanceBenchmarkInput = {
@@ -744,6 +776,7 @@ export type DestinationZoneUncheckedUpdateWithoutPerformanceBenchmarkInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateWithoutTripInput = {
@@ -758,6 +791,7 @@ export type DestinationZoneCreateWithoutTripInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutTripInput = {
@@ -772,6 +806,7 @@ export type DestinationZoneUncheckedCreateWithoutTripInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutTripInput = {
@@ -802,6 +837,7 @@ export type DestinationZoneUpdateWithoutTripInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutTripInput = {
@@ -816,6 +852,7 @@ export type DestinationZoneUncheckedUpdateWithoutTripInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateWithoutTripDeliveryDestinationInput = {
@@ -830,6 +867,7 @@ export type DestinationZoneCreateWithoutTripDeliveryDestinationInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutTripDeliveryDestinationInput = {
@@ -844,6 +882,7 @@ export type DestinationZoneUncheckedCreateWithoutTripDeliveryDestinationInput = 
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutTripDeliveryDestinationInput = {
@@ -874,6 +913,7 @@ export type DestinationZoneUpdateWithoutTripDeliveryDestinationInput = {
   Trip?: Prisma.TripUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutTripDeliveryDestinationInput = {
@@ -888,6 +928,7 @@ export type DestinationZoneUncheckedUpdateWithoutTripDeliveryDestinationInput = 
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateWithoutTransportRateCardInput = {
@@ -902,6 +943,7 @@ export type DestinationZoneCreateWithoutTransportRateCardInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutDestinationZoneInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutTransportRateCardInput = {
@@ -916,6 +958,7 @@ export type DestinationZoneUncheckedCreateWithoutTransportRateCardInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDestinationZoneInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutTransportRateCardInput = {
@@ -946,6 +989,7 @@ export type DestinationZoneUpdateWithoutTransportRateCardInput = {
   Trip?: Prisma.TripUpdateManyWithoutDestinationZoneNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutTransportRateCardInput = {
@@ -960,6 +1004,83 @@ export type DestinationZoneUncheckedUpdateWithoutTransportRateCardInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
+}
+
+export type DestinationZoneCreateWithoutLoadOrderDestinationInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutDestinationZoneInput
+  destinationCity: Prisma.DestinationCityCreateNestedOneWithoutDestinationZoneInput
+  PerformanceBenchmark?: Prisma.PerformanceBenchmarkCreateNestedManyWithoutDestinationZoneInput
+  Trip?: Prisma.TripCreateNestedManyWithoutDestinationZoneInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
+  ZoneRate?: Prisma.ZoneRateCreateNestedManyWithoutDestinationZoneInput
+  TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+}
+
+export type DestinationZoneUncheckedCreateWithoutLoadOrderDestinationInput = {
+  id?: string
+  name: string
+  destinationCityId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutDestinationZoneInput
+  PerformanceBenchmark?: Prisma.PerformanceBenchmarkUncheckedCreateNestedManyWithoutDestinationZoneInput
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDestinationZoneInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
+  ZoneRate?: Prisma.ZoneRateUncheckedCreateNestedManyWithoutDestinationZoneInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+}
+
+export type DestinationZoneCreateOrConnectWithoutLoadOrderDestinationInput = {
+  where: Prisma.DestinationZoneWhereUniqueInput
+  create: Prisma.XOR<Prisma.DestinationZoneCreateWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUncheckedCreateWithoutLoadOrderDestinationInput>
+}
+
+export type DestinationZoneUpsertWithoutLoadOrderDestinationInput = {
+  update: Prisma.XOR<Prisma.DestinationZoneUpdateWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUncheckedUpdateWithoutLoadOrderDestinationInput>
+  create: Prisma.XOR<Prisma.DestinationZoneCreateWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUncheckedCreateWithoutLoadOrderDestinationInput>
+  where?: Prisma.DestinationZoneWhereInput
+}
+
+export type DestinationZoneUpdateToOneWithWhereWithoutLoadOrderDestinationInput = {
+  where?: Prisma.DestinationZoneWhereInput
+  data: Prisma.XOR<Prisma.DestinationZoneUpdateWithoutLoadOrderDestinationInput, Prisma.DestinationZoneUncheckedUpdateWithoutLoadOrderDestinationInput>
+}
+
+export type DestinationZoneUpdateWithoutLoadOrderDestinationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUpdateManyWithoutDestinationZoneNestedInput
+  destinationCity?: Prisma.DestinationCityUpdateOneRequiredWithoutDestinationZoneNestedInput
+  PerformanceBenchmark?: Prisma.PerformanceBenchmarkUpdateManyWithoutDestinationZoneNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutDestinationZoneNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
+  ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+}
+
+export type DestinationZoneUncheckedUpdateWithoutLoadOrderDestinationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationCityId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  PerformanceBenchmark?: Prisma.PerformanceBenchmarkUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateWithoutZoneRateInput = {
@@ -974,6 +1095,7 @@ export type DestinationZoneCreateWithoutZoneRateInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutDestinationZoneInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneUncheckedCreateWithoutZoneRateInput = {
@@ -988,6 +1110,7 @@ export type DestinationZoneUncheckedCreateWithoutZoneRateInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDestinationZoneInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutDestinationZoneInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutDestinationZoneInput
 }
 
 export type DestinationZoneCreateOrConnectWithoutZoneRateInput = {
@@ -1018,6 +1141,7 @@ export type DestinationZoneUpdateWithoutZoneRateInput = {
   Trip?: Prisma.TripUpdateManyWithoutDestinationZoneNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutZoneRateInput = {
@@ -1032,6 +1156,7 @@ export type DestinationZoneUncheckedUpdateWithoutZoneRateInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneCreateManyDestinationCityInput = {
@@ -1054,6 +1179,7 @@ export type DestinationZoneUpdateWithoutDestinationCityInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateWithoutDestinationCityInput = {
@@ -1068,6 +1194,7 @@ export type DestinationZoneUncheckedUpdateWithoutDestinationCityInput = {
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
   ZoneRate?: Prisma.ZoneRateUncheckedUpdateManyWithoutDestinationZoneNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutDestinationZoneNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutDestinationZoneNestedInput
 }
 
 export type DestinationZoneUncheckedUpdateManyWithoutDestinationCityInput = {
@@ -1090,6 +1217,7 @@ export type DestinationZoneCountOutputType = {
   TripDeliveryDestination: number
   ZoneRate: number
   TransportRateCard: number
+  LoadOrderDestination: number
 }
 
 export type DestinationZoneCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1099,6 +1227,7 @@ export type DestinationZoneCountOutputTypeSelect<ExtArgs extends runtime.Types.E
   TripDeliveryDestination?: boolean | DestinationZoneCountOutputTypeCountTripDeliveryDestinationArgs
   ZoneRate?: boolean | DestinationZoneCountOutputTypeCountZoneRateArgs
   TransportRateCard?: boolean | DestinationZoneCountOutputTypeCountTransportRateCardArgs
+  LoadOrderDestination?: boolean | DestinationZoneCountOutputTypeCountLoadOrderDestinationArgs
 }
 
 /**
@@ -1153,6 +1282,13 @@ export type DestinationZoneCountOutputTypeCountTransportRateCardArgs<ExtArgs ext
   where?: Prisma.TransportRateCardWhereInput
 }
 
+/**
+ * DestinationZoneCountOutputType without action
+ */
+export type DestinationZoneCountOutputTypeCountLoadOrderDestinationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoadOrderDestinationWhereInput
+}
+
 
 export type DestinationZoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1168,6 +1304,7 @@ export type DestinationZoneSelect<ExtArgs extends runtime.Types.Extensions.Inter
   TripDeliveryDestination?: boolean | Prisma.DestinationZone$TripDeliveryDestinationArgs<ExtArgs>
   ZoneRate?: boolean | Prisma.DestinationZone$ZoneRateArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.DestinationZone$TransportRateCardArgs<ExtArgs>
+  LoadOrderDestination?: boolean | Prisma.DestinationZone$LoadOrderDestinationArgs<ExtArgs>
   _count?: boolean | Prisma.DestinationZoneCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["destinationZone"]>
 
@@ -1191,6 +1328,7 @@ export type DestinationZoneInclude<ExtArgs extends runtime.Types.Extensions.Inte
   TripDeliveryDestination?: boolean | Prisma.DestinationZone$TripDeliveryDestinationArgs<ExtArgs>
   ZoneRate?: boolean | Prisma.DestinationZone$ZoneRateArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.DestinationZone$TransportRateCardArgs<ExtArgs>
+  LoadOrderDestination?: boolean | Prisma.DestinationZone$LoadOrderDestinationArgs<ExtArgs>
   _count?: boolean | Prisma.DestinationZoneCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1204,6 +1342,7 @@ export type $DestinationZonePayload<ExtArgs extends runtime.Types.Extensions.Int
     TripDeliveryDestination: Prisma.$TripDeliveryDestinationPayload<ExtArgs>[]
     ZoneRate: Prisma.$ZoneRatePayload<ExtArgs>[]
     TransportRateCard: Prisma.$TransportRateCardPayload<ExtArgs>[]
+    LoadOrderDestination: Prisma.$LoadOrderDestinationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1559,6 +1698,7 @@ export interface Prisma__DestinationZoneClient<T, Null = never, ExtArgs extends 
   TripDeliveryDestination<T extends Prisma.DestinationZone$TripDeliveryDestinationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DestinationZone$TripDeliveryDestinationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripDeliveryDestinationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ZoneRate<T extends Prisma.DestinationZone$ZoneRateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DestinationZone$ZoneRateArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ZoneRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TransportRateCard<T extends Prisma.DestinationZone$TransportRateCardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DestinationZone$TransportRateCardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransportRateCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  LoadOrderDestination<T extends Prisma.DestinationZone$LoadOrderDestinationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DestinationZone$LoadOrderDestinationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadOrderDestinationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2083,6 +2223,30 @@ export type DestinationZone$TransportRateCardArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.TransportRateCardScalarFieldEnum | Prisma.TransportRateCardScalarFieldEnum[]
+}
+
+/**
+ * DestinationZone.LoadOrderDestination
+ */
+export type DestinationZone$LoadOrderDestinationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrderDestination
+   */
+  select?: Prisma.LoadOrderDestinationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrderDestination
+   */
+  omit?: Prisma.LoadOrderDestinationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderDestinationInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderDestinationWhereInput
+  orderBy?: Prisma.LoadOrderDestinationOrderByWithRelationInput | Prisma.LoadOrderDestinationOrderByWithRelationInput[]
+  cursor?: Prisma.LoadOrderDestinationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoadOrderDestinationScalarFieldEnum | Prisma.LoadOrderDestinationScalarFieldEnum[]
 }
 
 /**

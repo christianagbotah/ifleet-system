@@ -190,6 +190,20 @@ export const LoadBoardStatus = {
 export type LoadBoardStatus = (typeof LoadBoardStatus)[keyof typeof LoadBoardStatus]
 
 
+export const LoadOrderStatus = {
+  draft: 'draft',
+  open: 'open',
+  partially_allocated: 'partially_allocated',
+  allocated: 'allocated',
+  in_progress: 'in_progress',
+  on_hold: 'on_hold',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type LoadOrderStatus = (typeof LoadOrderStatus)[keyof typeof LoadOrderStatus]
+
+
 export const BorderCrossingStatus = {
   queued: 'queued',
   processing: 'processing',

@@ -210,6 +210,7 @@ export type ItemWhereInput = {
   Trip?: Prisma.TripListRelationFilter
   TripItem?: Prisma.TripItemListRelationFilter
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
+  LoadOrderLine?: Prisma.LoadOrderLineListRelationFilter
 }
 
 export type ItemOrderByWithRelationInput = {
@@ -225,6 +226,7 @@ export type ItemOrderByWithRelationInput = {
   Trip?: Prisma.TripOrderByRelationAggregateInput
   TripItem?: Prisma.TripItemOrderByRelationAggregateInput
   TransportRateCard?: Prisma.TransportRateCardOrderByRelationAggregateInput
+  LoadOrderLine?: Prisma.LoadOrderLineOrderByRelationAggregateInput
   _relevance?: Prisma.ItemOrderByRelevanceInput
 }
 
@@ -244,6 +246,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   Trip?: Prisma.TripListRelationFilter
   TripItem?: Prisma.TripItemListRelationFilter
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
+  LoadOrderLine?: Prisma.LoadOrderLineListRelationFilter
 }, "id" | "name">
 
 export type ItemOrderByWithAggregationInput = {
@@ -286,6 +289,7 @@ export type ItemCreateInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutItemInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateInput = {
@@ -300,6 +304,7 @@ export type ItemUncheckedCreateInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutItemInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemUpdateInput = {
@@ -314,6 +319,7 @@ export type ItemUpdateInput = {
   Trip?: Prisma.TripUpdateManyWithoutItemNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateInput = {
@@ -328,6 +334,7 @@ export type ItemUncheckedUpdateInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutItemNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateManyInput = {
@@ -506,6 +513,22 @@ export type ItemUpdateOneWithoutTransportRateCardNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutTransportRateCardInput, Prisma.ItemUpdateWithoutTransportRateCardInput>, Prisma.ItemUncheckedUpdateWithoutTransportRateCardInput>
 }
 
+export type ItemCreateNestedOneWithoutLoadOrderLineInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLoadOrderLineInput, Prisma.ItemUncheckedCreateWithoutLoadOrderLineInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLoadOrderLineInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUpdateOneWithoutLoadOrderLineNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLoadOrderLineInput, Prisma.ItemUncheckedCreateWithoutLoadOrderLineInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLoadOrderLineInput
+  upsert?: Prisma.ItemUpsertWithoutLoadOrderLineInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutLoadOrderLineInput, Prisma.ItemUpdateWithoutLoadOrderLineInput>, Prisma.ItemUncheckedUpdateWithoutLoadOrderLineInput>
+}
+
 export type ItemCreateWithoutSupplierInput = {
   id?: string
   name: string
@@ -517,6 +540,7 @@ export type ItemCreateWithoutSupplierInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutItemInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutSupplierInput = {
@@ -530,6 +554,7 @@ export type ItemUncheckedCreateWithoutSupplierInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutItemInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutSupplierInput = {
@@ -583,6 +608,7 @@ export type ItemCreateWithoutTripInput = {
   supplier?: Prisma.SupplierCreateNestedOneWithoutItemInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutTripInput = {
@@ -596,6 +622,7 @@ export type ItemUncheckedCreateWithoutTripInput = {
   supplierId?: string | null
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutTripInput = {
@@ -625,6 +652,7 @@ export type ItemUpdateWithoutTripInput = {
   supplier?: Prisma.SupplierUpdateOneWithoutItemNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutTripInput = {
@@ -638,6 +666,7 @@ export type ItemUncheckedUpdateWithoutTripInput = {
   supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateWithoutTripItemInput = {
@@ -651,6 +680,7 @@ export type ItemCreateWithoutTripItemInput = {
   supplier?: Prisma.SupplierCreateNestedOneWithoutItemInput
   Trip?: Prisma.TripCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutTripItemInput = {
@@ -664,6 +694,7 @@ export type ItemUncheckedCreateWithoutTripItemInput = {
   supplierId?: string | null
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutItemInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutTripItemInput = {
@@ -693,6 +724,7 @@ export type ItemUpdateWithoutTripItemInput = {
   supplier?: Prisma.SupplierUpdateOneWithoutItemNestedInput
   Trip?: Prisma.TripUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutTripItemInput = {
@@ -706,6 +738,7 @@ export type ItemUncheckedUpdateWithoutTripItemInput = {
   supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Trip?: Prisma.TripUncheckedUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateWithoutTransportRateCardInput = {
@@ -719,6 +752,7 @@ export type ItemCreateWithoutTransportRateCardInput = {
   supplier?: Prisma.SupplierCreateNestedOneWithoutItemInput
   Trip?: Prisma.TripCreateNestedManyWithoutItemInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutTransportRateCardInput = {
@@ -732,6 +766,7 @@ export type ItemUncheckedCreateWithoutTransportRateCardInput = {
   supplierId?: string | null
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutItemInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutItemInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutTransportRateCardInput = {
@@ -761,6 +796,7 @@ export type ItemUpdateWithoutTransportRateCardInput = {
   supplier?: Prisma.SupplierUpdateOneWithoutItemNestedInput
   Trip?: Prisma.TripUpdateManyWithoutItemNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutTransportRateCardInput = {
@@ -774,6 +810,79 @@ export type ItemUncheckedUpdateWithoutTransportRateCardInput = {
   supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Trip?: Prisma.TripUncheckedUpdateManyWithoutItemNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type ItemCreateWithoutLoadOrderLineInput = {
+  id?: string
+  name: string
+  description?: string | null
+  unit?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplier?: Prisma.SupplierCreateNestedOneWithoutItemInput
+  Trip?: Prisma.TripCreateNestedManyWithoutItemInput
+  TripItem?: Prisma.TripItemCreateNestedManyWithoutItemInput
+  TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutLoadOrderLineInput = {
+  id?: string
+  name: string
+  description?: string | null
+  unit?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutItemInput
+  TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutItemInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutLoadOrderLineInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutLoadOrderLineInput, Prisma.ItemUncheckedCreateWithoutLoadOrderLineInput>
+}
+
+export type ItemUpsertWithoutLoadOrderLineInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutLoadOrderLineInput, Prisma.ItemUncheckedUpdateWithoutLoadOrderLineInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutLoadOrderLineInput, Prisma.ItemUncheckedCreateWithoutLoadOrderLineInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutLoadOrderLineInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutLoadOrderLineInput, Prisma.ItemUncheckedUpdateWithoutLoadOrderLineInput>
+}
+
+export type ItemUpdateWithoutLoadOrderLineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplier?: Prisma.SupplierUpdateOneWithoutItemNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutItemNestedInput
+  TripItem?: Prisma.TripItemUpdateManyWithoutItemNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutLoadOrderLineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutItemNestedInput
+  TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutItemNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateManySupplierInput = {
@@ -797,6 +906,7 @@ export type ItemUpdateWithoutSupplierInput = {
   Trip?: Prisma.TripUpdateManyWithoutItemNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutSupplierInput = {
@@ -810,6 +920,7 @@ export type ItemUncheckedUpdateWithoutSupplierInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutItemNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutItemNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutItemNestedInput
+  LoadOrderLine?: Prisma.LoadOrderLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutSupplierInput = {
@@ -831,12 +942,14 @@ export type ItemCountOutputType = {
   Trip: number
   TripItem: number
   TransportRateCard: number
+  LoadOrderLine: number
 }
 
 export type ItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Trip?: boolean | ItemCountOutputTypeCountTripArgs
   TripItem?: boolean | ItemCountOutputTypeCountTripItemArgs
   TransportRateCard?: boolean | ItemCountOutputTypeCountTransportRateCardArgs
+  LoadOrderLine?: boolean | ItemCountOutputTypeCountLoadOrderLineArgs
 }
 
 /**
@@ -870,6 +983,13 @@ export type ItemCountOutputTypeCountTransportRateCardArgs<ExtArgs extends runtim
   where?: Prisma.TransportRateCardWhereInput
 }
 
+/**
+ * ItemCountOutputType without action
+ */
+export type ItemCountOutputTypeCountLoadOrderLineArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoadOrderLineWhereInput
+}
+
 
 export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -884,6 +1004,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   Trip?: boolean | Prisma.Item$TripArgs<ExtArgs>
   TripItem?: boolean | Prisma.Item$TripItemArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.Item$TransportRateCardArgs<ExtArgs>
+  LoadOrderLine?: boolean | Prisma.Item$LoadOrderLineArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -906,6 +1027,7 @@ export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   Trip?: boolean | Prisma.Item$TripArgs<ExtArgs>
   TripItem?: boolean | Prisma.Item$TripItemArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.Item$TransportRateCardArgs<ExtArgs>
+  LoadOrderLine?: boolean | Prisma.Item$LoadOrderLineArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -916,6 +1038,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     Trip: Prisma.$TripPayload<ExtArgs>[]
     TripItem: Prisma.$TripItemPayload<ExtArgs>[]
     TransportRateCard: Prisma.$TransportRateCardPayload<ExtArgs>[]
+    LoadOrderLine: Prisma.$LoadOrderLinePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1270,6 +1393,7 @@ export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Typ
   Trip<T extends Prisma.Item$TripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$TripArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TripItem<T extends Prisma.Item$TripItemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$TripItemArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TransportRateCard<T extends Prisma.Item$TransportRateCardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$TransportRateCardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransportRateCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  LoadOrderLine<T extends Prisma.Item$LoadOrderLineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$LoadOrderLineArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadOrderLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1743,6 +1867,30 @@ export type Item$TransportRateCardArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.TransportRateCardScalarFieldEnum | Prisma.TransportRateCardScalarFieldEnum[]
+}
+
+/**
+ * Item.LoadOrderLine
+ */
+export type Item$LoadOrderLineArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrderLine
+   */
+  select?: Prisma.LoadOrderLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrderLine
+   */
+  omit?: Prisma.LoadOrderLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderLineInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderLineWhereInput
+  orderBy?: Prisma.LoadOrderLineOrderByWithRelationInput | Prisma.LoadOrderLineOrderByWithRelationInput[]
+  cursor?: Prisma.LoadOrderLineWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoadOrderLineScalarFieldEnum | Prisma.LoadOrderLineScalarFieldEnum[]
 }
 
 /**

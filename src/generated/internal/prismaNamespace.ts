@@ -442,6 +442,11 @@ export const ModelName = {
   VehicleOwner: 'VehicleOwner',
   TransportContract: 'TransportContract',
   TransportRateCard: 'TransportRateCard',
+  ShipperProfile: 'ShipperProfile',
+  ShipperSiteRule: 'ShipperSiteRule',
+  LoadOrder: 'LoadOrder',
+  LoadOrderDestination: 'LoadOrderDestination',
+  LoadOrderLine: 'LoadOrderLine',
   Truck: 'Truck',
   Trailer: 'Trailer',
   TrailerCoupling: 'TrailerCoupling',
@@ -468,7 +473,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "organization" | "transporter" | "vehicleOwner" | "transportContract" | "transportRateCard" | "truck" | "trailer" | "trailerCoupling" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
+    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "organization" | "transporter" | "vehicleOwner" | "transportContract" | "transportRateCard" | "shipperProfile" | "shipperSiteRule" | "loadOrder" | "loadOrderDestination" | "loadOrderLine" | "truck" | "trailer" | "trailerCoupling" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4300,6 +4305,336 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ShipperProfile: {
+      payload: Prisma.$ShipperProfilePayload<ExtArgs>
+      fields: Prisma.ShipperProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShipperProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShipperProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.ShipperProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShipperProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>
+        }
+        findMany: {
+          args: Prisma.ShipperProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>[]
+        }
+        create: {
+          args: Prisma.ShipperProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>
+        }
+        createMany: {
+          args: Prisma.ShipperProfileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ShipperProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>
+        }
+        update: {
+          args: Prisma.ShipperProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.ShipperProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShipperProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ShipperProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperProfilePayload>
+        }
+        aggregate: {
+          args: Prisma.ShipperProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShipperProfile>
+        }
+        groupBy: {
+          args: Prisma.ShipperProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShipperProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShipperProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShipperProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    ShipperSiteRule: {
+      payload: Prisma.$ShipperSiteRulePayload<ExtArgs>
+      fields: Prisma.ShipperSiteRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShipperSiteRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShipperSiteRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>
+        }
+        findFirst: {
+          args: Prisma.ShipperSiteRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShipperSiteRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>
+        }
+        findMany: {
+          args: Prisma.ShipperSiteRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>[]
+        }
+        create: {
+          args: Prisma.ShipperSiteRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>
+        }
+        createMany: {
+          args: Prisma.ShipperSiteRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ShipperSiteRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>
+        }
+        update: {
+          args: Prisma.ShipperSiteRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.ShipperSiteRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShipperSiteRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ShipperSiteRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipperSiteRulePayload>
+        }
+        aggregate: {
+          args: Prisma.ShipperSiteRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShipperSiteRule>
+        }
+        groupBy: {
+          args: Prisma.ShipperSiteRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShipperSiteRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShipperSiteRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShipperSiteRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    LoadOrder: {
+      payload: Prisma.$LoadOrderPayload<ExtArgs>
+      fields: Prisma.LoadOrderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoadOrderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoadOrderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>
+        }
+        findFirst: {
+          args: Prisma.LoadOrderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoadOrderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>
+        }
+        findMany: {
+          args: Prisma.LoadOrderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>[]
+        }
+        create: {
+          args: Prisma.LoadOrderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>
+        }
+        createMany: {
+          args: Prisma.LoadOrderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LoadOrderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>
+        }
+        update: {
+          args: Prisma.LoadOrderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoadOrderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoadOrderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LoadOrderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderPayload>
+        }
+        aggregate: {
+          args: Prisma.LoadOrderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoadOrder>
+        }
+        groupBy: {
+          args: Prisma.LoadOrderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoadOrderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoadOrderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoadOrderCountAggregateOutputType> | number
+        }
+      }
+    }
+    LoadOrderDestination: {
+      payload: Prisma.$LoadOrderDestinationPayload<ExtArgs>
+      fields: Prisma.LoadOrderDestinationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoadOrderDestinationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoadOrderDestinationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>
+        }
+        findFirst: {
+          args: Prisma.LoadOrderDestinationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoadOrderDestinationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>
+        }
+        findMany: {
+          args: Prisma.LoadOrderDestinationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>[]
+        }
+        create: {
+          args: Prisma.LoadOrderDestinationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>
+        }
+        createMany: {
+          args: Prisma.LoadOrderDestinationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LoadOrderDestinationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>
+        }
+        update: {
+          args: Prisma.LoadOrderDestinationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoadOrderDestinationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoadOrderDestinationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LoadOrderDestinationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderDestinationPayload>
+        }
+        aggregate: {
+          args: Prisma.LoadOrderDestinationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoadOrderDestination>
+        }
+        groupBy: {
+          args: Prisma.LoadOrderDestinationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoadOrderDestinationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoadOrderDestinationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoadOrderDestinationCountAggregateOutputType> | number
+        }
+      }
+    }
+    LoadOrderLine: {
+      payload: Prisma.$LoadOrderLinePayload<ExtArgs>
+      fields: Prisma.LoadOrderLineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoadOrderLineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoadOrderLineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>
+        }
+        findFirst: {
+          args: Prisma.LoadOrderLineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoadOrderLineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>
+        }
+        findMany: {
+          args: Prisma.LoadOrderLineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>[]
+        }
+        create: {
+          args: Prisma.LoadOrderLineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>
+        }
+        createMany: {
+          args: Prisma.LoadOrderLineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LoadOrderLineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>
+        }
+        update: {
+          args: Prisma.LoadOrderLineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>
+        }
+        deleteMany: {
+          args: Prisma.LoadOrderLineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoadOrderLineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LoadOrderLineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoadOrderLinePayload>
+        }
+        aggregate: {
+          args: Prisma.LoadOrderLineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoadOrderLine>
+        }
+        groupBy: {
+          args: Prisma.LoadOrderLineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoadOrderLineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoadOrderLineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoadOrderLineCountAggregateOutputType> | number
+        }
+      }
+    }
     Truck: {
       payload: Prisma.$TruckPayload<ExtArgs>
       fields: Prisma.TruckFieldRefs
@@ -6095,6 +6430,7 @@ export const TripScalarFieldEnum = {
   truckId: 'truckId',
   driverId: 'driverId',
   trailerId: 'trailerId',
+  loadOrderId: 'loadOrderId',
   waybillNumber: 'waybillNumber',
   orderNumber: 'orderNumber',
   loadingLocation: 'loadingLocation',
@@ -6208,6 +6544,7 @@ export const TripItemScalarFieldEnum = {
   total: 'total',
   sortOrder: 'sortOrder',
   deliveryDestinationId: 'deliveryDestinationId',
+  loadOrderLineId: 'loadOrderLineId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -6314,6 +6651,135 @@ export const TransportRateCardScalarFieldEnum = {
 } as const
 
 export type TransportRateCardScalarFieldEnum = (typeof TransportRateCardScalarFieldEnum)[keyof typeof TransportRateCardScalarFieldEnum]
+
+
+export const ShipperProfileScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  clientId: 'clientId',
+  profileType: 'profileType',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  waybillFields: 'waybillFields',
+  weighingStages: 'weighingStages',
+  sealRequired: 'sealRequired',
+  queueProcess: 'queueProcess',
+  loadingCapacity: 'loadingCapacity',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  acceptedQuantityVariance: 'acceptedQuantityVariance',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules',
+  detentionFreeMinutes: 'detentionFreeMinutes',
+  detentionRules: 'detentionRules',
+  integrationMode: 'integrationMode',
+  extensibleSettings: 'extensibleSettings',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShipperProfileScalarFieldEnum = (typeof ShipperProfileScalarFieldEnum)[keyof typeof ShipperProfileScalarFieldEnum]
+
+
+export const ShipperSiteRuleScalarFieldEnum = {
+  id: 'id',
+  shipperProfileId: 'shipperProfileId',
+  loadingPointId: 'loadingPointId',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  weighingStages: 'weighingStages',
+  sealRequired: 'sealRequired',
+  queueProcess: 'queueProcess',
+  loadingCapacity: 'loadingCapacity',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  acceptedQuantityVariance: 'acceptedQuantityVariance',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShipperSiteRuleScalarFieldEnum = (typeof ShipperSiteRuleScalarFieldEnum)[keyof typeof ShipperSiteRuleScalarFieldEnum]
+
+
+export const LoadOrderScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  shipperProfileId: 'shipperProfileId',
+  clientId: 'clientId',
+  externalReference: 'externalReference',
+  loadingPointId: 'loadingPointId',
+  pickupWindowStart: 'pickupWindowStart',
+  pickupWindowEnd: 'pickupWindowEnd',
+  deliveryWindowStart: 'deliveryWindowStart',
+  deliveryWindowEnd: 'deliveryWindowEnd',
+  requiredVehicleType: 'requiredVehicleType',
+  requiredTrailerType: 'requiredTrailerType',
+  offeredRate: 'offeredRate',
+  currency: 'currency',
+  rateType: 'rateType',
+  priority: 'priority',
+  specialHandling: 'specialHandling',
+  documents: 'documents',
+  sourceType: 'sourceType',
+  status: 'status',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoadOrderScalarFieldEnum = (typeof LoadOrderScalarFieldEnum)[keyof typeof LoadOrderScalarFieldEnum]
+
+
+export const LoadOrderDestinationScalarFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  ref: 'ref',
+  stopOrder: 'stopOrder',
+  clientId: 'clientId',
+  destinationZoneId: 'destinationZoneId',
+  name: 'name',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  deliveryWindowStart: 'deliveryWindowStart',
+  deliveryWindowEnd: 'deliveryWindowEnd',
+  contactName: 'contactName',
+  contactPhone: 'contactPhone',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoadOrderDestinationScalarFieldEnum = (typeof LoadOrderDestinationScalarFieldEnum)[keyof typeof LoadOrderDestinationScalarFieldEnum]
+
+
+export const LoadOrderLineScalarFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  destinationId: 'destinationId',
+  ref: 'ref',
+  itemId: 'itemId',
+  itemName: 'itemName',
+  externalProductCode: 'externalProductCode',
+  orderedQuantity: 'orderedQuantity',
+  unit: 'unit',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoadOrderLineScalarFieldEnum = (typeof LoadOrderLineScalarFieldEnum)[keyof typeof LoadOrderLineScalarFieldEnum]
 
 
 export const TruckScalarFieldEnum = {
@@ -7253,6 +7719,7 @@ export const TripOrderByRelevanceFieldEnum = {
   truckId: 'truckId',
   driverId: 'driverId',
   trailerId: 'trailerId',
+  loadOrderId: 'loadOrderId',
   waybillNumber: 'waybillNumber',
   orderNumber: 'orderNumber',
   loadingLocation: 'loadingLocation',
@@ -7325,7 +7792,8 @@ export const TripItemOrderByRelevanceFieldEnum = {
   itemId: 'itemId',
   itemName: 'itemName',
   unit: 'unit',
-  deliveryDestinationId: 'deliveryDestinationId'
+  deliveryDestinationId: 'deliveryDestinationId',
+  loadOrderLineId: 'loadOrderLineId'
 } as const
 
 export type TripItemOrderByRelevanceFieldEnum = (typeof TripItemOrderByRelevanceFieldEnum)[keyof typeof TripItemOrderByRelevanceFieldEnum]
@@ -7407,6 +7875,104 @@ export const TransportRateCardOrderByRelevanceFieldEnum = {
 } as const
 
 export type TransportRateCardOrderByRelevanceFieldEnum = (typeof TransportRateCardOrderByRelevanceFieldEnum)[keyof typeof TransportRateCardOrderByRelevanceFieldEnum]
+
+
+export const ShipperProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  clientId: 'clientId',
+  profileType: 'profileType',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  waybillFields: 'waybillFields',
+  weighingStages: 'weighingStages',
+  queueProcess: 'queueProcess',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules',
+  detentionRules: 'detentionRules',
+  integrationMode: 'integrationMode',
+  extensibleSettings: 'extensibleSettings'
+} as const
+
+export type ShipperProfileOrderByRelevanceFieldEnum = (typeof ShipperProfileOrderByRelevanceFieldEnum)[keyof typeof ShipperProfileOrderByRelevanceFieldEnum]
+
+
+export const ShipperSiteRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  shipperProfileId: 'shipperProfileId',
+  loadingPointId: 'loadingPointId',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  weighingStages: 'weighingStages',
+  queueProcess: 'queueProcess',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules'
+} as const
+
+export type ShipperSiteRuleOrderByRelevanceFieldEnum = (typeof ShipperSiteRuleOrderByRelevanceFieldEnum)[keyof typeof ShipperSiteRuleOrderByRelevanceFieldEnum]
+
+
+export const LoadOrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  shipperProfileId: 'shipperProfileId',
+  clientId: 'clientId',
+  externalReference: 'externalReference',
+  loadingPointId: 'loadingPointId',
+  requiredVehicleType: 'requiredVehicleType',
+  requiredTrailerType: 'requiredTrailerType',
+  currency: 'currency',
+  rateType: 'rateType',
+  priority: 'priority',
+  specialHandling: 'specialHandling',
+  documents: 'documents',
+  sourceType: 'sourceType',
+  createdBy: 'createdBy'
+} as const
+
+export type LoadOrderOrderByRelevanceFieldEnum = (typeof LoadOrderOrderByRelevanceFieldEnum)[keyof typeof LoadOrderOrderByRelevanceFieldEnum]
+
+
+export const LoadOrderDestinationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  ref: 'ref',
+  clientId: 'clientId',
+  destinationZoneId: 'destinationZoneId',
+  name: 'name',
+  address: 'address',
+  contactName: 'contactName',
+  contactPhone: 'contactPhone',
+  notes: 'notes'
+} as const
+
+export type LoadOrderDestinationOrderByRelevanceFieldEnum = (typeof LoadOrderDestinationOrderByRelevanceFieldEnum)[keyof typeof LoadOrderDestinationOrderByRelevanceFieldEnum]
+
+
+export const LoadOrderLineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  destinationId: 'destinationId',
+  ref: 'ref',
+  itemId: 'itemId',
+  itemName: 'itemName',
+  externalProductCode: 'externalProductCode',
+  unit: 'unit',
+  notes: 'notes'
+} as const
+
+export type LoadOrderLineOrderByRelevanceFieldEnum = (typeof LoadOrderLineOrderByRelevanceFieldEnum)[keyof typeof LoadOrderLineOrderByRelevanceFieldEnum]
 
 
 export const TruckOrderByRelevanceFieldEnum = {
@@ -7765,6 +8331,13 @@ export type EnumTripDeliveryDestinationStatusFieldRefInput<$PrismaModel> = Field
 
 
 /**
+ * Reference to a field of type 'LoadOrderStatus'
+ */
+export type EnumLoadOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoadOrderStatus'>
+    
+
+
+/**
  * Reference to a field of type 'TruckStatus'
  */
 export type EnumTruckStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TruckStatus'>
@@ -7980,6 +8553,11 @@ export type GlobalOmitConfig = {
   vehicleOwner?: Prisma.VehicleOwnerOmit
   transportContract?: Prisma.TransportContractOmit
   transportRateCard?: Prisma.TransportRateCardOmit
+  shipperProfile?: Prisma.ShipperProfileOmit
+  shipperSiteRule?: Prisma.ShipperSiteRuleOmit
+  loadOrder?: Prisma.LoadOrderOmit
+  loadOrderDestination?: Prisma.LoadOrderDestinationOmit
+  loadOrderLine?: Prisma.LoadOrderLineOmit
   truck?: Prisma.TruckOmit
   trailer?: Prisma.TrailerOmit
   trailerCoupling?: Prisma.TrailerCouplingOmit

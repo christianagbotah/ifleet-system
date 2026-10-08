@@ -72,6 +72,7 @@ export type TripMinAggregateOutputType = {
   truckId: string | null
   driverId: string | null
   trailerId: string | null
+  loadOrderId: string | null
   waybillNumber: string | null
   orderNumber: string | null
   loadingLocation: string | null
@@ -128,6 +129,7 @@ export type TripMaxAggregateOutputType = {
   truckId: string | null
   driverId: string | null
   trailerId: string | null
+  loadOrderId: string | null
   waybillNumber: string | null
   orderNumber: string | null
   loadingLocation: string | null
@@ -184,6 +186,7 @@ export type TripCountAggregateOutputType = {
   truckId: number
   driverId: number
   trailerId: number
+  loadOrderId: number
   waybillNumber: number
   orderNumber: number
   loadingLocation: number
@@ -282,6 +285,7 @@ export type TripMinAggregateInputType = {
   truckId?: true
   driverId?: true
   trailerId?: true
+  loadOrderId?: true
   waybillNumber?: true
   orderNumber?: true
   loadingLocation?: true
@@ -338,6 +342,7 @@ export type TripMaxAggregateInputType = {
   truckId?: true
   driverId?: true
   trailerId?: true
+  loadOrderId?: true
   waybillNumber?: true
   orderNumber?: true
   loadingLocation?: true
@@ -394,6 +399,7 @@ export type TripCountAggregateInputType = {
   truckId?: true
   driverId?: true
   trailerId?: true
+  loadOrderId?: true
   waybillNumber?: true
   orderNumber?: true
   loadingLocation?: true
@@ -537,6 +543,7 @@ export type TripGroupByOutputType = {
   truckId: string
   driverId: string
   trailerId: string | null
+  loadOrderId: string | null
   waybillNumber: string | null
   orderNumber: string | null
   loadingLocation: string
@@ -616,6 +623,7 @@ export type TripWhereInput = {
   truckId?: Prisma.StringFilter<"Trip"> | string
   driverId?: Prisma.StringFilter<"Trip"> | string
   trailerId?: Prisma.StringNullableFilter<"Trip"> | string | null
+  loadOrderId?: Prisma.StringNullableFilter<"Trip"> | string | null
   waybillNumber?: Prisma.StringNullableFilter<"Trip"> | string | null
   orderNumber?: Prisma.StringNullableFilter<"Trip"> | string | null
   loadingLocation?: Prisma.StringFilter<"Trip"> | string
@@ -684,6 +692,7 @@ export type TripWhereInput = {
   loadingPoint?: Prisma.XOR<Prisma.LoadingPointNullableScalarRelationFilter, Prisma.LoadingPointWhereInput> | null
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
   trailer?: Prisma.XOR<Prisma.TrailerNullableScalarRelationFilter, Prisma.TrailerWhereInput> | null
+  loadOrder?: Prisma.XOR<Prisma.LoadOrderNullableScalarRelationFilter, Prisma.LoadOrderWhereInput> | null
   TripComment?: Prisma.TripCommentListRelationFilter
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationListRelationFilter
   TripEvent?: Prisma.TripEventListRelationFilter
@@ -700,6 +709,7 @@ export type TripOrderByWithRelationInput = {
   truckId?: Prisma.SortOrder
   driverId?: Prisma.SortOrder
   trailerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  loadOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
   waybillNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   orderNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   loadingLocation?: Prisma.SortOrder
@@ -768,6 +778,7 @@ export type TripOrderByWithRelationInput = {
   loadingPoint?: Prisma.LoadingPointOrderByWithRelationInput
   truck?: Prisma.TruckOrderByWithRelationInput
   trailer?: Prisma.TrailerOrderByWithRelationInput
+  loadOrder?: Prisma.LoadOrderOrderByWithRelationInput
   TripComment?: Prisma.TripCommentOrderByRelationAggregateInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationOrderByRelationAggregateInput
   TripEvent?: Prisma.TripEventOrderByRelationAggregateInput
@@ -788,6 +799,7 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   truckId?: Prisma.StringFilter<"Trip"> | string
   driverId?: Prisma.StringFilter<"Trip"> | string
   trailerId?: Prisma.StringNullableFilter<"Trip"> | string | null
+  loadOrderId?: Prisma.StringNullableFilter<"Trip"> | string | null
   waybillNumber?: Prisma.StringNullableFilter<"Trip"> | string | null
   orderNumber?: Prisma.StringNullableFilter<"Trip"> | string | null
   loadingLocation?: Prisma.StringFilter<"Trip"> | string
@@ -856,6 +868,7 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   loadingPoint?: Prisma.XOR<Prisma.LoadingPointNullableScalarRelationFilter, Prisma.LoadingPointWhereInput> | null
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
   trailer?: Prisma.XOR<Prisma.TrailerNullableScalarRelationFilter, Prisma.TrailerWhereInput> | null
+  loadOrder?: Prisma.XOR<Prisma.LoadOrderNullableScalarRelationFilter, Prisma.LoadOrderWhereInput> | null
   TripComment?: Prisma.TripCommentListRelationFilter
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationListRelationFilter
   TripEvent?: Prisma.TripEventListRelationFilter
@@ -872,6 +885,7 @@ export type TripOrderByWithAggregationInput = {
   truckId?: Prisma.SortOrder
   driverId?: Prisma.SortOrder
   trailerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  loadOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
   waybillNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   orderNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   loadingLocation?: Prisma.SortOrder
@@ -936,6 +950,7 @@ export type TripScalarWhereWithAggregatesInput = {
   truckId?: Prisma.StringWithAggregatesFilter<"Trip"> | string
   driverId?: Prisma.StringWithAggregatesFilter<"Trip"> | string
   trailerId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
+  loadOrderId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   waybillNumber?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   orderNumber?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   loadingLocation?: Prisma.StringWithAggregatesFilter<"Trip"> | string
@@ -1051,6 +1066,7 @@ export type TripCreateInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -1067,6 +1083,7 @@ export type TripUncheckedCreateInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -1201,6 +1218,7 @@ export type TripUpdateInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -1217,6 +1235,7 @@ export type TripUncheckedUpdateInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1292,6 +1311,7 @@ export type TripCreateManyInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -1395,6 +1415,7 @@ export type TripUncheckedUpdateManyInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1477,6 +1498,7 @@ export type TripCountOrderByAggregateInput = {
   truckId?: Prisma.SortOrder
   driverId?: Prisma.SortOrder
   trailerId?: Prisma.SortOrder
+  loadOrderId?: Prisma.SortOrder
   waybillNumber?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   loadingLocation?: Prisma.SortOrder
@@ -1553,6 +1575,7 @@ export type TripMaxOrderByAggregateInput = {
   truckId?: Prisma.SortOrder
   driverId?: Prisma.SortOrder
   trailerId?: Prisma.SortOrder
+  loadOrderId?: Prisma.SortOrder
   waybillNumber?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   loadingLocation?: Prisma.SortOrder
@@ -1609,6 +1632,7 @@ export type TripMinOrderByAggregateInput = {
   truckId?: Prisma.SortOrder
   driverId?: Prisma.SortOrder
   trailerId?: Prisma.SortOrder
+  loadOrderId?: Prisma.SortOrder
   waybillNumber?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   loadingLocation?: Prisma.SortOrder
@@ -2203,6 +2227,48 @@ export type TripUpdateOneRequiredWithoutTripItemNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutTripItemInput, Prisma.TripUpdateWithoutTripItemInput>, Prisma.TripUncheckedUpdateWithoutTripItemInput>
 }
 
+export type TripCreateNestedManyWithoutLoadOrderInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutLoadOrderInput, Prisma.TripUncheckedCreateWithoutLoadOrderInput> | Prisma.TripCreateWithoutLoadOrderInput[] | Prisma.TripUncheckedCreateWithoutLoadOrderInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutLoadOrderInput | Prisma.TripCreateOrConnectWithoutLoadOrderInput[]
+  createMany?: Prisma.TripCreateManyLoadOrderInputEnvelope
+  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+}
+
+export type TripUncheckedCreateNestedManyWithoutLoadOrderInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutLoadOrderInput, Prisma.TripUncheckedCreateWithoutLoadOrderInput> | Prisma.TripCreateWithoutLoadOrderInput[] | Prisma.TripUncheckedCreateWithoutLoadOrderInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutLoadOrderInput | Prisma.TripCreateOrConnectWithoutLoadOrderInput[]
+  createMany?: Prisma.TripCreateManyLoadOrderInputEnvelope
+  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+}
+
+export type TripUpdateManyWithoutLoadOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutLoadOrderInput, Prisma.TripUncheckedCreateWithoutLoadOrderInput> | Prisma.TripCreateWithoutLoadOrderInput[] | Prisma.TripUncheckedCreateWithoutLoadOrderInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutLoadOrderInput | Prisma.TripCreateOrConnectWithoutLoadOrderInput[]
+  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutLoadOrderInput | Prisma.TripUpsertWithWhereUniqueWithoutLoadOrderInput[]
+  createMany?: Prisma.TripCreateManyLoadOrderInputEnvelope
+  set?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  disconnect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  delete?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  update?: Prisma.TripUpdateWithWhereUniqueWithoutLoadOrderInput | Prisma.TripUpdateWithWhereUniqueWithoutLoadOrderInput[]
+  updateMany?: Prisma.TripUpdateManyWithWhereWithoutLoadOrderInput | Prisma.TripUpdateManyWithWhereWithoutLoadOrderInput[]
+  deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
+}
+
+export type TripUncheckedUpdateManyWithoutLoadOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutLoadOrderInput, Prisma.TripUncheckedCreateWithoutLoadOrderInput> | Prisma.TripCreateWithoutLoadOrderInput[] | Prisma.TripUncheckedCreateWithoutLoadOrderInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutLoadOrderInput | Prisma.TripCreateOrConnectWithoutLoadOrderInput[]
+  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutLoadOrderInput | Prisma.TripUpsertWithWhereUniqueWithoutLoadOrderInput[]
+  createMany?: Prisma.TripCreateManyLoadOrderInputEnvelope
+  set?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  disconnect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  delete?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+  update?: Prisma.TripUpdateWithWhereUniqueWithoutLoadOrderInput | Prisma.TripUpdateWithWhereUniqueWithoutLoadOrderInput[]
+  updateMany?: Prisma.TripUpdateManyWithWhereWithoutLoadOrderInput | Prisma.TripUpdateManyWithWhereWithoutLoadOrderInput[]
+  deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
+}
+
 export type TripCreateNestedManyWithoutTruckInput = {
   create?: Prisma.XOR<Prisma.TripCreateWithoutTruckInput, Prisma.TripUncheckedCreateWithoutTruckInput> | Prisma.TripCreateWithoutTruckInput[] | Prisma.TripUncheckedCreateWithoutTruckInput[]
   connectOrCreate?: Prisma.TripCreateOrConnectWithoutTruckInput | Prisma.TripCreateOrConnectWithoutTruckInput[]
@@ -2413,6 +2479,7 @@ export type TripCreateWithoutBorderCrossingInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -2429,6 +2496,7 @@ export type TripUncheckedCreateWithoutBorderCrossingInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -2577,6 +2645,7 @@ export type TripUpdateWithoutBorderCrossingInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -2593,6 +2662,7 @@ export type TripUncheckedUpdateWithoutBorderCrossingInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2725,6 +2795,7 @@ export type TripCreateWithoutCashAdvanceInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -2741,6 +2812,7 @@ export type TripUncheckedCreateWithoutCashAdvanceInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -2889,6 +2961,7 @@ export type TripUpdateWithoutCashAdvanceInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -2905,6 +2978,7 @@ export type TripUncheckedUpdateWithoutCashAdvanceInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3037,6 +3111,7 @@ export type TripCreateWithoutClientInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -3053,6 +3128,7 @@ export type TripUncheckedCreateWithoutClientInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -3156,6 +3232,7 @@ export type TripScalarWhereInput = {
   truckId?: Prisma.StringFilter<"Trip"> | string
   driverId?: Prisma.StringFilter<"Trip"> | string
   trailerId?: Prisma.StringNullableFilter<"Trip"> | string | null
+  loadOrderId?: Prisma.StringNullableFilter<"Trip"> | string | null
   waybillNumber?: Prisma.StringNullableFilter<"Trip"> | string | null
   orderNumber?: Prisma.StringNullableFilter<"Trip"> | string | null
   loadingLocation?: Prisma.StringFilter<"Trip"> | string
@@ -3270,6 +3347,7 @@ export type TripCreateWithoutDeliveryStopsInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -3286,6 +3364,7 @@ export type TripUncheckedCreateWithoutDeliveryStopsInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -3434,6 +3513,7 @@ export type TripUpdateWithoutDeliveryStopsInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -3450,6 +3530,7 @@ export type TripUncheckedUpdateWithoutDeliveryStopsInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3582,6 +3663,7 @@ export type TripCreateWithoutDepotQueueInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -3598,6 +3680,7 @@ export type TripUncheckedCreateWithoutDepotQueueInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -3746,6 +3829,7 @@ export type TripUpdateWithoutDepotQueueInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -3762,6 +3846,7 @@ export type TripUncheckedUpdateWithoutDepotQueueInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3894,6 +3979,7 @@ export type TripCreateWithoutDestinationCityInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -3910,6 +3996,7 @@ export type TripUncheckedCreateWithoutDestinationCityInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -4068,6 +4155,7 @@ export type TripCreateWithoutDestinationZoneInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -4084,6 +4172,7 @@ export type TripUncheckedCreateWithoutDestinationZoneInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -4242,6 +4331,7 @@ export type TripCreateWithoutDriverInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -4257,6 +4347,7 @@ export type TripUncheckedCreateWithoutDriverInput = {
   tripNumber: string
   truckId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -4416,6 +4507,7 @@ export type TripCreateWithoutExpenseInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -4432,6 +4524,7 @@ export type TripUncheckedCreateWithoutExpenseInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -4580,6 +4673,7 @@ export type TripUpdateWithoutExpenseInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -4596,6 +4690,7 @@ export type TripUncheckedUpdateWithoutExpenseInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4728,6 +4823,7 @@ export type TripCreateWithoutFuelLogInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -4744,6 +4840,7 @@ export type TripUncheckedCreateWithoutFuelLogInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -4892,6 +4989,7 @@ export type TripUpdateWithoutFuelLogInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -4908,6 +5006,7 @@ export type TripUncheckedUpdateWithoutFuelLogInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5040,6 +5139,7 @@ export type TripCreateWithoutInvoiceInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -5056,6 +5156,7 @@ export type TripUncheckedCreateWithoutInvoiceInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -5204,6 +5305,7 @@ export type TripUpdateWithoutInvoiceInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -5220,6 +5322,7 @@ export type TripUncheckedUpdateWithoutInvoiceInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5352,6 +5455,7 @@ export type TripCreateWithoutItemInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -5368,6 +5472,7 @@ export type TripUncheckedCreateWithoutItemInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -5526,6 +5631,7 @@ export type TripCreateWithoutLoadingCityInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -5542,6 +5648,7 @@ export type TripUncheckedCreateWithoutLoadingCityInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -5700,6 +5807,7 @@ export type TripCreateWithoutLoadingPointInput = {
   loadingCity?: Prisma.LoadingCityCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -5716,6 +5824,7 @@ export type TripUncheckedCreateWithoutLoadingPointInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -5874,6 +5983,7 @@ export type TripCreateWithoutRoadConditionReportInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -5890,6 +6000,7 @@ export type TripUncheckedCreateWithoutRoadConditionReportInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -6038,6 +6149,7 @@ export type TripUpdateWithoutRoadConditionReportInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -6054,6 +6166,7 @@ export type TripUncheckedUpdateWithoutRoadConditionReportInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6186,6 +6299,7 @@ export type TripCreateWithoutSettlementLineInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -6202,6 +6316,7 @@ export type TripUncheckedCreateWithoutSettlementLineInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -6350,6 +6465,7 @@ export type TripUpdateWithoutSettlementLineInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -6366,6 +6482,7 @@ export type TripUncheckedUpdateWithoutSettlementLineInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6498,6 +6615,7 @@ export type TripCreateWithoutTollRecordInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -6514,6 +6632,7 @@ export type TripUncheckedCreateWithoutTollRecordInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -6662,6 +6781,7 @@ export type TripUpdateWithoutTollRecordInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -6678,6 +6798,7 @@ export type TripUncheckedUpdateWithoutTollRecordInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6810,6 +6931,7 @@ export type TripCreateWithoutTrackingAlertInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -6826,6 +6948,7 @@ export type TripUncheckedCreateWithoutTrackingAlertInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -6974,6 +7097,7 @@ export type TripUpdateWithoutTrackingAlertInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -6990,6 +7114,7 @@ export type TripUncheckedUpdateWithoutTrackingAlertInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -7123,6 +7248,7 @@ export type TripCreateWithoutTripCommentInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutTripInput
@@ -7138,6 +7264,7 @@ export type TripUncheckedCreateWithoutTripCommentInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -7287,6 +7414,7 @@ export type TripUpdateWithoutTripCommentInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutTripNestedInput
@@ -7302,6 +7430,7 @@ export type TripUncheckedUpdateWithoutTripCommentInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -7435,6 +7564,7 @@ export type TripCreateWithoutTripDeliveryDestinationInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutTripInput
@@ -7450,6 +7580,7 @@ export type TripUncheckedCreateWithoutTripDeliveryDestinationInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -7599,6 +7730,7 @@ export type TripUpdateWithoutTripDeliveryDestinationInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutTripNestedInput
@@ -7614,6 +7746,7 @@ export type TripUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -7747,6 +7880,7 @@ export type TripCreateWithoutTripEventInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutTripInput
@@ -7762,6 +7896,7 @@ export type TripUncheckedCreateWithoutTripEventInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -7911,6 +8046,7 @@ export type TripUpdateWithoutTripEventInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutTripNestedInput
@@ -7926,6 +8062,7 @@ export type TripUncheckedUpdateWithoutTripEventInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -8059,6 +8196,7 @@ export type TripCreateWithoutTripItemInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -8074,6 +8212,7 @@ export type TripUncheckedCreateWithoutTripItemInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -8223,6 +8362,7 @@ export type TripUpdateWithoutTripItemInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -8238,6 +8378,7 @@ export type TripUncheckedUpdateWithoutTripItemInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -8306,6 +8447,182 @@ export type TripUncheckedUpdateWithoutTripItemInput = {
   WeightVerification?: Prisma.WeightVerificationUncheckedUpdateManyWithoutTripNestedInput
 }
 
+export type TripCreateWithoutLoadOrderInput = {
+  id?: string
+  tripNumber: string
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingCreateNestedManyWithoutTripInput
+  CashAdvance?: Prisma.CashAdvanceCreateNestedManyWithoutTripInput
+  deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutTripInput
+  DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutTripInput
+  Expense?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  FuelLog?: Prisma.FuelLogCreateNestedManyWithoutTripInput
+  Invoice?: Prisma.InvoiceCreateNestedOneWithoutTripInput
+  RoadConditionReport?: Prisma.RoadConditionReportCreateNestedManyWithoutTripInput
+  SettlementLine?: Prisma.SettlementLineCreateNestedManyWithoutTripInput
+  TollRecord?: Prisma.TollRecordCreateNestedManyWithoutTripInput
+  TrackingAlert?: Prisma.TrackingAlertCreateNestedManyWithoutTripInput
+  client?: Prisma.ClientCreateNestedOneWithoutTripInput
+  destinationCity?: Prisma.DestinationCityCreateNestedOneWithoutTripInput
+  destinationZone?: Prisma.DestinationZoneCreateNestedOneWithoutTripInput
+  driver: Prisma.DriverCreateNestedOneWithoutTripInput
+  item?: Prisma.ItemCreateNestedOneWithoutTripInput
+  loadingCity?: Prisma.LoadingCityCreateNestedOneWithoutTripInput
+  loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
+  truck: Prisma.TruckCreateNestedOneWithoutTripInput
+  trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
+  TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
+  TripItem?: Prisma.TripItemCreateNestedManyWithoutTripInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutTripInput
+  TruckLocation?: Prisma.TruckLocationCreateNestedManyWithoutTripInput
+  VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutTripInput
+  WeightVerification?: Prisma.WeightVerificationCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutLoadOrderInput = {
+  id?: string
+  tripNumber: string
+  truckId: string
+  driverId: string
+  trailerId?: string | null
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemId?: string | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  loadingCityId?: string | null
+  loadingPointId?: string | null
+  destinationCityId?: string | null
+  destinationZoneId?: string | null
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  clientId?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedCreateNestedManyWithoutTripInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedCreateNestedManyWithoutTripInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutTripInput
+  DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutTripInput
+  Expense?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  FuelLog?: Prisma.FuelLogUncheckedCreateNestedManyWithoutTripInput
+  Invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutTripInput
+  RoadConditionReport?: Prisma.RoadConditionReportUncheckedCreateNestedManyWithoutTripInput
+  SettlementLine?: Prisma.SettlementLineUncheckedCreateNestedManyWithoutTripInput
+  TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutTripInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedCreateNestedManyWithoutTripInput
+  TripComment?: Prisma.TripCommentUncheckedCreateNestedManyWithoutTripInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutTripInput
+  TripEvent?: Prisma.TripEventUncheckedCreateNestedManyWithoutTripInput
+  TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutTripInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutTripInput
+  TruckLocation?: Prisma.TruckLocationUncheckedCreateNestedManyWithoutTripInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutTripInput
+  WeightVerification?: Prisma.WeightVerificationUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutLoadOrderInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutLoadOrderInput, Prisma.TripUncheckedCreateWithoutLoadOrderInput>
+}
+
+export type TripCreateManyLoadOrderInputEnvelope = {
+  data: Prisma.TripCreateManyLoadOrderInput | Prisma.TripCreateManyLoadOrderInput[]
+  skipDuplicates?: boolean
+}
+
+export type TripUpsertWithWhereUniqueWithoutLoadOrderInput = {
+  where: Prisma.TripWhereUniqueInput
+  update: Prisma.XOR<Prisma.TripUpdateWithoutLoadOrderInput, Prisma.TripUncheckedUpdateWithoutLoadOrderInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutLoadOrderInput, Prisma.TripUncheckedCreateWithoutLoadOrderInput>
+}
+
+export type TripUpdateWithWhereUniqueWithoutLoadOrderInput = {
+  where: Prisma.TripWhereUniqueInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutLoadOrderInput, Prisma.TripUncheckedUpdateWithoutLoadOrderInput>
+}
+
+export type TripUpdateManyWithWhereWithoutLoadOrderInput = {
+  where: Prisma.TripScalarWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateManyMutationInput, Prisma.TripUncheckedUpdateManyWithoutLoadOrderInput>
+}
+
 export type TripCreateWithoutTruckInput = {
   id?: string
   tripNumber: string
@@ -8370,6 +8687,7 @@ export type TripCreateWithoutTruckInput = {
   loadingCity?: Prisma.LoadingCityCreateNestedOneWithoutTripInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -8385,6 +8703,7 @@ export type TripUncheckedCreateWithoutTruckInput = {
   tripNumber: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -8544,6 +8863,7 @@ export type TripCreateWithoutTrailerInput = {
   loadingCity?: Prisma.LoadingCityCreateNestedOneWithoutTripInput
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -8559,6 +8879,7 @@ export type TripUncheckedCreateWithoutTrailerInput = {
   tripNumber: string
   truckId: string
   driverId: string
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -8719,6 +9040,7 @@ export type TripCreateWithoutTrailerCouplingInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -8734,6 +9056,7 @@ export type TripUncheckedCreateWithoutTrailerCouplingInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -8883,6 +9206,7 @@ export type TripUpdateWithoutTrailerCouplingInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -8898,6 +9222,7 @@ export type TripUncheckedUpdateWithoutTrailerCouplingInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -9031,6 +9356,7 @@ export type TripCreateWithoutTruckLocationInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -9046,6 +9372,7 @@ export type TripUncheckedCreateWithoutTruckLocationInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -9195,6 +9522,7 @@ export type TripUpdateWithoutTruckLocationInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -9210,6 +9538,7 @@ export type TripUncheckedUpdateWithoutTruckLocationInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -9343,6 +9672,7 @@ export type TripCreateWithoutVehicleInspectionInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -9358,6 +9688,7 @@ export type TripUncheckedCreateWithoutVehicleInspectionInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -9507,6 +9838,7 @@ export type TripUpdateWithoutVehicleInspectionInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -9522,6 +9854,7 @@ export type TripUncheckedUpdateWithoutVehicleInspectionInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -9655,6 +9988,7 @@ export type TripCreateWithoutWeightVerificationInput = {
   loadingPoint?: Prisma.LoadingPointCreateNestedOneWithoutTripInput
   truck: Prisma.TruckCreateNestedOneWithoutTripInput
   trailer?: Prisma.TrailerCreateNestedOneWithoutTripInput
+  loadOrder?: Prisma.LoadOrderCreateNestedOneWithoutTripInput
   TripComment?: Prisma.TripCommentCreateNestedManyWithoutTripInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutTripInput
   TripEvent?: Prisma.TripEventCreateNestedManyWithoutTripInput
@@ -9670,6 +10004,7 @@ export type TripUncheckedCreateWithoutWeightVerificationInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -9819,6 +10154,7 @@ export type TripUpdateWithoutWeightVerificationInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -9834,6 +10170,7 @@ export type TripUncheckedUpdateWithoutWeightVerificationInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -9908,6 +10245,7 @@ export type TripCreateManyClientInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -10021,6 +10359,7 @@ export type TripUpdateWithoutClientInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -10037,6 +10376,7 @@ export type TripUncheckedUpdateWithoutClientInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10111,6 +10451,7 @@ export type TripUncheckedUpdateManyWithoutClientInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10166,6 +10507,7 @@ export type TripCreateManyDestinationCityInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -10279,6 +10621,7 @@ export type TripUpdateWithoutDestinationCityInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -10295,6 +10638,7 @@ export type TripUncheckedUpdateWithoutDestinationCityInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10369,6 +10713,7 @@ export type TripUncheckedUpdateManyWithoutDestinationCityInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10424,6 +10769,7 @@ export type TripCreateManyDestinationZoneInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -10537,6 +10883,7 @@ export type TripUpdateWithoutDestinationZoneInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -10553,6 +10900,7 @@ export type TripUncheckedUpdateWithoutDestinationZoneInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10627,6 +10975,7 @@ export type TripUncheckedUpdateManyWithoutDestinationZoneInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10681,6 +11030,7 @@ export type TripCreateManyDriverInput = {
   tripNumber: string
   truckId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -10795,6 +11145,7 @@ export type TripUpdateWithoutDriverInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -10810,6 +11161,7 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10884,6 +11236,7 @@ export type TripUncheckedUpdateManyWithoutDriverInput = {
   tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10940,6 +11293,7 @@ export type TripCreateManyItemInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -11053,6 +11407,7 @@ export type TripUpdateWithoutItemInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -11069,6 +11424,7 @@ export type TripUncheckedUpdateWithoutItemInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11143,6 +11499,7 @@ export type TripUncheckedUpdateManyWithoutItemInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11198,6 +11555,7 @@ export type TripCreateManyLoadingCityInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -11311,6 +11669,7 @@ export type TripUpdateWithoutLoadingCityInput = {
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -11327,6 +11686,7 @@ export type TripUncheckedUpdateWithoutLoadingCityInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11401,6 +11761,7 @@ export type TripUncheckedUpdateManyWithoutLoadingCityInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11456,6 +11817,7 @@ export type TripCreateManyLoadingPointInput = {
   truckId: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -11569,6 +11931,7 @@ export type TripUpdateWithoutLoadingPointInput = {
   loadingCity?: Prisma.LoadingCityUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -11585,6 +11948,7 @@ export type TripUncheckedUpdateWithoutLoadingPointInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11659,6 +12023,7 @@ export type TripUncheckedUpdateManyWithoutLoadingPointInput = {
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11708,11 +12073,274 @@ export type TripUncheckedUpdateManyWithoutLoadingPointInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type TripCreateManyLoadOrderInput = {
+  id?: string
+  tripNumber: string
+  truckId: string
+  driverId: string
+  trailerId?: string | null
+  waybillNumber?: string | null
+  orderNumber?: string | null
+  loadingLocation: string
+  loadingAddress?: string | null
+  loadingLat?: number | null
+  loadingLng?: number | null
+  destination: string
+  destinationAddress?: string | null
+  destLat?: number | null
+  destLng?: number | null
+  itemId?: string | null
+  itemName: string
+  quantity: number
+  unit?: string
+  unitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime: Date | string
+  arrivalTime?: Date | string | null
+  estimatedDuration?: number | null
+  actualDuration?: number | null
+  startMileage?: number | null
+  endMileage?: number | null
+  totalMileage?: number | null
+  fuelLevelBefore?: number | null
+  fuelLevelAfter?: number | null
+  fuelUsed?: number | null
+  fuelCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: string | null
+  deliveryType?: string
+  loadingCityId?: string | null
+  loadingPointId?: string | null
+  destinationCityId?: string | null
+  destinationZoneId?: string | null
+  status?: $Enums.TripStatus
+  waitingReason?: string | null
+  waitingSince?: Date | string | null
+  loadingStartedAt?: Date | string | null
+  loadingCompletedAt?: Date | string | null
+  totalOffloaded?: number
+  offloadingStartedAt?: Date | string | null
+  offloadingCompletedAt?: Date | string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  customerRef?: string | null
+  clientId?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TripUpdateWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUpdateManyWithoutTripNestedInput
+  CashAdvance?: Prisma.CashAdvanceUpdateManyWithoutTripNestedInput
+  deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutTripNestedInput
+  DepotQueue?: Prisma.DepotQueueUpdateManyWithoutTripNestedInput
+  Expense?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  FuelLog?: Prisma.FuelLogUpdateManyWithoutTripNestedInput
+  Invoice?: Prisma.InvoiceUpdateOneWithoutTripNestedInput
+  RoadConditionReport?: Prisma.RoadConditionReportUpdateManyWithoutTripNestedInput
+  SettlementLine?: Prisma.SettlementLineUpdateManyWithoutTripNestedInput
+  TollRecord?: Prisma.TollRecordUpdateManyWithoutTripNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUpdateManyWithoutTripNestedInput
+  client?: Prisma.ClientUpdateOneWithoutTripNestedInput
+  destinationCity?: Prisma.DestinationCityUpdateOneWithoutTripNestedInput
+  destinationZone?: Prisma.DestinationZoneUpdateOneWithoutTripNestedInput
+  driver?: Prisma.DriverUpdateOneRequiredWithoutTripNestedInput
+  item?: Prisma.ItemUpdateOneWithoutTripNestedInput
+  loadingCity?: Prisma.LoadingCityUpdateOneWithoutTripNestedInput
+  loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
+  truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
+  trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
+  TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
+  TripItem?: Prisma.TripItemUpdateManyWithoutTripNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutTripNestedInput
+  TruckLocation?: Prisma.TruckLocationUpdateManyWithoutTripNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutTripNestedInput
+  WeightVerification?: Prisma.WeightVerificationUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedUpdateManyWithoutTripNestedInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedUpdateManyWithoutTripNestedInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutTripNestedInput
+  DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutTripNestedInput
+  Expense?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+  FuelLog?: Prisma.FuelLogUncheckedUpdateManyWithoutTripNestedInput
+  Invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutTripNestedInput
+  RoadConditionReport?: Prisma.RoadConditionReportUncheckedUpdateManyWithoutTripNestedInput
+  SettlementLine?: Prisma.SettlementLineUncheckedUpdateManyWithoutTripNestedInput
+  TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutTripNestedInput
+  TrackingAlert?: Prisma.TrackingAlertUncheckedUpdateManyWithoutTripNestedInput
+  TripComment?: Prisma.TripCommentUncheckedUpdateManyWithoutTripNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutTripNestedInput
+  TripEvent?: Prisma.TripEventUncheckedUpdateManyWithoutTripNestedInput
+  TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutTripNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutTripNestedInput
+  TruckLocation?: Prisma.TruckLocationUncheckedUpdateManyWithoutTripNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutTripNestedInput
+  WeightVerification?: Prisma.WeightVerificationUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateManyWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  truckId?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loadingLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  totalRevenue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  actualDuration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  endMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMileage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelLevelAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelUsed?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fuelCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  startMileageImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryType?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadingPointId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationCityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationZoneId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  waitingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waitingSince?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalOffloaded?: Prisma.FloatFieldUpdateOperationsInput | number
+  offloadingStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  offloadingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type TripCreateManyTruckInput = {
   id?: string
   tripNumber: string
   driverId: string
   trailerId?: string | null
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -11827,6 +12455,7 @@ export type TripUpdateWithoutTruckInput = {
   loadingCity?: Prisma.LoadingCityUpdateOneWithoutTripNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   trailer?: Prisma.TrailerUpdateOneWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -11842,6 +12471,7 @@ export type TripUncheckedUpdateWithoutTruckInput = {
   tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11916,6 +12546,7 @@ export type TripUncheckedUpdateManyWithoutTruckInput = {
   tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   trailerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11971,6 +12602,7 @@ export type TripCreateManyTrailerInput = {
   tripNumber: string
   truckId: string
   driverId: string
+  loadOrderId?: string | null
   waybillNumber?: string | null
   orderNumber?: string | null
   loadingLocation: string
@@ -12085,6 +12717,7 @@ export type TripUpdateWithoutTrailerInput = {
   loadingCity?: Prisma.LoadingCityUpdateOneWithoutTripNestedInput
   loadingPoint?: Prisma.LoadingPointUpdateOneWithoutTripNestedInput
   truck?: Prisma.TruckUpdateOneRequiredWithoutTripNestedInput
+  loadOrder?: Prisma.LoadOrderUpdateOneWithoutTripNestedInput
   TripComment?: Prisma.TripCommentUpdateManyWithoutTripNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutTripNestedInput
   TripEvent?: Prisma.TripEventUpdateManyWithoutTripNestedInput
@@ -12100,6 +12733,7 @@ export type TripUncheckedUpdateWithoutTrailerInput = {
   tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -12174,6 +12808,7 @@ export type TripUncheckedUpdateManyWithoutTrailerInput = {
   tripNumber?: Prisma.StringFieldUpdateOperationsInput | string
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  loadOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waybillNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loadingLocation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -12414,6 +13049,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   truckId?: boolean
   driverId?: boolean
   trailerId?: boolean
+  loadOrderId?: boolean
   waybillNumber?: boolean
   orderNumber?: boolean
   loadingLocation?: boolean
@@ -12482,6 +13118,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   loadingPoint?: boolean | Prisma.Trip$loadingPointArgs<ExtArgs>
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
   trailer?: boolean | Prisma.Trip$trailerArgs<ExtArgs>
+  loadOrder?: boolean | Prisma.Trip$loadOrderArgs<ExtArgs>
   TripComment?: boolean | Prisma.Trip$TripCommentArgs<ExtArgs>
   TripDeliveryDestination?: boolean | Prisma.Trip$TripDeliveryDestinationArgs<ExtArgs>
   TripEvent?: boolean | Prisma.Trip$TripEventArgs<ExtArgs>
@@ -12501,6 +13138,7 @@ export type TripSelectScalar = {
   truckId?: boolean
   driverId?: boolean
   trailerId?: boolean
+  loadOrderId?: boolean
   waybillNumber?: boolean
   orderNumber?: boolean
   loadingLocation?: boolean
@@ -12551,7 +13189,7 @@ export type TripSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripNumber" | "truckId" | "driverId" | "trailerId" | "waybillNumber" | "orderNumber" | "loadingLocation" | "loadingAddress" | "loadingLat" | "loadingLng" | "destination" | "destinationAddress" | "destLat" | "destLng" | "itemId" | "itemName" | "quantity" | "unit" | "unitPrice" | "totalRevenue" | "departureTime" | "arrivalTime" | "estimatedDuration" | "actualDuration" | "startMileage" | "endMileage" | "totalMileage" | "fuelLevelBefore" | "fuelLevelAfter" | "fuelUsed" | "fuelCost" | "startMileageImage" | "deliveryType" | "loadingCityId" | "loadingPointId" | "destinationCityId" | "destinationZoneId" | "status" | "waitingReason" | "waitingSince" | "loadingStartedAt" | "loadingCompletedAt" | "totalOffloaded" | "offloadingStartedAt" | "offloadingCompletedAt" | "customerName" | "customerPhone" | "customerRef" | "clientId" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripNumber" | "truckId" | "driverId" | "trailerId" | "loadOrderId" | "waybillNumber" | "orderNumber" | "loadingLocation" | "loadingAddress" | "loadingLat" | "loadingLng" | "destination" | "destinationAddress" | "destLat" | "destLng" | "itemId" | "itemName" | "quantity" | "unit" | "unitPrice" | "totalRevenue" | "departureTime" | "arrivalTime" | "estimatedDuration" | "actualDuration" | "startMileage" | "endMileage" | "totalMileage" | "fuelLevelBefore" | "fuelLevelAfter" | "fuelUsed" | "fuelCost" | "startMileageImage" | "deliveryType" | "loadingCityId" | "loadingPointId" | "destinationCityId" | "destinationZoneId" | "status" | "waitingReason" | "waitingSince" | "loadingStartedAt" | "loadingCompletedAt" | "totalOffloaded" | "offloadingStartedAt" | "offloadingCompletedAt" | "customerName" | "customerPhone" | "customerRef" | "clientId" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   BorderCrossing?: boolean | Prisma.Trip$BorderCrossingArgs<ExtArgs>
   CashAdvance?: boolean | Prisma.Trip$CashAdvanceArgs<ExtArgs>
@@ -12573,6 +13211,7 @@ export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   loadingPoint?: boolean | Prisma.Trip$loadingPointArgs<ExtArgs>
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
   trailer?: boolean | Prisma.Trip$trailerArgs<ExtArgs>
+  loadOrder?: boolean | Prisma.Trip$loadOrderArgs<ExtArgs>
   TripComment?: boolean | Prisma.Trip$TripCommentArgs<ExtArgs>
   TripDeliveryDestination?: boolean | Prisma.Trip$TripDeliveryDestinationArgs<ExtArgs>
   TripEvent?: boolean | Prisma.Trip$TripEventArgs<ExtArgs>
@@ -12607,6 +13246,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     loadingPoint: Prisma.$LoadingPointPayload<ExtArgs> | null
     truck: Prisma.$TruckPayload<ExtArgs>
     trailer: Prisma.$TrailerPayload<ExtArgs> | null
+    loadOrder: Prisma.$LoadOrderPayload<ExtArgs> | null
     TripComment: Prisma.$TripCommentPayload<ExtArgs>[]
     TripDeliveryDestination: Prisma.$TripDeliveryDestinationPayload<ExtArgs>[]
     TripEvent: Prisma.$TripEventPayload<ExtArgs>[]
@@ -12622,6 +13262,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     truckId: string
     driverId: string
     trailerId: string | null
+    loadOrderId: string | null
     waybillNumber: string | null
     orderNumber: string | null
     loadingLocation: string
@@ -13030,6 +13671,7 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   loadingPoint<T extends Prisma.Trip$loadingPointArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$loadingPointArgs<ExtArgs>>): Prisma.Prisma__LoadingPointClient<runtime.Types.Result.GetResult<Prisma.$LoadingPointPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   truck<T extends Prisma.TruckDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TruckDefaultArgs<ExtArgs>>): Prisma.Prisma__TruckClient<runtime.Types.Result.GetResult<Prisma.$TruckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   trailer<T extends Prisma.Trip$trailerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$trailerArgs<ExtArgs>>): Prisma.Prisma__TrailerClient<runtime.Types.Result.GetResult<Prisma.$TrailerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  loadOrder<T extends Prisma.Trip$loadOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$loadOrderArgs<ExtArgs>>): Prisma.Prisma__LoadOrderClient<runtime.Types.Result.GetResult<Prisma.$LoadOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   TripComment<T extends Prisma.Trip$TripCommentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$TripCommentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TripDeliveryDestination<T extends Prisma.Trip$TripDeliveryDestinationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$TripDeliveryDestinationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripDeliveryDestinationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TripEvent<T extends Prisma.Trip$TripEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$TripEventArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13072,6 +13714,7 @@ export interface TripFieldRefs {
   readonly truckId: Prisma.FieldRef<"Trip", 'String'>
   readonly driverId: Prisma.FieldRef<"Trip", 'String'>
   readonly trailerId: Prisma.FieldRef<"Trip", 'String'>
+  readonly loadOrderId: Prisma.FieldRef<"Trip", 'String'>
   readonly waybillNumber: Prisma.FieldRef<"Trip", 'String'>
   readonly orderNumber: Prisma.FieldRef<"Trip", 'String'>
   readonly loadingLocation: Prisma.FieldRef<"Trip", 'String'>
@@ -13857,6 +14500,25 @@ export type Trip$trailerArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.TrailerInclude<ExtArgs> | null
   where?: Prisma.TrailerWhereInput
+}
+
+/**
+ * Trip.loadOrder
+ */
+export type Trip$loadOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrder
+   */
+  select?: Prisma.LoadOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrder
+   */
+  omit?: Prisma.LoadOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderWhereInput
 }
 
 /**

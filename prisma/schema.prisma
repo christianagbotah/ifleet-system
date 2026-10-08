@@ -144,6 +144,17 @@ enum LoadBoardStatus {
   cancelled
 }
 
+enum LoadOrderStatus {
+  draft
+  open
+  partially_allocated
+  allocated
+  in_progress
+  on_hold
+  completed
+  cancelled
+}
+
 enum BorderCrossingStatus {
   queued
   processing
@@ -380,6 +391,9 @@ model Client {
   Invoice                 Invoice[]
   LoadBoard               LoadBoard[]
   Trip                    Trip[]
+  ShipperProfile          ShipperProfile[]
+  LoadOrder               LoadOrder[]
+  LoadOrderDestination    LoadOrderDestination[]
   TripDeliveryDestination TripDeliveryDestination[]
 
   @@index([companyName])
@@ -500,6 +514,7 @@ model DestinationZone {
   TripDeliveryDestination TripDeliveryDestination[]
   ZoneRate                ZoneRate[]
   TransportRateCard       TransportRateCard[]
+  LoadOrderDestination    LoadOrderDestination[]
 
   @@unique([name, destinationCityId])
   @@index([destinationCityId])
@@ -979,6 +994,7 @@ model Item {
   Trip        Trip[]
   TripItem    TripItem[]
   TransportRateCard TransportRateCard[]
+  LoadOrderLine      LoadOrderLine[]
 
   @@index([isActive])
   @@index([supplierId])
@@ -1057,6 +1073,8 @@ model LoadingPoint {
   Trip          Trip[]
   TripItem      TripItem[]
   TransportRateCard TransportRateCard[]
+  ShipperSiteRule  ShipperSiteRule[]
+  LoadOrder        LoadOrder[]
 
   @@unique([name, loadingCityId])
   @@index([isActive])
@@ -1450,6 +1468,7 @@ model Trip {
   truckId                 String
   driverId                String
   trailerId               String?
+  loadOrderId              String?
   waybillNumber           String?
   orderNumber             String?
   loadingLocation         String
@@ -1518,6 +1537,7 @@ model Trip {
   loadingPoint            LoadingPoint?             @relation(fields: [loadingPointId], references: [id])
   truck                   Truck                     @relation(fields: [truckId], references: [id])
   trailer                 Trailer?                  @relation(fields: [trailerId], references: [id])
+  loadOrder               LoadOrder?                @relation(fields: [loadOrderId], references: [id])
   TripComment             TripComment[]
   TripDeliveryDestination TripDeliveryDestination[]
   TripEvent               TripEvent[]
@@ -1540,6 +1560,7 @@ model Trip {
   @@index([status])
   @@index([truckId])
   @@index([trailerId])
+  @@index([loadOrderId])
 }
 
 model TripComment {
@@ -1611,17 +1632,20 @@ model TripItem {
   total                   Decimal?
   sortOrder               Int                      @default(0)
   deliveryDestinationId   String?
+  loadOrderLineId         String?
   createdAt               DateTime                 @default(now())
   updatedAt DateTime @updatedAt
   tripDeliveryDestination TripDeliveryDestination? @relation(fields: [deliveryDestinationId], references: [id])
   item                    Item?                    @relation(fields: [itemId], references: [id])
   loadingPoint            LoadingPoint?            @relation(fields: [loadingPointId], references: [id])
+  loadOrderLine           LoadOrderLine?           @relation(fields: [loadOrderLineId], references: [id])
   supplier                Supplier?                @relation(fields: [supplierId], references: [id])
   trip                    Trip                     @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@index([deliveryDestinationId])
   @@index([itemId])
   @@index([loadingPointId], map: "TripItem_loadingPointId_fkey")
+  @@index([loadOrderLineId])
   @@index([supplierId])
   @@index([tripId])
 }
@@ -1710,6 +1734,7 @@ model TransportContract {
   updatedAt        DateTime            @updatedAt
   organization     Organization?       @relation(fields: [organizationId], references: [id])
   transporter      Transporter?        @relation(fields: [transporterId], references: [id])
+  shipperProfile   ShipperProfile?     @relation(fields: [shipperProfileId], references: [id])
   TransportRateCard TransportRateCard[]
 
   @@index([organizationId])
@@ -1740,6 +1765,7 @@ model TransportRateCard {
   updatedAt         DateTime           @updatedAt
   contract          TransportContract? @relation(fields: [contractId], references: [id])
   transporter       Transporter?       @relation(fields: [transporterId], references: [id])
+  shipperProfile    ShipperProfile?     @relation(fields: [shipperProfileId], references: [id])
   loadingPoint      LoadingPoint?      @relation(fields: [loadingPointId], references: [id])
   destinationZone   DestinationZone?   @relation(fields: [destinationZoneId], references: [id])
   item              Item?              @relation(fields: [itemId], references: [id])
@@ -1753,6 +1779,166 @@ model TransportRateCard {
   @@index([itemId])
   @@index([unit])
   @@index([isActive, effectiveFrom])
+}
+
+
+model ShipperProfile {
+  id                       String              @id @default(cuid())
+  code                     String              @unique
+  name                     String
+  clientId                 String?
+  profileType              String              @default("general")
+  requiredDocuments        String?             @db.Text
+  allowedVehicleTypes      String?             @db.Text
+  allowedTrailerTypes      String?             @db.Text
+  waybillFields            String?             @db.Text
+  weighingStages           String?             @db.Text
+  sealRequired             Boolean             @default(false)
+  queueProcess             String?
+  loadingCapacity          Float?
+  loadingCapacityUnit      String?
+  gateOpenTime             String?
+  gateCloseTime            String?
+  podRequirements          String?             @db.Text
+  acceptedQuantityVariance Float               @default(0)
+  permittedRoutes          String?             @db.Text
+  speedRules               String?             @db.Text
+  detentionFreeMinutes     Int?
+  detentionRules           String?             @db.Text
+  integrationMode          String              @default("manual")
+  extensibleSettings       String?             @db.Text
+  isActive                 Boolean             @default(true)
+  createdAt                DateTime            @default(now())
+  updatedAt                DateTime            @updatedAt
+  client                   Client?             @relation(fields: [clientId], references: [id])
+  ShipperSiteRule          ShipperSiteRule[]
+  LoadOrder                LoadOrder[]
+  TransportContract        TransportContract[]
+  TransportRateCard        TransportRateCard[]
+
+  @@index([clientId])
+  @@index([isActive])
+  @@index([profileType])
+}
+
+model ShipperSiteRule {
+  id                       String         @id @default(cuid())
+  shipperProfileId         String
+  loadingPointId           String
+  requiredDocuments        String?        @db.Text
+  allowedVehicleTypes      String?        @db.Text
+  allowedTrailerTypes      String?        @db.Text
+  weighingStages           String?        @db.Text
+  sealRequired             Boolean?
+  queueProcess             String?
+  loadingCapacity          Float?
+  loadingCapacityUnit      String?
+  gateOpenTime             String?
+  gateCloseTime            String?
+  podRequirements          String?        @db.Text
+  acceptedQuantityVariance Float?
+  permittedRoutes          String?        @db.Text
+  speedRules               String?        @db.Text
+  isActive                 Boolean        @default(true)
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+  shipperProfile           ShipperProfile @relation(fields: [shipperProfileId], references: [id], onDelete: Cascade)
+  loadingPoint             LoadingPoint   @relation(fields: [loadingPointId], references: [id])
+
+  @@unique([shipperProfileId, loadingPointId])
+  @@index([loadingPointId])
+  @@index([isActive])
+}
+
+model LoadOrder {
+  id                  String          @id @default(cuid())
+  orderNumber         String          @unique
+  shipperProfileId    String
+  clientId            String?
+  externalReference   String?
+  loadingPointId      String
+  pickupWindowStart   DateTime?
+  pickupWindowEnd     DateTime?
+  deliveryWindowStart DateTime?
+  deliveryWindowEnd   DateTime?
+  requiredVehicleType String?
+  requiredTrailerType String?
+  offeredRate         Decimal?
+  currency            String          @default("GHS")
+  rateType            String?
+  priority            String          @default("normal")
+  specialHandling     String?         @db.Text
+  documents           String?         @db.Text
+  sourceType          String          @default("manual")
+  status              LoadOrderStatus @default(open)
+  createdBy           String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  shipperProfile      ShipperProfile  @relation(fields: [shipperProfileId], references: [id])
+  client              Client?         @relation(fields: [clientId], references: [id])
+  loadingPoint        LoadingPoint    @relation(fields: [loadingPointId], references: [id])
+  LoadOrderLine       LoadOrderLine[]
+  LoadOrderDestination LoadOrderDestination[]
+  Trip                Trip[]
+
+  @@unique([shipperProfileId, externalReference])
+  @@index([clientId])
+  @@index([loadingPointId])
+  @@index([status, createdAt])
+  @@index([priority])
+}
+
+model LoadOrderDestination {
+  id                  String         @id @default(cuid())
+  loadOrderId         String
+  ref                 String
+  stopOrder           Int            @default(0)
+  clientId            String?
+  destinationZoneId   String?
+  name                String
+  address             String?
+  latitude            Float?
+  longitude           Float?
+  deliveryWindowStart DateTime?
+  deliveryWindowEnd   DateTime?
+  contactName         String?
+  contactPhone        String?
+  notes               String?        @db.Text
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  loadOrder           LoadOrder      @relation(fields: [loadOrderId], references: [id], onDelete: Cascade)
+  client              Client?        @relation(fields: [clientId], references: [id])
+  destinationZone     DestinationZone? @relation(fields: [destinationZoneId], references: [id])
+  LoadOrderLine       LoadOrderLine[]
+
+  @@unique([loadOrderId, ref])
+  @@index([clientId])
+  @@index([destinationZoneId])
+  @@index([loadOrderId, stopOrder])
+}
+
+model LoadOrderLine {
+  id                  String               @id @default(cuid())
+  loadOrderId         String
+  destinationId       String?
+  ref                 String
+  itemId              String?
+  itemName            String
+  externalProductCode String?
+  orderedQuantity     Float
+  unit                String
+  notes               String?              @db.Text
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  loadOrder           LoadOrder            @relation(fields: [loadOrderId], references: [id], onDelete: Cascade)
+  destination         LoadOrderDestination? @relation(fields: [destinationId], references: [id])
+  item                Item?                @relation(fields: [itemId], references: [id])
+  TripItem            TripItem[]
+
+  @@unique([loadOrderId, ref])
+  @@index([destinationId])
+  @@index([itemId])
+  @@index([loadOrderId])
 }
 
 model Truck {

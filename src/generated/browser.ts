@@ -308,6 +308,31 @@ export type TransportContract = Prisma.TransportContractModel
  */
 export type TransportRateCard = Prisma.TransportRateCardModel
 /**
+ * Model ShipperProfile
+ * 
+ */
+export type ShipperProfile = Prisma.ShipperProfileModel
+/**
+ * Model ShipperSiteRule
+ * 
+ */
+export type ShipperSiteRule = Prisma.ShipperSiteRuleModel
+/**
+ * Model LoadOrder
+ * 
+ */
+export type LoadOrder = Prisma.LoadOrderModel
+/**
+ * Model LoadOrderDestination
+ * 
+ */
+export type LoadOrderDestination = Prisma.LoadOrderDestinationModel
+/**
+ * Model LoadOrderLine
+ * 
+ */
+export type LoadOrderLine = Prisma.LoadOrderLineModel
+/**
  * Model Truck
  * 
  */

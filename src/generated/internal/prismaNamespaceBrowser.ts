@@ -109,6 +109,11 @@ export const ModelName = {
   VehicleOwner: 'VehicleOwner',
   TransportContract: 'TransportContract',
   TransportRateCard: 'TransportRateCard',
+  ShipperProfile: 'ShipperProfile',
+  ShipperSiteRule: 'ShipperSiteRule',
+  LoadOrder: 'LoadOrder',
+  LoadOrderDestination: 'LoadOrderDestination',
+  LoadOrderLine: 'LoadOrderLine',
   Truck: 'Truck',
   Trailer: 'Trailer',
   TrailerCoupling: 'TrailerCoupling',
@@ -1168,6 +1173,7 @@ export const TripScalarFieldEnum = {
   truckId: 'truckId',
   driverId: 'driverId',
   trailerId: 'trailerId',
+  loadOrderId: 'loadOrderId',
   waybillNumber: 'waybillNumber',
   orderNumber: 'orderNumber',
   loadingLocation: 'loadingLocation',
@@ -1281,6 +1287,7 @@ export const TripItemScalarFieldEnum = {
   total: 'total',
   sortOrder: 'sortOrder',
   deliveryDestinationId: 'deliveryDestinationId',
+  loadOrderLineId: 'loadOrderLineId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1387,6 +1394,135 @@ export const TransportRateCardScalarFieldEnum = {
 } as const
 
 export type TransportRateCardScalarFieldEnum = (typeof TransportRateCardScalarFieldEnum)[keyof typeof TransportRateCardScalarFieldEnum]
+
+
+export const ShipperProfileScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  clientId: 'clientId',
+  profileType: 'profileType',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  waybillFields: 'waybillFields',
+  weighingStages: 'weighingStages',
+  sealRequired: 'sealRequired',
+  queueProcess: 'queueProcess',
+  loadingCapacity: 'loadingCapacity',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  acceptedQuantityVariance: 'acceptedQuantityVariance',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules',
+  detentionFreeMinutes: 'detentionFreeMinutes',
+  detentionRules: 'detentionRules',
+  integrationMode: 'integrationMode',
+  extensibleSettings: 'extensibleSettings',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShipperProfileScalarFieldEnum = (typeof ShipperProfileScalarFieldEnum)[keyof typeof ShipperProfileScalarFieldEnum]
+
+
+export const ShipperSiteRuleScalarFieldEnum = {
+  id: 'id',
+  shipperProfileId: 'shipperProfileId',
+  loadingPointId: 'loadingPointId',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  weighingStages: 'weighingStages',
+  sealRequired: 'sealRequired',
+  queueProcess: 'queueProcess',
+  loadingCapacity: 'loadingCapacity',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  acceptedQuantityVariance: 'acceptedQuantityVariance',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShipperSiteRuleScalarFieldEnum = (typeof ShipperSiteRuleScalarFieldEnum)[keyof typeof ShipperSiteRuleScalarFieldEnum]
+
+
+export const LoadOrderScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  shipperProfileId: 'shipperProfileId',
+  clientId: 'clientId',
+  externalReference: 'externalReference',
+  loadingPointId: 'loadingPointId',
+  pickupWindowStart: 'pickupWindowStart',
+  pickupWindowEnd: 'pickupWindowEnd',
+  deliveryWindowStart: 'deliveryWindowStart',
+  deliveryWindowEnd: 'deliveryWindowEnd',
+  requiredVehicleType: 'requiredVehicleType',
+  requiredTrailerType: 'requiredTrailerType',
+  offeredRate: 'offeredRate',
+  currency: 'currency',
+  rateType: 'rateType',
+  priority: 'priority',
+  specialHandling: 'specialHandling',
+  documents: 'documents',
+  sourceType: 'sourceType',
+  status: 'status',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoadOrderScalarFieldEnum = (typeof LoadOrderScalarFieldEnum)[keyof typeof LoadOrderScalarFieldEnum]
+
+
+export const LoadOrderDestinationScalarFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  ref: 'ref',
+  stopOrder: 'stopOrder',
+  clientId: 'clientId',
+  destinationZoneId: 'destinationZoneId',
+  name: 'name',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  deliveryWindowStart: 'deliveryWindowStart',
+  deliveryWindowEnd: 'deliveryWindowEnd',
+  contactName: 'contactName',
+  contactPhone: 'contactPhone',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoadOrderDestinationScalarFieldEnum = (typeof LoadOrderDestinationScalarFieldEnum)[keyof typeof LoadOrderDestinationScalarFieldEnum]
+
+
+export const LoadOrderLineScalarFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  destinationId: 'destinationId',
+  ref: 'ref',
+  itemId: 'itemId',
+  itemName: 'itemName',
+  externalProductCode: 'externalProductCode',
+  orderedQuantity: 'orderedQuantity',
+  unit: 'unit',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoadOrderLineScalarFieldEnum = (typeof LoadOrderLineScalarFieldEnum)[keyof typeof LoadOrderLineScalarFieldEnum]
 
 
 export const TruckScalarFieldEnum = {
@@ -2326,6 +2462,7 @@ export const TripOrderByRelevanceFieldEnum = {
   truckId: 'truckId',
   driverId: 'driverId',
   trailerId: 'trailerId',
+  loadOrderId: 'loadOrderId',
   waybillNumber: 'waybillNumber',
   orderNumber: 'orderNumber',
   loadingLocation: 'loadingLocation',
@@ -2398,7 +2535,8 @@ export const TripItemOrderByRelevanceFieldEnum = {
   itemId: 'itemId',
   itemName: 'itemName',
   unit: 'unit',
-  deliveryDestinationId: 'deliveryDestinationId'
+  deliveryDestinationId: 'deliveryDestinationId',
+  loadOrderLineId: 'loadOrderLineId'
 } as const
 
 export type TripItemOrderByRelevanceFieldEnum = (typeof TripItemOrderByRelevanceFieldEnum)[keyof typeof TripItemOrderByRelevanceFieldEnum]
@@ -2480,6 +2618,104 @@ export const TransportRateCardOrderByRelevanceFieldEnum = {
 } as const
 
 export type TransportRateCardOrderByRelevanceFieldEnum = (typeof TransportRateCardOrderByRelevanceFieldEnum)[keyof typeof TransportRateCardOrderByRelevanceFieldEnum]
+
+
+export const ShipperProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  clientId: 'clientId',
+  profileType: 'profileType',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  waybillFields: 'waybillFields',
+  weighingStages: 'weighingStages',
+  queueProcess: 'queueProcess',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules',
+  detentionRules: 'detentionRules',
+  integrationMode: 'integrationMode',
+  extensibleSettings: 'extensibleSettings'
+} as const
+
+export type ShipperProfileOrderByRelevanceFieldEnum = (typeof ShipperProfileOrderByRelevanceFieldEnum)[keyof typeof ShipperProfileOrderByRelevanceFieldEnum]
+
+
+export const ShipperSiteRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  shipperProfileId: 'shipperProfileId',
+  loadingPointId: 'loadingPointId',
+  requiredDocuments: 'requiredDocuments',
+  allowedVehicleTypes: 'allowedVehicleTypes',
+  allowedTrailerTypes: 'allowedTrailerTypes',
+  weighingStages: 'weighingStages',
+  queueProcess: 'queueProcess',
+  loadingCapacityUnit: 'loadingCapacityUnit',
+  gateOpenTime: 'gateOpenTime',
+  gateCloseTime: 'gateCloseTime',
+  podRequirements: 'podRequirements',
+  permittedRoutes: 'permittedRoutes',
+  speedRules: 'speedRules'
+} as const
+
+export type ShipperSiteRuleOrderByRelevanceFieldEnum = (typeof ShipperSiteRuleOrderByRelevanceFieldEnum)[keyof typeof ShipperSiteRuleOrderByRelevanceFieldEnum]
+
+
+export const LoadOrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  shipperProfileId: 'shipperProfileId',
+  clientId: 'clientId',
+  externalReference: 'externalReference',
+  loadingPointId: 'loadingPointId',
+  requiredVehicleType: 'requiredVehicleType',
+  requiredTrailerType: 'requiredTrailerType',
+  currency: 'currency',
+  rateType: 'rateType',
+  priority: 'priority',
+  specialHandling: 'specialHandling',
+  documents: 'documents',
+  sourceType: 'sourceType',
+  createdBy: 'createdBy'
+} as const
+
+export type LoadOrderOrderByRelevanceFieldEnum = (typeof LoadOrderOrderByRelevanceFieldEnum)[keyof typeof LoadOrderOrderByRelevanceFieldEnum]
+
+
+export const LoadOrderDestinationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  ref: 'ref',
+  clientId: 'clientId',
+  destinationZoneId: 'destinationZoneId',
+  name: 'name',
+  address: 'address',
+  contactName: 'contactName',
+  contactPhone: 'contactPhone',
+  notes: 'notes'
+} as const
+
+export type LoadOrderDestinationOrderByRelevanceFieldEnum = (typeof LoadOrderDestinationOrderByRelevanceFieldEnum)[keyof typeof LoadOrderDestinationOrderByRelevanceFieldEnum]
+
+
+export const LoadOrderLineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loadOrderId: 'loadOrderId',
+  destinationId: 'destinationId',
+  ref: 'ref',
+  itemId: 'itemId',
+  itemName: 'itemName',
+  externalProductCode: 'externalProductCode',
+  unit: 'unit',
+  notes: 'notes'
+} as const
+
+export type LoadOrderLineOrderByRelevanceFieldEnum = (typeof LoadOrderLineOrderByRelevanceFieldEnum)[keyof typeof LoadOrderLineOrderByRelevanceFieldEnum]
 
 
 export const TruckOrderByRelevanceFieldEnum = {

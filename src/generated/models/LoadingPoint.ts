@@ -227,6 +227,8 @@ export type LoadingPointWhereInput = {
   Trip?: Prisma.TripListRelationFilter
   TripItem?: Prisma.TripItemListRelationFilter
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
+  ShipperSiteRule?: Prisma.ShipperSiteRuleListRelationFilter
+  LoadOrder?: Prisma.LoadOrderListRelationFilter
 }
 
 export type LoadingPointOrderByWithRelationInput = {
@@ -245,6 +247,8 @@ export type LoadingPointOrderByWithRelationInput = {
   Trip?: Prisma.TripOrderByRelationAggregateInput
   TripItem?: Prisma.TripItemOrderByRelationAggregateInput
   TransportRateCard?: Prisma.TransportRateCardOrderByRelationAggregateInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleOrderByRelationAggregateInput
+  LoadOrder?: Prisma.LoadOrderOrderByRelationAggregateInput
   _relevance?: Prisma.LoadingPointOrderByRelevanceInput
 }
 
@@ -268,6 +272,8 @@ export type LoadingPointWhereUniqueInput = Prisma.AtLeast<{
   Trip?: Prisma.TripListRelationFilter
   TripItem?: Prisma.TripItemListRelationFilter
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
+  ShipperSiteRule?: Prisma.ShipperSiteRuleListRelationFilter
+  LoadOrder?: Prisma.LoadOrderListRelationFilter
 }, "id" | "name_loadingCityId">
 
 export type LoadingPointOrderByWithAggregationInput = {
@@ -316,6 +322,8 @@ export type LoadingPointCreateInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUncheckedCreateInput = {
@@ -332,6 +340,8 @@ export type LoadingPointUncheckedCreateInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUpdateInput = {
@@ -348,6 +358,8 @@ export type LoadingPointUpdateInput = {
   Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateInput = {
@@ -364,6 +376,8 @@ export type LoadingPointUncheckedUpdateInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointCreateManyInput = {
@@ -466,6 +480,11 @@ export type LoadingPointMinOrderByAggregateInput = {
 export type LoadingPointNullableScalarRelationFilter = {
   is?: Prisma.LoadingPointWhereInput | null
   isNot?: Prisma.LoadingPointWhereInput | null
+}
+
+export type LoadingPointScalarRelationFilter = {
+  is?: Prisma.LoadingPointWhereInput
+  isNot?: Prisma.LoadingPointWhereInput
 }
 
 export type LoadingPointCreateNestedManyWithoutLoadingCityInput = {
@@ -600,6 +619,34 @@ export type LoadingPointUpdateOneWithoutTransportRateCardNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LoadingPointUpdateToOneWithWhereWithoutTransportRateCardInput, Prisma.LoadingPointUpdateWithoutTransportRateCardInput>, Prisma.LoadingPointUncheckedUpdateWithoutTransportRateCardInput>
 }
 
+export type LoadingPointCreateNestedOneWithoutShipperSiteRuleInput = {
+  create?: Prisma.XOR<Prisma.LoadingPointCreateWithoutShipperSiteRuleInput, Prisma.LoadingPointUncheckedCreateWithoutShipperSiteRuleInput>
+  connectOrCreate?: Prisma.LoadingPointCreateOrConnectWithoutShipperSiteRuleInput
+  connect?: Prisma.LoadingPointWhereUniqueInput
+}
+
+export type LoadingPointUpdateOneRequiredWithoutShipperSiteRuleNestedInput = {
+  create?: Prisma.XOR<Prisma.LoadingPointCreateWithoutShipperSiteRuleInput, Prisma.LoadingPointUncheckedCreateWithoutShipperSiteRuleInput>
+  connectOrCreate?: Prisma.LoadingPointCreateOrConnectWithoutShipperSiteRuleInput
+  upsert?: Prisma.LoadingPointUpsertWithoutShipperSiteRuleInput
+  connect?: Prisma.LoadingPointWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoadingPointUpdateToOneWithWhereWithoutShipperSiteRuleInput, Prisma.LoadingPointUpdateWithoutShipperSiteRuleInput>, Prisma.LoadingPointUncheckedUpdateWithoutShipperSiteRuleInput>
+}
+
+export type LoadingPointCreateNestedOneWithoutLoadOrderInput = {
+  create?: Prisma.XOR<Prisma.LoadingPointCreateWithoutLoadOrderInput, Prisma.LoadingPointUncheckedCreateWithoutLoadOrderInput>
+  connectOrCreate?: Prisma.LoadingPointCreateOrConnectWithoutLoadOrderInput
+  connect?: Prisma.LoadingPointWhereUniqueInput
+}
+
+export type LoadingPointUpdateOneRequiredWithoutLoadOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.LoadingPointCreateWithoutLoadOrderInput, Prisma.LoadingPointUncheckedCreateWithoutLoadOrderInput>
+  connectOrCreate?: Prisma.LoadingPointCreateOrConnectWithoutLoadOrderInput
+  upsert?: Prisma.LoadingPointUpsertWithoutLoadOrderInput
+  connect?: Prisma.LoadingPointWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoadingPointUpdateToOneWithWhereWithoutLoadOrderInput, Prisma.LoadingPointUpdateWithoutLoadOrderInput>, Prisma.LoadingPointUncheckedUpdateWithoutLoadOrderInput>
+}
+
 export type LoadingPointCreateWithoutLoadingCityInput = {
   id?: string
   name: string
@@ -613,6 +660,8 @@ export type LoadingPointCreateWithoutLoadingCityInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUncheckedCreateWithoutLoadingCityInput = {
@@ -628,6 +677,8 @@ export type LoadingPointUncheckedCreateWithoutLoadingCityInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointCreateOrConnectWithoutLoadingCityInput = {
@@ -685,6 +736,8 @@ export type LoadingPointCreateWithoutSupplierInput = {
   Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUncheckedCreateWithoutSupplierInput = {
@@ -700,6 +753,8 @@ export type LoadingPointUncheckedCreateWithoutSupplierInput = {
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointCreateOrConnectWithoutSupplierInput = {
@@ -741,6 +796,8 @@ export type LoadingPointCreateWithoutTripInput = {
   supplier?: Prisma.SupplierCreateNestedOneWithoutLoadingPointInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUncheckedCreateWithoutTripInput = {
@@ -756,6 +813,8 @@ export type LoadingPointUncheckedCreateWithoutTripInput = {
   supplierId?: string | null
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointCreateOrConnectWithoutTripInput = {
@@ -787,6 +846,8 @@ export type LoadingPointUpdateWithoutTripInput = {
   supplier?: Prisma.SupplierUpdateOneWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateWithoutTripInput = {
@@ -802,6 +863,8 @@ export type LoadingPointUncheckedUpdateWithoutTripInput = {
   supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointCreateWithoutTripItemInput = {
@@ -817,6 +880,8 @@ export type LoadingPointCreateWithoutTripItemInput = {
   supplier?: Prisma.SupplierCreateNestedOneWithoutLoadingPointInput
   Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUncheckedCreateWithoutTripItemInput = {
@@ -832,6 +897,8 @@ export type LoadingPointUncheckedCreateWithoutTripItemInput = {
   supplierId?: string | null
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointCreateOrConnectWithoutTripItemInput = {
@@ -863,6 +930,8 @@ export type LoadingPointUpdateWithoutTripItemInput = {
   supplier?: Prisma.SupplierUpdateOneWithoutLoadingPointNestedInput
   Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateWithoutTripItemInput = {
@@ -878,6 +947,8 @@ export type LoadingPointUncheckedUpdateWithoutTripItemInput = {
   supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointCreateWithoutTransportRateCardInput = {
@@ -893,6 +964,8 @@ export type LoadingPointCreateWithoutTransportRateCardInput = {
   supplier?: Prisma.SupplierCreateNestedOneWithoutLoadingPointInput
   Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointUncheckedCreateWithoutTransportRateCardInput = {
@@ -908,6 +981,8 @@ export type LoadingPointUncheckedCreateWithoutTransportRateCardInput = {
   supplierId?: string | null
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
   TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
 }
 
 export type LoadingPointCreateOrConnectWithoutTransportRateCardInput = {
@@ -939,6 +1014,8 @@ export type LoadingPointUpdateWithoutTransportRateCardInput = {
   supplier?: Prisma.SupplierUpdateOneWithoutLoadingPointNestedInput
   Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateWithoutTransportRateCardInput = {
@@ -954,6 +1031,176 @@ export type LoadingPointUncheckedUpdateWithoutTransportRateCardInput = {
   supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
+}
+
+export type LoadingPointCreateWithoutShipperSiteRuleInput = {
+  id?: string
+  name: string
+  address?: string | null
+  contactPerson?: string | null
+  contactPhone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loadingCity: Prisma.LoadingCityCreateNestedOneWithoutLoadingPointInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutLoadingPointInput
+  Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
+  TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
+  TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutLoadingPointInput
+}
+
+export type LoadingPointUncheckedCreateWithoutShipperSiteRuleInput = {
+  id?: string
+  name: string
+  loadingCityId: string
+  address?: string | null
+  contactPerson?: string | null
+  contactPhone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
+  TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutLoadingPointInput
+}
+
+export type LoadingPointCreateOrConnectWithoutShipperSiteRuleInput = {
+  where: Prisma.LoadingPointWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoadingPointCreateWithoutShipperSiteRuleInput, Prisma.LoadingPointUncheckedCreateWithoutShipperSiteRuleInput>
+}
+
+export type LoadingPointUpsertWithoutShipperSiteRuleInput = {
+  update: Prisma.XOR<Prisma.LoadingPointUpdateWithoutShipperSiteRuleInput, Prisma.LoadingPointUncheckedUpdateWithoutShipperSiteRuleInput>
+  create: Prisma.XOR<Prisma.LoadingPointCreateWithoutShipperSiteRuleInput, Prisma.LoadingPointUncheckedCreateWithoutShipperSiteRuleInput>
+  where?: Prisma.LoadingPointWhereInput
+}
+
+export type LoadingPointUpdateToOneWithWhereWithoutShipperSiteRuleInput = {
+  where?: Prisma.LoadingPointWhereInput
+  data: Prisma.XOR<Prisma.LoadingPointUpdateWithoutShipperSiteRuleInput, Prisma.LoadingPointUncheckedUpdateWithoutShipperSiteRuleInput>
+}
+
+export type LoadingPointUpdateWithoutShipperSiteRuleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loadingCity?: Prisma.LoadingCityUpdateOneRequiredWithoutLoadingPointNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutLoadingPointNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
+  TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
+}
+
+export type LoadingPointUncheckedUpdateWithoutShipperSiteRuleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingCityId?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
+  TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
+}
+
+export type LoadingPointCreateWithoutLoadOrderInput = {
+  id?: string
+  name: string
+  address?: string | null
+  contactPerson?: string | null
+  contactPhone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loadingCity: Prisma.LoadingCityCreateNestedOneWithoutLoadingPointInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutLoadingPointInput
+  Trip?: Prisma.TripCreateNestedManyWithoutLoadingPointInput
+  TripItem?: Prisma.TripItemCreateNestedManyWithoutLoadingPointInput
+  TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleCreateNestedManyWithoutLoadingPointInput
+}
+
+export type LoadingPointUncheckedCreateWithoutLoadOrderInput = {
+  id?: string
+  name: string
+  loadingCityId: string
+  address?: string | null
+  contactPerson?: string | null
+  contactPhone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutLoadingPointInput
+  TripItem?: Prisma.TripItemUncheckedCreateNestedManyWithoutLoadingPointInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutLoadingPointInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedCreateNestedManyWithoutLoadingPointInput
+}
+
+export type LoadingPointCreateOrConnectWithoutLoadOrderInput = {
+  where: Prisma.LoadingPointWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoadingPointCreateWithoutLoadOrderInput, Prisma.LoadingPointUncheckedCreateWithoutLoadOrderInput>
+}
+
+export type LoadingPointUpsertWithoutLoadOrderInput = {
+  update: Prisma.XOR<Prisma.LoadingPointUpdateWithoutLoadOrderInput, Prisma.LoadingPointUncheckedUpdateWithoutLoadOrderInput>
+  create: Prisma.XOR<Prisma.LoadingPointCreateWithoutLoadOrderInput, Prisma.LoadingPointUncheckedCreateWithoutLoadOrderInput>
+  where?: Prisma.LoadingPointWhereInput
+}
+
+export type LoadingPointUpdateToOneWithWhereWithoutLoadOrderInput = {
+  where?: Prisma.LoadingPointWhereInput
+  data: Prisma.XOR<Prisma.LoadingPointUpdateWithoutLoadOrderInput, Prisma.LoadingPointUncheckedUpdateWithoutLoadOrderInput>
+}
+
+export type LoadingPointUpdateWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loadingCity?: Prisma.LoadingCityUpdateOneRequiredWithoutLoadingPointNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutLoadingPointNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
+  TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+}
+
+export type LoadingPointUncheckedUpdateWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  loadingCityId?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
+  TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointCreateManyLoadingCityInput = {
@@ -981,6 +1228,8 @@ export type LoadingPointUpdateWithoutLoadingCityInput = {
   Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateWithoutLoadingCityInput = {
@@ -996,6 +1245,8 @@ export type LoadingPointUncheckedUpdateWithoutLoadingCityInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateManyWithoutLoadingCityInput = {
@@ -1035,6 +1286,8 @@ export type LoadingPointUpdateWithoutSupplierInput = {
   Trip?: Prisma.TripUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateWithoutSupplierInput = {
@@ -1050,6 +1303,8 @@ export type LoadingPointUncheckedUpdateWithoutSupplierInput = {
   Trip?: Prisma.TripUncheckedUpdateManyWithoutLoadingPointNestedInput
   TripItem?: Prisma.TripItemUncheckedUpdateManyWithoutLoadingPointNestedInput
   TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutLoadingPointNestedInput
+  ShipperSiteRule?: Prisma.ShipperSiteRuleUncheckedUpdateManyWithoutLoadingPointNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutLoadingPointNestedInput
 }
 
 export type LoadingPointUncheckedUpdateManyWithoutSupplierInput = {
@@ -1073,12 +1328,16 @@ export type LoadingPointCountOutputType = {
   Trip: number
   TripItem: number
   TransportRateCard: number
+  ShipperSiteRule: number
+  LoadOrder: number
 }
 
 export type LoadingPointCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Trip?: boolean | LoadingPointCountOutputTypeCountTripArgs
   TripItem?: boolean | LoadingPointCountOutputTypeCountTripItemArgs
   TransportRateCard?: boolean | LoadingPointCountOutputTypeCountTransportRateCardArgs
+  ShipperSiteRule?: boolean | LoadingPointCountOutputTypeCountShipperSiteRuleArgs
+  LoadOrder?: boolean | LoadingPointCountOutputTypeCountLoadOrderArgs
 }
 
 /**
@@ -1112,6 +1371,20 @@ export type LoadingPointCountOutputTypeCountTransportRateCardArgs<ExtArgs extend
   where?: Prisma.TransportRateCardWhereInput
 }
 
+/**
+ * LoadingPointCountOutputType without action
+ */
+export type LoadingPointCountOutputTypeCountShipperSiteRuleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShipperSiteRuleWhereInput
+}
+
+/**
+ * LoadingPointCountOutputType without action
+ */
+export type LoadingPointCountOutputTypeCountLoadOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoadOrderWhereInput
+}
+
 
 export type LoadingPointSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1129,6 +1402,8 @@ export type LoadingPointSelect<ExtArgs extends runtime.Types.Extensions.Internal
   Trip?: boolean | Prisma.LoadingPoint$TripArgs<ExtArgs>
   TripItem?: boolean | Prisma.LoadingPoint$TripItemArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.LoadingPoint$TransportRateCardArgs<ExtArgs>
+  ShipperSiteRule?: boolean | Prisma.LoadingPoint$ShipperSiteRuleArgs<ExtArgs>
+  LoadOrder?: boolean | Prisma.LoadingPoint$LoadOrderArgs<ExtArgs>
   _count?: boolean | Prisma.LoadingPointCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["loadingPoint"]>
 
@@ -1154,6 +1429,8 @@ export type LoadingPointInclude<ExtArgs extends runtime.Types.Extensions.Interna
   Trip?: boolean | Prisma.LoadingPoint$TripArgs<ExtArgs>
   TripItem?: boolean | Prisma.LoadingPoint$TripItemArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.LoadingPoint$TransportRateCardArgs<ExtArgs>
+  ShipperSiteRule?: boolean | Prisma.LoadingPoint$ShipperSiteRuleArgs<ExtArgs>
+  LoadOrder?: boolean | Prisma.LoadingPoint$LoadOrderArgs<ExtArgs>
   _count?: boolean | Prisma.LoadingPointCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1165,6 +1442,8 @@ export type $LoadingPointPayload<ExtArgs extends runtime.Types.Extensions.Intern
     Trip: Prisma.$TripPayload<ExtArgs>[]
     TripItem: Prisma.$TripItemPayload<ExtArgs>[]
     TransportRateCard: Prisma.$TransportRateCardPayload<ExtArgs>[]
+    ShipperSiteRule: Prisma.$ShipperSiteRulePayload<ExtArgs>[]
+    LoadOrder: Prisma.$LoadOrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1522,6 +1801,8 @@ export interface Prisma__LoadingPointClient<T, Null = never, ExtArgs extends run
   Trip<T extends Prisma.LoadingPoint$TripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoadingPoint$TripArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TripItem<T extends Prisma.LoadingPoint$TripItemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoadingPoint$TripItemArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TransportRateCard<T extends Prisma.LoadingPoint$TransportRateCardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoadingPoint$TransportRateCardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransportRateCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ShipperSiteRule<T extends Prisma.LoadingPoint$ShipperSiteRuleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoadingPoint$ShipperSiteRuleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShipperSiteRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  LoadOrder<T extends Prisma.LoadingPoint$LoadOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoadingPoint$LoadOrderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1997,6 +2278,54 @@ export type LoadingPoint$TransportRateCardArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.TransportRateCardScalarFieldEnum | Prisma.TransportRateCardScalarFieldEnum[]
+}
+
+/**
+ * LoadingPoint.ShipperSiteRule
+ */
+export type LoadingPoint$ShipperSiteRuleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ShipperSiteRule
+   */
+  select?: Prisma.ShipperSiteRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ShipperSiteRule
+   */
+  omit?: Prisma.ShipperSiteRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShipperSiteRuleInclude<ExtArgs> | null
+  where?: Prisma.ShipperSiteRuleWhereInput
+  orderBy?: Prisma.ShipperSiteRuleOrderByWithRelationInput | Prisma.ShipperSiteRuleOrderByWithRelationInput[]
+  cursor?: Prisma.ShipperSiteRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShipperSiteRuleScalarFieldEnum | Prisma.ShipperSiteRuleScalarFieldEnum[]
+}
+
+/**
+ * LoadingPoint.LoadOrder
+ */
+export type LoadingPoint$LoadOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrder
+   */
+  select?: Prisma.LoadOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrder
+   */
+  omit?: Prisma.LoadOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderWhereInput
+  orderBy?: Prisma.LoadOrderOrderByWithRelationInput | Prisma.LoadOrderOrderByWithRelationInput[]
+  cursor?: Prisma.LoadOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoadOrderScalarFieldEnum | Prisma.LoadOrderScalarFieldEnum[]
 }
 
 /**

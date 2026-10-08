@@ -248,6 +248,7 @@ export type TransportContractWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"TransportContract"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   transporter?: Prisma.XOR<Prisma.TransporterNullableScalarRelationFilter, Prisma.TransporterWhereInput> | null
+  shipperProfile?: Prisma.XOR<Prisma.ShipperProfileNullableScalarRelationFilter, Prisma.ShipperProfileWhereInput> | null
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
 }
 
@@ -267,6 +268,7 @@ export type TransportContractOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   transporter?: Prisma.TransporterOrderByWithRelationInput
+  shipperProfile?: Prisma.ShipperProfileOrderByWithRelationInput
   TransportRateCard?: Prisma.TransportRateCardOrderByRelationAggregateInput
   _relevance?: Prisma.TransportContractOrderByRelevanceInput
 }
@@ -290,6 +292,7 @@ export type TransportContractWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"TransportContract"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   transporter?: Prisma.XOR<Prisma.TransporterNullableScalarRelationFilter, Prisma.TransporterWhereInput> | null
+  shipperProfile?: Prisma.XOR<Prisma.ShipperProfileNullableScalarRelationFilter, Prisma.ShipperProfileWhereInput> | null
   TransportRateCard?: Prisma.TransportRateCardListRelationFilter
 }, "id" | "contractNumber">
 
@@ -333,7 +336,6 @@ export type TransportContractScalarWhereWithAggregatesInput = {
 
 export type TransportContractCreateInput = {
   id?: string
-  shipperProfileId?: string | null
   contractNumber: string
   name: string
   currency?: string
@@ -345,6 +347,7 @@ export type TransportContractCreateInput = {
   updatedAt?: Date | string
   organization?: Prisma.OrganizationCreateNestedOneWithoutTransportContractInput
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportContractInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportContractInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutContractInput
 }
 
@@ -367,7 +370,6 @@ export type TransportContractUncheckedCreateInput = {
 
 export type TransportContractUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -379,6 +381,7 @@ export type TransportContractUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneWithoutTransportContractNestedInput
   transporter?: Prisma.TransporterUpdateOneWithoutTransportContractNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportContractNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutContractNestedInput
 }
 
@@ -417,7 +420,6 @@ export type TransportContractCreateManyInput = {
 
 export type TransportContractUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -614,9 +616,50 @@ export type TransportContractUpdateOneWithoutTransportRateCardNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TransportContractUpdateToOneWithWhereWithoutTransportRateCardInput, Prisma.TransportContractUpdateWithoutTransportRateCardInput>, Prisma.TransportContractUncheckedUpdateWithoutTransportRateCardInput>
 }
 
+export type TransportContractCreateNestedManyWithoutShipperProfileInput = {
+  create?: Prisma.XOR<Prisma.TransportContractCreateWithoutShipperProfileInput, Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportContractCreateWithoutShipperProfileInput[] | Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput | Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportContractCreateManyShipperProfileInputEnvelope
+  connect?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+}
+
+export type TransportContractUncheckedCreateNestedManyWithoutShipperProfileInput = {
+  create?: Prisma.XOR<Prisma.TransportContractCreateWithoutShipperProfileInput, Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportContractCreateWithoutShipperProfileInput[] | Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput | Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportContractCreateManyShipperProfileInputEnvelope
+  connect?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+}
+
+export type TransportContractUpdateManyWithoutShipperProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TransportContractCreateWithoutShipperProfileInput, Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportContractCreateWithoutShipperProfileInput[] | Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput | Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput[]
+  upsert?: Prisma.TransportContractUpsertWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportContractUpsertWithWhereUniqueWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportContractCreateManyShipperProfileInputEnvelope
+  set?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  disconnect?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  delete?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  connect?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  update?: Prisma.TransportContractUpdateWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportContractUpdateWithWhereUniqueWithoutShipperProfileInput[]
+  updateMany?: Prisma.TransportContractUpdateManyWithWhereWithoutShipperProfileInput | Prisma.TransportContractUpdateManyWithWhereWithoutShipperProfileInput[]
+  deleteMany?: Prisma.TransportContractScalarWhereInput | Prisma.TransportContractScalarWhereInput[]
+}
+
+export type TransportContractUncheckedUpdateManyWithoutShipperProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TransportContractCreateWithoutShipperProfileInput, Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput> | Prisma.TransportContractCreateWithoutShipperProfileInput[] | Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput[]
+  connectOrCreate?: Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput | Prisma.TransportContractCreateOrConnectWithoutShipperProfileInput[]
+  upsert?: Prisma.TransportContractUpsertWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportContractUpsertWithWhereUniqueWithoutShipperProfileInput[]
+  createMany?: Prisma.TransportContractCreateManyShipperProfileInputEnvelope
+  set?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  disconnect?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  delete?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  connect?: Prisma.TransportContractWhereUniqueInput | Prisma.TransportContractWhereUniqueInput[]
+  update?: Prisma.TransportContractUpdateWithWhereUniqueWithoutShipperProfileInput | Prisma.TransportContractUpdateWithWhereUniqueWithoutShipperProfileInput[]
+  updateMany?: Prisma.TransportContractUpdateManyWithWhereWithoutShipperProfileInput | Prisma.TransportContractUpdateManyWithWhereWithoutShipperProfileInput[]
+  deleteMany?: Prisma.TransportContractScalarWhereInput | Prisma.TransportContractScalarWhereInput[]
+}
+
 export type TransportContractCreateWithoutOrganizationInput = {
   id?: string
-  shipperProfileId?: string | null
   contractNumber: string
   name: string
   currency?: string
@@ -627,6 +670,7 @@ export type TransportContractCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportContractInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportContractInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutContractInput
 }
 
@@ -693,7 +737,6 @@ export type TransportContractScalarWhereInput = {
 
 export type TransportContractCreateWithoutTransporterInput = {
   id?: string
-  shipperProfileId?: string | null
   contractNumber: string
   name: string
   currency?: string
@@ -704,6 +747,7 @@ export type TransportContractCreateWithoutTransporterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization?: Prisma.OrganizationCreateNestedOneWithoutTransportContractInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportContractInput
   TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutContractInput
 }
 
@@ -751,7 +795,6 @@ export type TransportContractUpdateManyWithWhereWithoutTransporterInput = {
 
 export type TransportContractCreateWithoutTransportRateCardInput = {
   id?: string
-  shipperProfileId?: string | null
   contractNumber: string
   name: string
   currency?: string
@@ -763,6 +806,7 @@ export type TransportContractCreateWithoutTransportRateCardInput = {
   updatedAt?: Date | string
   organization?: Prisma.OrganizationCreateNestedOneWithoutTransportContractInput
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportContractInput
+  shipperProfile?: Prisma.ShipperProfileCreateNestedOneWithoutTransportContractInput
 }
 
 export type TransportContractUncheckedCreateWithoutTransportRateCardInput = {
@@ -799,7 +843,6 @@ export type TransportContractUpdateToOneWithWhereWithoutTransportRateCardInput =
 
 export type TransportContractUpdateWithoutTransportRateCardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -811,6 +854,7 @@ export type TransportContractUpdateWithoutTransportRateCardInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneWithoutTransportContractNestedInput
   transporter?: Prisma.TransporterUpdateOneWithoutTransportContractNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportContractNestedInput
 }
 
 export type TransportContractUncheckedUpdateWithoutTransportRateCardInput = {
@@ -827,6 +871,64 @@ export type TransportContractUncheckedUpdateWithoutTransportRateCardInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransportContractCreateWithoutShipperProfileInput = {
+  id?: string
+  contractNumber: string
+  name: string
+  currency?: string
+  startDate: Date | string
+  endDate?: Date | string | null
+  isActive?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutTransportContractInput
+  transporter?: Prisma.TransporterCreateNestedOneWithoutTransportContractInput
+  TransportRateCard?: Prisma.TransportRateCardCreateNestedManyWithoutContractInput
+}
+
+export type TransportContractUncheckedCreateWithoutShipperProfileInput = {
+  id?: string
+  organizationId?: string | null
+  transporterId?: string | null
+  contractNumber: string
+  name: string
+  currency?: string
+  startDate: Date | string
+  endDate?: Date | string | null
+  isActive?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  TransportRateCard?: Prisma.TransportRateCardUncheckedCreateNestedManyWithoutContractInput
+}
+
+export type TransportContractCreateOrConnectWithoutShipperProfileInput = {
+  where: Prisma.TransportContractWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransportContractCreateWithoutShipperProfileInput, Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput>
+}
+
+export type TransportContractCreateManyShipperProfileInputEnvelope = {
+  data: Prisma.TransportContractCreateManyShipperProfileInput | Prisma.TransportContractCreateManyShipperProfileInput[]
+  skipDuplicates?: boolean
+}
+
+export type TransportContractUpsertWithWhereUniqueWithoutShipperProfileInput = {
+  where: Prisma.TransportContractWhereUniqueInput
+  update: Prisma.XOR<Prisma.TransportContractUpdateWithoutShipperProfileInput, Prisma.TransportContractUncheckedUpdateWithoutShipperProfileInput>
+  create: Prisma.XOR<Prisma.TransportContractCreateWithoutShipperProfileInput, Prisma.TransportContractUncheckedCreateWithoutShipperProfileInput>
+}
+
+export type TransportContractUpdateWithWhereUniqueWithoutShipperProfileInput = {
+  where: Prisma.TransportContractWhereUniqueInput
+  data: Prisma.XOR<Prisma.TransportContractUpdateWithoutShipperProfileInput, Prisma.TransportContractUncheckedUpdateWithoutShipperProfileInput>
+}
+
+export type TransportContractUpdateManyWithWhereWithoutShipperProfileInput = {
+  where: Prisma.TransportContractScalarWhereInput
+  data: Prisma.XOR<Prisma.TransportContractUpdateManyMutationInput, Prisma.TransportContractUncheckedUpdateManyWithoutShipperProfileInput>
 }
 
 export type TransportContractCreateManyOrganizationInput = {
@@ -846,7 +948,6 @@ export type TransportContractCreateManyOrganizationInput = {
 
 export type TransportContractUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -857,6 +958,7 @@ export type TransportContractUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transporter?: Prisma.TransporterUpdateOneWithoutTransportContractNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportContractNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutContractNestedInput
 }
 
@@ -908,7 +1010,6 @@ export type TransportContractCreateManyTransporterInput = {
 
 export type TransportContractUpdateWithoutTransporterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -919,6 +1020,7 @@ export type TransportContractUpdateWithoutTransporterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneWithoutTransportContractNestedInput
+  shipperProfile?: Prisma.ShipperProfileUpdateOneWithoutTransportContractNestedInput
   TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutContractNestedInput
 }
 
@@ -942,6 +1044,68 @@ export type TransportContractUncheckedUpdateManyWithoutTransporterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shipperProfileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransportContractCreateManyShipperProfileInput = {
+  id?: string
+  organizationId?: string | null
+  transporterId?: string | null
+  contractNumber: string
+  name: string
+  currency?: string
+  startDate: Date | string
+  endDate?: Date | string | null
+  isActive?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TransportContractUpdateWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutTransportContractNestedInput
+  transporter?: Prisma.TransporterUpdateOneWithoutTransportContractNestedInput
+  TransportRateCard?: Prisma.TransportRateCardUpdateManyWithoutContractNestedInput
+}
+
+export type TransportContractUncheckedUpdateWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transporterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  TransportRateCard?: Prisma.TransportRateCardUncheckedUpdateManyWithoutContractNestedInput
+}
+
+export type TransportContractUncheckedUpdateManyWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transporterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractNumber?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1000,6 +1164,7 @@ export type TransportContractSelect<ExtArgs extends runtime.Types.Extensions.Int
   updatedAt?: boolean
   organization?: boolean | Prisma.TransportContract$organizationArgs<ExtArgs>
   transporter?: boolean | Prisma.TransportContract$transporterArgs<ExtArgs>
+  shipperProfile?: boolean | Prisma.TransportContract$shipperProfileArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.TransportContract$TransportRateCardArgs<ExtArgs>
   _count?: boolean | Prisma.TransportContractCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transportContract"]>
@@ -1026,6 +1191,7 @@ export type TransportContractOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type TransportContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.TransportContract$organizationArgs<ExtArgs>
   transporter?: boolean | Prisma.TransportContract$transporterArgs<ExtArgs>
+  shipperProfile?: boolean | Prisma.TransportContract$shipperProfileArgs<ExtArgs>
   TransportRateCard?: boolean | Prisma.TransportContract$TransportRateCardArgs<ExtArgs>
   _count?: boolean | Prisma.TransportContractCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1035,6 +1201,7 @@ export type $TransportContractPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs> | null
     transporter: Prisma.$TransporterPayload<ExtArgs> | null
+    shipperProfile: Prisma.$ShipperProfilePayload<ExtArgs> | null
     TransportRateCard: Prisma.$TransportRateCardPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1393,6 +1560,7 @@ export interface Prisma__TransportContractClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.TransportContract$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportContract$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transporter<T extends Prisma.TransportContract$transporterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportContract$transporterArgs<ExtArgs>>): Prisma.Prisma__TransporterClient<runtime.Types.Result.GetResult<Prisma.$TransporterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  shipperProfile<T extends Prisma.TransportContract$shipperProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportContract$shipperProfileArgs<ExtArgs>>): Prisma.Prisma__ShipperProfileClient<runtime.Types.Result.GetResult<Prisma.$ShipperProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   TransportRateCard<T extends Prisma.TransportContract$TransportRateCardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransportContract$TransportRateCardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransportRateCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1819,6 +1987,25 @@ export type TransportContract$transporterArgs<ExtArgs extends runtime.Types.Exte
    */
   include?: Prisma.TransporterInclude<ExtArgs> | null
   where?: Prisma.TransporterWhereInput
+}
+
+/**
+ * TransportContract.shipperProfile
+ */
+export type TransportContract$shipperProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ShipperProfile
+   */
+  select?: Prisma.ShipperProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ShipperProfile
+   */
+  omit?: Prisma.ShipperProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShipperProfileInclude<ExtArgs> | null
+  where?: Prisma.ShipperProfileWhereInput
 }
 
 /**
