@@ -40,6 +40,8 @@ ${demoProfiles}`
     expect(header).toContain('user?.isDemo')
     expect(header).toContain('Demo Mode')
     expect(header).toContain('Read Only')
+    expect(header).toContain('Demo · RO')
+    expect(header).not.toContain('hidden items-center gap-2 rounded-full')
   })
 
 })
