@@ -1,9 +1,9 @@
 [
   {
     "id": "ifleetpro-deploy",
-    "execute-command": "/home/ifleetpro/app/scripts/webhook-deploy.sh",
-    "command-working-directory": "/home/ifleetpro/app",
-    "response-message": "Deploy triggered. Check logs at /home/ifleetpro/logs/deploy.log",
+    "execute-command": "/home/lightworld/webapps/ifleetpro/scripts/webhook-deploy.sh",
+    "command-working-directory": "/home/lightworld/webapps/ifleetpro",
+    "response-message": "Deploy triggered. Check logs at /var/log/ifleetpro/deploy.log",
     "trigger-rule": {
       "and": [
         {

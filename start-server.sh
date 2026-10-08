@@ -1,6 +1,9 @@
 #!/bin/bash
-cd /home/z/my-project
-while true; do
-  npx next dev -p 3000 2>&1
-  sleep 3
-done
+set -euo pipefail
+
+APP_DIR="/home/lightworld/webapps/ifleetpro"
+cd "$APP_DIR"
+
+export NODE_ENV=production
+export PORT="${PORT:-3000}"
+exec /root/.bun/bin/bun .next/standalone/server.js
