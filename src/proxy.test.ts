@@ -66,16 +66,18 @@ describe('API authentication proxy', () => {
 
     expect(response.status).toBe(403)
     await expect(response.json()).resolves.toEqual({
-      error: 'This area is not available in public demo mode.',
+      error: 'Public demo sessions use synthetic data and cannot access production APIs.',
     })
   })
 
-  it('allows authenticated demo sessions to browse safe GET APIs', async () => {
+  it('blocks demo sessions from all protected production APIs, including ordinary GETs', async () => {
     const token = await demoToken()
     const response = await proxy(request('/api/dashboard', { method: 'GET', token }))
 
-    expect(response.status).toBe(200)
-    expect(response.headers.get('x-middleware-next')).toBe('1')
+    expect(response.status).toBe(403)
+    await expect(response.json()).resolves.toEqual({
+      error: 'Public demo sessions use synthetic data and cannot access production APIs.',
+    })
   })
 
   it('does not make neighboring demo-auth paths public', async () => {

@@ -261,7 +261,7 @@ export async function proxy(request: NextRequest) {
           {
             error: isMutation
               ? 'Demo mode is read-only. Sign in with a standard account to make changes.'
-              : 'This area is not available in public demo mode.',
+              : 'Public demo sessions use synthetic data and cannot access production APIs.',
           },
           { status: 403 },
         ))
