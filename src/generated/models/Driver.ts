@@ -468,6 +468,7 @@ export type DriverWhereInput = {
   TollRecord?: Prisma.TollRecordListRelationFilter
   Trip?: Prisma.TripListRelationFilter
   Truck?: Prisma.TruckListRelationFilter
+  TrailerCoupling?: Prisma.TrailerCouplingListRelationFilter
   VehicleInspection?: Prisma.VehicleInspectionListRelationFilter
 }
 
@@ -518,6 +519,7 @@ export type DriverOrderByWithRelationInput = {
   TollRecord?: Prisma.TollRecordOrderByRelationAggregateInput
   Trip?: Prisma.TripOrderByRelationAggregateInput
   Truck?: Prisma.TruckOrderByRelationAggregateInput
+  TrailerCoupling?: Prisma.TrailerCouplingOrderByRelationAggregateInput
   VehicleInspection?: Prisma.VehicleInspectionOrderByRelationAggregateInput
   _relevance?: Prisma.DriverOrderByRelevanceInput
 }
@@ -572,6 +574,7 @@ export type DriverWhereUniqueInput = Prisma.AtLeast<{
   TollRecord?: Prisma.TollRecordListRelationFilter
   Trip?: Prisma.TripListRelationFilter
   Truck?: Prisma.TruckListRelationFilter
+  TrailerCoupling?: Prisma.TrailerCouplingListRelationFilter
   VehicleInspection?: Prisma.VehicleInspectionListRelationFilter
 }, "id" | "userId" | "phone" | "email" | "employeeId" | "ghanaCardNumber" | "licenseNumber">
 
@@ -703,6 +706,7 @@ export type DriverCreateInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -752,6 +756,7 @@ export type DriverUncheckedCreateInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -801,6 +806,7 @@ export type DriverUpdateInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -850,6 +856,7 @@ export type DriverUncheckedUpdateInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -1304,6 +1311,22 @@ export type DriverUpdateOneWithoutTruckNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DriverUpdateToOneWithWhereWithoutTruckInput, Prisma.DriverUpdateWithoutTruckInput>, Prisma.DriverUncheckedUpdateWithoutTruckInput>
 }
 
+export type DriverCreateNestedOneWithoutTrailerCouplingInput = {
+  create?: Prisma.XOR<Prisma.DriverCreateWithoutTrailerCouplingInput, Prisma.DriverUncheckedCreateWithoutTrailerCouplingInput>
+  connectOrCreate?: Prisma.DriverCreateOrConnectWithoutTrailerCouplingInput
+  connect?: Prisma.DriverWhereUniqueInput
+}
+
+export type DriverUpdateOneWithoutTrailerCouplingNestedInput = {
+  create?: Prisma.XOR<Prisma.DriverCreateWithoutTrailerCouplingInput, Prisma.DriverUncheckedCreateWithoutTrailerCouplingInput>
+  connectOrCreate?: Prisma.DriverCreateOrConnectWithoutTrailerCouplingInput
+  upsert?: Prisma.DriverUpsertWithoutTrailerCouplingInput
+  disconnect?: Prisma.DriverWhereInput | boolean
+  delete?: Prisma.DriverWhereInput | boolean
+  connect?: Prisma.DriverWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DriverUpdateToOneWithWhereWithoutTrailerCouplingInput, Prisma.DriverUpdateWithoutTrailerCouplingInput>, Prisma.DriverUncheckedUpdateWithoutTrailerCouplingInput>
+}
+
 export type DriverCreateNestedOneWithoutVehicleInspectionInput = {
   create?: Prisma.XOR<Prisma.DriverCreateWithoutVehicleInspectionInput, Prisma.DriverUncheckedCreateWithoutVehicleInspectionInput>
   connectOrCreate?: Prisma.DriverCreateOrConnectWithoutVehicleInspectionInput
@@ -1365,6 +1388,7 @@ export type DriverCreateWithoutUserInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -1413,6 +1437,7 @@ export type DriverUncheckedCreateWithoutUserInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -1477,6 +1502,7 @@ export type DriverUpdateWithoutUserInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -1525,6 +1551,7 @@ export type DriverUncheckedUpdateWithoutUserInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -1573,6 +1600,7 @@ export type DriverCreateWithoutBorderCrossingInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -1621,6 +1649,7 @@ export type DriverUncheckedCreateWithoutBorderCrossingInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -1685,6 +1714,7 @@ export type DriverUpdateWithoutBorderCrossingInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -1733,6 +1763,7 @@ export type DriverUncheckedUpdateWithoutBorderCrossingInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -1781,6 +1812,7 @@ export type DriverCreateWithoutCashAdvanceInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -1829,6 +1861,7 @@ export type DriverUncheckedCreateWithoutCashAdvanceInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -1893,6 +1926,7 @@ export type DriverUpdateWithoutCashAdvanceInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -1941,6 +1975,7 @@ export type DriverUncheckedUpdateWithoutCashAdvanceInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -1989,6 +2024,7 @@ export type DriverCreateWithoutDepotQueueInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -2037,6 +2073,7 @@ export type DriverUncheckedCreateWithoutDepotQueueInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -2101,6 +2138,7 @@ export type DriverUpdateWithoutDepotQueueInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -2149,6 +2187,7 @@ export type DriverUncheckedUpdateWithoutDepotQueueInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -2197,6 +2236,7 @@ export type DriverCreateWithoutDriverIncentiveInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -2245,6 +2285,7 @@ export type DriverUncheckedCreateWithoutDriverIncentiveInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -2309,6 +2350,7 @@ export type DriverUpdateWithoutDriverIncentiveInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -2357,6 +2399,7 @@ export type DriverUncheckedUpdateWithoutDriverIncentiveInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -2405,6 +2448,7 @@ export type DriverCreateWithoutDriverSettlementInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -2453,6 +2497,7 @@ export type DriverUncheckedCreateWithoutDriverSettlementInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -2517,6 +2562,7 @@ export type DriverUpdateWithoutDriverSettlementInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -2565,6 +2611,7 @@ export type DriverUncheckedUpdateWithoutDriverSettlementInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -2613,6 +2660,7 @@ export type DriverCreateWithoutDriverWalletInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -2661,6 +2709,7 @@ export type DriverUncheckedCreateWithoutDriverWalletInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -2725,6 +2774,7 @@ export type DriverUpdateWithoutDriverWalletInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -2773,6 +2823,7 @@ export type DriverUncheckedUpdateWithoutDriverWalletInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -2821,6 +2872,7 @@ export type DriverCreateWithoutLoadBoardInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -2869,6 +2921,7 @@ export type DriverUncheckedCreateWithoutLoadBoardInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -2933,6 +2986,7 @@ export type DriverUpdateWithoutLoadBoardInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -2981,6 +3035,7 @@ export type DriverUncheckedUpdateWithoutLoadBoardInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -3029,6 +3084,7 @@ export type DriverCreateWithoutPayrollInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -3077,6 +3133,7 @@ export type DriverUncheckedCreateWithoutPayrollInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -3141,6 +3198,7 @@ export type DriverUpdateWithoutPayrollInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -3189,6 +3247,7 @@ export type DriverUncheckedUpdateWithoutPayrollInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -3237,6 +3296,7 @@ export type DriverCreateWithoutTollRecordInput = {
   Payroll?: Prisma.PayrollCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -3285,6 +3345,7 @@ export type DriverUncheckedCreateWithoutTollRecordInput = {
   Payroll?: Prisma.PayrollUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -3349,6 +3410,7 @@ export type DriverUpdateWithoutTollRecordInput = {
   Payroll?: Prisma.PayrollUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -3397,6 +3459,7 @@ export type DriverUncheckedUpdateWithoutTollRecordInput = {
   Payroll?: Prisma.PayrollUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -3445,6 +3508,7 @@ export type DriverCreateWithoutTripInput = {
   Payroll?: Prisma.PayrollCreateNestedManyWithoutDriverInput
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -3493,6 +3557,7 @@ export type DriverUncheckedCreateWithoutTripInput = {
   Payroll?: Prisma.PayrollUncheckedCreateNestedManyWithoutDriverInput
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -3557,6 +3622,7 @@ export type DriverUpdateWithoutTripInput = {
   Payroll?: Prisma.PayrollUpdateManyWithoutDriverNestedInput
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -3605,6 +3671,7 @@ export type DriverUncheckedUpdateWithoutTripInput = {
   Payroll?: Prisma.PayrollUncheckedUpdateManyWithoutDriverNestedInput
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -3653,6 +3720,7 @@ export type DriverCreateWithoutTruckInput = {
   Payroll?: Prisma.PayrollCreateNestedManyWithoutDriverInput
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
 }
 
@@ -3701,6 +3769,7 @@ export type DriverUncheckedCreateWithoutTruckInput = {
   Payroll?: Prisma.PayrollUncheckedCreateNestedManyWithoutDriverInput
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -3765,6 +3834,7 @@ export type DriverUpdateWithoutTruckInput = {
   Payroll?: Prisma.PayrollUpdateManyWithoutDriverNestedInput
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
 }
 
@@ -3813,6 +3883,219 @@ export type DriverUncheckedUpdateWithoutTruckInput = {
   Payroll?: Prisma.PayrollUncheckedUpdateManyWithoutDriverNestedInput
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
+}
+
+export type DriverCreateWithoutTrailerCouplingInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  phone: string
+  email?: string | null
+  dateOfBirth?: Date | string | null
+  address?: string | null
+  photo?: string | null
+  employeeId: string
+  ghanaCardNumber?: string | null
+  ghanaCardExpiry?: Date | string | null
+  licenseNumber: string
+  licenseExpiry: Date | string
+  licenseClass: string
+  licenseImage?: string | null
+  ghanaCardFrontImage?: string | null
+  ghanaCardBackImage?: string | null
+  emergencyName?: string | null
+  emergencyPhone?: string | null
+  verificationStatus?: $Enums.DriverVerificationStatus
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  verificationNotes?: string | null
+  notifySMS?: boolean
+  notifyEmail?: boolean
+  notifyPush?: boolean
+  rating?: number
+  status?: $Enums.DriverStatus
+  totalTrips?: number
+  totalMileage?: number
+  hireDate?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingCreateNestedManyWithoutDriverInput
+  CashAdvance?: Prisma.CashAdvanceCreateNestedManyWithoutDriverInput
+  DepotQueue?: Prisma.DepotQueueCreateNestedManyWithoutDriverInput
+  user?: Prisma.UserCreateNestedOneWithoutDriverInput
+  DriverIncentive?: Prisma.DriverIncentiveCreateNestedManyWithoutDriverInput
+  DriverSettlement?: Prisma.DriverSettlementCreateNestedManyWithoutDriverInput
+  DriverWallet?: Prisma.DriverWalletCreateNestedOneWithoutDriverInput
+  LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutDriverInput
+  Payroll?: Prisma.PayrollCreateNestedManyWithoutDriverInput
+  TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
+  Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
+  Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  VehicleInspection?: Prisma.VehicleInspectionCreateNestedManyWithoutDriverInput
+}
+
+export type DriverUncheckedCreateWithoutTrailerCouplingInput = {
+  id?: string
+  userId?: string | null
+  firstName: string
+  lastName: string
+  phone: string
+  email?: string | null
+  dateOfBirth?: Date | string | null
+  address?: string | null
+  photo?: string | null
+  employeeId: string
+  ghanaCardNumber?: string | null
+  ghanaCardExpiry?: Date | string | null
+  licenseNumber: string
+  licenseExpiry: Date | string
+  licenseClass: string
+  licenseImage?: string | null
+  ghanaCardFrontImage?: string | null
+  ghanaCardBackImage?: string | null
+  emergencyName?: string | null
+  emergencyPhone?: string | null
+  verificationStatus?: $Enums.DriverVerificationStatus
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  verificationNotes?: string | null
+  notifySMS?: boolean
+  notifyEmail?: boolean
+  notifyPush?: boolean
+  rating?: number
+  status?: $Enums.DriverStatus
+  totalTrips?: number
+  totalMileage?: number
+  hireDate?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedCreateNestedManyWithoutDriverInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedCreateNestedManyWithoutDriverInput
+  DepotQueue?: Prisma.DepotQueueUncheckedCreateNestedManyWithoutDriverInput
+  DriverIncentive?: Prisma.DriverIncentiveUncheckedCreateNestedManyWithoutDriverInput
+  DriverSettlement?: Prisma.DriverSettlementUncheckedCreateNestedManyWithoutDriverInput
+  DriverWallet?: Prisma.DriverWalletUncheckedCreateNestedOneWithoutDriverInput
+  LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutDriverInput
+  Payroll?: Prisma.PayrollUncheckedCreateNestedManyWithoutDriverInput
+  TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
+  Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  VehicleInspection?: Prisma.VehicleInspectionUncheckedCreateNestedManyWithoutDriverInput
+}
+
+export type DriverCreateOrConnectWithoutTrailerCouplingInput = {
+  where: Prisma.DriverWhereUniqueInput
+  create: Prisma.XOR<Prisma.DriverCreateWithoutTrailerCouplingInput, Prisma.DriverUncheckedCreateWithoutTrailerCouplingInput>
+}
+
+export type DriverUpsertWithoutTrailerCouplingInput = {
+  update: Prisma.XOR<Prisma.DriverUpdateWithoutTrailerCouplingInput, Prisma.DriverUncheckedUpdateWithoutTrailerCouplingInput>
+  create: Prisma.XOR<Prisma.DriverCreateWithoutTrailerCouplingInput, Prisma.DriverUncheckedCreateWithoutTrailerCouplingInput>
+  where?: Prisma.DriverWhereInput
+}
+
+export type DriverUpdateToOneWithWhereWithoutTrailerCouplingInput = {
+  where?: Prisma.DriverWhereInput
+  data: Prisma.XOR<Prisma.DriverUpdateWithoutTrailerCouplingInput, Prisma.DriverUncheckedUpdateWithoutTrailerCouplingInput>
+}
+
+export type DriverUpdateWithoutTrailerCouplingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  ghanaCardNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghanaCardExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenseClass?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghanaCardFrontImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifySMS?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
+  totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUpdateManyWithoutDriverNestedInput
+  CashAdvance?: Prisma.CashAdvanceUpdateManyWithoutDriverNestedInput
+  DepotQueue?: Prisma.DepotQueueUpdateManyWithoutDriverNestedInput
+  user?: Prisma.UserUpdateOneWithoutDriverNestedInput
+  DriverIncentive?: Prisma.DriverIncentiveUpdateManyWithoutDriverNestedInput
+  DriverSettlement?: Prisma.DriverSettlementUpdateManyWithoutDriverNestedInput
+  DriverWallet?: Prisma.DriverWalletUpdateOneWithoutDriverNestedInput
+  LoadBoard?: Prisma.LoadBoardUpdateManyWithoutDriverNestedInput
+  Payroll?: Prisma.PayrollUpdateManyWithoutDriverNestedInput
+  TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
+  Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  VehicleInspection?: Prisma.VehicleInspectionUpdateManyWithoutDriverNestedInput
+}
+
+export type DriverUncheckedUpdateWithoutTrailerCouplingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  ghanaCardNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghanaCardExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenseClass?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghanaCardFrontImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghanaCardBackImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumDriverVerificationStatusFieldUpdateOperationsInput | $Enums.DriverVerificationStatus
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifySMS?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifyEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifyPush?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumDriverStatusFieldUpdateOperationsInput | $Enums.DriverStatus
+  totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMileage?: Prisma.FloatFieldUpdateOperationsInput | number
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  BorderCrossing?: Prisma.BorderCrossingUncheckedUpdateManyWithoutDriverNestedInput
+  CashAdvance?: Prisma.CashAdvanceUncheckedUpdateManyWithoutDriverNestedInput
+  DepotQueue?: Prisma.DepotQueueUncheckedUpdateManyWithoutDriverNestedInput
+  DriverIncentive?: Prisma.DriverIncentiveUncheckedUpdateManyWithoutDriverNestedInput
+  DriverSettlement?: Prisma.DriverSettlementUncheckedUpdateManyWithoutDriverNestedInput
+  DriverWallet?: Prisma.DriverWalletUncheckedUpdateOneWithoutDriverNestedInput
+  LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutDriverNestedInput
+  Payroll?: Prisma.PayrollUncheckedUpdateManyWithoutDriverNestedInput
+  TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
+  Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
   VehicleInspection?: Prisma.VehicleInspectionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -3862,6 +4145,7 @@ export type DriverCreateWithoutVehicleInspectionInput = {
   TollRecord?: Prisma.TollRecordCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingCreateNestedManyWithoutDriverInput
 }
 
 export type DriverUncheckedCreateWithoutVehicleInspectionInput = {
@@ -3910,6 +4194,7 @@ export type DriverUncheckedCreateWithoutVehicleInspectionInput = {
   TollRecord?: Prisma.TollRecordUncheckedCreateNestedManyWithoutDriverInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
   Truck?: Prisma.TruckUncheckedCreateNestedManyWithoutDriverInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type DriverCreateOrConnectWithoutVehicleInspectionInput = {
@@ -3974,6 +4259,7 @@ export type DriverUpdateWithoutVehicleInspectionInput = {
   TollRecord?: Prisma.TollRecordUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUpdateManyWithoutDriverNestedInput
 }
 
 export type DriverUncheckedUpdateWithoutVehicleInspectionInput = {
@@ -4022,6 +4308,7 @@ export type DriverUncheckedUpdateWithoutVehicleInspectionInput = {
   TollRecord?: Prisma.TollRecordUncheckedUpdateManyWithoutDriverNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
   Truck?: Prisma.TruckUncheckedUpdateManyWithoutDriverNestedInput
+  TrailerCoupling?: Prisma.TrailerCouplingUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 
@@ -4040,6 +4327,7 @@ export type DriverCountOutputType = {
   TollRecord: number
   Trip: number
   Truck: number
+  TrailerCoupling: number
   VehicleInspection: number
 }
 
@@ -4054,6 +4342,7 @@ export type DriverCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   TollRecord?: boolean | DriverCountOutputTypeCountTollRecordArgs
   Trip?: boolean | DriverCountOutputTypeCountTripArgs
   Truck?: boolean | DriverCountOutputTypeCountTruckArgs
+  TrailerCoupling?: boolean | DriverCountOutputTypeCountTrailerCouplingArgs
   VehicleInspection?: boolean | DriverCountOutputTypeCountVehicleInspectionArgs
 }
 
@@ -4140,6 +4429,13 @@ export type DriverCountOutputTypeCountTruckArgs<ExtArgs extends runtime.Types.Ex
 /**
  * DriverCountOutputType without action
  */
+export type DriverCountOutputTypeCountTrailerCouplingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TrailerCouplingWhereInput
+}
+
+/**
+ * DriverCountOutputType without action
+ */
 export type DriverCountOutputTypeCountVehicleInspectionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.VehicleInspectionWhereInput
 }
@@ -4192,6 +4488,7 @@ export type DriverSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   TollRecord?: boolean | Prisma.Driver$TollRecordArgs<ExtArgs>
   Trip?: boolean | Prisma.Driver$TripArgs<ExtArgs>
   Truck?: boolean | Prisma.Driver$TruckArgs<ExtArgs>
+  TrailerCoupling?: boolean | Prisma.Driver$TrailerCouplingArgs<ExtArgs>
   VehicleInspection?: boolean | Prisma.Driver$VehicleInspectionArgs<ExtArgs>
   _count?: boolean | Prisma.DriverCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["driver"]>
@@ -4249,6 +4546,7 @@ export type DriverInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   TollRecord?: boolean | Prisma.Driver$TollRecordArgs<ExtArgs>
   Trip?: boolean | Prisma.Driver$TripArgs<ExtArgs>
   Truck?: boolean | Prisma.Driver$TruckArgs<ExtArgs>
+  TrailerCoupling?: boolean | Prisma.Driver$TrailerCouplingArgs<ExtArgs>
   VehicleInspection?: boolean | Prisma.Driver$VehicleInspectionArgs<ExtArgs>
   _count?: boolean | Prisma.DriverCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -4268,6 +4566,7 @@ export type $DriverPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     TollRecord: Prisma.$TollRecordPayload<ExtArgs>[]
     Trip: Prisma.$TripPayload<ExtArgs>[]
     Truck: Prisma.$TruckPayload<ExtArgs>[]
+    TrailerCoupling: Prisma.$TrailerCouplingPayload<ExtArgs>[]
     VehicleInspection: Prisma.$VehicleInspectionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -4657,6 +4956,7 @@ export interface Prisma__DriverClient<T, Null = never, ExtArgs extends runtime.T
   TollRecord<T extends Prisma.Driver$TollRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Driver$TollRecordArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TollRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Trip<T extends Prisma.Driver$TripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Driver$TripArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Truck<T extends Prisma.Driver$TruckArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Driver$TruckArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TruckPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  TrailerCoupling<T extends Prisma.Driver$TrailerCouplingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Driver$TrailerCouplingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrailerCouplingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   VehicleInspection<T extends Prisma.Driver$VehicleInspectionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Driver$VehicleInspectionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VehicleInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5344,6 +5644,30 @@ export type Driver$TruckArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.TruckScalarFieldEnum | Prisma.TruckScalarFieldEnum[]
+}
+
+/**
+ * Driver.TrailerCoupling
+ */
+export type Driver$TrailerCouplingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TrailerCoupling
+   */
+  select?: Prisma.TrailerCouplingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TrailerCoupling
+   */
+  omit?: Prisma.TrailerCouplingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TrailerCouplingInclude<ExtArgs> | null
+  where?: Prisma.TrailerCouplingWhereInput
+  orderBy?: Prisma.TrailerCouplingOrderByWithRelationInput | Prisma.TrailerCouplingOrderByWithRelationInput[]
+  cursor?: Prisma.TrailerCouplingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TrailerCouplingScalarFieldEnum | Prisma.TrailerCouplingScalarFieldEnum[]
 }
 
 /**

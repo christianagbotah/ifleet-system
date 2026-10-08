@@ -25,6 +25,10 @@ const TrucksView = dynamic(
   () => import('@/components/trucks/TrucksView').then(m => ({ default: m.TrucksView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const TrailersView = dynamic(
+  () => import('@/components/trailers/TrailersView').then(m => ({ default: m.TrailersView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const DriversView = dynamic(
   () => import('@/components/drivers/DriversView').then(m => ({ default: m.DriversView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -302,6 +306,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <DriverIncentivesView />
     case 'trucks':
       return <TrucksView />
+    case 'trailers':
+      return <TrailersView />
     case 'drivers':
       return <DriversView />
     case 'trips':

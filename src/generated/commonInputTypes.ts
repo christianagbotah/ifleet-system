@@ -718,6 +718,23 @@ export type EnumTruckInsuranceStatusWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
 }
 
+export type EnumTrailerStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel> | $Enums.TrailerStatus
+}
+
+export type EnumTrailerStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusWithAggregatesFilter<$PrismaModel> | $Enums.TrailerStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
+}
+
 export type EnumTyreConditionFilter<$PrismaModel = never> = {
   equals?: $Enums.TyreCondition | Prisma.EnumTyreConditionFieldRefInput<$PrismaModel>
   in?: $Enums.TyreCondition[]
@@ -1483,6 +1500,23 @@ export type NestedEnumTruckInsuranceStatusWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumTrailerStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel> | $Enums.TrailerStatus
+}
+
+export type NestedEnumTrailerStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusWithAggregatesFilter<$PrismaModel> | $Enums.TrailerStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumTyreConditionFilter<$PrismaModel = never> = {

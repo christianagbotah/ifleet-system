@@ -36,6 +36,15 @@ enum TruckStatus {
   decommissioned
 }
 
+enum TrailerStatus {
+  active
+  inactive
+  maintenance
+  out_of_service
+  retired
+  decommissioned
+}
+
 enum TruckInsuranceStatus {
   none
   active
@@ -564,6 +573,7 @@ model Driver {
   TollRecord          TollRecord[]
   Trip                Trip[]
   Truck               Truck[]
+  TrailerCoupling       TrailerCoupling[]
   VehicleInspection   VehicleInspection[]
 }
 
@@ -1439,6 +1449,7 @@ model Trip {
   tripNumber              String                    @unique
   truckId                 String
   driverId                String
+  trailerId               String?
   waybillNumber           String?
   orderNumber             String?
   loadingLocation         String
@@ -1506,10 +1517,12 @@ model Trip {
   loadingCity             LoadingCity?              @relation(fields: [loadingCityId], references: [id])
   loadingPoint            LoadingPoint?             @relation(fields: [loadingPointId], references: [id])
   truck                   Truck                     @relation(fields: [truckId], references: [id])
+  trailer                 Trailer?                  @relation(fields: [trailerId], references: [id])
   TripComment             TripComment[]
   TripDeliveryDestination TripDeliveryDestination[]
   TripEvent               TripEvent[]
   TripItem                TripItem[]
+  TrailerCoupling         TrailerCoupling[]
   TruckLocation           TruckLocation[]
   VehicleInspection       VehicleInspection[]
   WeightVerification      WeightVerification[]
@@ -1526,6 +1539,7 @@ model Trip {
   @@index([status, departureTime])
   @@index([status])
   @@index([truckId])
+  @@index([trailerId])
 }
 
 model TripComment {
@@ -1649,6 +1663,7 @@ model Transporter {
   updatedAt         DateTime            @updatedAt
   organization      Organization?       @relation(fields: [organizationId], references: [id])
   Truck             Truck[]
+  Trailer           Trailer[]
   TransportContract TransportContract[]
   TransportRateCard TransportRateCard[]
 
@@ -1673,6 +1688,7 @@ model VehicleOwner {
   updatedAt          DateTime      @updatedAt
   organization       Organization? @relation(fields: [organizationId], references: [id])
   Truck              Truck[]
+  Trailer            Trailer[]
 
   @@index([organizationId])
   @@index([isActive])
@@ -1780,12 +1796,80 @@ model Truck {
   TruckLocation        TruckLocation[]
   Tyre                 Tyre[]
   VehicleInspection    VehicleInspection[]
+  TrailerCoupling       TrailerCoupling[]
   transporter          Transporter?           @relation(fields: [transporterId], references: [id])
   vehicleOwner         VehicleOwner?          @relation(fields: [vehicleOwnerId], references: [id])
 
   @@index([driverId], map: "Truck_driverId_fkey")
   @@index([transporterId])
   @@index([vehicleOwnerId])
+}
+
+model Trailer {
+  id                  String        @id @default(cuid())
+  plateNumber         String        @unique
+  vinNumber           String?       @unique
+  chassisNumber       String?       @unique
+  trailerType         String
+  bodyType            String?
+  axleCount           Int?
+  axleConfiguration   String?
+  tareWeight          Float?
+  maxPayload          Float?
+  length              Float?
+  width               Float?
+  height              Float?
+  transporterId       String?
+  vehicleOwnerId      String?
+  telematicsDeviceRef String?
+  registrationExpiry  DateTime?
+  roadworthyExpiry    DateTime?
+  lastInspectionAt    DateTime?
+  nextInspectionAt    DateTime?
+  status              TrailerStatus @default(active)
+  notes               String?       @db.Text
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  transporter         Transporter?  @relation(fields: [transporterId], references: [id])
+  vehicleOwner        VehicleOwner? @relation(fields: [vehicleOwnerId], references: [id])
+  Trip                Trip[]
+  TrailerCoupling     TrailerCoupling[]
+
+  @@index([status])
+  @@index([transporterId])
+  @@index([vehicleOwnerId])
+  @@index([roadworthyExpiry])
+  @@index([registrationExpiry])
+}
+
+model TrailerCoupling {
+  id                String   @id @default(cuid())
+  tractorId         String
+  trailerId         String
+  driverId          String?
+  tripId            String?
+  coupledAt         DateTime @default(now())
+  decoupledAt       DateTime?
+  location          String?
+  decoupledLocation String?
+  latitude          Float?
+  longitude         Float?
+  odometer          Float?
+  actorId           String?
+  decoupledById     String?
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tractor           Truck    @relation(fields: [tractorId], references: [id])
+  trailer           Trailer  @relation(fields: [trailerId], references: [id])
+  driver            Driver?  @relation(fields: [driverId], references: [id])
+  trip              Trip?    @relation(fields: [tripId], references: [id])
+
+  @@index([tractorId, decoupledAt])
+  @@index([trailerId, decoupledAt])
+  @@index([driverId])
+  @@index([tripId])
+  @@index([coupledAt])
 }
 
 model TruckLocation {

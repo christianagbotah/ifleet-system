@@ -40,6 +40,18 @@ export const TruckStatus = {
 export type TruckStatus = (typeof TruckStatus)[keyof typeof TruckStatus]
 
 
+export const TrailerStatus = {
+  active: 'active',
+  inactive: 'inactive',
+  maintenance: 'maintenance',
+  out_of_service: 'out_of_service',
+  retired: 'retired',
+  decommissioned: 'decommissioned'
+} as const
+
+export type TrailerStatus = (typeof TrailerStatus)[keyof typeof TrailerStatus]
+
+
 export const TruckInsuranceStatus = {
   none: 'none',
   active: 'active',
