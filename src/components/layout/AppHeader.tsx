@@ -125,11 +125,12 @@ export function AppHeader({ currentPage, onNavigate }: AppHeaderProps) {
         <ConnectionStatusDot />
 
         {user?.isDemo && (
-          <div className="hidden items-center gap-2 rounded-full border border-amber-300/70 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-amber-800 sm:flex dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300" title="Demo Mode · Read Only">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Demo Mode</span>
-            <span className="text-amber-500/70">·</span>
-            <span>Read Only</span>
+          <div className="flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2 py-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-amber-800 sm:gap-2 sm:px-3 sm:text-[10px] sm:tracking-[0.1em] dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300" title="Demo Mode · Read Only">
+            <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+            <span className="sm:hidden">Demo · RO</span>
+            <span className="hidden sm:inline">Demo Mode</span>
+            <span className="hidden text-amber-500/70 sm:inline">·</span>
+            <span className="hidden sm:inline">Read Only</span>
           </div>
         )}
 
