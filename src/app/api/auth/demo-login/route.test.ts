@@ -25,7 +25,7 @@ vi.mock('@/lib/audit', () => ({
 }))
 
 vi.mock('@/lib/jwt-secret', () => ({
-  JWT_SECRET: 'demo-route-test-secret-1234567890',
+  JWT_SECRET: 'demo-route-test-secret-not-for-production-1234567890',
 }))
 
 import { POST } from './route'
@@ -82,7 +82,7 @@ describe('POST /api/auth/demo-login', () => {
     })
     expect(body.user).not.toHaveProperty('password')
 
-    const token = jwt.verify(body.token, 'demo-route-test-secret-1234567890') as jwt.JwtPayload
+    const token = jwt.verify(body.token, 'demo-route-test-secret-not-for-production-1234567890') as jwt.JwtPayload
     expect(token.isDemo).toBe(true)
     expect(token.demoProfile).toBe('admin')
     expect(Number(token.exp) - Number(token.iat)).toBeLessThanOrEqual(8 * 60 * 60)
