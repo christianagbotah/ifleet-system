@@ -78,6 +78,12 @@ describe('API authentication proxy', () => {
     expect(response.headers.get('x-middleware-next')).toBe('1')
   })
 
+  it('does not make neighboring demo-auth paths public', async () => {
+    const response = await proxy(request('/api/auth/demo-login-extra', { method: 'POST' }))
+
+    expect(response.status).toBe(401)
+  })
+
   it('does not open neighboring internal ingest routes', async () => {
     const response = await proxy(request('/api/internal/ingest/admin'))
 

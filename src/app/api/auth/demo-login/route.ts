@@ -9,9 +9,15 @@ import { JWT_SECRET } from '@/lib/jwt-secret'
 
 const DEMO_SESSION_TTL = '8h'
 
+function isDemoLoginEnabled(): boolean {
+  if (process.env.DEMO_LOGIN_ENABLED !== 'true') return false
+  if (process.env.NODE_ENV === 'production' && process.env.DEMO_LOGIN_ALLOW_PRODUCTION !== 'true') return false
+  return true
+}
+
 export async function GET() {
   return NextResponse.json(
-    { enabled: process.env.DEMO_LOGIN_ENABLED === 'true' },
+    { enabled: isDemoLoginEnabled() },
     { headers: { 'Cache-Control': 'no-store' } },
   )
 }
@@ -95,7 +101,7 @@ async function ensureDemoUser(profile: DemoProfileId) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (process.env.DEMO_LOGIN_ENABLED !== 'true') {
+    if (!isDemoLoginEnabled()) {
       return NextResponse.json({ error: 'Demo access is not enabled.' }, { status: 403 })
     }
 

@@ -214,6 +214,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   hasPermission: (permission: string) => {
     const { user } = get()
     if (!user) return false
+    if (user.isDemo) {
+      return permission.includes('.view') && user.permissions.includes(permission)
+    }
     if (user.role === 'Admin') return true
     if (user.role === 'Manager') return true
     return user.permissions.includes(permission)
@@ -222,6 +225,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   hasAnyPermission: (permissions: string[]) => {
     const { user } = get()
     if (!user) return false
+    if (user.isDemo) {
+      return permissions.some((permission) => permission.includes('.view') && user.permissions.includes(permission))
+    }
     if (user.role === 'Admin') return true
     if (user.role === 'Manager') return true
     return permissions.some((p) => user.permissions.includes(p))
