@@ -46,4 +46,16 @@ describe('factory operations integration contract', () => {
     expect(source).toContain('Gate & Queue')
     expect(source).toContain('Detention')
   })
+
+  it('registers Factory Operations in the hash-routed shell and access map', () => {
+    const page = read('src/app/page.tsx')
+    const constants = read('src/lib/constants.ts')
+    const auth = read('src/lib/store/auth.ts')
+
+    expect(page).toContain("@/components/factory-ops/FactoryOperationsView")
+    expect(page).toContain("case 'factory-operations':")
+    expect(page).toContain('<FactoryOperationsView />')
+    expect(constants).toContain('{ id: "factory-operations", label: "Factory Operations"')
+    expect(auth).toContain("'factory-operations': ['trips.view']")
+  })
 })
