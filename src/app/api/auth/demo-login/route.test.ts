@@ -28,7 +28,7 @@ vi.mock('@/lib/jwt-secret', () => ({
   JWT_SECRET: 'demo-route-test-secret-not-for-production-1234567890',
 }))
 
-import { POST } from './route'
+import { GET, POST } from './route'
 
 function request(profile: unknown) {
   return new NextRequest('https://ifleetpro.example/api/auth/demo-login', {
@@ -59,6 +59,22 @@ beforeEach(() => {
       permissions: JSON.stringify(['dashboard.view', 'trips.view']),
     },
     driver: null,
+  })
+})
+
+describe('GET /api/auth/demo-login', () => {
+  it('reports demo access disabled unless explicitly enabled', async () => {
+    delete process.env.DEMO_LOGIN_ENABLED
+    const response = await GET()
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toEqual({ enabled: false })
+  })
+
+  it('reports demo access enabled when the server flag is true', async () => {
+    process.env.DEMO_LOGIN_ENABLED = 'true'
+    const response = await GET()
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toEqual({ enabled: true })
   })
 })
 

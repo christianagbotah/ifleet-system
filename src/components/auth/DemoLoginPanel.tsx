@@ -27,10 +27,29 @@ const ICONS: Record<DemoProfileId, LucideIcon> = {
 }
 
 export function DemoLoginPanel() {
+  const [isEnabled, setIsEnabled] = React.useState(false)
   const [selected, setSelected] = React.useState<DemoProfileId>('manager')
   const [pending, setPending] = React.useState<DemoProfileId | null>(null)
   const { demoLogin, isLoading } = useAuthStore()
   const active = DEMO_PROFILES.find((profile) => profile.id === selected)!
+
+  React.useEffect(() => {
+    let cancelled = false
+    fetch('/api/auth/demo-login')
+      .then(async (response) => (response.ok ? response.json() : { enabled: false }))
+      .then((data) => {
+        if (!cancelled) setIsEnabled(data?.enabled === true)
+      })
+      .catch(() => {
+        if (!cancelled) setIsEnabled(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (!isEnabled) return null
 
   async function continueAsDemo() {
     setPending(selected)
