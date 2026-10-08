@@ -3,7 +3,7 @@
 import * as React from 'react'
 
 import { FactoryOperationsView } from '@/components/factory-ops/FactoryOperationsView'
-import { LegacyDepotQueueView } from '@/components/operations/LegacyDepotQueueView'
+import { DepotQueueView as LegacyDepotQueueView } from '@/components/operations/LegacyDepotQueueView'
 import { Button } from '@/components/ui/button'
 
 export function DepotQueueView() {
