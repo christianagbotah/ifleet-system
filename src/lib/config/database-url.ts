@@ -1,5 +1,4 @@
-const PRODUCTION_DB_HOST = '163.245.212.15'
-const PRODUCTION_DB_NAME = 'ifleetpro_data'
+const PRODUCTION_DB_NAMES = new Set(['lightworld_ifleetpro_db', 'ifleetpro_data'])
 
 function normalizeProtocol(value: string): string {
   if (value.startsWith('mysql://')) {
@@ -41,8 +40,7 @@ export function assertSafeDatabaseTarget(
 ): void {
   const parsed = parseDatabaseUrl(url)
   const databaseName = extractDatabaseName(url)
-  const isKnownProductionTarget =
-    parsed.hostname === PRODUCTION_DB_HOST && databaseName === PRODUCTION_DB_NAME
+  const isKnownProductionTarget = PRODUCTION_DB_NAMES.has(databaseName)
 
   if (nodeEnv !== 'production' && isKnownProductionTarget && !allowProductionDbInDev) {
     throw new Error(

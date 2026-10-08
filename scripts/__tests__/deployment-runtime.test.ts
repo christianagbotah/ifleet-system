@@ -8,6 +8,7 @@ const APP_DIR = '/home/lightworld/webapps/ifleetpro'
 const STALE_PATHS = ['/home/ifleetpro/app', '/home/z/my-project']
 const runtimeFiles = [
   'start-server.sh',
+  'deploy.sh',
   'scripts/webhook-deploy.sh',
   'update.sh',
   'hooks.json.example',
@@ -41,8 +42,14 @@ describe('production deployment runtime configuration', () => {
     expect(content).not.toContain('pm2 restart all')
   })
 
+  it('marks production deployment scripts as production before Prisma runs', () => {
+    for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
+      expect(read(file), file).toContain('NODE_ENV=production')
+    }
+  })
+
   it('keeps deployment shell scripts syntactically valid', () => {
-    for (const file of ['start-server.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
+    for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
       expect(() => execFileSync('bash', ['-n', resolve(ROOT, file)])).not.toThrow()
     }
   })

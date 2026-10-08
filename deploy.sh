@@ -4,7 +4,7 @@
 # ════════════════════════════════════════════════════════════════════
 #
 # For Webuzo VPS with MariaDB (local).
-# User: lightworld | App dir: /home/lightworld/app
+# User: lightworld | App dir: /home/lightworld/webapps/ifleetpro
 #
 # USAGE:
 #   1. Run this script as root or lightworld user
@@ -14,9 +14,10 @@
 # ────────────────────────────────────────────────────────────────────
 
 set -e
+export NODE_ENV=production
 
 APP_USER="${1:-lightworld}"
-APP_DIR="/home/$APP_USER/app"
+APP_DIR="${IFLEETPRO_APP_DIR:-/home/lightworld/webapps/ifleetpro}"
 REPO_URL="https://github.com/christianagbotah/ifleet-system.git"
 NODE_VERSION="20"
 BUN_VERSION="1.3.13"
@@ -41,7 +42,9 @@ if [ "$(id -u)" -eq 0 ]; then
 else
   echo "  Running as $(whoami) — setting APP_USER=$(whoami)"
   APP_USER=$(whoami)
-  APP_DIR="/home/$APP_USER/app"
+  if [ -z "${IFLEETPRO_APP_DIR:-}" ]; then
+    APP_DIR="/home/$APP_USER/webapps/ifleetpro"
+  fi
 fi
 
 # Check git
@@ -81,7 +84,7 @@ else
     su - "$APP_USER" -c "git clone $REPO_URL $APP_DIR"
   else
     mkdir -p "$(dirname "$APP_DIR")"
-    git clone "$REPO_URL "$APP_DIR"
+    git clone "$REPO_URL" "$APP_DIR"
   fi
   cd "$APP_DIR"
 fi
@@ -92,7 +95,7 @@ echo ""
 # ── Step 3: Install dependencies ──
 echo -e "${YELLOW}[3/10] Installing dependencies (bun install)...${NC}"
 cd "$APP_DIR"
-bun install --production 2>&1 | tail -5
+bun install --frozen-lockfile 2>/dev/null || bun install
 echo -e "${GREEN}  ✓ Dependencies installed${NC}"
 echo ""
 
@@ -102,7 +105,7 @@ echo -e "${YELLOW}[4/10] Setting up environment variables...${NC}"
 # Prompt for DB password
 DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_PORT="${DB_PORT:-3306}"
-DB_NAME="${DB_NAME:-ifleetpro_data}"
+DB_NAME="${DB_NAME:-lightworld_ifleetpro_db}"
 DB_USER="${DB_USER:-ifleetpro_app}"
 read -rsp "  Enter MariaDB password for ${DB_USER}: " DB_PASSWORD
 echo ""
@@ -216,7 +219,7 @@ module.exports = {
     {
       name: 'ifleetpro',
       script: '.next/standalone/server.js',
-      cwd: '/home/lightworld/app',
+      cwd: '/home/lightworld/webapps/ifleetpro',
       env: { NODE_ENV: 'production' },
       instances: 1,
       autorestart: true,
@@ -227,7 +230,7 @@ module.exports = {
 ECOSYSTEM
 
 # Fix cwd if APP_USER is different
-sed -i "s|/home/lightworld/app|$APP_DIR|g" "$APP_DIR/ecosystem.config.cjs"
+sed -i "s|/home/lightworld/webapps/ifleetpro|$APP_DIR|g" "$APP_DIR/ecosystem.config.cjs"
 
 echo -e "${GREEN}  ✓ PM2 config created${NC}"
 echo ""

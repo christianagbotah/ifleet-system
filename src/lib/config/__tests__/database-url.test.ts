@@ -6,7 +6,8 @@ import {
   resolveDatabaseUrl,
 } from '@/lib/config/database-url'
 
-const productionUrl = 'mariadb://ifleet_app@163.245.212.15:3306/ifleetpro_data'
+const productionUrl = 'mariadb://ifleetpro_app@localhost:3306/lightworld_ifleetpro_db'
+const legacyProductionUrl = 'mariadb://ifleet_app@163.245.212.15:3306/ifleetpro_data'
 
 describe('resolveDatabaseUrl', () => {
   it('fails fast when DATABASE_URL is missing', () => {
@@ -26,8 +27,14 @@ describe('resolveDatabaseUrl', () => {
     expect(value).toBe('mariadb://dev@127.0.0.1:3306/ifleetpro_dev')
   })
 
-  it('blocks the known production database target outside production', () => {
+  it('blocks the actual production database outside production even on localhost', () => {
     expect(() => resolveDatabaseUrl({ DATABASE_URL: productionUrl }, 'development')).toThrow(
+      /production database/i
+    )
+  })
+
+  it('continues to block the legacy production database fingerprint', () => {
+    expect(() => resolveDatabaseUrl({ DATABASE_URL: legacyProductionUrl }, 'test')).toThrow(
       /production database/i
     )
   })
@@ -53,7 +60,7 @@ describe('database URL helpers', () => {
     )
   })
 
-  it('blocks only when the target matches the production fingerprint', () => {
+  it('allows a non-production database target', () => {
     expect(() =>
       assertSafeDatabaseTarget(
         'mariadb://dev@127.0.0.1:3306/ifleetpro_dev',

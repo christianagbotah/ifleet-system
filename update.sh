@@ -2,6 +2,7 @@
 # iFleetPro — controlled production update
 
 set -euo pipefail
+export NODE_ENV=production
 
 APP_DIR="/home/lightworld/webapps/ifleetpro"
 GREEN='\033[0;32m'

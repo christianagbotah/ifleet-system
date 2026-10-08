@@ -13,6 +13,7 @@
 # ══════════════════════════════════════════════════════════════
 
 set -e
+export NODE_ENV=production
 
 # ── Ensure Bun is in PATH (systemd services have minimal PATH) ──
 export PATH="/root/.bun/bin:/usr/local/apps/nodejs20/bin:/usr/local/bin:/usr/lib/node_modules/.bin:$PATH"
