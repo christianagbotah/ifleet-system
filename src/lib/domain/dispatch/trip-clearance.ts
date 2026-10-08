@@ -154,7 +154,7 @@ export async function evaluateTripDispatchClearance(
     documents: [...documentValidity].map(([category, validUntil]) => ({ category, validUntil })),
   })
 
-  const [gateIn, completedQueue, weighingEvents] = await Promise.all([
+  const [gateIn, completedQueue, weighingEvents, electronicWaybill] = await Promise.all([
     db.gateEvent.findFirst({
       where: { tripId: trip.id, direction: 'in' },
       orderBy: [{ occurredAt: 'desc' }, { createdAt: 'desc' }],
@@ -177,6 +177,7 @@ export async function evaluateTripDispatchClearance(
       },
       orderBy: [{ recordedAt: 'desc' }, { createdAt: 'desc' }],
     }),
+    db.electronicWaybill.findUnique({ where: { tripId: trip.id } }),
   ])
 
   const supersededIds = new Set(
@@ -194,10 +195,31 @@ export async function evaluateTripDispatchClearance(
     ...documentValidity.keys().map((category) => category.trim().toLowerCase()),
   ])
   const missingRequired = requiredDocuments.filter((category) => !availableDocumentCategories.has(category.trim().toLowerCase()))
-  const waybillRequired = Boolean(siteRule?.weighingStages || profile?.waybillFields)
-  const waybillFinalized = Boolean(trip.waybillNumber)
+
+  const currentWaybillVersion = electronicWaybill
+    ? await db.electronicWaybillVersion.findUnique({
+        where: { waybillId_version: { waybillId: electronicWaybill.id, version: electronicWaybill.currentVersion } },
+        select: { id: true },
+      })
+    : null
+  // WaybillSeal evidence is versioned with the finalized electronic waybill.
+  const WaybillSeal = electronicWaybill
+    ? await db.waybillSeal.findFirst({
+        where: {
+          waybillId: electronicWaybill.id,
+          version: electronicWaybill.currentVersion,
+          status: 'applied',
+          removedAt: null,
+        },
+        orderBy: { createdAt: 'asc' },
+        select: { sealNumber: true },
+      })
+    : null
+
+  // New haulage load-order trips require a finalized electronic waybill before gate-out.
+  const waybillRequired = Boolean(trip.loadOrder)
+  const waybillFinalized = Boolean(electronicWaybill && currentWaybillVersion && electronicWaybill.status === 'finalized')
   const sealRequired = siteRule?.sealRequired ?? profile?.sealRequired ?? false
-  const sealDocument = documents.find((document) => ['cargo_seal', 'seal', 'seal_record'].includes(document.category.trim().toLowerCase()))
 
   return evaluateDispatchClearance({
     assignment: {
@@ -223,13 +245,13 @@ export async function evaluateTripDispatchClearance(
     documents: {
       waybillRequired,
       waybillFinalized,
-      waybillId: trip.waybillNumber ?? null,
+      waybillId: electronicWaybill?.id ?? null,
       missingRequired,
     },
     seal: {
       required: sealRequired,
-      present: !sealRequired || Boolean(sealDocument),
-      sealNumber: sealDocument?.id ?? null,
+      present: !sealRequired || Boolean(WaybillSeal),
+      sealNumber: WaybillSeal?.sealNumber ?? null,
     },
     compliance: {
       passed: true,
