@@ -58,6 +58,27 @@ export interface EligibilityResult {
 }
 
 const WARNING_WINDOW_MS = 30 * 24 * 60 * 60 * 1000
+const STATUTORY_DOCUMENT_CATEGORIES = new Set([
+  'ghana_card',
+  'driver_license',
+  'insurance',
+  'roadworthy',
+  'trailer_registration',
+  'trailer_roadworthy',
+])
+
+function token(value: string): string {
+  return value.trim().toLowerCase()
+}
+
+function isOverrideableBlocker(code: string): boolean {
+  if (code === 'trailer_type') return true
+  if (code.startsWith('missing_document:') || code.startsWith('document_expired:')) {
+    const category = token(code.slice(code.indexOf(':') + 1))
+    return !STATUTORY_DOCUMENT_CATEGORIES.has(category)
+  }
+  return false
+}
 
 function dateValue(value: Date | string | null | undefined): number | null {
   if (!value) return null
@@ -91,7 +112,7 @@ export function evaluateAssignmentEligibility(input: EligibilityInput): Eligibil
   inspectExpiry(input.driver.licenseExpiry, now, 'driver_license_expired', 'driver_license_expiring_soon', blocking, warnings)
   if (
     input.requirements.allowedLicenseClasses.length > 0 &&
-    !input.requirements.allowedLicenseClasses.includes(input.driver.licenseClass)
+    !input.requirements.allowedLicenseClasses.some((licenseClass) => token(licenseClass) === token(input.driver.licenseClass))
   ) blocking.push('driver_license_class')
 
   if (input.tractor.status !== 'active') blocking.push('tractor_unavailable')
@@ -114,7 +135,7 @@ export function evaluateAssignmentEligibility(input: EligibilityInput): Eligibil
     if (input.trailer.status !== 'active') blocking.push('trailer_unavailable')
     if (
       input.requirements.allowedTrailerTypes.length > 0 &&
-      (!input.trailer.trailerType || !input.requirements.allowedTrailerTypes.includes(input.trailer.trailerType))
+      (!input.trailer.trailerType || !input.requirements.allowedTrailerTypes.some((trailerType) => token(trailerType) === token(input.trailer!.trailerType!)))
     ) blocking.push('trailer_type')
     if (input.trailer.registrationExpiry) {
       inspectExpiry(input.trailer.registrationExpiry, now, 'trailer_registration_expired', 'trailer_registration_expiring_soon', blocking, warnings)
@@ -125,7 +146,7 @@ export function evaluateAssignmentEligibility(input: EligibilityInput): Eligibil
   }
 
   for (const category of input.requirements.requiredDocuments) {
-    const document = input.documents.find((candidate) => candidate.category === category)
+    const document = input.documents.find((candidate) => token(candidate.category) === token(category))
     if (!document) {
       blocking.push(`missing_document:${category}`)
       continue
@@ -138,7 +159,11 @@ export function evaluateAssignmentEligibility(input: EligibilityInput): Eligibil
   const override = input.override
   const privileged = override?.actorRole === 'Admin' || override?.actorRole === 'Manager'
   const overrideApplied = Boolean(
-    blocking.length > 0 && override?.authorized && privileged && override.reason.trim().length >= 8
+    blocking.length > 0 &&
+    blocking.every(isOverrideableBlocker) &&
+    override?.authorized &&
+    privileged &&
+    override.reason.trim().length >= 8
   )
   if (overrideApplied) warnings.push('override_applied')
 

@@ -127,16 +127,41 @@ describe('evaluateAssignmentEligibility', () => {
     expect(result.blocking).toContain('missing_document:ghana_card')
   })
 
-  it('accepts an audited privileged override while preserving blockers for audit', () => {
+  it('accepts an audited privileged override only for shipper-policy exceptions', () => {
     const result = evaluateAssignmentEligibility(input({
-      driver: { ...input().driver, licenseClass: 'B' },
-      requirements: { ...input().requirements, allowedLicenseClasses: ['C'] },
-      override: { authorized: true, actorRole: 'Manager', reason: 'Emergency recovery movement approved by operations director' },
+      trailer: { id: 'trailer-1', status: 'active', trailerType: 'lowbed' },
+      requirements: { ...input().requirements, requiresTrailer: true, allowedTrailerTypes: ['flatbed'] },
+      override: { authorized: true, actorRole: 'Manager', reason: 'Shipper approved substitute trailer for this movement' },
     }))
     expect(result.passed).toBe(true)
     expect(result.overrideApplied).toBe(true)
-    expect(result.blocking).toContain('driver_license_class')
+    expect(result.blocking).toContain('trailer_type')
     expect(result.warnings).toContain('override_applied')
+  })
+
+  it('never overrides statutory driver or vehicle compliance blockers', () => {
+    const result = evaluateAssignmentEligibility(input({
+      driver: { ...input().driver, licenseExpiry: '2026-10-01T00:00:00Z' },
+      override: { authorized: true, actorRole: 'Admin', reason: 'Operations director requested emergency dispatch' },
+    }))
+    expect(result.passed).toBe(false)
+    expect(result.overrideApplied).toBe(false)
+    expect(result.blocking).toContain('driver_license_expired')
+  })
+
+  it('matches configured licence, trailer and document categories case-insensitively', () => {
+    const result = evaluateAssignmentEligibility(input({
+      driver: { ...input().driver, licenseClass: 'c' },
+      trailer: { id: 'trailer-1', status: 'active', trailerType: 'FlatBed' },
+      requirements: {
+        requiresTrailer: true,
+        allowedLicenseClasses: [' C '],
+        allowedTrailerTypes: ['flatbed'],
+        requiredDocuments: ['Loading_Permit'],
+      },
+      documents: [{ category: 'loading_permit' }],
+    }))
+    expect(result.passed).toBe(true)
   })
 
   it('rejects an unprivileged or reasonless override', () => {
