@@ -5,7 +5,7 @@ import { ShieldCheck, SlidersHorizontal } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ComplianceRulesView } from '@/components/compliance/ComplianceRulesView'
-import { LegacyComplianceDashboardView } from '@/components/compliance/LegacyComplianceDashboardView'
+import LegacyComplianceDashboardView from '@/components/compliance/LegacyComplianceDashboardView'
 
 export function ComplianceDashboardView() {
   const [workspace, setWorkspace] = useState<'dashboard' | 'rules'>('dashboard')
