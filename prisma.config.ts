@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { readFileSync } from 'node:fs'
 import { defineConfig } from 'prisma/config'
-import { resolveDatabaseUrl } from './src/lib/config/database-url'
+import { resolvePrismaCliDatabaseUrl } from './src/lib/config/database-url'
 
 // Read DATABASE_URL from .env files, with explicit .env taking priority to avoid
 // being overridden by a system-level DATABASE_URL (e.g. SQLite sandbox default).
@@ -28,7 +28,7 @@ function loadDatabaseUrl(): string {
 }
 
 const rawDatabaseUrl = loadDatabaseUrl()
-const databaseUrl = resolveDatabaseUrl(
+const databaseUrl = resolvePrismaCliDatabaseUrl(
   { ...process.env, DATABASE_URL: rawDatabaseUrl },
   process.env.NODE_ENV ?? 'development'
 )

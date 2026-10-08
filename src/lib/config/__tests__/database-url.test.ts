@@ -4,6 +4,7 @@ import {
   assertSafeDatabaseTarget,
   extractDatabaseName,
   resolveDatabaseUrl,
+  resolvePrismaCliDatabaseUrl,
 } from '@/lib/config/database-url'
 
 const productionUrl = 'mariadb://ifleetpro_app@localhost:3306/lightworld_ifleetpro_db'
@@ -68,5 +69,23 @@ describe('database URL helpers', () => {
         false
       )
     ).not.toThrow()
+  })
+})
+
+
+describe('resolvePrismaCliDatabaseUrl', () => {
+  it('uses Prisma MySQL URL syntax for a MariaDB app connection', () => {
+    expect(
+      resolvePrismaCliDatabaseUrl(
+        { DATABASE_URL: 'mariadb://staging@localhost:3306/lightworld_ifleetpro_staging' },
+        'development'
+      )
+    ).toBe('mysql://staging@localhost:3306/lightworld_ifleetpro_staging')
+  })
+
+  it('still blocks a production database target outside production', () => {
+    expect(() =>
+      resolvePrismaCliDatabaseUrl({ DATABASE_URL: productionUrl }, 'development')
+    ).toThrow(/production database/i)
   })
 })
