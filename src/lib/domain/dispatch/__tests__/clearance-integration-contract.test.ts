@@ -30,4 +30,14 @@ describe('dispatch clearance integration', () => {
     expect(transition).toContain('evaluateTripDispatchClearance')
     expect(transition).toContain('DISPATCH_CLEARANCE_BLOCKED')
   })
+
+  it('evaluates active versioned compliance rules at dispatch instead of failing open', () => {
+    const clearance = read('src/lib/domain/dispatch/trip-clearance.ts')
+
+    expect(clearance).toContain('evaluateCompliance')
+    expect(clearance).toContain('storedComplianceRuleToDomain')
+    expect(clearance).toContain('db.complianceRuleSet.findMany')
+    expect(clearance).toContain('complianceEvaluation')
+    expect(clearance).not.toContain("compliance: {\n      passed: true,\n      blocking: [],\n      warnings: [],\n    }")
+  })
 })
