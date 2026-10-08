@@ -43,6 +43,14 @@ export interface WeightClearanceInput {
   rules: WeightClearanceRule[]
 }
 
+function isWeightRuleType(type: string): boolean {
+  return type === 'gross_weight' ||
+    type === 'tare_weight' ||
+    type === 'net_weight' ||
+    type.startsWith('axle:') ||
+    type.startsWith('axle_group:')
+}
+
 function toleranceAdjustedRule(rule: WeightClearanceRule, tolerancePercent: number): ComplianceRule {
   let adjustedValue = rule.value
   const numeric = typeof rule.value === 'number' ? rule.value : Number(rule.value)
@@ -107,6 +115,10 @@ export function evaluateWeightClearance(input: WeightClearanceInput) {
     ? Math.max(0, input.tolerancePercent ?? 0)
     : 0
 
+  const weightRules = input.rules
+    .filter((rule) => isWeightRuleType(rule.type))
+    .map((rule) => toleranceAdjustedRule(rule, tolerancePercent))
+
   const compliance = evaluateCompliance({
     occurredAt: input.occurredAt,
     country: input.country ?? null,
@@ -115,7 +127,7 @@ export function evaluateWeightClearance(input: WeightClearanceInput) {
     trailerType: input.trailerType ?? null,
     commodityId: input.commodityId ?? null,
     values,
-  }, input.rules.map((rule) => toleranceAdjustedRule(rule, tolerancePercent)))
+  }, weightRules)
 
   const passed = metrics.valid && reasons.length === 0 && compliance.passed
 
