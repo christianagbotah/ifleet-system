@@ -1,13 +1,35 @@
+// @vitest-environment node
 import { NextRequest } from 'next/server'
+import jwt from 'jsonwebtoken'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 let proxy: (request: NextRequest) => Promise<Response>
 
-function request(path: string): NextRequest {
+function request(path: string, options?: { method?: string; token?: string }): NextRequest {
+  const headers = new Headers({ 'content-type': 'application/json' })
+  if (options?.token) headers.set('authorization', `Bearer ${options.token}`)
   return new NextRequest(`https://ifleetpro.example${path}`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    method: options?.method ?? 'POST',
+    headers,
   })
+}
+
+async function demoToken(): Promise<string> {
+  const { JWT_SECRET } = await import('./lib/jwt-secret')
+  return jwt.sign(
+    {
+      userId: 'demo-admin-user',
+      email: 'demo.admin@ifleetpro.local',
+      name: 'Demo Administrator',
+      roleName: 'Admin',
+      permissions: ['dashboard.view'],
+      driverId: null,
+      isActive: true,
+      isDemo: true,
+    },
+    JWT_SECRET,
+    { expiresIn: '1h' },
+  )
 }
 
 beforeAll(async () => {
@@ -23,6 +45,24 @@ afterAll(() => {
 describe('API authentication proxy', () => {
   it('lets the HMAC-authenticated machine health route reach its handler', async () => {
     const response = await proxy(request('/api/internal/ingest/health'))
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('x-middleware-next')).toBe('1')
+  })
+
+  it('blocks all mutating API requests from demo sessions', async () => {
+    const token = await demoToken()
+    const response = await proxy(request('/api/trips', { method: 'POST', token }))
+
+    expect(response.status).toBe(403)
+    await expect(response.json()).resolves.toEqual({
+      error: 'Demo mode is read-only. Sign in with a standard account to make changes.',
+    })
+  })
+
+  it('allows authenticated demo sessions to browse GET APIs', async () => {
+    const token = await demoToken()
+    const response = await proxy(request('/api/dashboard', { method: 'GET', token }))
 
     expect(response.status).toBe(200)
     expect(response.headers.get('x-middleware-next')).toBe('1')

@@ -10,6 +10,8 @@ export interface AuthContext {
   roleName: string
   permissions: string[]
   driverId: string | null
+  isDemo: boolean
+  demoProfile: string | null
 }
 
 export interface JwtPayload {
@@ -20,6 +22,8 @@ export interface JwtPayload {
   permissions: string[]
   driverId: string | null
   isActive: boolean
+  isDemo?: boolean
+  demoProfile?: string
   iat?: number
   exp?: number
 }
@@ -73,6 +77,8 @@ function decodeJwtFromRequest(request: NextRequest): AuthContext | null {
         roleName,
         permissions,
         driverId: request.headers.get('x-auth-driver-id') || null,
+        isDemo: request.headers.get('x-auth-demo') === 'true',
+        demoProfile: request.headers.get('x-auth-demo-profile') || null,
       }
       ;(request as Record<symbol, unknown>)[JWT_CONTEXT_KEY] = ctx
       return ctx
@@ -92,6 +98,8 @@ function decodeJwtFromRequest(request: NextRequest): AuthContext | null {
       roleName: payload.roleName,
       permissions: Array.isArray(payload.permissions) ? payload.permissions : [],
       driverId: payload.driverId || null,
+      isDemo: payload.isDemo === true,
+      demoProfile: payload.demoProfile || null,
     }
     ;(request as Record<symbol, unknown>)[JWT_CONTEXT_KEY] = ctx
     return ctx
@@ -240,6 +248,12 @@ export function isDriverOrAdmin(auth: AuthContext, resourceDriverId?: string | n
  * if (writeGuard instanceof NextResponse) return writeGuard // 403 response sent
  */
 export function requireWriteAccess(auth: AuthContext): true | NextResponse {
+  if (auth.isDemo) {
+    return NextResponse.json(
+      { error: 'Demo mode is read-only. Sign in with a standard account to make changes.' },
+      { status: 403 }
+    )
+  }
   if (auth.roleName === ROLES.ADMIN || auth.roleName === ROLES.MANAGER) return true
 
   return NextResponse.json(

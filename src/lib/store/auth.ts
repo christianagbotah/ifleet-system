@@ -1,3 +1,4 @@
+import type { DemoProfileId } from '@/lib/auth/demo-profiles'
 import { create } from 'zustand'
 
 export interface AuthUser {
@@ -10,6 +11,8 @@ export interface AuthUser {
   permissions: string[]  // e.g. ['trucks.view', 'trucks.create', ...]
   driverId?: string | null   // linked Driver record ID (if role is Driver)
   isActive: boolean
+  isDemo?: boolean
+  demoProfile?: DemoProfileId | null
 }
 
 interface AuthState {
@@ -19,6 +22,7 @@ interface AuthState {
   isHydrated: boolean  // true after initial localStorage check on mount
   token: string | null  // JWT token from server
   login: (email: string, password: string) => Promise<void>
+  demoLogin: (profile: DemoProfileId) => Promise<void>
   logout: () => void
   setUser: (user: AuthUser | null) => void
   setToken: (token: string | null) => void
@@ -152,6 +156,35 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Write to localStorage for persistence across page refreshes
       writeStorage(data.user, token, true)
 
+      set({
+        user: data.user,
+        token,
+        isAuthenticated: true,
+        isLoading: false,
+      })
+    } catch (error) {
+      set({ isLoading: false })
+      throw error
+    }
+  },
+
+  demoLogin: async (profile: DemoProfileId) => {
+    set({ isLoading: true })
+    try {
+      const res = await fetch('/api/auth/demo-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Demo login failed' }))
+        throw new Error(err.error || 'Demo login failed')
+      }
+
+      const data = await res.json()
+      const token = data.token || null
+      writeStorage(data.user, token, true)
       set({
         user: data.user,
         token,

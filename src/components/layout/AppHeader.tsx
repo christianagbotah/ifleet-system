@@ -22,7 +22,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Search, Sun, Moon, LogOut, User, Settings, ArrowLeft } from 'lucide-react'
+import { Search, Sun, Moon, LogOut, User, Settings, ArrowLeft, ShieldCheck } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { navigationGroups, APP_NAME } from '@/lib/constants'
 import { useAuthStore, getUserInitials, getRoleBadgeColor } from '@/lib/store/auth'
@@ -123,6 +123,15 @@ export function AppHeader({ currentPage, onNavigate }: AppHeaderProps) {
         </div>
 
         <ConnectionStatusDot />
+
+        {user?.isDemo && (
+          <div className="hidden items-center gap-2 rounded-full border border-amber-300/70 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-amber-800 sm:flex dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300" title="Demo Mode · Read Only">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>Demo Mode</span>
+            <span className="text-amber-500/70">·</span>
+            <span>Read Only</span>
+          </div>
+        )}
 
         <NotificationBellDropdown onNavigate={onNavigate} />
 
