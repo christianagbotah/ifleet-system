@@ -1,18 +1,21 @@
 model ComplianceRuleSet {
   id            String           @id @default(cuid())
+  code          String
   name          String
-  version       String
+  version       Int              @default(1)
   country       String?
   description   String?          @db.Text
   effectiveFrom DateTime
   effectiveTo   DateTime?
+  isCurrent     Boolean          @default(true)
   isActive      Boolean          @default(true)
   createdBy     String
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   rules         ComplianceRule[]
 
-  @@unique([name, version])
+  @@unique([code, version])
+  @@index([code, isCurrent])
   @@index([country, isActive, effectiveFrom])
   @@index([effectiveFrom, effectiveTo])
 }
