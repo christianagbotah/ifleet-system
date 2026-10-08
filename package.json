@@ -12,7 +12,8 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "security:scan": "bun scripts/secret-scan.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -24,10 +24,10 @@
 - **Engine**: MariaDB 11.8.5 (installed by Webuzo at /usr/local/apps/mariadb118/)
 - **Service Name**: mariadb.service (control via systemctl restart mysql.service)
 - **Config**: /etc/my.cnf
-- **Connection**: mysql://ifleetpro_user:myjesus4mE2018@163.245.212.15:3306/ifleetpro_data
-- **Local .env also points to this remote MySQL** (no more SQLite)
-- **Remote access enabled**: bind-address = 0.0.0.0, port 3306 open in firewall
-- **User granted from %** (any host)
+- **Connection**: `<stored-on-vps>`
+- **Local development**: must use a separate non-production database target.
+- **Database network access**: restricted by the Phase 0 security policy; see the security rotation runbook.
+- **Database grants**: least-privilege application grants only; broad `%` grants are prohibited.
 
 ### Nginx (Webuzo)
 - **NOT Caddy** — Webuzo uses its own Nginx
@@ -55,7 +55,7 @@
 ### Webhook Configuration
 - **Binary**: adnanh/webhook running on port 9000
 - **Config file**: hooks.json (in .gitignore — NOT in git, preserved during deploys)
-- **Secret**: 04a6dc53e79c2dc3e8e61506b228aedea090d681d9d253c95eb1c456a3ddb9d0
+- **Secret**: `<stored-on-vps>` (rotate before further production expansion)
 - **Trigger**: refs/heads/main only
 - **Deploy Script**: scripts/webhook-deploy.sh
 
@@ -92,8 +92,8 @@ LOG_FILE="$LOG_DIR/deploy.log"
 - All JSON string fields use @db.Text for MySQL compatibility
 
 ### Database URL
-- Local .env: `DATABASE_URL=mysql://ifleetpro_user:myjesus4mE2018@163.245.212.15:3306/ifleetpro_data`
-- Local dev connects DIRECTLY to production MySQL — no separate local DB
+- Local/staging `.env`: `DATABASE_URL=<non-production-database-url>`
+- Local development must use a separate non-production database; direct production DB use is blocked by configuration.
 
 ### Key Pages/Routes
 - Dashboard: /
@@ -152,7 +152,7 @@ LOG_FILE="$LOG_DIR/deploy.log"
 
 ## 8. ENVIRONMENT VARIABLES (.env)
 ```
-DATABASE_URL=mysql://ifleetpro_user:myjesus4mE2018@163.245.212.15:3306/ifleetpro_data
+DATABASE_URL=<set-in-server-secret-environment>
 ```
 Other vars (NEXTAUTH_SECRET, SMTP, Hubtel SMS) are configured on VPS .env only.
 

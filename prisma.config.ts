@@ -31,7 +31,7 @@ const databaseUrl = loadDatabaseUrl()
 if (!databaseUrl) {
   throw new Error(
     'DATABASE_URL is not set. Create a .env file in the project root with:\n' +
-    '  DATABASE_URL=mysql://user:password@host:3306/database\n' +
+    '  DATABASE_URL=mariadb://user@127.0.0.1:3306/ifleetpro_dev\n' +
     'Or set the DATABASE_URL environment variable.'
   )
 }
