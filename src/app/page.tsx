@@ -30,6 +30,10 @@ const TrailersView = dynamic(
   () => import('@/components/trailers/TrailersView').then(m => ({ default: m.TrailersView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const DeviceRegistryView = dynamic(
+  () => import('@/components/telematics/DeviceRegistryView').then(m => ({ default: m.DeviceRegistryView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const LoadOrdersView = dynamic(
   () => import('@/components/orders/LoadOrdersView').then(m => ({ default: m.LoadOrdersView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -321,6 +325,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <TrucksView />
     case 'trailers':
       return <TrailersView />
+    case 'telematics-devices':
+      return <DeviceRegistryView />
     case 'load-orders':
       return <LoadOrdersView />
     case 'dispatch':

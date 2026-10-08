@@ -1,0 +1,38 @@
+model TelematicsDevice {
+  id            String   @id @default(cuid())
+  name          String
+  provider      String
+  deviceType    String
+  imei          String?  @unique
+  serialNumber  String?  @unique
+  credentialRef String?
+  status        String   @default("active")
+  metadata      String?  @db.Text
+  lastSeenAt    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  installations DeviceInstallationHistory[]
+
+  @@index([provider, status])
+  @@index([deviceType, status])
+  @@index([lastSeenAt])
+}
+
+model DeviceInstallationHistory {
+  id            String   @id @default(cuid())
+  deviceId      String
+  assetType     String
+  assetId       String
+  installedAt   DateTime
+  uninstalledAt DateTime?
+  installedById String?
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+
+  @@index([deviceId, installedAt])
+  @@index([deviceId, uninstalledAt])
+  @@index([assetType, assetId, installedAt])
+}
