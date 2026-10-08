@@ -314,7 +314,7 @@ model AuditLog {
   action    String
   entity    String
   entityId  String?
-  details   String? 
+  details   String?   @db.Text
   ipAddress String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
