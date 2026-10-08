@@ -29,7 +29,8 @@ describe('weighing persistence and UI integration', () => {
     expect(source).toContain('requireAuth')
     expect(source).toContain('requireWriteAccess')
     expect(source).toContain('evaluateWeightClearance')
-    expect(source).toContain('db.weighingEvent.create')
+    expect(source).toContain('db.$transaction')
+    expect(source).toContain('tx.weighingEvent.create')
     expect(source).toContain('exception_hold')
   })
 
