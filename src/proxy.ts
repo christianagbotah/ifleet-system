@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 import { APP_NAME } from '@/lib/constants'
 import { getJwtSecretKey } from '@/lib/jwt-secret'
+import { canDemoAccessApi } from '@/lib/auth/demo-access'
 
 // ${APP_NAME} — API Authentication Proxy
 //
@@ -254,9 +255,14 @@ export async function proxy(request: NextRequest) {
         ))
       }
 
-      if (isDemo && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method.toUpperCase())) {
+      if (isDemo && !canDemoAccessApi(pathname, request.method)) {
+        const isMutation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method.toUpperCase())
         return applySecurityHeaders(NextResponse.json(
-          { error: 'Demo mode is read-only. Sign in with a standard account to make changes.' },
+          {
+            error: isMutation
+              ? 'Demo mode is read-only. Sign in with a standard account to make changes.'
+              : 'This area is not available in public demo mode.',
+          },
           { status: 403 },
         ))
       }
