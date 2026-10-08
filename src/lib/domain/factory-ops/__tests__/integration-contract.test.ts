@@ -38,7 +38,7 @@ describe('factory operations integration contract', () => {
     expect(source).toContain('legacyQueueId')
   })
 
-  it('provides a factory operations shell view wired to gate and queue APIs', () => {
+  it('provides a factory operations view wired to gate and queue APIs', () => {
     const source = read('src/components/factory-ops/FactoryOperationsView.tsx')
 
     expect(source).toContain('/api/factory-ops/gate')
@@ -47,15 +47,14 @@ describe('factory operations integration contract', () => {
     expect(source).toContain('Detention')
   })
 
-  it('registers Factory Operations in the hash-routed shell and access map', () => {
-    const page = read('src/app/page.tsx')
-    const constants = read('src/lib/constants.ts')
-    const auth = read('src/lib/store/auth.ts')
+  it('upgrades the existing Depot Queue menu into a compatibility wrapper instead of orphaning the legacy UI', () => {
+    const wrapper = read('src/components/operations/DepotQueueView.tsx')
+    const legacy = read('src/components/operations/LegacyDepotQueueView.tsx')
 
-    expect(page).toContain("@/components/factory-ops/FactoryOperationsView")
-    expect(page).toContain("case 'factory-operations':")
-    expect(page).toContain('<FactoryOperationsView />')
-    expect(constants).toContain('{ id: "factory-operations", label: "Factory Operations"')
-    expect(auth).toContain("'factory-operations': ['trips.view']")
+    expect(wrapper).toContain("@/components/factory-ops/FactoryOperationsView")
+    expect(wrapper).toContain("@/components/operations/LegacyDepotQueueView")
+    expect(wrapper).toContain('Factory Operations')
+    expect(wrapper).toContain('Legacy Queue')
+    expect(legacy).toContain('/api/depot-queue')
   })
 })
