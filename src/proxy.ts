@@ -25,6 +25,7 @@ function getSecretKey(): Uint8Array {
 
 const PUBLIC_API_ROUTES = [
   '/api/auth/login',
+  '/api/auth/demo-login',
   '/api/auth/register',
   '/api/auth/forgot-password',
   '/api/auth/verify-reset-token',
@@ -243,10 +244,19 @@ export async function proxy(request: NextRequest) {
       const permissions = payload.permissions as string[] | undefined
       const driverId = payload.driverId as string | null | undefined
       const isActive = payload.isActive as boolean | undefined
+      const isDemo = payload.isDemo === true
+      const demoProfile = payload.demoProfile as string | undefined
 
       if (isActive === false) {
         return applySecurityHeaders(NextResponse.json(
           { error: 'Account is deactivated. Contact your administrator.' },
+          { status: 403 },
+        ))
+      }
+
+      if (isDemo && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method.toUpperCase())) {
+        return applySecurityHeaders(NextResponse.json(
+          { error: 'Demo mode is read-only. Sign in with a standard account to make changes.' },
           { status: 403 },
         ))
       }
@@ -257,6 +267,8 @@ export async function proxy(request: NextRequest) {
       requestHeaders.set('x-auth-user-email', email || '')
       requestHeaders.set('x-auth-user-permissions', JSON.stringify(permissions || []))
       requestHeaders.set('x-auth-driver-id', driverId || '')
+      requestHeaders.set('x-auth-demo', isDemo ? 'true' : 'false')
+      requestHeaders.set('x-auth-demo-profile', demoProfile || '')
 
       return applySecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }))
     } catch (jwtError) {

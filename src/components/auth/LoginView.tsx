@@ -1,26 +1,34 @@
 'use client'
-import { APP_COPYRIGHT, APP_NAME } from '@/lib/constants'
 
+import { APP_COPYRIGHT, APP_NAME } from '@/lib/constants'
 import * as React from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
-  Truck,
-  Eye,
-  EyeOff,
-  Loader2,
+  Activity,
   AlertCircle,
   ArrowLeft,
-  Mail,
-  KeyRound,
   CheckCircle2,
+  Eye,
+  EyeOff,
+  KeyRound,
+  Loader2,
+  Mail,
+  MapPinned,
+  Navigation,
+  RadioTower,
+  Route,
   ShieldCheck,
+  Sparkles,
+  Truck,
 } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { DemoLoginPanel } from '@/components/auth/DemoLoginPanel'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/lib/store/auth'
-import { toast } from 'sonner'
 
 // ── Auth view states ──
 type AuthView = 'login' | 'forgot-password' | 'reset-password' | 'reset-success'
@@ -53,86 +61,166 @@ export function LoginView() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-amber-200/30 dark:bg-amber-900/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-200/30 dark:bg-orange-900/10 rounded-full blur-3xl" />
+    <div className="relative min-h-[100dvh] overflow-hidden bg-[#07111d]">
+      <div className="pointer-events-none absolute inset-0 lg:hidden">
+        <div className="absolute -left-24 -top-32 h-80 w-80 rounded-full bg-amber-400/20 blur-3xl" />
+        <div className="absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
       </div>
 
-      <div className="w-full max-w-md relative">
-        {/* Logo / Brand */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-500/25 mb-4">
-            <Truck className="w-8 h-8" />
+      <main className="relative mx-auto grid min-h-[100dvh] w-full max-w-[1680px] lg:grid-cols-[minmax(0,1.08fr)_minmax(500px,0.92fr)]">
+        <LoginShowcase />
+
+        <section className="relative flex min-h-[100dvh] items-center justify-center bg-white px-4 py-8 dark:bg-[#0b111a] sm:px-8 lg:px-10 xl:px-16">
+          <div className="w-full max-w-[560px]">
+            <div className="mb-7 flex items-center justify-between lg:hidden">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20">
+                  <Truck className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-base font-bold tracking-tight text-slate-950 dark:text-white">{APP_NAME}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">Fleet intelligence</div>
+                </div>
+              </div>
+              <span className="rounded-full border border-slate-200 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:border-white/10 dark:text-slate-400">Ghana</span>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {view === 'login' && (
+                <LoginForm
+                  key="login"
+                  email={email}
+                  setEmail={setEmail}
+                  password={password}
+                  setPassword={setPassword}
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                  isLoading={isLoading}
+                  onSubmit={handleLoginSubmit}
+                  onForgotPassword={() => {
+                    setView('forgot-password')
+                    setPassword('')
+                  }}
+                />
+              )}
+
+              {view === 'forgot-password' && (
+                <ForgotPasswordForm
+                  key="forgot"
+                  email={email}
+                  setEmail={setEmail}
+                  onBack={() => setView('login')}
+                  onTokenSent={(returnedEmail) => {
+                    setEmail(returnedEmail)
+                    setView('reset-password')
+                  }}
+                />
+              )}
+
+              {view === 'reset-password' && (
+                <ResetPasswordForm
+                  key="reset"
+                  email={email}
+                  onBack={() => setView('forgot-password')}
+                  onSuccess={() => setView('reset-success')}
+                />
+              )}
+
+              {view === 'reset-success' && (
+                <ResetSuccessView
+                  key="success"
+                  onBackToLogin={() => {
+                    setView('login')
+                    setPassword('')
+                  }}
+                />
+              )}
+            </AnimatePresence>
+
+            <div className="mt-7 flex flex-col items-center justify-between gap-2 text-center text-[11px] text-slate-400 sm:flex-row sm:text-left">
+              <span>{APP_COPYRIGHT}</span>
+              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Secure fleet operations</span>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{APP_NAME}</h1>
-          <p className="text-sm text-muted-foreground mt-1">Ghana Fleet Management System</p>
-        </div>
-
-        <AnimatePresence mode="wait">
-          {view === 'login' && (
-            <LoginForm
-              key="login"
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-              isLoading={isLoading}
-              onSubmit={handleLoginSubmit}
-              onForgotPassword={() => {
-                setView('forgot-password')
-                setPassword('')
-              }}
-            />
-          )}
-
-          {view === 'forgot-password' && (
-            <ForgotPasswordForm
-              key="forgot"
-              email={email}
-              setEmail={setEmail}
-              onBack={() => setView('login')}
-              onTokenSent={(returnedEmail) => {
-                setEmail(returnedEmail)
-                setView('reset-password')
-              }}
-            />
-          )}
-
-          {view === 'reset-password' && (
-            <ResetPasswordForm
-              key="reset"
-              email={email}
-              onBack={() => setView('forgot-password')}
-              onSuccess={() => setView('reset-success')}
-            />
-          )}
-
-          {view === 'reset-success' && (
-            <ResetSuccessView
-              key="success"
-              onBackToLogin={() => {
-                setView('login')
-                setPassword('')
-              }}
-            />
-          )}
-        </AnimatePresence>
-
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          {APP_COPYRIGHT}
-        </p>
-      </div>
+        </section>
+      </main>
     </div>
   )
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Login Form
-// ──────────────────────────────────────────────────────────────────────────────
+function LoginShowcase() {
+  return (
+    <aside className="relative hidden min-h-[100dvh] overflow-hidden bg-[#07111d] px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-16 xl:py-14">
+      <div className="pointer-events-none absolute inset-0 opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
+      <div className="pointer-events-none absolute -left-20 top-24 h-80 w-80 rounded-full bg-amber-500/20 blur-[110px]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-400/10 blur-[130px]" />
+
+      <div className="relative z-10 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-300/30 bg-amber-400 text-slate-950 shadow-[0_12px_40px_-12px_rgba(245,158,11,0.7)]">
+            <Truck className="h-6 w-6" />
+          </div>
+          <div>
+            <div className="text-lg font-black tracking-tight">{APP_NAME}</div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300">African haulage operating system</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 rounded-full border border-emerald-300/15 bg-emerald-300/5 px-3 py-1.5 text-[11px] font-semibold text-emerald-200">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" /> Platform online
+        </div>
+      </div>
+
+      <div className="relative z-10 my-10 max-w-3xl">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/20 bg-amber-300/10 px-3.5 py-2 text-xs font-semibold text-amber-200">
+          <Sparkles className="h-3.5 w-3.5" /> Fleet intelligence · Ghana haulage OS
+        </div>
+        <h1 className="max-w-2xl text-5xl font-black leading-[1.02] tracking-[-0.045em] xl:text-6xl">
+          Command every vehicle. <span className="text-amber-400">See every risk.</span> Move every load.
+        </h1>
+        <p className="mt-6 max-w-xl text-base leading-7 text-slate-300 xl:text-lg">
+          One intelligent control layer for dispatch, factory loading, compliance, weighing, live fleet visibility and commercial performance.
+        </p>
+
+        <div className="mt-8 grid max-w-2xl grid-cols-3 gap-3">
+          {[{ icon: RadioTower, value: 'Live', label: 'Control tower' }, { icon: ShieldCheck, value: 'Guarded', label: 'Compliance' }, { icon: Activity, value: 'Unified', label: 'Operations data' }].map(({ icon: Icon, value, label }) => (
+            <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-xl">
+              <Icon className="mb-5 h-5 w-5 text-amber-300" />
+              <div className="text-sm font-bold">{value}</div>
+              <div className="mt-1 text-xs text-slate-400">{label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative z-10 rounded-[28px] border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/20 backdrop-blur-2xl xl:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-400"><MapPinned className="h-4 w-4 text-amber-300" /> Active movement</div>
+            <div className="mt-2 text-lg font-bold">Tema Port → Kumasi</div>
+            <div className="mt-1 text-xs text-slate-400">Haulage corridor · live operations preview</div>
+          </div>
+          <div className="rounded-xl border border-emerald-300/15 bg-emerald-300/10 px-3 py-2 text-right">
+            <div className="text-xs font-bold text-emerald-200">On route</div>
+            <div className="mt-0.5 text-[10px] text-emerald-200/70">Telemetry healthy</div>
+          </div>
+        </div>
+
+        <div className="relative my-7 h-20">
+          <div className="absolute left-3 right-3 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-amber-400 via-amber-300/70 to-cyan-300/60" />
+          <div className="absolute left-3 top-1/2 -translate-y-1/2"><div className="h-3 w-3 rounded-full bg-amber-400 shadow-[0_0_0_6px_rgba(245,158,11,0.12)]" /><span className="absolute left-0 top-5 whitespace-nowrap text-[10px] text-slate-400">Tema</span></div>
+          <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2"><div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-amber-300/30 bg-[#111d2b] text-amber-300 shadow-xl"><Truck className="h-5 w-5" /></div></div>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2"><div className="h-3 w-3 rounded-full border-2 border-cyan-300 bg-[#07111d] shadow-[0_0_0_6px_rgba(103,232,249,0.08)]" /><span className="absolute right-0 top-5 whitespace-nowrap text-[10px] text-slate-400">Kumasi</span></div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
+          <div><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-slate-500"><Navigation className="h-3 w-3" /> ETA</div><div className="mt-1 text-sm font-semibold">2h 18m</div></div>
+          <div><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-slate-500"><Route className="h-3 w-3" /> Corridor</div><div className="mt-1 text-sm font-semibold">Clear</div></div>
+          <div><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-slate-500"><ShieldCheck className="h-3 w-3" /> Compliance</div><div className="mt-1 text-sm font-semibold">Passed</div></div>
+        </div>
+      </div>
+    </aside>
+  )
+}
 
 function LoginForm({
   email,
@@ -156,110 +244,46 @@ function LoginForm({
   onForgotPassword: () => void
 }) {
   return (
-    <motion.div
-      initial={false}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      transition={{ duration: 0.25 }}
-    >
-      <Card className="shadow-xl border-0 shadow-gray-200/50 dark:shadow-gray-900/50">
-        <CardHeader className="text-center pb-2">
-          <CardTitle className="text-xl">Sign In</CardTitle>
-          <CardDescription>
-            Enter your credentials to access the dashboard
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="login-email">Email Address</Label>
-              <Input
-                id="login-email"
-                type="email"
-                placeholder="you@fleetpro.com.gh"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-                autoComplete="email"
-                className="h-11"
-              />
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.25 }}>
+      <div className="rounded-[30px] border border-slate-200/90 bg-white p-5 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035] sm:p-8">
+        <div className="mb-7">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-700 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-300">
+            <ShieldCheck className="h-3.5 w-3.5" /> Secure workspace
+          </div>
+          <h2 className="text-3xl font-black tracking-[-0.035em] text-slate-950 dark:text-white sm:text-[34px]">Welcome back</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Sign in to your intelligent fleet command center.</p>
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="login-email" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Email address</Label>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input id="login-email" type="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} autoComplete="email" className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-none transition focus-visible:border-amber-400 focus-visible:ring-amber-400/20 dark:border-white/10 dark:bg-white/[0.045]" />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="login-password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="login-password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
-                  autoComplete="current-password"
-                  className="h-11 pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-11 w-11 px-3 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full h-11 font-semibold"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </Button>
-          </form>
-
-          {/* Forgot Password link */}
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={onForgotPassword}
-              className="text-sm text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 font-medium transition-colors"
-            >
-              Forgot Password?
-            </button>
           </div>
 
-          {/* Demo credentials hint - development only */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-                <div className="text-xs text-amber-700 dark:text-amber-400 space-y-1">
-                  <p className="font-medium">Demo Accounts</p>
-                  <div className="grid grid-cols-1 gap-1 mt-1">
-                    <p><span className="font-medium">Admin:</span> admin@fleetpro.com.gh / admin123</p>
-                    <p><span className="font-medium">Manager:</span> manager@fleetpro.com.gh / manager123</p>
-                    <p><span className="font-medium">Driver:</span> driver1@fleetpro.com.gh / driver123</p>
-                  </div>
-                </div>
-              </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="login-password" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Password</Label>
+              <button type="button" onClick={onForgotPassword} className="text-xs font-semibold text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">Forgot password?</button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <div className="relative">
+              <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} autoComplete="current-password" className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 pr-11 text-sm shadow-none transition focus-visible:border-amber-400 focus-visible:ring-amber-400/20 dark:border-white/10 dark:bg-white/[0.045]" />
+              <button type="button" className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+
+          <Button type="submit" className="h-12 w-full rounded-xl bg-amber-500 font-bold text-slate-950 shadow-[0_12px_28px_-14px_rgba(245,158,11,0.85)] hover:bg-amber-400" disabled={isLoading}>
+            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…</> : 'Sign in to iFleetPro'}
+          </Button>
+        </form>
+
+        <DemoLoginPanel />
+      </div>
     </motion.div>
   )
 }
@@ -324,7 +348,7 @@ function ForgotPasswordForm({
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.25 }}
     >
-      <Card className="shadow-xl border-0 shadow-gray-200/50 dark:shadow-gray-900/50">
+      <Card className="rounded-[28px] border border-slate-200/90 bg-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035]">
         <CardHeader className="text-center pb-2">
           <div className="mx-auto mb-2 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30">
             <Mail className="w-6 h-6 text-amber-600 dark:text-amber-400" />
@@ -518,7 +542,7 @@ function ResetPasswordForm({
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.25 }}
     >
-      <Card className="shadow-xl border-0 shadow-gray-200/50 dark:shadow-gray-900/50">
+      <Card className="rounded-[28px] border border-slate-200/90 bg-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035]">
         <CardHeader className="text-center pb-2">
           <div className="mx-auto mb-2 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30">
             <KeyRound className="w-6 h-6 text-amber-600 dark:text-amber-400" />
@@ -681,7 +705,7 @@ function ResetSuccessView({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="shadow-xl border-0 shadow-gray-200/50 dark:shadow-gray-900/50">
+      <Card className="rounded-[28px] border border-slate-200/90 bg-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035]">
         <CardContent className="pt-8 pb-8 text-center">
           <div className="mx-auto mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30">
             <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
