@@ -27,6 +27,29 @@ export interface TransitionRepository {
   }>
 }
 
+export interface TripTransitionTimestamps {
+  loadingStartedAt?: Date | null
+  loadingCompletedAt?: Date | null
+  offloadingStartedAt?: Date | null
+  offloadingCompletedAt?: Date | null
+  arrivalTime?: Date | null
+}
+
+export function buildTripTransitionUpdate(
+  toStatus: TripStatusValue,
+  current: TripTransitionTimestamps,
+  now = new Date()
+): Record<string, unknown> {
+  const data: Record<string, unknown> = { status: toStatus }
+  if (toStatus === 'loading' && !current.loadingStartedAt) data.loadingStartedAt = now
+  if (toStatus === 'loaded' && !current.loadingCompletedAt) data.loadingCompletedAt = now
+  if (toStatus === 'arrived_destination' && !current.arrivalTime) data.arrivalTime = now
+  if (toStatus === 'offloading' && !current.offloadingStartedAt) data.offloadingStartedAt = now
+  if (toStatus === 'delivered' && !current.offloadingCompletedAt) data.offloadingCompletedAt = now
+  if (toStatus === 'completed' && !current.arrivalTime) data.arrivalTime = now
+  return data
+}
+
 export class TripTransitionError extends Error {
   constructor(
     public code: 'NOT_FOUND' | 'INVALID_TRANSITION' | 'CONFLICT',
@@ -51,7 +74,17 @@ async function createPrismaRepository(): Promise<TransitionRepository> {
       return db.$transaction(async (tx) => {
         const current = await tx.trip.findUnique({
           where: { id: input.tripId },
-          select: { id: true, status: true, driverId: true, totalMileage: true, arrivalTime: true },
+          select: {
+            id: true,
+            status: true,
+            driverId: true,
+            totalMileage: true,
+            arrivalTime: true,
+            loadingStartedAt: true,
+            loadingCompletedAt: true,
+            offloadingStartedAt: true,
+            offloadingCompletedAt: true,
+          },
         })
         if (!current) throw new TripTransitionError('NOT_FOUND', 'Trip not found')
         if (current.status !== input.fromStatus) {
@@ -63,10 +96,7 @@ async function createPrismaRepository(): Promise<TransitionRepository> {
 
         const trip = await tx.trip.update({
           where: { id: input.tripId },
-          data: {
-            status: input.toStatus as never,
-            ...(input.toStatus === 'completed' && !current.arrivalTime ? { arrivalTime: new Date() } : {}),
-          },
+          data: buildTripTransitionUpdate(input.toStatus, current) as never,
         })
 
         if (input.toStatus === 'completed') {

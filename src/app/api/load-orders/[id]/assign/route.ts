@@ -7,6 +7,7 @@ import { db } from '@/lib/db'
 import { evaluateAssignmentEligibility } from '@/lib/domain/dispatch/eligibility'
 import { validateCoupling } from '@/lib/domain/fleet-assets/coupling'
 import { allocateLoadOrderQuantity } from '@/lib/domain/orders/load-order'
+import { dispatchTripStatusNotification } from '@/lib/services/trip-status-notifier'
 
 function stringList(value: string | null | undefined): string[] {
   if (!value) return []
@@ -286,8 +287,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         ? existing?.tripNumber
         : `TRP-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`
       if (!tripNumber) throw new AssignmentConflictError('Existing trip is not part of this load order')
-      if (existing && !['draft', 'scheduled'].includes(existing.status)) {
-        throw new AssignmentConflictError('Existing trip must be draft or scheduled')
+      if (existing && existing.status !== 'scheduled') {
+        throw new AssignmentConflictError('Existing trip must be scheduled before assignment')
       }
 
       const firstLiveAllocationLine = liveLineById.get(allocations[0].lineId)
@@ -412,6 +413,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    dispatchTripStatusNotification(trip.id, 'assigned').catch((error) => {
+      console.error('Dispatch assignment notification error:', error)
+    })
 
     return NextResponse.json({ trip, eligibility }, { status: existingTripId ? 200 : 201 })
   } catch (error) {

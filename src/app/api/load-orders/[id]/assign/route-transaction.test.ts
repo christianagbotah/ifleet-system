@@ -14,6 +14,8 @@ describe('dispatch assignment transaction contract', () => {
     expect(transaction).toContain('allocateLoadOrderQuantity')
     expect(transaction).toContain('liveRemainingByLine')
     expect(transaction).toContain("isolationLevel: 'Serializable'")
+    expect(transaction).toContain("existing.status !== 'scheduled'")
+    expect(transaction).not.toContain("['draft', 'scheduled'].includes(existing.status)")
   })
 
   it('maps serialization/deadlock conflicts to a retryable 409 instead of a generic 500', () => {

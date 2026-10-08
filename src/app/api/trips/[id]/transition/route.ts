@@ -5,6 +5,7 @@ import { requireAuth, isDriverOrAdmin, ROLES } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { getDefaultNextStatus, type TripStatusValue } from '@/lib/domain/dispatch/trip-state-machine'
 import { transitionTrip, TripTransitionError } from '@/lib/domain/dispatch/transition-trip'
+import { dispatchTripStatusNotification } from '@/lib/services/trip-status-notifier'
 
 const DRIVER_ALLOWED_TARGETS = new Set<TripStatusValue>([
   'en_route_to_loading_point',
@@ -61,6 +62,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       details: { tripNumber: trip.tripNumber, toStatus: result.trip.status, method: 'guarded_transition' },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    dispatchTripStatusNotification(id, result.trip.status as TripStatusValue).catch((error) => {
+      console.error('Trip transition notification error:', error)
+    })
 
     return NextResponse.json(result.trip)
   } catch (error) {

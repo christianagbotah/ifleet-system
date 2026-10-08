@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   TripTransitionError,
+  buildTripTransitionUpdate,
   transitionTrip,
   type TransitionRepository,
 } from '@/lib/domain/dispatch/transition-trip'
@@ -72,5 +73,25 @@ describe('transitionTrip', () => {
       transitionTrip({ tripId: 'missing', to: 'assigned', actorId: 'user-1' }, repo)
     ).rejects.toMatchObject({ code: 'NOT_FOUND' })
     expect(calls).toHaveLength(0)
+  })
+})
+
+
+describe('buildTripTransitionUpdate', () => {
+  const now = new Date('2026-10-08T08:00:00Z')
+
+  it('records loading, delivery and arrival milestones when first reached', () => {
+    expect(buildTripTransitionUpdate('loading', {}, now)).toMatchObject({ status: 'loading', loadingStartedAt: now })
+    expect(buildTripTransitionUpdate('loaded', {}, now)).toMatchObject({ status: 'loaded', loadingCompletedAt: now })
+    expect(buildTripTransitionUpdate('arrived_destination', {}, now)).toMatchObject({ status: 'arrived_destination', arrivalTime: now })
+    expect(buildTripTransitionUpdate('offloading', {}, now)).toMatchObject({ status: 'offloading', offloadingStartedAt: now })
+    expect(buildTripTransitionUpdate('delivered', {}, now)).toMatchObject({ status: 'delivered', offloadingCompletedAt: now })
+  })
+
+  it('never overwrites an existing operational timestamp', () => {
+    const existing = new Date('2026-10-08T07:30:00Z')
+    expect(buildTripTransitionUpdate('loading', { loadingStartedAt: existing }, now)).toEqual({ status: 'loading' })
+    expect(buildTripTransitionUpdate('arrived_destination', { arrivalTime: existing }, now)).toEqual({ status: 'arrived_destination' })
+    expect(buildTripTransitionUpdate('delivered', { offloadingCompletedAt: existing }, now)).toEqual({ status: 'delivered' })
   })
 })
