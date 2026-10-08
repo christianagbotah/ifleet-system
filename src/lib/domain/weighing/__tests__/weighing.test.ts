@@ -153,4 +153,21 @@ describe('weight clearance', () => {
     expect(result.appliedRules.map((item) => item.ruleId)).toEqual(['old-limit'])
     expect(result.passed).toBe(false)
   })
+
+  it('ignores unrelated compliance rules that weighing cannot evaluate', () => {
+    const result = evaluateWeightClearance({
+      occurredAt: at('2026-06-15T10:08:00Z'),
+      grossWeightKg: 49_000,
+      tareWeightKg: 16_000,
+      axleReadings: [],
+      requiredAxleCount: 0,
+      rules: [
+        rule({ id: 'gross-ok', type: 'gross_weight', value: 50_000 }),
+        rule({ id: 'driver-hours', type: 'driver_hours', value: 8, unit: 'hours' }),
+      ],
+    })
+
+    expect(result.appliedRules.map((item) => item.ruleId)).toEqual(['gross-ok'])
+    expect(result.passed).toBe(true)
+  })
 })
