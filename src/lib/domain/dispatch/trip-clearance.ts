@@ -1,4 +1,6 @@
 import { db } from '@/lib/db'
+import { evaluateCompliance } from '@/lib/domain/compliance/rule-engine'
+import { storedComplianceRuleToDomain } from '@/lib/domain/compliance/rule-set-input'
 import { evaluateAssignmentEligibility } from '@/lib/domain/dispatch/eligibility'
 import {
   evaluateDispatchClearance,
@@ -53,6 +55,10 @@ function parseClearanceDetails(value: string | null | undefined): { blocking: st
   }
 }
 
+function isCurrent(value: Date | null | undefined, now: Date): boolean {
+  return Boolean(value && value.getTime() > now.getTime())
+}
+
 export class TripClearanceError extends Error {
   constructor(public readonly code: 'NOT_FOUND', message: string) {
     super(message)
@@ -64,6 +70,7 @@ export async function evaluateTripDispatchClearance(
   tripId: string,
   override: DispatchClearanceInput['override'] = null,
 ): Promise<DispatchClearanceResult> {
+  const now = new Date()
   const trip = await db.trip.findUnique({
     where: { id: tripId },
     include: {
@@ -120,7 +127,7 @@ export async function evaluateTripDispatchClearance(
   if (trip.trailer?.roadworthyExpiry) documentValidity.set('trailer_roadworthy', trip.trailer.roadworthyExpiry)
 
   const assignment = evaluateAssignmentEligibility({
-    now: new Date(),
+    now,
     driver: {
       id: trip.driver.id,
       status: trip.driver.status,
@@ -154,7 +161,7 @@ export async function evaluateTripDispatchClearance(
     documents: [...documentValidity].map(([category, validUntil]) => ({ category, validUntil })),
   })
 
-  const [gateIn, completedQueue, weighingEvents, electronicWaybill] = await Promise.all([
+  const [gateIn, completedQueue, weighingEvents, electronicWaybill, complianceRuleSets] = await Promise.all([
     db.gateEvent.findFirst({
       where: { tripId: trip.id, direction: 'in' },
       orderBy: [{ occurredAt: 'desc' }, { createdAt: 'desc' }],
@@ -171,13 +178,29 @@ export async function evaluateTripDispatchClearance(
         id: true,
         stage: true,
         recordedAt: true,
+        grossWeightKg: true,
+        tareWeightKg: true,
+        netWeightKg: true,
         clearancePassed: true,
         clearanceDetails: true,
         supersedesEventId: true,
+        axleReadings: {
+          select: { axleNumber: true, axleGroup: true, weightKg: true },
+          orderBy: { axleNumber: 'asc' },
+        },
       },
       orderBy: [{ recordedAt: 'desc' }, { createdAt: 'desc' }],
     }),
     db.electronicWaybill.findUnique({ where: { tripId: trip.id } }),
+    db.complianceRuleSet.findMany({
+      where: {
+        isCurrent: true,
+        isActive: true,
+        effectiveFrom: { lte: now },
+        OR: [{ effectiveTo: null }, { effectiveTo: { gte: now } }],
+      },
+      include: { rules: { where: { isActive: true } } },
+    }),
   ])
 
   const supersededIds = new Set(
@@ -202,7 +225,6 @@ export async function evaluateTripDispatchClearance(
         select: { id: true },
       })
     : null
-  // WaybillSeal evidence is versioned with the finalized electronic waybill.
   const WaybillSeal = electronicWaybill
     ? await db.waybillSeal.findFirst({
         where: {
@@ -216,10 +238,69 @@ export async function evaluateTripDispatchClearance(
       })
     : null
 
-  // New haulage load-order trips require a finalized electronic waybill before gate-out.
   const waybillRequired = Boolean(trip.loadOrder)
   const waybillFinalized = Boolean(electronicWaybill && currentWaybillVersion && electronicWaybill.status === 'finalized')
   const sealRequired = siteRule?.sealRequired ?? profile?.sealRequired ?? false
+
+  const complianceValues: Record<string, unknown> = {
+    assignment_eligible: assignment.passed,
+    gate_in_recorded: Boolean(gateIn),
+    queue_completed: Boolean(completedQueue),
+    weight_clearance: Boolean(effectiveWeighing?.clearancePassed),
+    waybill_finalized: waybillFinalized,
+    seal_present: !sealRequired || Boolean(WaybillSeal),
+    required_documents_present: missingRequired.length === 0,
+    driver_active: trip.driver.status === 'active',
+    driver_verified: trip.driver.verificationStatus === 'verified',
+    driver_license_valid: isCurrent(trip.driver.licenseExpiry, now),
+    tractor_active: trip.truck.status === 'active',
+    tractor_insurance_valid: Boolean(latestInsurance && latestInsurance.status === 'active' && isCurrent(latestInsurance.endDate, now)),
+    tractor_roadworthy_valid: Boolean(
+      latestRoadworthy &&
+      latestRoadworthy.status === 'completed' &&
+      latestRoadworthy.result === 'passed' &&
+      latestRoadworthy.vehicleFitness === 'fit' &&
+      latestRoadworthy.certificateIssued === true &&
+      isCurrent(latestRoadworthy.certificateExpiry, now),
+    ),
+    maintenance_clear: trip.truck.MaintenanceRecord.length === 0,
+    trailer_present: Boolean(trip.trailer),
+    trailer_active: !trip.trailer || trip.trailer.status === 'active',
+    trailer_registration_valid: !trip.trailer || !trip.trailer.registrationExpiry || isCurrent(trip.trailer.registrationExpiry, now),
+    trailer_roadworthy_valid: !trip.trailer || !trip.trailer.roadworthyExpiry || isCurrent(trip.trailer.roadworthyExpiry, now),
+  }
+
+  if (effectiveWeighing) {
+    complianceValues.gross_weight = effectiveWeighing.grossWeightKg
+    complianceValues.tare_weight = effectiveWeighing.tareWeightKg
+    complianceValues.net_weight = effectiveWeighing.netWeightKg
+    const axleGroups = new Map<string, number>()
+    for (const reading of effectiveWeighing.axleReadings) {
+      complianceValues[`axle:${reading.axleNumber}`] = reading.weightKg
+      if (reading.axleGroup) {
+        axleGroups.set(reading.axleGroup, (axleGroups.get(reading.axleGroup) ?? 0) + reading.weightKg)
+      }
+    }
+    for (const [group, weightKg] of axleGroups) complianceValues[`axle_group:${group}`] = weightKg
+  }
+
+  const complianceRules = complianceRuleSets.flatMap((ruleSet) =>
+    ruleSet.rules.map((rule) => storedComplianceRuleToDomain(rule)),
+  )
+  const complianceEvaluation = evaluateCompliance({
+    occurredAt: now,
+    country: 'GH',
+    shipperId: profile?.id ?? null,
+    vehicleType: 'tractor',
+    trailerType: trip.trailer?.trailerType ?? null,
+    commodityId: trip.itemId ?? trip.itemName,
+    values: complianceValues,
+  }, complianceRules)
+  const complianceBlocking = [
+    ...complianceEvaluation.blocking.map((rule) => `Compliance rule failed: ${rule.type}`),
+    ...complianceEvaluation.ambiguities.map((ambiguity) => `Ambiguous compliance rules: ${ambiguity.type}`),
+  ]
+  const complianceWarnings = complianceEvaluation.warnings.map((rule) => `Compliance warning: ${rule.type}`)
 
   return evaluateDispatchClearance({
     assignment: {
@@ -254,9 +335,9 @@ export async function evaluateTripDispatchClearance(
       sealNumber: WaybillSeal?.sealNumber ?? null,
     },
     compliance: {
-      passed: true,
-      blocking: [],
-      warnings: [],
+      passed: complianceEvaluation.passed,
+      blocking: complianceBlocking,
+      warnings: complianceWarnings,
     },
     override,
   })
