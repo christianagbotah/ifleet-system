@@ -1,0 +1,42 @@
+model ComplianceRuleSet {
+  id            String           @id @default(cuid())
+  name          String
+  version       String
+  country       String?
+  description   String?          @db.Text
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  isActive      Boolean          @default(true)
+  createdBy     String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  rules         ComplianceRule[]
+
+  @@unique([name, version])
+  @@index([country, isActive, effectiveFrom])
+  @@index([effectiveFrom, effectiveTo])
+}
+
+model ComplianceRule {
+  id            String            @id @default(cuid())
+  ruleSetId     String
+  type          String
+  metric        String?
+  scope         String            @db.Text
+  operator      String
+  value         String            @db.Text
+  unit          String?
+  severity      String
+  priority      Int               @default(0)
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  isActive      Boolean           @default(true)
+  description   String?           @db.Text
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  ruleSet       ComplianceRuleSet @relation(fields: [ruleSetId], references: [id], onDelete: Cascade)
+
+  @@index([ruleSetId, type, isActive])
+  @@index([type, priority, effectiveFrom])
+  @@index([effectiveFrom, effectiveTo])
+}
