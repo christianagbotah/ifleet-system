@@ -230,6 +230,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   trucks: ['trucks.view'],
   trailers: ['trucks.view'],
   'load-orders': ['trips.view'],
+  dispatch: ['trips.create'],
   'shipper-profiles': ['trips.view'],
   drivers: ['drivers.view'],
   'driver-performance': ['drivers.view'],

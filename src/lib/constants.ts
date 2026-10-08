@@ -122,6 +122,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "trucks", label: "Trucks", icon: Truck },
       { id: "trailers", label: "Trailers", icon: Truck },
       { id: "load-orders", label: "Load Orders", icon: Truck },
+      { id: "dispatch", label: "Dispatch Control", icon: Route },
       { id: "shipper-profiles", label: "Shipper Profiles", icon: Truck },
       { id: "driver-performance", label: "Driver Performance", icon: Trophy },
       { id: "safety-scoring", label: "Safety Scoring", icon: ShieldAlert },

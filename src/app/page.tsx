@@ -33,6 +33,10 @@ const LoadOrdersView = dynamic(
   () => import('@/components/orders/LoadOrdersView').then(m => ({ default: m.LoadOrdersView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const DispatchView = dynamic(
+  () => import('@/components/dispatch/DispatchView').then(m => ({ default: m.DispatchView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const ShipperProfilesView = dynamic(
   () => import('@/components/shippers/ShipperProfilesView').then(m => ({ default: m.ShipperProfilesView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -318,6 +322,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <TrailersView />
     case 'load-orders':
       return <LoadOrdersView />
+    case 'dispatch':
+      return <DispatchView />
     case 'shipper-profiles':
       return <ShipperProfilesView />
     case 'drivers':
