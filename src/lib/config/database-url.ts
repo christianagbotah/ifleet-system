@@ -65,3 +65,8 @@ export function resolveDatabaseUrl(env: NodeJS.ProcessEnv, nodeEnv: string): str
 
   return normalized
 }
+
+export function resolvePrismaCliDatabaseUrl(env: NodeJS.ProcessEnv, nodeEnv: string): string {
+  const runtimeUrl = resolveDatabaseUrl(env, nodeEnv)
+  return `mysql://${runtimeUrl.slice('mariadb://'.length)}`
+}

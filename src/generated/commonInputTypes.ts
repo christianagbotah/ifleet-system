@@ -684,6 +684,36 @@ export type EnumTripDeliveryDestinationStatusWithAggregatesFilter<$PrismaModel =
   _max?: Prisma.NestedEnumTripDeliveryDestinationStatusFilter<$PrismaModel>
 }
 
+export type BoolNullableFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedBoolNullableFilter<$PrismaModel> | boolean | null
+}
+
+export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedBoolNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedBoolNullableFilter<$PrismaModel>
+}
+
+export type EnumLoadOrderStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoadOrderStatus | Prisma.EnumLoadOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LoadOrderStatus[]
+  notIn?: $Enums.LoadOrderStatus[]
+  not?: Prisma.NestedEnumLoadOrderStatusFilter<$PrismaModel> | $Enums.LoadOrderStatus
+}
+
+export type EnumLoadOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoadOrderStatus | Prisma.EnumLoadOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LoadOrderStatus[]
+  notIn?: $Enums.LoadOrderStatus[]
+  not?: Prisma.NestedEnumLoadOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.LoadOrderStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLoadOrderStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLoadOrderStatusFilter<$PrismaModel>
+}
+
 export type EnumTruckStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TruckStatus | Prisma.EnumTruckStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TruckStatus[]
@@ -716,6 +746,23 @@ export type EnumTruckInsuranceStatusWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
+}
+
+export type EnumTrailerStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel> | $Enums.TrailerStatus
+}
+
+export type EnumTrailerStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusWithAggregatesFilter<$PrismaModel> | $Enums.TrailerStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
 }
 
 export type EnumTyreConditionFilter<$PrismaModel = never> = {
@@ -1451,6 +1498,36 @@ export type NestedEnumTripDeliveryDestinationStatusWithAggregatesFilter<$PrismaM
   _max?: Prisma.NestedEnumTripDeliveryDestinationStatusFilter<$PrismaModel>
 }
 
+export type NestedBoolNullableFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedBoolNullableFilter<$PrismaModel> | boolean | null
+}
+
+export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedBoolNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedBoolNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumLoadOrderStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoadOrderStatus | Prisma.EnumLoadOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LoadOrderStatus[]
+  notIn?: $Enums.LoadOrderStatus[]
+  not?: Prisma.NestedEnumLoadOrderStatusFilter<$PrismaModel> | $Enums.LoadOrderStatus
+}
+
+export type NestedEnumLoadOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoadOrderStatus | Prisma.EnumLoadOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LoadOrderStatus[]
+  notIn?: $Enums.LoadOrderStatus[]
+  not?: Prisma.NestedEnumLoadOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.LoadOrderStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLoadOrderStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLoadOrderStatusFilter<$PrismaModel>
+}
+
 export type NestedEnumTruckStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TruckStatus | Prisma.EnumTruckStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TruckStatus[]
@@ -1483,6 +1560,23 @@ export type NestedEnumTruckInsuranceStatusWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTruckInsuranceStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumTrailerStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel> | $Enums.TrailerStatus
+}
+
+export type NestedEnumTrailerStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TrailerStatus | Prisma.EnumTrailerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TrailerStatus[]
+  notIn?: $Enums.TrailerStatus[]
+  not?: Prisma.NestedEnumTrailerStatusWithAggregatesFilter<$PrismaModel> | $Enums.TrailerStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTrailerStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumTyreConditionFilter<$PrismaModel = never> = {

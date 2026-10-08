@@ -45,6 +45,7 @@ import {
   TRIP_STATUS_META,
   TRIP_PHASES,
   ALL_TRIP_STATUSES,
+  getTripStatusIndex,
   TRIP_EXPENSE_CATEGORIES,
   getNextStatus,
   getTripProgress,
@@ -149,7 +150,7 @@ function FleetActiveTripsDashboard() {
   const handleAdvanceStatus = React.useCallback(async (tripId: string) => {
     setAdvancingId(tripId)
     try {
-      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/advance-status`, {
+      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/transition`, {
         method: 'POST',
         body: JSON.stringify({}),
       })
@@ -844,7 +845,7 @@ function FleetTripDetailPanel({
           {/* Horizontal mini lifecycle */}
           <div className="flex items-center gap-0 mt-4 overflow-x-auto pb-1">
             {ALL_TRIP_STATUSES.map((stage, idx) => {
-              const currentIdx = ALL_TRIP_STATUSES.indexOf(trip.status as typeof ALL_TRIP_STATUSES[number])
+              const currentIdx = getTripStatusIndex(trip.status)
               const isCompleted = idx < currentIdx
               const isActive = stage === trip.status
               return (
@@ -1378,7 +1379,7 @@ function DriverView() {
   const handleAdvanceStatus = React.useCallback(async (tripId: string) => {
     setAdvancing(true)
     try {
-      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/advance-status`, {
+      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/transition`, {
         method: 'POST',
         body: JSON.stringify({}),
       })
@@ -2225,7 +2226,7 @@ function TripHeroHeader({
           {/* Horizontal mini lifecycle */}
           <div className="flex items-center gap-0 mt-3 overflow-x-auto pb-1">
             {ALL_TRIP_STATUSES.map((stage, idx) => {
-              const currentIdx = ALL_TRIP_STATUSES.indexOf(trip.status as typeof ALL_TRIP_STATUSES[number])
+              const currentIdx = getTripStatusIndex(trip.status)
               const isCompleted = idx < currentIdx
               const isActive = stage === trip.status
 

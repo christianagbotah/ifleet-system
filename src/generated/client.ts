@@ -307,10 +307,70 @@ export type TripEvent = Prisma.TripEventModel
  */
 export type TripItem = Prisma.TripItemModel
 /**
+ * Model Organization
+ * 
+ */
+export type Organization = Prisma.OrganizationModel
+/**
+ * Model Transporter
+ * 
+ */
+export type Transporter = Prisma.TransporterModel
+/**
+ * Model VehicleOwner
+ * 
+ */
+export type VehicleOwner = Prisma.VehicleOwnerModel
+/**
+ * Model TransportContract
+ * 
+ */
+export type TransportContract = Prisma.TransportContractModel
+/**
+ * Model TransportRateCard
+ * 
+ */
+export type TransportRateCard = Prisma.TransportRateCardModel
+/**
+ * Model ShipperProfile
+ * 
+ */
+export type ShipperProfile = Prisma.ShipperProfileModel
+/**
+ * Model ShipperSiteRule
+ * 
+ */
+export type ShipperSiteRule = Prisma.ShipperSiteRuleModel
+/**
+ * Model LoadOrder
+ * 
+ */
+export type LoadOrder = Prisma.LoadOrderModel
+/**
+ * Model LoadOrderDestination
+ * 
+ */
+export type LoadOrderDestination = Prisma.LoadOrderDestinationModel
+/**
+ * Model LoadOrderLine
+ * 
+ */
+export type LoadOrderLine = Prisma.LoadOrderLineModel
+/**
  * Model Truck
  * 
  */
 export type Truck = Prisma.TruckModel
+/**
+ * Model Trailer
+ * 
+ */
+export type Trailer = Prisma.TrailerModel
+/**
+ * Model TrailerCoupling
+ * 
+ */
+export type TrailerCoupling = Prisma.TrailerCouplingModel
 /**
  * Model TruckLocation
  * 

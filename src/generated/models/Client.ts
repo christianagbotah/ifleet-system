@@ -242,6 +242,9 @@ export type ClientWhereInput = {
   Invoice?: Prisma.InvoiceListRelationFilter
   LoadBoard?: Prisma.LoadBoardListRelationFilter
   Trip?: Prisma.TripListRelationFilter
+  ShipperProfile?: Prisma.ShipperProfileListRelationFilter
+  LoadOrder?: Prisma.LoadOrderListRelationFilter
+  LoadOrderDestination?: Prisma.LoadOrderDestinationListRelationFilter
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationListRelationFilter
 }
 
@@ -262,6 +265,9 @@ export type ClientOrderByWithRelationInput = {
   Invoice?: Prisma.InvoiceOrderByRelationAggregateInput
   LoadBoard?: Prisma.LoadBoardOrderByRelationAggregateInput
   Trip?: Prisma.TripOrderByRelationAggregateInput
+  ShipperProfile?: Prisma.ShipperProfileOrderByRelationAggregateInput
+  LoadOrder?: Prisma.LoadOrderOrderByRelationAggregateInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationOrderByRelationAggregateInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationOrderByRelationAggregateInput
   _relevance?: Prisma.ClientOrderByRelevanceInput
 }
@@ -286,6 +292,9 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   Invoice?: Prisma.InvoiceListRelationFilter
   LoadBoard?: Prisma.LoadBoardListRelationFilter
   Trip?: Prisma.TripListRelationFilter
+  ShipperProfile?: Prisma.ShipperProfileListRelationFilter
+  LoadOrder?: Prisma.LoadOrderListRelationFilter
+  LoadOrderDestination?: Prisma.LoadOrderDestinationListRelationFilter
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationListRelationFilter
 }, "id">
 
@@ -342,6 +351,9 @@ export type ClientCreateInput = {
   Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
 }
 
@@ -362,6 +374,9 @@ export type ClientUncheckedCreateInput = {
   Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
 }
 
@@ -382,6 +397,9 @@ export type ClientUpdateInput = {
   Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
 }
 
@@ -402,6 +420,9 @@ export type ClientUncheckedUpdateInput = {
   Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
 }
 
@@ -587,6 +608,54 @@ export type ClientUpdateOneWithoutTripDeliveryDestinationNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutTripDeliveryDestinationInput, Prisma.ClientUpdateWithoutTripDeliveryDestinationInput>, Prisma.ClientUncheckedUpdateWithoutTripDeliveryDestinationInput>
 }
 
+export type ClientCreateNestedOneWithoutShipperProfileInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutShipperProfileInput, Prisma.ClientUncheckedCreateWithoutShipperProfileInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutShipperProfileInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneWithoutShipperProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutShipperProfileInput, Prisma.ClientUncheckedCreateWithoutShipperProfileInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutShipperProfileInput
+  upsert?: Prisma.ClientUpsertWithoutShipperProfileInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutShipperProfileInput, Prisma.ClientUpdateWithoutShipperProfileInput>, Prisma.ClientUncheckedUpdateWithoutShipperProfileInput>
+}
+
+export type ClientCreateNestedOneWithoutLoadOrderInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderInput, Prisma.ClientUncheckedCreateWithoutLoadOrderInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutLoadOrderInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneWithoutLoadOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderInput, Prisma.ClientUncheckedCreateWithoutLoadOrderInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutLoadOrderInput
+  upsert?: Prisma.ClientUpsertWithoutLoadOrderInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutLoadOrderInput, Prisma.ClientUpdateWithoutLoadOrderInput>, Prisma.ClientUncheckedUpdateWithoutLoadOrderInput>
+}
+
+export type ClientCreateNestedOneWithoutLoadOrderDestinationInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderDestinationInput, Prisma.ClientUncheckedCreateWithoutLoadOrderDestinationInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutLoadOrderDestinationInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneWithoutLoadOrderDestinationNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderDestinationInput, Prisma.ClientUncheckedCreateWithoutLoadOrderDestinationInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutLoadOrderDestinationInput
+  upsert?: Prisma.ClientUpsertWithoutLoadOrderDestinationInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutLoadOrderDestinationInput, Prisma.ClientUpdateWithoutLoadOrderDestinationInput>, Prisma.ClientUncheckedUpdateWithoutLoadOrderDestinationInput>
+}
+
 export type ClientCreateWithoutClientZoneInput = {
   id?: string
   companyName: string
@@ -603,6 +672,9 @@ export type ClientCreateWithoutClientZoneInput = {
   Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
 }
 
@@ -622,6 +694,9 @@ export type ClientUncheckedCreateWithoutClientZoneInput = {
   Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
 }
 
@@ -657,6 +732,9 @@ export type ClientUpdateWithoutClientZoneInput = {
   Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
 }
 
@@ -676,6 +754,9 @@ export type ClientUncheckedUpdateWithoutClientZoneInput = {
   Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
 }
 
@@ -695,6 +776,9 @@ export type ClientCreateWithoutInvoiceInput = {
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
 }
 
@@ -714,6 +798,9 @@ export type ClientUncheckedCreateWithoutInvoiceInput = {
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
 }
 
@@ -749,6 +836,9 @@ export type ClientUpdateWithoutInvoiceInput = {
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
 }
 
@@ -768,6 +858,9 @@ export type ClientUncheckedUpdateWithoutInvoiceInput = {
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
 }
 
@@ -787,6 +880,9 @@ export type ClientCreateWithoutLoadBoardInput = {
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
   Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
 }
 
@@ -806,6 +902,9 @@ export type ClientUncheckedCreateWithoutLoadBoardInput = {
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
 }
 
@@ -841,6 +940,9 @@ export type ClientUpdateWithoutLoadBoardInput = {
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
   Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
 }
 
@@ -860,6 +962,9 @@ export type ClientUncheckedUpdateWithoutLoadBoardInput = {
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
 }
 
@@ -879,6 +984,9 @@ export type ClientCreateWithoutTripInput = {
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
   Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
 }
 
@@ -898,6 +1006,9 @@ export type ClientUncheckedCreateWithoutTripInput = {
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
   Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
 }
 
@@ -933,6 +1044,9 @@ export type ClientUpdateWithoutTripInput = {
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
   Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
 }
 
@@ -952,6 +1066,9 @@ export type ClientUncheckedUpdateWithoutTripInput = {
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
   Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
   TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
 }
 
@@ -972,6 +1089,9 @@ export type ClientCreateWithoutTripDeliveryDestinationInput = {
   Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutTripDeliveryDestinationInput = {
@@ -991,6 +1111,9 @@ export type ClientUncheckedCreateWithoutTripDeliveryDestinationInput = {
   Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
   Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutTripDeliveryDestinationInput = {
@@ -1026,6 +1149,9 @@ export type ClientUpdateWithoutTripDeliveryDestinationInput = {
   Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutTripDeliveryDestinationInput = {
@@ -1045,6 +1171,321 @@ export type ClientUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
   Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutShipperProfileInput = {
+  id?: string
+  companyName: string
+  contactPerson: string
+  email?: string | null
+  phone: string
+  address?: string | null
+  city?: string | null
+  region?: string | null
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
+  Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
+  LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
+  Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutShipperProfileInput = {
+  id?: string
+  companyName: string
+  contactPerson: string
+  email?: string | null
+  phone: string
+  address?: string | null
+  city?: string | null
+  region?: string | null
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
+  Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
+  LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutShipperProfileInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutShipperProfileInput, Prisma.ClientUncheckedCreateWithoutShipperProfileInput>
+}
+
+export type ClientUpsertWithoutShipperProfileInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutShipperProfileInput, Prisma.ClientUncheckedUpdateWithoutShipperProfileInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutShipperProfileInput, Prisma.ClientUncheckedCreateWithoutShipperProfileInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutShipperProfileInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutShipperProfileInput, Prisma.ClientUncheckedUpdateWithoutShipperProfileInput>
+}
+
+export type ClientUpdateWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
+  Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
+  LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutShipperProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
+  Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutLoadOrderInput = {
+  id?: string
+  companyName: string
+  contactPerson: string
+  email?: string | null
+  phone: string
+  address?: string | null
+  city?: string | null
+  region?: string | null
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
+  Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
+  LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
+  Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationCreateNestedManyWithoutClientInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutLoadOrderInput = {
+  id?: string
+  companyName: string
+  contactPerson: string
+  email?: string | null
+  phone: string
+  address?: string | null
+  city?: string | null
+  region?: string | null
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
+  Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
+  LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedCreateNestedManyWithoutClientInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutLoadOrderInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderInput, Prisma.ClientUncheckedCreateWithoutLoadOrderInput>
+}
+
+export type ClientUpsertWithoutLoadOrderInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutLoadOrderInput, Prisma.ClientUncheckedUpdateWithoutLoadOrderInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderInput, Prisma.ClientUncheckedCreateWithoutLoadOrderInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutLoadOrderInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutLoadOrderInput, Prisma.ClientUncheckedUpdateWithoutLoadOrderInput>
+}
+
+export type ClientUpdateWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
+  Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
+  LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUpdateManyWithoutClientNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutLoadOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
+  Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrderDestination?: Prisma.LoadOrderDestinationUncheckedUpdateManyWithoutClientNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutLoadOrderDestinationInput = {
+  id?: string
+  companyName: string
+  contactPerson: string
+  email?: string | null
+  phone: string
+  address?: string | null
+  city?: string | null
+  region?: string | null
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
+  Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
+  LoadBoard?: Prisma.LoadBoardCreateNestedManyWithoutClientInput
+  Trip?: Prisma.TripCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderCreateNestedManyWithoutClientInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutLoadOrderDestinationInput = {
+  id?: string
+  companyName: string
+  contactPerson: string
+  email?: string | null
+  phone: string
+  address?: string | null
+  city?: string | null
+  region?: string | null
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
+  Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
+  LoadBoard?: Prisma.LoadBoardUncheckedCreateNestedManyWithoutClientInput
+  Trip?: Prisma.TripUncheckedCreateNestedManyWithoutClientInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedCreateNestedManyWithoutClientInput
+  LoadOrder?: Prisma.LoadOrderUncheckedCreateNestedManyWithoutClientInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutLoadOrderDestinationInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderDestinationInput, Prisma.ClientUncheckedCreateWithoutLoadOrderDestinationInput>
+}
+
+export type ClientUpsertWithoutLoadOrderDestinationInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutLoadOrderDestinationInput, Prisma.ClientUncheckedUpdateWithoutLoadOrderDestinationInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutLoadOrderDestinationInput, Prisma.ClientUncheckedCreateWithoutLoadOrderDestinationInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutLoadOrderDestinationInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutLoadOrderDestinationInput, Prisma.ClientUncheckedUpdateWithoutLoadOrderDestinationInput>
+}
+
+export type ClientUpdateWithoutLoadOrderDestinationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
+  Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
+  LoadBoard?: Prisma.LoadBoardUpdateManyWithoutClientNestedInput
+  Trip?: Prisma.TripUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUpdateManyWithoutClientNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutLoadOrderDestinationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
+  Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  LoadBoard?: Prisma.LoadBoardUncheckedUpdateManyWithoutClientNestedInput
+  Trip?: Prisma.TripUncheckedUpdateManyWithoutClientNestedInput
+  ShipperProfile?: Prisma.ShipperProfileUncheckedUpdateManyWithoutClientNestedInput
+  LoadOrder?: Prisma.LoadOrderUncheckedUpdateManyWithoutClientNestedInput
+  TripDeliveryDestination?: Prisma.TripDeliveryDestinationUncheckedUpdateManyWithoutClientNestedInput
 }
 
 
@@ -1057,6 +1498,9 @@ export type ClientCountOutputType = {
   Invoice: number
   LoadBoard: number
   Trip: number
+  ShipperProfile: number
+  LoadOrder: number
+  LoadOrderDestination: number
   TripDeliveryDestination: number
 }
 
@@ -1065,6 +1509,9 @@ export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   Invoice?: boolean | ClientCountOutputTypeCountInvoiceArgs
   LoadBoard?: boolean | ClientCountOutputTypeCountLoadBoardArgs
   Trip?: boolean | ClientCountOutputTypeCountTripArgs
+  ShipperProfile?: boolean | ClientCountOutputTypeCountShipperProfileArgs
+  LoadOrder?: boolean | ClientCountOutputTypeCountLoadOrderArgs
+  LoadOrderDestination?: boolean | ClientCountOutputTypeCountLoadOrderDestinationArgs
   TripDeliveryDestination?: boolean | ClientCountOutputTypeCountTripDeliveryDestinationArgs
 }
 
@@ -1109,6 +1556,27 @@ export type ClientCountOutputTypeCountTripArgs<ExtArgs extends runtime.Types.Ext
 /**
  * ClientCountOutputType without action
  */
+export type ClientCountOutputTypeCountShipperProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShipperProfileWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountLoadOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoadOrderWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountLoadOrderDestinationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoadOrderDestinationWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
 export type ClientCountOutputTypeCountTripDeliveryDestinationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TripDeliveryDestinationWhereInput
 }
@@ -1131,6 +1599,9 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   Invoice?: boolean | Prisma.Client$InvoiceArgs<ExtArgs>
   LoadBoard?: boolean | Prisma.Client$LoadBoardArgs<ExtArgs>
   Trip?: boolean | Prisma.Client$TripArgs<ExtArgs>
+  ShipperProfile?: boolean | Prisma.Client$ShipperProfileArgs<ExtArgs>
+  LoadOrder?: boolean | Prisma.Client$LoadOrderArgs<ExtArgs>
+  LoadOrderDestination?: boolean | Prisma.Client$LoadOrderDestinationArgs<ExtArgs>
   TripDeliveryDestination?: boolean | Prisma.Client$TripDeliveryDestinationArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
@@ -1158,6 +1629,9 @@ export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   Invoice?: boolean | Prisma.Client$InvoiceArgs<ExtArgs>
   LoadBoard?: boolean | Prisma.Client$LoadBoardArgs<ExtArgs>
   Trip?: boolean | Prisma.Client$TripArgs<ExtArgs>
+  ShipperProfile?: boolean | Prisma.Client$ShipperProfileArgs<ExtArgs>
+  LoadOrder?: boolean | Prisma.Client$LoadOrderArgs<ExtArgs>
+  LoadOrderDestination?: boolean | Prisma.Client$LoadOrderDestinationArgs<ExtArgs>
   TripDeliveryDestination?: boolean | Prisma.Client$TripDeliveryDestinationArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1169,6 +1643,9 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     Invoice: Prisma.$InvoicePayload<ExtArgs>[]
     LoadBoard: Prisma.$LoadBoardPayload<ExtArgs>[]
     Trip: Prisma.$TripPayload<ExtArgs>[]
+    ShipperProfile: Prisma.$ShipperProfilePayload<ExtArgs>[]
+    LoadOrder: Prisma.$LoadOrderPayload<ExtArgs>[]
+    LoadOrderDestination: Prisma.$LoadOrderDestinationPayload<ExtArgs>[]
     TripDeliveryDestination: Prisma.$TripDeliveryDestinationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1528,6 +2005,9 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
   Invoice<T extends Prisma.Client$InvoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$InvoiceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   LoadBoard<T extends Prisma.Client$LoadBoardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$LoadBoardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadBoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Trip<T extends Prisma.Client$TripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$TripArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ShipperProfile<T extends Prisma.Client$ShipperProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$ShipperProfileArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShipperProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  LoadOrder<T extends Prisma.Client$LoadOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$LoadOrderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  LoadOrderDestination<T extends Prisma.Client$LoadOrderDestinationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$LoadOrderDestinationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoadOrderDestinationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TripDeliveryDestination<T extends Prisma.Client$TripDeliveryDestinationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$TripDeliveryDestinationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripDeliveryDestinationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2011,6 +2491,78 @@ export type Client$TripArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.TripScalarFieldEnum | Prisma.TripScalarFieldEnum[]
+}
+
+/**
+ * Client.ShipperProfile
+ */
+export type Client$ShipperProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ShipperProfile
+   */
+  select?: Prisma.ShipperProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ShipperProfile
+   */
+  omit?: Prisma.ShipperProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShipperProfileInclude<ExtArgs> | null
+  where?: Prisma.ShipperProfileWhereInput
+  orderBy?: Prisma.ShipperProfileOrderByWithRelationInput | Prisma.ShipperProfileOrderByWithRelationInput[]
+  cursor?: Prisma.ShipperProfileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShipperProfileScalarFieldEnum | Prisma.ShipperProfileScalarFieldEnum[]
+}
+
+/**
+ * Client.LoadOrder
+ */
+export type Client$LoadOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrder
+   */
+  select?: Prisma.LoadOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrder
+   */
+  omit?: Prisma.LoadOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderWhereInput
+  orderBy?: Prisma.LoadOrderOrderByWithRelationInput | Prisma.LoadOrderOrderByWithRelationInput[]
+  cursor?: Prisma.LoadOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoadOrderScalarFieldEnum | Prisma.LoadOrderScalarFieldEnum[]
+}
+
+/**
+ * Client.LoadOrderDestination
+ */
+export type Client$LoadOrderDestinationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoadOrderDestination
+   */
+  select?: Prisma.LoadOrderDestinationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoadOrderDestination
+   */
+  omit?: Prisma.LoadOrderDestinationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoadOrderDestinationInclude<ExtArgs> | null
+  where?: Prisma.LoadOrderDestinationWhereInput
+  orderBy?: Prisma.LoadOrderDestinationOrderByWithRelationInput | Prisma.LoadOrderDestinationOrderByWithRelationInput[]
+  cursor?: Prisma.LoadOrderDestinationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoadOrderDestinationScalarFieldEnum | Prisma.LoadOrderDestinationScalarFieldEnum[]
 }
 
 /**
