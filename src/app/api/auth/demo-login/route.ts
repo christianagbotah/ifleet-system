@@ -9,6 +9,13 @@ import { JWT_SECRET } from '@/lib/jwt-secret'
 
 const DEMO_SESSION_TTL = '8h'
 
+export async function GET() {
+  return NextResponse.json(
+    { enabled: process.env.DEMO_LOGIN_ENABLED === 'true' },
+    { headers: { 'Cache-Control': 'no-store' } },
+  )
+}
+
 async function ensureDemoUser(profile: DemoProfileId) {
   const identity = getDemoIdentityConfig(profile)
   const role = await db.role.findUnique({
