@@ -3,20 +3,25 @@ import { describe, expect, it } from 'vitest'
 import { canDemoAccessApi, canDemoAccessNav } from '../demo-access'
 
 describe('demo access policy', () => {
-  it('allows safe operational reads but blocks sensitive read namespaces', () => {
-    expect(canDemoAccessApi('/api/dashboard', 'GET')).toBe(true)
-    expect(canDemoAccessApi('/api/trips', 'GET')).toBe(true)
-    expect(canDemoAccessApi('/api/users', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/audit-logs', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/payroll', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/invoices', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/tracking', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/drivers', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/clients', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/pricing', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/fuel-budgets', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/trip-expenses', 'GET')).toBe(false)
-    expect(canDemoAccessApi('/api/tolls/analytics', 'GET')).toBe(false)
+  it('blocks every protected production API read for public demo sessions', () => {
+    for (const path of [
+      '/api/dashboard',
+      '/api/trips',
+      '/api/trucks',
+      '/api/users',
+      '/api/audit-logs',
+      '/api/payroll',
+      '/api/invoices',
+      '/api/tracking',
+      '/api/drivers',
+      '/api/clients',
+      '/api/pricing',
+      '/api/fuel-budgets',
+      '/api/trip-expenses',
+      '/api/tolls/analytics',
+    ]) {
+      expect(canDemoAccessApi(path, 'GET')).toBe(false)
+    }
   })
 
   it('blocks every mutating API method for demo sessions', () => {

@@ -9,6 +9,7 @@ import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { CommandPalette } from '@/components/layout/CommandPalette'
 import { QuickActionsFab } from '@/components/layout/QuickActionsFab'
 import { LoginView } from '@/components/auth/LoginView'
+import { DemoWorkspace } from '@/components/auth/DemoWorkspace'
 import { useAuthStore, canAccessNav } from '@/lib/store/auth'
 import { useHighlightStore } from '@/lib/store/highlight'
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts'
@@ -584,6 +585,16 @@ export default function Home() {
     return (
       <ErrorBoundary>
         <LoginView />
+      </ErrorBoundary>
+    )
+  }
+
+  // Public demo identities never mount the production application shell. Their
+  // workspace is synthetic and makes no protected production API requests.
+  if (user.isDemo) {
+    return (
+      <ErrorBoundary>
+        <DemoWorkspace />
       </ErrorBoundary>
     )
   }
