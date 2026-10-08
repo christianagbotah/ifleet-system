@@ -27,6 +27,7 @@ import { apiFetch, type Trip } from '@/lib/api'
 import {
   TRIP_STATUS_META,
   ALL_TRIP_STATUSES,
+  getTripStatusIndex,
   TRIP_EXPENSE_CATEGORIES,
   getAdvanceAction,
   getStatusTimeline,
@@ -296,9 +297,7 @@ function TripCard({
 function StatusTimeline({ currentStatus }: { currentStatus: string }) {
   const timeline = getStatusTimeline(currentStatus)
   const hasReachedPhase = (statuses: readonly string[]): boolean => {
-    const currentIdx = ALL_TRIP_STATUSES.indexOf(
-      currentStatus as (typeof ALL_TRIP_STATUSES)[number],
-    )
+    const currentIdx = getTripStatusIndex(currentStatus)
     if (currentIdx === -1 && currentStatus === 'completed') return true
     return statuses.some(
       (s) => ALL_TRIP_STATUSES.indexOf(s) <= currentIdx,
@@ -321,9 +320,7 @@ function StatusTimeline({ currentStatus }: { currentStatus: string }) {
               {phase.statuses.map((step, idx) => {
                 const isLast = idx === phase.statuses.length - 1
                 const statusIdx = ALL_TRIP_STATUSES.indexOf(step)
-                const currentIdx = ALL_TRIP_STATUSES.indexOf(
-                  currentStatus as (typeof ALL_TRIP_STATUSES)[number],
-                )
+                const currentIdx = getTripStatusIndex(currentStatus)
                 const stepReached =
                   currentStatus === 'completed' ||
                   (currentIdx >= 0 && statusIdx <= currentIdx)
@@ -605,7 +602,7 @@ function TripDetailView({
     if (!trip || advancing) return
     setAdvancing(true)
     try {
-      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/advance-status`, {
+      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/transition`, {
         method: 'POST',
         body: JSON.stringify({}),
       })

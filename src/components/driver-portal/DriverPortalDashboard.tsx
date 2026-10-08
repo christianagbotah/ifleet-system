@@ -241,7 +241,7 @@ function ActiveTripCard({
     setAdvancing(true)
 
     try {
-      const updated = await apiFetch<Trip>(`/api/trips/${trip.id}/advance-status`, {
+      const updated = await apiFetch<Trip>(`/api/trips/${trip.id}/transition`, {
         method: 'POST',
         body: JSON.stringify({}),
       })

@@ -12,19 +12,35 @@ datasource db {
 // ─────────────────────────────────────────────────────────────────────────────
 
 enum TripStatus {
+  draft
   scheduled
+  assigned
+  eligibility_check
+  authorized_for_loading
+  en_route_to_loading_point
+  gate_in
+  queued
+  preload_weighing
   loading
   loaded
-  departed_depot
+  postload_weighing
+  awaiting_dispatch_clearance
+  departed_loading_point
   in_transit
   arrived_destination
   offloading
-  offloaded
+  delivered
   return_journey
-  arrived_depot
+  arrived_base
+  awaiting_reconciliation
+  reconciled
   completed
-  cancelled
   delayed
+  cancelled
+  exception_hold
+  departed_depot
+  offloaded
+  arrived_depot
 }
 
 enum TruckStatus {

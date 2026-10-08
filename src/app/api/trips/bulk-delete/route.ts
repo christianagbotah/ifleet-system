@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { transitionTrip, TripTransitionError } from '@/lib/domain/dispatch/transition-trip'
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,26 +27,19 @@ export async function POST(request: NextRequest) {
       select: { id: true, tripNumber: true, status: true },
     })
 
-    // Filter out completed trips — cannot cancel completed trips
-    const cancellableIds = trips.filter(t => t.status !== 'completed').map(t => t.id)
-    const skippedCompleted = trips.length - cancellableIds.length
+    let cancelled = 0
+    let skipped = 0
 
-    if (cancellableIds.length === 0) {
-      return NextResponse.json(
-        { error: 'All selected trips are already completed and cannot be cancelled' },
-        { status: 400 }
-      )
-    }
-
-    const result = await db.trip.updateMany({
-      where: { id: { in: cancellableIds } },
-      data: { status: 'cancelled' },
-    })
-
-    // Audit log: bulk cancel trips (fire-and-forget)
-    trips
-      .filter(t => t.status !== 'completed')
-      .forEach(trip => {
+    for (const trip of trips) {
+      try {
+        await transitionTrip({
+          tripId: trip.id,
+          to: 'cancelled',
+          actorId: auth.userId,
+          notes: 'Trip cancelled by bulk action',
+          metadata: { source: 'trip-bulk-delete' },
+        })
+        cancelled += 1
         createAuditLog({
           userId: auth.userId,
           action: 'delete',
@@ -54,12 +48,23 @@ export async function POST(request: NextRequest) {
           details: { tripNumber: trip.tripNumber, previousStatus: trip.status, newStatus: 'cancelled', bulk: true },
           ipAddress: getClientIp(request),
         }).catch(() => {})
-      })
+      } catch (error) {
+        if (error instanceof TripTransitionError) {
+          skipped += 1
+          continue
+        }
+        throw error
+      }
+    }
+
+    if (cancelled === 0) {
+      return NextResponse.json({ error: 'None of the selected trips can be cancelled from their current lifecycle state' }, { status: 409 })
+    }
 
     return NextResponse.json({
       success: true,
-      deleted: result.count,
-      skipped: skippedCompleted,
+      deleted: cancelled,
+      skipped,
     })
   } catch (error) {
     console.error('Bulk trip delete error:', error)

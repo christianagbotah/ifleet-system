@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users, CheckCircle2, Receipt } from 'lucide-react'
+import { MapPin, Truck, User, Package, Clock, DollarSign, Fuel, Route, ArrowRight, AlertTriangle, ChevronRight, Copy, MessageSquare, Send, Trash2, X, Camera, Users, Receipt } from 'lucide-react'
 import { ResponsiveSheet } from '@/components/ui/responsive-sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,9 +27,11 @@ import { useAuthStore, getRoleBadgeColor } from '@/lib/store/auth'
 import {
   TRIP_STATUS_META,
   ALL_TRIP_STATUSES,
+  getTripStatusIndex,
   getNextStatus,
   getTripProgress,
   isTerminalStatus,
+  isValidTransition,
 } from '@/lib/trip-lifecycle'
 import { toast } from 'sonner'
 import { InvoiceDetailSheet } from '@/components/invoices/InvoiceDetailSheet'
@@ -119,7 +121,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
     if (!trip) return
     setAdvancing(true)
     try {
-      const res = await apiFetch<TripFull>(`/api/trips/${trip.id}/advance-status`, {
+      const res = await apiFetch<TripFull>(`/api/trips/${trip.id}/transition`, {
         method: 'POST',
         body: JSON.stringify({}),
       })
@@ -181,7 +183,6 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
   }
 
   const [duplicating, setDuplicating] = React.useState(false)
-  const [completing, setCompleting] = React.useState(false)
 
   // Invoice state
   const [tripInvoice, setTripInvoice] = React.useState<Invoice | null>(null)
@@ -222,25 +223,6 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
     }
   }
 
-  const handleMarkCompleted = async () => {
-    if (!trip) return
-    setCompleting(true)
-    try {
-      const res = await apiFetch<TripFull>(`/api/trips/${trip.id}/complete`, {
-        method: 'POST',
-        body: JSON.stringify({}),
-      })
-      setFullTrip(res)
-      toast.success('Trip marked as completed', {
-        description: `All workflow stages completed for ${currentTrip.tripNumber}`,
-      })
-      onStatusChanged?.()
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to mark trip as completed')
-    } finally {
-      setCompleting(false)
-    }
-  }
 
   const handleDuplicateTrip = async () => {
     if (!currentTrip) return
@@ -281,7 +263,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
 
   const nextStatus = getNextStatus(currentTrip.status)
   const progress = getTripProgress(currentTrip.status)
-  const currentStatusIdx = ALL_TRIP_STATUSES.indexOf(currentTrip.status as typeof ALL_TRIP_STATUSES[number])
+  const currentStatusIdx = getTripStatusIndex(currentTrip.status)
   const meta = TRIP_STATUS_META[currentTrip.status]
   const nextMeta = nextStatus ? TRIP_STATUS_META[nextStatus] : null
 
@@ -792,80 +774,50 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
 
                   {!isTerminalStatus(currentTrip.status) && (
                     <>
-                    <Button
-                      onClick={handleAdvanceStatus}
-                      disabled={advancing}
-                      className="bg-amber-500 hover:bg-amber-600 text-white w-full"
-                    >
-                      {advancing ? (
-                        <>
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white mr-2" />
-                          Updating...
-                        </>
-                      ) : (
-                        <>
-                          <ChevronRight className="h-4 w-4 mr-2" />
-                          {nextMeta
-                            ? `Advance to ${nextMeta.label}`
-                            : 'Complete Trip'}
-                        </>
-                      )}
-                    </Button>
-
-                    {/* Mark as Completed — skip all stages */}
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
+                      {nextStatus && (
                         <Button
-                          variant="outline"
-                          disabled={completing}
-                          className="w-full gap-2 border-emerald-300 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+                          onClick={handleAdvanceStatus}
+                          disabled={advancing}
+                          className="bg-amber-500 hover:bg-amber-600 text-white w-full"
                         >
-                          {completing ? (
-                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-300 border-t-emerald-600" />
+                          {advancing ? (
+                            <>
+                              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white mr-2" />
+                              Updating...
+                            </>
                           ) : (
-                            <CheckCircle2 className="h-4 w-4" />
+                            <>
+                              <ChevronRight className="h-4 w-4 mr-2" />
+                              {`Advance to ${nextMeta?.label || nextStatus}`}
+                            </>
                           )}
-                          Mark as Completed
                         </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Mark trip as completed?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will skip all remaining workflow stages and mark trip {currentTrip.tripNumber} as completed. All lifecycle stages will be recorded. This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={handleMarkCompleted} className="bg-emerald-600 hover:bg-emerald-700">
-                            Yes, Complete Trip
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      )}
 
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive" className="w-full">
-                          <AlertTriangle className="h-4 w-4 mr-2" />
-                          Cancel Trip
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Cancel this trip?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will mark trip {currentTrip.tripNumber} as cancelled. This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Keep Trip</AlertDialogCancel>
-                          <AlertDialogAction onClick={handleCancelTrip} className="bg-red-600 hover:bg-red-700">
-                            Cancel Trip
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      {isValidTransition(currentTrip.status, 'cancelled') && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="destructive" className="w-full">
+                              <AlertTriangle className="h-4 w-4 mr-2" />
+                              Cancel Trip
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Cancel this trip?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will mark trip {currentTrip.tripNumber} as cancelled. This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Keep Trip</AlertDialogCancel>
+                              <AlertDialogAction onClick={handleCancelTrip} className="bg-red-600 hover:bg-red-700">
+                                Cancel Trip
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </>
                   )}
                 </div>

@@ -10,19 +10,35 @@
 */
 
 export const TripStatus = {
+  draft: 'draft',
   scheduled: 'scheduled',
+  assigned: 'assigned',
+  eligibility_check: 'eligibility_check',
+  authorized_for_loading: 'authorized_for_loading',
+  en_route_to_loading_point: 'en_route_to_loading_point',
+  gate_in: 'gate_in',
+  queued: 'queued',
+  preload_weighing: 'preload_weighing',
   loading: 'loading',
   loaded: 'loaded',
-  departed_depot: 'departed_depot',
+  postload_weighing: 'postload_weighing',
+  awaiting_dispatch_clearance: 'awaiting_dispatch_clearance',
+  departed_loading_point: 'departed_loading_point',
   in_transit: 'in_transit',
   arrived_destination: 'arrived_destination',
   offloading: 'offloading',
-  offloaded: 'offloaded',
+  delivered: 'delivered',
   return_journey: 'return_journey',
-  arrived_depot: 'arrived_depot',
+  arrived_base: 'arrived_base',
+  awaiting_reconciliation: 'awaiting_reconciliation',
+  reconciled: 'reconciled',
   completed: 'completed',
+  delayed: 'delayed',
   cancelled: 'cancelled',
-  delayed: 'delayed'
+  exception_hold: 'exception_hold',
+  departed_depot: 'departed_depot',
+  offloaded: 'offloaded',
+  arrived_depot: 'arrived_depot'
 } as const
 
 export type TripStatus = (typeof TripStatus)[keyof typeof TripStatus]

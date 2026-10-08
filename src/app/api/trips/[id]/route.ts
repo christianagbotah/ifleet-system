@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { transitionTrip, TripTransitionError } from '@/lib/domain/dispatch/transition-trip'
 
 export async function GET(
   request: NextRequest,
@@ -139,6 +140,13 @@ export async function PUT(
       deliveryDestinations: bodyDeliveryDestinations,
     } = body
 
+    if (status !== undefined && status !== trip.status) {
+      return NextResponse.json(
+        { error: 'Direct trip status updates are disabled. Use /api/trips/[id]/transition.' },
+        { status: 409 }
+      )
+    }
+
     // Collect changed fields for audit log
     const changes: Record<string, unknown> = {}
     if (waybillNumber !== undefined && waybillNumber !== trip.waybillNumber) changes.waybillNumber = waybillNumber
@@ -146,7 +154,6 @@ export async function PUT(
     if (destination !== undefined && destination !== trip.destination) changes.destination = destination
     if (itemName !== undefined && itemName !== trip.itemName) changes.itemName = itemName
     if (quantity !== undefined && parseFloat(quantity) !== trip.quantity) changes.quantity = parseFloat(quantity)
-    if (status !== undefined && status !== trip.status) changes.status = status
     if (totalRevenue !== undefined) changes.totalRevenue = totalRevenue ? parseFloat(totalRevenue) : null
     if (customerName !== undefined && customerName !== trip.customerName) changes.customerName = customerName
     if (notes !== undefined && notes !== trip.notes) changes.notes = notes
@@ -190,7 +197,6 @@ export async function PUT(
         ...(totalRevenue !== undefined && { totalRevenue: totalRevenue ? parseFloat(totalRevenue) : null }),
         ...(departureTime !== undefined && { departureTime: new Date(departureTime) }),
         ...(arrivalTime !== undefined && { arrivalTime: arrivalTime ? new Date(arrivalTime) : null }),
-        ...(status !== undefined && { status }),
         ...(customerName !== undefined && { customerName }),
         ...(customerPhone !== undefined && { customerPhone }),
         ...(customerRef !== undefined && { customerRef }),
@@ -389,17 +395,14 @@ export async function DELETE(
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
     }
 
-    if (trip.status === 'completed') {
-      return NextResponse.json(
-        { error: 'Cannot cancel a completed trip' },
-        { status: 400 }
-      )
-    }
-
-    const updatedTrip = await db.trip.update({
-      where: { id },
-      data: { status: 'cancelled' },
+    const transition = await transitionTrip({
+      tripId: id,
+      to: 'cancelled',
+      actorId: auth.userId,
+      notes: 'Trip cancelled',
+      metadata: { source: 'trip-delete' },
     })
+    const updatedTrip = transition.trip
 
     // Audit log: trip cancelled (fire-and-forget)
     createAuditLog({
@@ -413,6 +416,9 @@ export async function DELETE(
 
     return NextResponse.json(updatedTrip)
   } catch (error) {
+    if (error instanceof TripTransitionError) {
+      return NextResponse.json({ error: error.message, code: error.code }, { status: error.code === 'NOT_FOUND' ? 404 : 409 })
+    }
     console.error('Trip delete error:', error)
     return NextResponse.json({ error: 'Failed to cancel trip' }, { status: 500 })
   }

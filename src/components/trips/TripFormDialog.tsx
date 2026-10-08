@@ -37,7 +37,7 @@ import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { apiFetch, uploadFiles, createTrip, updateTrip, fetchTrucks, fetchDrivers, type Truck, type Driver, type Trip } from '@/lib/api'
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
-import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2, CheckSquare, Square, Camera } from 'lucide-react'
+import { X, Upload, Loader2, Plus, AlertCircle, User, CalendarIcon, Check, CheckCircle2, Camera } from 'lucide-react'
 import { TripInvoicePanel } from './TripInvoicePanel'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
@@ -492,8 +492,6 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
   // Image upload state for start mileage
   const [mileageImages, setMileageImages] = React.useState<ImageFile[]>([])
 
-  // Mark as completed on creation
-  const [markCompleted, setMarkCompleted] = React.useState(false)
 
   // Auto-generated invoice state (shown after trip creation)
   const [createdInvoice, setCreatedInvoice] = React.useState<Record<string, unknown> | null>(null)
@@ -1009,8 +1007,6 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
         onOpenChange(false)
         onUpdated?.()
       } else {
-        // Include markCompleted flag for new trips
-        if (markCompleted) body.markCompleted = true
         const response = await createTrip(body)
         // Check if auto-generated invoice came back
         const responseAny = response as Record<string, unknown>
@@ -1018,7 +1014,7 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
           setCreatedInvoice(responseAny.invoice as Parameters<typeof setCreatedInvoice>[0])
           setCreatedTripNumber(responseAny.tripNumber as string)
         } else {
-          toast.success(markCompleted ? 'Trip created and completed' : 'Trip created successfully', {
+          toast.success('Trip created successfully', {
             description: `${data.loadingLocation || 'Origin'} → ${data.destination || 'Destination'} (${data.itemName})`,
           })
           onOpenChange(false)
@@ -1850,31 +1846,6 @@ export function TripFormDialog({ open, onOpenChange, onCreated, onUpdated, trip 
               )}
             />
 
-            {/* Mark as Completed — only for new trips */}
-            {!trip && (
-              <>
-                <Separator />
-                <button
-                  type="button"
-                  onClick={() => setMarkCompleted(!markCompleted)}
-                  className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30 hover:bg-muted/60 transition-colors w-full text-left"
-                >
-                  {markCompleted ? (
-                    <CheckSquare className="h-5 w-5 text-emerald-500 shrink-0" />
-                  ) : (
-                    <Square className="h-5 w-5 text-muted-foreground shrink-0" />
-                  )}
-                  <div>
-                    <div className="text-sm font-medium">
-                      Mark as completed on creation
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      Trip will skip all workflow stages and be created with a completed status
-                    </div>
-                  </div>
-                </button>
-              </>
-            )}
 
           </form>
         </Form>
