@@ -20,7 +20,7 @@ module.exports = {
     {
       name: 'ifleetpro',
       script: '.next/standalone/server.js',
-      cwd: '/home/ifleetpro/app',
+      cwd: '/home/lightworld/webapps/ifleetpro',
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
@@ -30,8 +30,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
-      error_file: '/home/ifleetpro/logs/ifleetpro-error.log',
-      out_file: '/home/ifleetpro/logs/ifleetpro-out.log',
+      error_file: '/var/log/ifleetpro/ifleetpro-error.log',
+      out_file: '/var/log/ifleetpro/ifleetpro-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
     },
@@ -40,7 +40,7 @@ module.exports = {
     {
       name: 'ifleetpro-tracking',
       script: 'index.ts',
-      cwd: '/home/ifleetpro/app/mini-services/tracking-service',
+      cwd: '/home/lightworld/webapps/ifleetpro/mini-services/tracking-service',
       interpreter: 'bun',
       env: {
         NODE_ENV: 'production',
@@ -50,8 +50,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '512M',
-      error_file: '/home/ifleetpro/logs/tracking-error.log',
-      out_file: '/home/ifleetpro/logs/tracking-out.log',
+      error_file: '/var/log/ifleetpro/tracking-error.log',
+      out_file: '/var/log/ifleetpro/tracking-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
     },
@@ -60,7 +60,7 @@ module.exports = {
     {
       name: 'ifleetpro-notifications',
       script: 'index.ts',
-      cwd: '/home/ifleetpro/app/mini-services/notification-service',
+      cwd: '/home/lightworld/webapps/ifleetpro/mini-services/notification-service',
       interpreter: 'bun',
       env: {
         NODE_ENV: 'production',
@@ -70,8 +70,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '512M',
-      error_file: '/home/ifleetpro/logs/notification-error.log',
-      out_file: '/home/ifleetpro/logs/notification-out.log',
+      error_file: '/var/log/ifleetpro/notification-error.log',
+      out_file: '/var/log/ifleetpro/notification-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
     },

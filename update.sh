@@ -1,55 +1,30 @@
 #!/bin/bash
-# ══════════════════════════════════════════════════════════════
-# iFleetPro — Quick Update Script
-# ══════════════════════════════════════════════════════════════
-# Usage: ./update.sh
-# ══════════════════════════════════════════════════════════════
+# iFleetPro — controlled production update
 
-set -e
+set -euo pipefail
+export NODE_ENV=production
 
-APP_DIR="/home/ifleetpro/app"
+APP_DIR="/home/lightworld/webapps/ifleetpro"
 GREEN='\033[0;32m'
 NC='\033[0m'
 
+cd "$APP_DIR"
+git config core.fileMode false
+
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "Refusing update: tracked working-tree changes are present."
+  exit 1
+fi
+
 echo -e "${GREEN}Updating iFleetPro...${NC}"
+git pull --ff-only origin main
 
-cd "$APP_DIR"
-
-# Pull latest code
-echo "Pulling latest code..."
-git pull origin main
-
-# Install dependencies
-echo "Installing dependencies..."
-bun install
-
-# Update mini-services
-echo "Installing mini-service dependencies..."
-cd "$APP_DIR/mini-services/tracking-service" && bun install 2>/dev/null || true
-cd "$APP_DIR/mini-services/notification-service" && bun install 2>/dev/null || true
-
-# Generate Prisma client
-cd "$APP_DIR"
-echo "Generating Prisma client..."
+bun install --frozen-lockfile 2>/dev/null || bun install
 bunx prisma generate
-
-# Update database
-echo "Pushing database schema..."
 bunx prisma db push
-
-# Build
-echo "Building Next.js..."
 bun run build
 
-# Copy static assets
-echo "Copying static assets..."
-cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
-cp -r public .next/standalone/ 2>/dev/null || true
+systemctl restart ifleetpro.service
+systemctl is-active --quiet ifleetpro.service
 
-# Restart services
-echo "Restarting services..."
-pm2 restart all
-
-echo ""
-echo -e "${GREEN}Update complete!${NC}"
-pm2 status
+echo -e "${GREEN}iFleetPro update complete.${NC}"

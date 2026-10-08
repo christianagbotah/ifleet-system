@@ -5,7 +5,7 @@
 #
 # This script is triggered by GitHub webhooks when you push
 # to the main branch. It pulls the latest code, rebuilds,
-# and restarts the app via PM2.
+# and restarts the app via systemd.
 #
 # Called by: webhook tool (adnanh/webhook)
 # Config:    hooks.json (NOT tracked in git)
@@ -13,13 +13,14 @@
 # ══════════════════════════════════════════════════════════════
 
 set -e
+export NODE_ENV=production
 
-# ── Ensure bun and pm2 are in PATH (systemd services have minimal PATH) ──
+# ── Ensure Bun is in PATH (systemd services have minimal PATH) ──
 export PATH="/root/.bun/bin:/usr/local/apps/nodejs20/bin:/usr/local/bin:/usr/lib/node_modules/.bin:$PATH"
 
 # ── Configuration ──
-APP_DIR="/home/ifleetpro/app"
-LOG_DIR="/home/ifleetpro/logs"
+APP_DIR="/home/lightworld/webapps/ifleetpro"
+LOG_DIR="/var/log/ifleetpro"
 LOCK_FILE="/tmp/ifleetpro-deploy.lock"
 LOG_FILE="$LOG_DIR/deploy.log"
 
@@ -48,6 +49,13 @@ log "═════════════════════════
 # ── Step 0: Preserve local-only files before git reset ──
 log "Preserving local config files..."
 cd "$APP_DIR"
+git config core.fileMode false
+
+# Never discard tracked work during an automated deployment.
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    log "DEPLOY BLOCKED: tracked working-tree changes are present"
+    exit 1
+fi
 
 # Backup hooks.json (contains real webhook secret — NOT in git)
 if [ -f "hooks.json" ]; then
@@ -64,9 +72,9 @@ fi
 # ── Step 1: Pull latest code ──
 log "Pulling latest code from GitHub..."
 
-# Discard any local changes to tracked files only
-git checkout main --force 2>/dev/null || true
+# Fast-forward to the exact remote main only after the clean-tree gate above.
 git fetch origin main
+git checkout main
 git reset --hard origin/main
 
 COMMIT=$(git rev-parse --short HEAD)
@@ -124,10 +132,10 @@ log "Copying static assets..."
 cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
 cp -r public .next/standalone/ 2>/dev/null || true
 
-# ── Step 5: Restart PM2 ──
-log "Restarting PM2 services..."
-pm2 restart ifleetpro 2>/dev/null || pm2 start ecosystem.config.js
-pm2 save
+# ── Step 5: Restart iFleetPro only ──
+log "Restarting iFleetPro service..."
+systemctl restart ifleetpro.service
+systemctl is-active --quiet ifleetpro.service
 
 # ── Step 6: Flush nginx proxy cache ──
 # Webuzo's nginx has a 60-minute proxy cache that can serve stale HTML
@@ -144,9 +152,9 @@ fi
 
 # ── Step 7: Verify ──
 sleep 3
-PM2_STATUS=$(pm2 describe ifleetpro 2>/dev/null | grep -oP 'status\s*\|\s*\K\w+' | head -1)
+SERVICE_STATUS=$(systemctl is-active ifleetpro.service)
 
 log "════════════════════════════════════════"
 log "  DEPLOY COMPLETE — $COMMIT"
-log "  PM2 Status: $PM2_STATUS"
+log "  Service Status: $SERVICE_STATUS"
 log "════════════════════════════════════════"

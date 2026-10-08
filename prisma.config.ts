@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { readFileSync } from 'node:fs'
 import { defineConfig } from 'prisma/config'
+import { resolveDatabaseUrl } from './src/lib/config/database-url'
 
 // Read DATABASE_URL from .env files, with explicit .env taking priority to avoid
 // being overridden by a system-level DATABASE_URL (e.g. SQLite sandbox default).
@@ -26,15 +27,11 @@ function loadDatabaseUrl(): string {
   return process.env.DATABASE_URL || ''
 }
 
-const databaseUrl = loadDatabaseUrl()
-
-if (!databaseUrl) {
-  throw new Error(
-    'DATABASE_URL is not set. Create a .env file in the project root with:\n' +
-    '  DATABASE_URL=mysql://user:password@host:3306/database\n' +
-    'Or set the DATABASE_URL environment variable.'
-  )
-}
+const rawDatabaseUrl = loadDatabaseUrl()
+const databaseUrl = resolveDatabaseUrl(
+  { ...process.env, DATABASE_URL: rawDatabaseUrl },
+  process.env.NODE_ENV ?? 'development'
+)
 
 export default defineConfig({
   earlyAccess: true,
