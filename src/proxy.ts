@@ -41,6 +41,12 @@ const PUBLIC_API_ROUTES = [
 
 // Routes where GET is public (for unauthenticated reads like currency provider)
 // but other methods (PUT/POST/DELETE) require JWT auth and inject x-auth-* headers
+// Machine-to-machine routes authenticate inside their handlers using the HMAC contract.
+// Keep this list exact: never exempt the whole /api/internal namespace from user JWT auth.
+const MACHINE_AUTH_API_ROUTES = [
+  '/api/internal/ingest/health',
+]
+
 const PUBLIC_GET_ONLY_ROUTES = [
   '/api/settings',          // GET = display config (currency, units). PUT = admin save.
   '/api/settings/channels', // GET = channel config (masked secrets). PUT = admin save.
@@ -286,6 +292,11 @@ export async function proxy(request: NextRequest) {
 
   // Allow public auth routes (all methods)
   if (PUBLIC_API_ROUTES.some((route) => pathname.startsWith(route))) {
+    return applySecurityHeaders(NextResponse.next())
+  }
+
+  // Machine routes listed here perform their own HMAC authentication in the route handler.
+  if (MACHINE_AUTH_API_ROUTES.includes(pathname)) {
     return applySecurityHeaders(NextResponse.next())
   }
 
