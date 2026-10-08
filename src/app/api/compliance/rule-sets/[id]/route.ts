@@ -167,26 +167,86 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     if (writeGuard instanceof NextResponse) return writeGuard
 
     const { id } = await params
-    const existing = await db.complianceRuleSet.findUnique({ where: { id } })
-    if (!existing) return NextResponse.json({ error: 'Compliance rule set not found' }, { status: 404 })
-
-    const archived = await db.complianceRuleSet.update({
+    const existing = await db.complianceRuleSet.findUnique({
       where: { id },
-      data: { isActive: false, isCurrent: false },
+      include: { rules: true },
     })
+    if (!existing) return NextResponse.json({ error: 'Compliance rule set not found' }, { status: 404 })
+    if (!existing.isCurrent) {
+      return NextResponse.json({ error: 'Only the current rule-set version can be archived' }, { status: 409 })
+    }
+
+    const archived = await db.$transaction(async (tx) => {
+      const live = await tx.complianceRuleSet.findUnique({
+        where: { id },
+        select: { id: true, code: true, isCurrent: true },
+      })
+      if (!live || !live.isCurrent || live.code !== existing.code) {
+        throw new Error('Rule-set version changed; reload before retrying')
+      }
+
+      const maximum = await tx.complianceRuleSet.aggregate({
+        where: { code: existing.code },
+        _max: { version: true },
+      })
+      const nextVersion = (maximum._max.version ?? existing.version) + 1
+
+      await tx.complianceRuleSet.updateMany({
+        where: { code: existing.code, isCurrent: true },
+        data: { isCurrent: false },
+      })
+
+      return tx.complianceRuleSet.create({
+        data: {
+          code: existing.code,
+          name: existing.name,
+          version: nextVersion,
+          country: existing.country,
+          description: existing.description,
+          effectiveFrom: existing.effectiveFrom,
+          effectiveTo: existing.effectiveTo,
+          isActive: false,
+          isCurrent: true,
+          createdBy: auth.userId,
+          rules: {
+            create: existing.rules.map((rule) => ({
+              type: rule.type,
+              metric: rule.metric,
+              scope: rule.scope,
+              operator: rule.operator,
+              value: rule.value,
+              unit: rule.unit,
+              severity: rule.severity,
+              priority: rule.priority,
+              effectiveFrom: rule.effectiveFrom,
+              effectiveTo: rule.effectiveTo,
+              isActive: rule.isActive,
+              description: rule.description,
+            })),
+          },
+        },
+        include: { rules: true },
+      })
+    }, { isolationLevel: 'Serializable' })
 
     createAuditLog({
       userId: auth.userId,
       action: 'archive',
       entity: 'ComplianceRuleSet',
-      entityId: id,
-      details: { code: existing.code, version: existing.version },
+      entityId: archived.id,
+      details: {
+        code: archived.code,
+        previousId: existing.id,
+        fromVersion: existing.version,
+        version: archived.version,
+      },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
     return NextResponse.json(archived)
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to archive compliance rule set'
     console.error('Compliance rule-set archive error:', error)
-    return NextResponse.json({ error: 'Failed to archive compliance rule set' }, { status: 500 })
+    return NextResponse.json({ error: message }, { status: message.includes('reload') ? 409 : 500 })
   }
 }
