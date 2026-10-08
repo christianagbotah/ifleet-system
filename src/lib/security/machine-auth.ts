@@ -1,4 +1,6 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export interface MachineNonceStore {
   claim(keyId: string, nonce: string, expiresAt: number): Promise<boolean>
@@ -44,6 +46,57 @@ function signaturesMatch(expectedHex: string, supplied: string): boolean {
   const expected = Buffer.from(expectedHex, 'hex')
   const actual = Buffer.from(suppliedHex, 'hex')
   return expected.length === actual.length && timingSafeEqual(expected, actual)
+}
+
+function nonceFileName(keyId: string, nonce: string): string {
+  return createHash('sha256').update(`${keyId}\0${nonce}`).digest('hex')
+}
+
+export class FilesystemNonceStore implements MachineNonceStore {
+  constructor(
+    private readonly directory: string = '/tmp/ifleetpro-machine-nonces',
+    private readonly now: () => number = Date.now
+  ) {}
+
+  async claim(keyId: string, nonce: string, expiresAt: number): Promise<boolean> {
+    await mkdir(this.directory, { recursive: true, mode: 0o700 })
+    const filePath = join(this.directory, nonceFileName(keyId, nonce))
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        await writeFile(filePath, `${expiresAt}\n`, { flag: 'wx', mode: 0o600 })
+        return true
+      } catch (error: unknown) {
+        if (!(error instanceof Error) || !('code' in error) || error.code !== 'EEXIST') {
+          throw error
+        }
+      }
+
+      let existingExpiry = Number.NaN
+      try {
+        existingExpiry = Number((await readFile(filePath, 'utf8')).trim())
+      } catch (error: unknown) {
+        if (!(error instanceof Error) || !('code' in error) || error.code !== 'ENOENT') {
+          throw error
+        }
+        continue
+      }
+
+      if (Number.isFinite(existingExpiry) && existingExpiry > this.now()) {
+        return false
+      }
+
+      try {
+        await unlink(filePath)
+      } catch (error: unknown) {
+        if (!(error instanceof Error) || !('code' in error) || error.code !== 'ENOENT') {
+          throw error
+        }
+      }
+    }
+
+    return false
+  }
 }
 
 export async function verifyMachineRequest(
