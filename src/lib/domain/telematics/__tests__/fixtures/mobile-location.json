@@ -1,0 +1,10 @@
+{
+  "truckId": "truck-ghana-001",
+  "latitude": 5.6037,
+  "longitude": -0.187,
+  "accuracy": 7.5,
+  "speed": 10,
+  "heading": 92,
+  "timestamp": "2026-10-08T09:59:58.000Z",
+  "source": "phone"
+}

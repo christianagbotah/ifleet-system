@@ -1,0 +1,10 @@
+{
+  "assetRef": "truck-ghana-001",
+  "lat": 5.6037,
+  "lon": -0.187,
+  "accuracyMeters": 7.5,
+  "speedKph": 36,
+  "headingDeg": 92,
+  "deviceTime": "2026-10-08T09:59:58.000Z",
+  "eventId": "generic-event-001"
+}

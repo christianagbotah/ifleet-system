@@ -13,6 +13,7 @@ model TelematicsDevice {
   updatedAt     DateTime @updatedAt
 
   installations DeviceInstallationHistory[]
+  events        TelematicsEvent[]
 
   @@index([provider, status])
   @@index([deviceType, status])
@@ -35,4 +36,43 @@ model DeviceInstallationHistory {
   @@index([deviceId, installedAt])
   @@index([deviceId, uninstalledAt])
   @@index([assetType, assetId, installedAt])
+}
+
+model TelematicsEvent {
+  id              String   @id @default(cuid())
+  eventType       String
+  deviceId        String?
+  provider        String
+  providerEventId String?
+  assetType       String?
+  assetId         String?
+  tripId          String?
+  deviceTimestamp DateTime
+  receivedAt      DateTime @default(now())
+  latitude        Float?
+  longitude       Float?
+  speedKph        Float?
+  headingDeg      Float?
+  accuracyMeters  Float?
+  ignitionOn      Boolean?
+  sensorType      String?
+  sensorValue     String?  @db.Text
+  sensorUnit      String?
+  alarmType       String?
+  severity        String?
+  message         String?  @db.Text
+  source          String
+  trust           String
+  rawEventRef     String
+  normalizedPayload String? @db.Text
+  createdAt       DateTime @default(now())
+
+  device TelematicsDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+
+  @@index([assetType, assetId, deviceTimestamp])
+  @@index([tripId, deviceTimestamp])
+  @@index([deviceId, deviceTimestamp])
+  @@index([rawEventRef])
+  @@index([provider, providerEventId])
+  @@index([eventType, receivedAt])
 }
