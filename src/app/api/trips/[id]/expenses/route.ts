@@ -52,12 +52,17 @@ export async function POST(
     const { id } = await params
 
     const body = await request.json()
-    const { category, description, amount, paymentMethod, reference } = body as {
+    const { category, description, amount, paymentMethod, reference, clientMutationId } = body as {
       category: string
       description: string
       amount: number
       paymentMethod?: string
       reference?: string
+      clientMutationId?: string
+    }
+    const mutationId = typeof clientMutationId === 'string' ? clientMutationId.trim() : ''
+    if (mutationId.length > 191) {
+      return NextResponse.json({ error: 'clientMutationId is too long' }, { status: 400 })
     }
 
     if (!category || !description || !amount) {
@@ -83,8 +88,19 @@ export async function POST(
       if (writeGuard instanceof NextResponse) return writeGuard
     }
 
+    if (mutationId) {
+      const existing = await db.expense.findUnique({ where: { clientMutationId: mutationId } })
+      if (existing) {
+        if (existing.tripId !== id) {
+          return NextResponse.json({ error: 'clientMutationId was already used for another trip' }, { status: 409 })
+        }
+        return NextResponse.json({ ...existing, replayed: true })
+      }
+    }
+
     const expense = await db.expense.create({
       data: {
+        clientMutationId: mutationId || null,
         truckId: trip.truckId,
         category,
         description,

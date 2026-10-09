@@ -729,6 +729,7 @@ model DvlaRegistration {
 
 model Expense {
   id                      String                    @id @default(cuid())
+  clientMutationId String?                         @unique
   truckId         String
   category        String
   description     String
@@ -801,6 +802,7 @@ model FuelBudget {
 
 model FuelLog {
   id                      String                    @id @default(cuid())
+  clientMutationId String?                         @unique
   tripId          String
   truckId         String
   date            DateTime @default(now())
@@ -1632,6 +1634,7 @@ model TripDeliveryDestination {
 
 model TripEvent {
   id                      String                    @id @default(cuid())
+  clientMutationId String?                         @unique
   tripId     String
   fromStatus String?
   toStatus   String

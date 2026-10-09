@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { apiFetch } from '@/lib/api'
+import { submitDriverMutation } from '@/lib/offline/driver-sync'
 
 interface PodTarget {
   kind: 'destination' | 'delivery_stop' | 'trip'
@@ -171,14 +172,23 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
       if (selected.kind === 'destination') payload.deliveryDestinationId = selected.id
       if (selected.kind === 'delivery_stop') payload.deliveryStopId = selected.id
 
-      await apiFetch(`/api/trips/${tripId}/proof-of-delivery`, {
-        method: 'POST',
-        body: JSON.stringify(payload),
+      const result = await submitDriverMutation({
+        clientMutationId: mutationIdRef.current,
+        kind: 'pod',
+        request: {
+          method: 'POST',
+          url: `/api/trips/${tripId}/proof-of-delivery`,
+          body: payload,
+        },
       })
-      toast.success('Proof of delivery recorded')
       mutationIdRef.current = crypto.randomUUID()
-      await load()
-      onSubmitted?.()
+      if (result.queued) {
+        toast.success('Proof of delivery queued for sync')
+      } else {
+        toast.success('Proof of delivery recorded')
+        await load()
+        onSubmitted?.()
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to record proof of delivery')
     } finally {

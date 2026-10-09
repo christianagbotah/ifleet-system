@@ -37,6 +37,8 @@ import { CURRENCY_SYMBOL } from '@/lib/constants'
 import { DatePicker } from '@/components/ui/date-picker'
 import { fetchTrucks, fetchTrips, fetchFuelStations, type Truck, type Trip, type FuelLog, type FuelStation, createFuelLog, updateFuelLog, uploadDocument, uploadFiles } from '@/lib/api'
 import { toast } from 'sonner'
+import { submitDriverMutation } from '@/lib/offline/driver-sync'
+import { useAuthStore } from '@/lib/store/auth'
 import { ReceiptScanner, type ScannedReceiptData } from '@/components/scanner/ReceiptScanner'
 
 // Helper: treat empty string / NaN as undefined for optional number fields
@@ -395,6 +397,7 @@ export function FuelLogFormDialog({
   onUpdated,
   initialMode = 'standard',
 }: FuelLogFormDialogProps) {
+  const currentUser = useAuthStore((state) => state.user)
   const [submitting, setSubmitting] = React.useState(false)
   const [trucks, setTrucks] = React.useState<Truck[]>([])
   const [trips, setTrips] = React.useState<Trip[]>([])
@@ -646,6 +649,16 @@ export function FuelLogFormDialog({
         await updateFuelLog(fuelLog.id, body)
         toast.success('Fuel log updated successfully')
         onUpdated?.()
+      } else if (currentUser?.role === 'Driver') {
+        const result = await submitDriverMutation({
+          clientMutationId: crypto.randomUUID(),
+          kind: 'fuel',
+          request: { method: 'POST', url: '/api/fuel-logs', body },
+        })
+        toast.success(result.queued ? 'Fuel log queued for sync' : 'Fuel log added successfully', {
+          description: `${data.litersFilled}L ${data.fuelType} - ${CURRENCY_SYMBOL}${data.totalCost.toLocaleString()}`,
+        })
+        if (!result.queued) onCreated?.()
       } else {
         await createFuelLog(body)
         toast.success('Fuel log added successfully', {
