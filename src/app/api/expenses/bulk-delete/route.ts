@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,8 +24,17 @@ export async function POST(request: NextRequest) {
 
     const expenses = await db.expense.findMany({
       where: { id: { in: ids } },
-      select: { id: true, category: true, description: true, amount: true },
+      select: { id: true, category: true, description: true, amount: true, tripId: true },
     })
+
+    for (const tripId of new Set(expenses.map((expense) => expense.tripId).filter((value): value is string => Boolean(value)))) {
+      if (await isTripFinancialSourceLocked(db, tripId)) {
+        return NextResponse.json({
+        error: 'This expense belongs to an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+      }
+    }
 
     const result = await db.expense.deleteMany({
       where: { id: { in: ids } },

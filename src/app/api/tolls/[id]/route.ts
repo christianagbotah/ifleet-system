@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 export async function GET(
   request: NextRequest,
@@ -49,6 +50,18 @@ export async function PUT(
     const existing = await db.tollRecord.findUnique({ where: { id } })
     if (!existing) {
       return NextResponse.json({ error: 'Toll record not found' }, { status: 404 })
+    }
+    if (await isTripFinancialSourceLocked(db, existing.tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+    }
+    if (typeof body.tripId === 'string' && body.tripId !== existing.tripId && await isTripFinancialSourceLocked(db, body.tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     const updateData: Record<string, unknown> = {}
@@ -112,6 +125,12 @@ export async function DELETE(
     const existing = await db.tollRecord.findUnique({ where: { id } })
     if (!existing) {
       return NextResponse.json({ error: 'Toll record not found' }, { status: 404 })
+    }
+    if (await isTripFinancialSourceLocked(db, existing.tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     await db.tollRecord.delete({ where: { id } })

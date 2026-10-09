@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { initialTripExpenseStatus } from '@/lib/domain/reconciliation/trip-expense-policy'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 export async function GET(
   request: NextRequest,
@@ -97,6 +98,12 @@ export async function POST(
         }
         return NextResponse.json({ ...existing, replayed: true })
       }
+    }
+    if (await isTripFinancialSourceLocked(db, id)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     const expense = await db.expense.create({

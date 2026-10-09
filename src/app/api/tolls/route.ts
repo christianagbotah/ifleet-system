@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 export async function GET(request: NextRequest) {
   try {
@@ -108,6 +109,12 @@ export async function POST(request: NextRequest) {
     const truck = await db.truck.findUnique({ where: { id: truckId } })
     if (!truck) {
       return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
+    }
+    if (tripId && await isTripFinancialSourceLocked(db, tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     const record = await db.tollRecord.create({

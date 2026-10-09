@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 // GET /api/trip-expenses?tripId=xxx — List expenses for a trip
 export async function GET(request: NextRequest) {
@@ -97,6 +98,12 @@ export async function POST(request: NextRequest) {
 
     if (!trip) {
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+    }
+    if (await isTripFinancialSourceLocked(db, tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     if (trip.status === 'completed' || trip.status === 'cancelled') {

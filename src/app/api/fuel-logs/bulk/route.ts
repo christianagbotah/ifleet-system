@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 const VALID_ACTIONS = ['delete'] as const
 
@@ -39,9 +40,19 @@ export async function POST(request: NextRequest) {
         date: true,
         litersFilled: true,
         totalCost: true,
+        tripId: true,
         truck: { select: { plateNumber: true } },
       },
     })
+
+    for (const tripId of new Set(fuelLogs.map((fuelLog) => fuelLog.tripId).filter((value): value is string => Boolean(value)))) {
+      if (await isTripFinancialSourceLocked(db, tripId)) {
+        return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+      }
+    }
 
     let success = 0
     let failed = 0
