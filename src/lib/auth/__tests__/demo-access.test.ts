@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { canDemoAccessApi, canDemoAccessNav } from '../demo-access'
+import { canDemoAccessApi } from '../demo-access'
 
 describe('demo access policy', () => {
   it('blocks every protected production API read for public demo sessions', () => {
@@ -30,13 +30,9 @@ describe('demo access policy', () => {
     }
   })
 
-  it('hides sensitive navigation while keeping operational modules visible', () => {
-    expect(canDemoAccessNav('dashboard')).toBe(true)
-    expect(canDemoAccessNav('tracking')).toBe(false)
-    expect(canDemoAccessNav('drivers')).toBe(false)
-    expect(canDemoAccessNav('clients')).toBe(false)
-    expect(canDemoAccessNav('payroll')).toBe(false)
-    expect(canDemoAccessNav('users')).toBe(false)
-    expect(canDemoAccessNav('audit-log')).toBe(false)
+  it('keeps all production navigation behind the isolated demo workspace', () => {
+    expect(canDemoAccessApi('/api/dashboard', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/tracking', 'GET')).toBe(false)
+    expect(canDemoAccessApi('/api/drivers', 'GET')).toBe(false)
   })
 })
