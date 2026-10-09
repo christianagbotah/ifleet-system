@@ -44,6 +44,7 @@ model TelematicsEvent {
   deviceId        String?
   provider        String
   providerEventId String?
+  idempotencyKey  String   @unique
   assetType       String?
   assetId         String?
   tripId          String?
@@ -75,4 +76,46 @@ model TelematicsEvent {
   @@index([rawEventRef])
   @@index([provider, providerEventId])
   @@index([eventType, receivedAt])
+}
+
+model RawTelematicsPacket {
+  id              String   @id
+  provider        String
+  deviceId        String?
+  providerEventId String?
+  idempotencyKey String   @unique
+  payloadHash     String
+  payload         String   @db.LongText
+  receivedAt      DateTime
+  createdAt       DateTime @default(now())
+
+  @@index([provider, providerEventId])
+  @@index([deviceId, receivedAt])
+  @@index([receivedAt])
+}
+
+model VehicleLiveState {
+  id               String   @id @default(cuid())
+  assetType        String
+  assetId          String
+  latestEventId    String
+  deviceId         String?
+  tripId           String?
+  provider         String
+  latitude         Float?
+  longitude        Float?
+  speedKph         Float?
+  headingDeg       Float?
+  accuracyMeters   Float?
+  ignitionOn       Boolean?
+  source           String
+  trust            String
+  deviceTimestamp  DateTime
+  receivedAt       DateTime
+  updatedAt        DateTime @updatedAt
+
+  @@unique([assetType, assetId])
+  @@index([tripId, deviceTimestamp])
+  @@index([deviceId, deviceTimestamp])
+  @@index([deviceTimestamp])
 }

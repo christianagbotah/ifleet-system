@@ -36,6 +36,7 @@ const PUBLIC_API_ROUTES = [
 
 const MACHINE_AUTH_API_ROUTES = [
   '/api/internal/ingest/health',
+  '/api/telematics/ingest/generic-http',
 ]
 
 const PUBLIC_GET_ONLY_ROUTES = [
