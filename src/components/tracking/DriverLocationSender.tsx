@@ -97,7 +97,7 @@ export function DriverLocationSender() {
 
   const loading = isDriver ? loadingDriverTruck : loadingTrucks
 
-  const { user } = useAuthStore()
+  const { user, token } = useAuthStore()
 
   const [selectedTruckLabel, setSelectedTruckLabel] = React.useState<string>('')
 
@@ -158,6 +158,10 @@ export function DriverLocationSender() {
       toast.error('Please select a truck')
       return
     }
+    if (!token) {
+      toast.error('Your session has expired. Please sign in again.')
+      return
+    }
 
     setPermissionDenied(false)
 
@@ -165,6 +169,7 @@ export function DriverLocationSender() {
     const ioModule = await getIo()
     const socket = ioModule('/?XTransformPort=3003', {
       transports: ['websocket', 'polling'],
+      auth: { token },
     })
     socketRef.current = socket
 

@@ -1,205 +1,367 @@
-import { Server } from 'socket.io';
-import http from 'http';
+import http from 'http'
+import { Server, type Socket } from 'socket.io'
+import { canViewFleetTracking, loadTrackingSession, type TrackingSession } from './auth'
 
-const PORT = 3003;
+const PORT = Number(process.env.PORT || 3003)
+const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '')
+const FRESH_LOCATION_MS = 5 * 60 * 1000
+const STALE_LOCATION_MS = 10 * 60 * 1000
 
-// ─── CORS Configuration ───────────────────────────────────────────────────
-const allowedOrigins = process.env.CORS_ORIGIN
+const allowedOrigins: string[] = process.env.CORS_ORIGIN
   ? (process.env.CORS_ORIGIN.startsWith('[')
       ? JSON.parse(process.env.CORS_ORIGIN)
       : [process.env.CORS_ORIGIN])
-  : ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com'];
+  : ['http://localhost:3000', 'https://ifleetpro.lightworldtech.com']
 
-// ─── Create HTTP server + Socket.IO (with health endpoint) ────────────────
+interface PersistedLocation {
+  truckId: string
+  plateNumber?: string
+  driverName?: string
+  latitude: number
+  longitude: number
+  speed: number | null
+  heading: number | null
+  accuracy: number | null
+  source: string
+  timestamp: string
+  receivedAt?: string
+  tripId?: string | null
+}
+
+interface PhoneLocationInput {
+  truckId: string
+  latitude: number
+  longitude: number
+  accuracy?: number | null
+  speed?: number | null
+  heading?: number | null
+  timestamp?: string
+  eventId?: string
+}
+
+interface LegacyDriverLocationInput {
+  driverId: string
+  lat: number
+  lng: number
+  heading?: number
+  speed?: number
+  truckId?: string
+  driverName?: string
+}
+
+const locationCache = new Map<string, PersistedLocation>()
+const activeSenders = new Map<string, { socketId: string; lastSeen: number }>()
+const viewerSubscriptions = new Map<string, string[]>()
+
 const httpServer = http.createServer((req, res) => {
-  const url = new URL(req.url || '/', `http://localhost:${PORT}`);
+  const url = new URL(req.url || '/', `http://localhost:${PORT}`)
 
-  // Health check endpoint
   if (url.pathname === '/api/health' && req.method === 'GET') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({
       status: 'ok',
       connectedUsers: io.sockets.sockets.size,
-      activeDrivers: driverLocations.size,
+      activeSenders: activeSenders.size,
+      cachedAssets: locationCache.size,
+      sourceOfTruth: 'durable-next-api',
       service: 'tracking',
-    }));
-    return;
+    }))
+    return
   }
 
-  // 404 for unmatched HTTP routes
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not found' }));
-});
+  res.writeHead(404, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ error: 'Not found' }))
+})
 
 const io = new Server(httpServer, {
   cors: {
     origin: (origin, callback) => {
-      // Allow connections with no origin (mobile apps, server-to-server)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      console.warn(`[Tracking] Blocked connection from disallowed origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.includes(origin)) return callback(null, true)
+      console.warn(`[Tracking] Blocked connection from disallowed origin: ${origin}`)
+      callback(new Error('Not allowed by CORS'))
     },
     methods: ['GET', 'POST'],
     credentials: true,
   },
-  // Allow polling and websocket
   transports: ['polling', 'websocket'],
-});
+})
 
-// ─── In-memory stores ─────────────────────────────────────────────────────
+io.use(async (socket, next) => {
+  const token = authToken(socket)
+  if (!token) return next(new Error('Authentication required for live tracking'))
 
-const driverLocations = new Map<string, {
-  lat: number;
-  lng: number;
-  heading?: number;
-  speed?: number;
-  timestamp: number;
-  truckId?: string;
-  driverName?: string;
-}>();
+  const session = await loadTrackingSession(APP_BASE_URL, token)
+  if (!session) return next(new Error('Invalid or inactive authentication session'))
 
-const activeDrivers = new Map<string, { socketId: string; lastSeen: number }>();
-const activeViewers = new Map<string, { socketId: string; watching: string[] }>();
+  socket.data.authToken = token
+  socket.data.authSession = session
+  next()
+})
 
-// ─── Lightweight validation (no Zod dep needed in mini-service) ───────────
+function authToken(socket: Socket): string | null {
+  const value = socket.handshake.auth?.token
+  return typeof value === 'string' && value.trim() ? value.trim() : null
+}
 
-function isValidLocation(data: unknown): data is {
-  driverId: string;
-  lat: number;
-  lng: number;
-  heading?: number;
-  speed?: number;
-  truckId?: string;
-  driverName?: string;
-} {
-  if (typeof data !== 'object' || data === null) return false;
-  const d = data as Record<string, unknown>;
+function isValidPhoneLocation(data: unknown): data is PhoneLocationInput {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false
+  const value = data as Record<string, unknown>
   return (
-    typeof d.driverId === 'string' && d.driverId.length > 0 &&
-    typeof d.lat === 'number' && d.lat >= -90 && d.lat <= 90 &&
-    typeof d.lng === 'number' && d.lng >= -180 && d.lng <= 180 &&
-    (d.heading === undefined || (typeof d.heading === 'number' && d.heading >= 0 && d.heading < 360)) &&
-    (d.speed === undefined || (typeof d.speed === 'number' && d.speed >= 0 && d.speed <= 300)) &&
-    (d.truckId === undefined || typeof d.truckId === 'string') &&
-    (d.driverName === undefined || typeof d.driverName === 'string')
-  );
+    typeof value.truckId === 'string' && value.truckId.length > 0 &&
+    typeof value.latitude === 'number' && value.latitude >= -90 && value.latitude <= 90 &&
+    typeof value.longitude === 'number' && value.longitude >= -180 && value.longitude <= 180 &&
+    (value.accuracy === undefined || value.accuracy === null || (typeof value.accuracy === 'number' && value.accuracy >= 0)) &&
+    (value.speed === undefined || value.speed === null || (typeof value.speed === 'number' && value.speed >= 0)) &&
+    (value.heading === undefined || value.heading === null || (typeof value.heading === 'number' && value.heading >= 0 && value.heading <= 360))
+  )
+}
+
+function isValidLegacyLocation(data: unknown): data is LegacyDriverLocationInput {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false
+  const value = data as Record<string, unknown>
+  return (
+    typeof value.driverId === 'string' && value.driverId.length > 0 &&
+    typeof value.truckId === 'string' && value.truckId.length > 0 &&
+    typeof value.lat === 'number' && value.lat >= -90 && value.lat <= 90 &&
+    typeof value.lng === 'number' && value.lng >= -180 && value.lng <= 180 &&
+    (value.heading === undefined || (typeof value.heading === 'number' && value.heading >= 0 && value.heading <= 360)) &&
+    (value.speed === undefined || (typeof value.speed === 'number' && value.speed >= 0))
+  )
 }
 
 function isValidSubscribe(data: unknown): data is string[] {
-  if (!Array.isArray(data)) return false;
-  if (data.length > 50) return false; // Max 50 drivers per subscription
-  return data.every((id) => typeof id === 'string' && id.length > 0);
+  return Array.isArray(data) && data.length <= 50 && data.every((value) => typeof value === 'string' && value.length > 0)
 }
 
-// ─── Event Handlers ────────────────────────────────────────────────────────
+async function persistPhoneLocation(token: string, data: PhoneLocationInput): Promise<PersistedLocation> {
+  const response = await fetch(`${APP_BASE_URL}/api/tracking/location`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ ...data, source: 'phone' }),
+  })
+  const payload = await response.json().catch(() => ({})) as { data?: PersistedLocation; error?: string }
+  if (!response.ok || !payload.data) {
+    throw new Error(payload.error || `Location persistence failed (${response.status})`)
+  }
+  return payload.data
+}
+
+async function hydrateDurableLocations(token: string): Promise<PersistedLocation[]> {
+  const response = await fetch(`${APP_BASE_URL}/api/tracking/location`, {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  })
+  if (!response.ok) throw new Error(`Location hydration failed (${response.status})`)
+  const payload = await response.json()
+  return Array.isArray(payload) ? payload as PersistedLocation[] : []
+}
+
+function normalizedSocketLocation(location: PersistedLocation) {
+  return {
+    truckId: location.truckId,
+    lat: location.latitude,
+    lng: location.longitude,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    speed: location.speed,
+    heading: location.heading,
+    accuracy: location.accuracy,
+    source: location.source,
+    timestamp: location.timestamp,
+    receivedAt: location.receivedAt,
+    tripId: location.tripId ?? null,
+    plateNumber: location.plateNumber,
+    driverName: location.driverName,
+  }
+}
+
+function cacheLocation(location: PersistedLocation) {
+  locationCache.set(location.truckId, location)
+}
+
+function broadcastPersistedLocation(socket: Socket, location: PersistedLocation) {
+  cacheLocation(location)
+  activeSenders.set(location.truckId, { socketId: socket.id, lastSeen: Date.now() })
+  const normalized = normalizedSocketLocation(location)
+
+  socket.emit('location:updated', normalized)
+  socket.broadcast.emit('location:updated', normalized)
+  socket.to(`truck:${location.truckId}`).emit('location:updated', normalized)
+
+  // Preserve the existing live-map contract while new consumers move to normalized events.
+  socket.emit('truck-location', location)
+  socket.broadcast.to('all-trucks').emit('truck-location', location)
+}
+
+async function refreshCache(token: string): Promise<PersistedLocation[]> {
+  const locations = await hydrateDurableLocations(token)
+  for (const location of locations) cacheLocation(location)
+  return locations
+}
+
+function emitError(socket: Socket, message: string) {
+  socket.emit('error', { message })
+}
 
 io.on('connection', (socket) => {
-  console.log(`[Tracking] Client connected: ${socket.id}`);
+  console.log(`[Tracking] Client connected: ${socket.id}`)
+  const token = typeof socket.data.authToken === 'string' ? socket.data.authToken : null
+  const session = socket.data.authSession as TrackingSession | undefined
+  const requireFleetViewer = () => {
+    if (session && canViewFleetTracking(session)) return true
+    emitError(socket, 'Fleet tracking permission required')
+    return false
+  }
 
-  // Driver sends location update
-  socket.on('driver:location', (data: unknown) => {
-    if (!isValidLocation(data)) {
-      socket.emit('error', { message: 'Invalid location data format' });
-      return;
+  socket.on('join-truck', (data: unknown) => {
+    if (!requireFleetViewer()) return
+    const truckId = data && typeof data === 'object' && typeof (data as Record<string, unknown>).truckId === 'string'
+      ? String((data as Record<string, unknown>).truckId)
+      : ''
+    if (truckId) socket.join(`truck:${truckId}`)
+  })
+
+  socket.on('leave-truck', (data: unknown) => {
+    const truckId = data && typeof data === 'object' && typeof (data as Record<string, unknown>).truckId === 'string'
+      ? String((data as Record<string, unknown>).truckId)
+      : ''
+    if (truckId) socket.leave(`truck:${truckId}`)
+  })
+
+  socket.on('join-all-trucks', async () => {
+    if (!requireFleetViewer()) return
+    socket.join('all-trucks')
+    if (!token) return emitError(socket, 'Authentication required for live tracking')
+    try {
+      const locations = await refreshCache(token)
+      for (const location of locations) socket.emit('truck-location', location)
+    } catch (error) {
+      emitError(socket, error instanceof Error ? error.message : 'Failed to hydrate tracking state')
+    }
+  })
+
+  // Browser/driver contract: persist durably before any broadcast.
+  socket.on('location-update', async (data: unknown, acknowledge?: (result: unknown) => void) => {
+    if (!token) {
+      const error = 'Authentication required for location sharing'
+      emitError(socket, error)
+      acknowledge?.({ ok: false, error })
+      return
+    }
+    if (!isValidPhoneLocation(data)) {
+      const error = 'Invalid location data format'
+      emitError(socket, error)
+      acknowledge?.({ ok: false, error })
+      return
     }
 
-    const location = {
-      lat: data.lat,
-      lng: data.lng,
-      heading: data.heading,
-      speed: data.speed,
-      timestamp: Date.now(),
-      truckId: data.truckId,
-      driverName: data.driverName,
-    };
-
-    driverLocations.set(data.driverId, location);
-    activeDrivers.set(data.driverId, { socketId: socket.id, lastSeen: Date.now() });
-
-    // Broadcast to all viewers watching this driver
-    socket.emit('location:updated', { driverId: data.driverId, ...location });
-    socket.broadcast.emit('location:updated', { driverId: data.driverId, ...location });
-  });
-
-  // Viewer subscribes to specific drivers
-  socket.on('viewer:subscribe', (data: unknown) => {
-    if (!isValidSubscribe(data)) {
-      socket.emit('error', { message: 'Invalid subscription — must be an array of up to 50 driver IDs' });
-      return;
+    try {
+      const location = await persistPhoneLocation(token, data)
+      broadcastPersistedLocation(socket, location)
+      acknowledge?.({ ok: true, timestamp: location.timestamp })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Location persistence failed'
+      emitError(socket, message)
+      acknowledge?.({ ok: false, error: message })
     }
+  })
 
-    activeViewers.set(socket.id, { socketId: socket.id, watching: data });
-    // Send current locations for subscribed drivers
-    for (const driverId of data) {
-      const location = driverLocations.get(driverId);
-      if (location) {
-        socket.emit('location:updated', { driverId, ...location });
+  // Backward-compatible legacy sender, routed through the same durable HTTP pipeline.
+  socket.on('driver:location', async (data: unknown) => {
+    if (!token) return emitError(socket, 'Authentication required for location sharing')
+    if (!isValidLegacyLocation(data)) return emitError(socket, 'Invalid legacy location data format')
+
+    try {
+      const location = await persistPhoneLocation(token, {
+        truckId: data.truckId!,
+        latitude: data.lat,
+        longitude: data.lng,
+        heading: data.heading ?? null,
+        speed: data.speed ?? null,
+      })
+      broadcastPersistedLocation(socket, location)
+    } catch (error) {
+      emitError(socket, error instanceof Error ? error.message : 'Location persistence failed')
+    }
+  })
+
+  socket.on('viewer:subscribe', async (data: unknown) => {
+    if (!requireFleetViewer()) return
+    if (!isValidSubscribe(data)) return emitError(socket, 'Invalid subscription — must contain up to 50 truck IDs')
+    viewerSubscriptions.set(socket.id, data)
+    if (!token) return emitError(socket, 'Authentication required for live tracking')
+
+    try {
+      await refreshCache(token)
+      for (const truckId of data) {
+        const location = locationCache.get(truckId)
+        if (location) socket.emit('location:updated', normalizedSocketLocation(location))
       }
+    } catch (error) {
+      emitError(socket, error instanceof Error ? error.message : 'Failed to hydrate tracking state')
     }
-  });
+  })
 
-  // Get all active driver locations
-  socket.on('get:all-locations', () => {
-    const locations: Record<string, typeof driverLocations extends Map<string, infer V> ? V : never> = {};
-    for (const [driverId, location] of driverLocations) {
-      // Only return locations less than 5 minutes old
-      if (Date.now() - location.timestamp < 5 * 60 * 1000) {
-        locations[driverId] = location;
-      }
+  socket.on('get:all-locations', async () => {
+    if (!requireFleetViewer()) return
+    if (!token) return emitError(socket, 'Authentication required for live tracking')
+    try {
+      const locations = await refreshCache(token)
+      const payload: Record<string, ReturnType<typeof normalizedSocketLocation>> = {}
+      for (const location of locations) payload[location.truckId] = normalizedSocketLocation(location)
+      socket.emit('all-locations', payload)
+    } catch (error) {
+      emitError(socket, error instanceof Error ? error.message : 'Failed to hydrate tracking state')
     }
-    socket.emit('all-locations', locations);
-  });
+  })
 
-  // Get active drivers list
+  socket.on('get-active-trucks', async () => {
+    if (!requireFleetViewer()) return
+    if (!token) return emitError(socket, 'Authentication required for live tracking')
+    try {
+      const locations = await refreshCache(token)
+      socket.emit('active-trucks', locations.map((location) => location.truckId))
+    } catch (error) {
+      emitError(socket, error instanceof Error ? error.message : 'Failed to hydrate tracking state')
+    }
+  })
+
   socket.on('get:active-drivers', () => {
-    const now = Date.now();
-    const active: string[] = [];
-    for (const [driverId, info] of activeDrivers) {
-      if (now - info.lastSeen < 5 * 60 * 1000) {
-        active.push(driverId);
-      }
-    }
-    socket.emit('active-drivers', active);
-  });
+    if (!requireFleetViewer()) return
+    const now = Date.now()
+    const active = [...activeSenders.entries()]
+      .filter(([, info]) => now - info.lastSeen < FRESH_LOCATION_MS)
+      .map(([truckId]) => truckId)
+    socket.emit('active-drivers', active)
+  })
 
   socket.on('disconnect', () => {
-    console.log(`[Tracking] Client disconnected: ${socket.id}`);
-    // Remove from active viewers
-    activeViewers.delete(socket.id);
-    // Remove from active drivers
-    for (const [driverId, info] of activeDrivers) {
-      if (info.socketId === socket.id) {
-        activeDrivers.delete(driverId);
-        break;
-      }
+    console.log(`[Tracking] Client disconnected: ${socket.id}`)
+    viewerSubscriptions.delete(socket.id)
+    for (const [truckId, info] of activeSenders) {
+      if (info.socketId === socket.id) activeSenders.delete(truckId)
     }
-  });
-});
-
-// ─── Periodic cleanup ────────────────────────────────────────────────────
+  })
+})
 
 setInterval(() => {
-  const now = Date.now();
-  const staleThreshold = 10 * 60 * 1000; // 10 minutes
-  for (const [driverId, location] of driverLocations) {
-    if (now - location.timestamp > staleThreshold) {
-      driverLocations.delete(driverId);
-    }
+  const now = Date.now()
+  for (const [truckId, location] of locationCache) {
+    const timestamp = new Date(location.receivedAt ?? location.timestamp).getTime()
+    if (!Number.isFinite(timestamp) || now - timestamp > STALE_LOCATION_MS) locationCache.delete(truckId)
   }
-  for (const [driverId, info] of activeDrivers) {
-    if (now - info.lastSeen > staleThreshold) {
-      activeDrivers.delete(driverId);
-    }
+  for (const [truckId, info] of activeSenders) {
+    if (now - info.lastSeen > STALE_LOCATION_MS) activeSenders.delete(truckId)
   }
-}, 10 * 60 * 1000);
-
-// ════════════════════════════════════════════════════════════════════
-// START
-// ════════════════════════════════════════════════════════════════════
+}, STALE_LOCATION_MS)
 
 httpServer.listen(PORT, () => {
-  console.log(`[Tracking Service] Running on port ${PORT}`);
-  console.log(`[Tracking Service] Health:    http://localhost:${PORT}/api/health`);
-  console.log(`[Tracking Service] CORS origins: ${allowedOrigins.join(', ')}`);
-});
+  console.log(`[Tracking Service] Running on port ${PORT}`)
+  console.log(`[Tracking Service] Health: http://localhost:${PORT}/api/health`)
+  console.log(`[Tracking Service] Durable API: ${APP_BASE_URL}`)
+  console.log(`[Tracking Service] CORS origins: ${allowedOrigins.join(', ')}`)
+})

@@ -883,6 +883,9 @@ model GeofenceZone {
   latitude      Float
   longitude     Float
   radius        Int             @default(500)
+  geometryType  String          @default("circle")
+  geometryJson  String?         @db.LongText
+  dwellThresholdMinutes Int     @default(15)
   type          String          @default("depot")
   address       String?
   createdAt     DateTime        @default(now())

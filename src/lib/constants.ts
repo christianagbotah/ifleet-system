@@ -42,6 +42,7 @@ import {
   CircleDollarSign,
   Scale,
   Store,
+  RadioTower,
   type LucideIcon,
 } from "lucide-react"
 
@@ -113,6 +114,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "reports", label: "Reports", icon: FileText },
       { id: "cost-analytics", label: "Cost Analytics", icon: Calculator },
       { id: "tracking", label: "Live Tracking", icon: MapPin },
+      { id: "control-tower", label: "Control Tower", icon: RadioTower },
       { id: "client-portal", label: "Client Portal", icon: Globe },
     ],
   },
@@ -121,6 +123,7 @@ export const navigationGroups: NavGroup[] = [
     items: [
       { id: "trucks", label: "Trucks", icon: Truck },
       { id: "trailers", label: "Trailers", icon: Truck },
+      { id: "telematics-devices", label: "Device Registry", icon: RadioTower },
       { id: "load-orders", label: "Load Orders", icon: Truck },
       { id: "dispatch", label: "Dispatch Control", icon: Route },
       { id: "shipper-profiles", label: "Shipper Profiles", icon: Truck },

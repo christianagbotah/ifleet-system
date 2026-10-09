@@ -30,6 +30,10 @@ const TrailersView = dynamic(
   () => import('@/components/trailers/TrailersView').then(m => ({ default: m.TrailersView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const DeviceRegistryView = dynamic(
+  () => import('@/components/telematics/DeviceRegistryView').then(m => ({ default: m.DeviceRegistryView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const LoadOrdersView = dynamic(
   () => import('@/components/orders/LoadOrdersView').then(m => ({ default: m.LoadOrdersView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -80,6 +84,10 @@ const ItemsView = dynamic(
 )
 const LiveTrackingView = dynamic(
   () => import('@/components/tracking/LiveTrackingView').then(m => ({ default: m.LiveTrackingView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
+const ControlTower = dynamic(
+  () => import('@/components/tracking/ControlTower').then(m => ({ default: m.ControlTower })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
 const DriverLocationSender = dynamic(
@@ -321,6 +329,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <TrucksView />
     case 'trailers':
       return <TrailersView />
+    case 'telematics-devices':
+      return <DeviceRegistryView />
     case 'load-orders':
       return <LoadOrdersView />
     case 'dispatch':
@@ -363,6 +373,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <FuelBudgetView />
     case 'tracking':
       return <LiveTrackingView />
+    case 'control-tower':
+      return <ControlTower />
     case 'driver-tracking':
       return <DriverLocationSender />
     case 'waybills':

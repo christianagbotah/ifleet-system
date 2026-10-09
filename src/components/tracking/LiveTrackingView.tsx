@@ -35,6 +35,7 @@ import {
 } from '@/lib/api'
 import { TrackingSettingsDialog } from './TrackingSettingsDialog'
 import { RouteHistoryDialog } from './RouteHistoryDialog'
+import { useAuthStore } from '@/lib/store/auth'
 
 let L: typeof import('leaflet')['default'] | null = null
 
@@ -198,6 +199,8 @@ function createTruckMarker(isOnline: boolean, isSelected: boolean, isSpeeding: b
 // ======================== MAIN COMPONENT ========================
 
 export function LiveTrackingView() {
+  const { token } = useAuthStore()
+
   // State
   const [truckLocations, setTruckLocations] = React.useState<Map<string, TruckLocation>>(new Map())
   const [onlineTrucks, setOnlineTrucks] = React.useState<Set<string>>(new Set())
@@ -265,8 +268,10 @@ export function LiveTrackingView() {
     async function connect() {
       const ioModule = await getIo()
       if (cancelled) return
+      if (!token) return
       const socket = ioModule('/?XTransformPort=3003', {
         transports: ['websocket', 'polling'],
+        auth: { token },
       })
       socketRef.current = socket
 
@@ -317,7 +322,7 @@ export function LiveTrackingView() {
         socketRef.current = null
       }
     }
-  }, [])
+  }, [token])
 
   // Handlers
   const handleSelectTruck = React.useCallback((truckId: string) => {
@@ -387,6 +392,12 @@ export function LiveTrackingView() {
           <p className="text-muted-foreground">Real-time fleet monitoring</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="default" size="sm" onClick={() => {
+            window.dispatchEvent(new CustomEvent('navigate-page', { detail: 'control-tower' }))
+          }}>
+            <Radio className="mr-2 h-4 w-4" />
+            Control Tower
+          </Button>
           <Button variant="outline" size="sm" onClick={() => {
             window.dispatchEvent(new CustomEvent('navigate-page', { detail: 'driver-tracking' }))
           }}>

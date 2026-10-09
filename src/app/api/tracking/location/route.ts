@@ -1,39 +1,94 @@
+import { createHash } from 'node:crypto'
+
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/auth-server'
+import { requireAuth, ROLES } from '@/lib/auth-server'
+import { createTelematicsIdempotencyKey, ingestTelematicsEvent } from '@/lib/domain/telematics/ingest'
+import { PrismaTelematicsIngestRepository } from '@/lib/domain/telematics/prisma-ingest-repository'
+import { MobileAppTelematicsProvider } from '@/lib/domain/telematics/providers/mobile-app'
+import { TelematicsNormalizationError } from '@/lib/domain/telematics/provider'
 
-// POST /api/tracking/location - Receive location update (HTTP fallback for hardware)
+// POST /api/tracking/location - authenticated phone GPS fallback through durable telematics ingest
 export async function POST(request: NextRequest) {
   try {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
 
-    const body = await request.json()
-    const { truckId, latitude, longitude, speed, heading, accuracy, source } = body
-
-    if (!truckId || latitude === undefined || longitude === undefined) {
-      return NextResponse.json(
-        { error: 'Missing required fields: truckId, latitude, longitude' },
-        { status: 400 }
-      )
+    const payloadText = await request.text()
+    const body = JSON.parse(payloadText) as Record<string, unknown>
+    const truckId = typeof body.truckId === 'string' ? body.truckId.trim() : ''
+    if (!truckId) {
+      return NextResponse.json({ error: 'Missing required field: truckId' }, { status: 400 })
     }
 
-    const location = await db.truckLocation.create({
-      data: {
-        truckId,
-        latitude,
-        longitude,
-        speed: speed ?? null,
-        heading: heading ?? null,
-        accuracy: accuracy ?? null,
-        source: source ?? 'hardware',
-        timestamp: new Date(),
-      },
+    const truck = await db.truck.findUnique({
+      where: { id: truckId },
+      select: { id: true, driverId: true },
+    })
+    if (!truck) return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
+
+    const isAdminOrManager = auth.roleName === ROLES.ADMIN || auth.roleName === ROLES.MANAGER
+    const isAssignedDriver = auth.roleName === ROLES.DRIVER && !!auth.driverId && auth.driverId === truck.driverId
+    if (!isAdminOrManager && !isAssignedDriver) {
+      return NextResponse.json({ error: 'You cannot publish location for this truck.' }, { status: 403 })
+    }
+
+    const receivedAt = new Date()
+    const payloadHash = createHash('sha256').update(payloadText).digest('hex')
+    const providerEventId = typeof body.eventId === 'string' && body.eventId.trim() ? body.eventId.trim() : null
+    const idempotencyKey = createTelematicsIdempotencyKey('mobile-app', null, providerEventId, payloadHash)
+    const rawEventRef = `raw_${idempotencyKey}`
+    const adapter = new MobileAppTelematicsProvider()
+    const event = adapter.normalizeLocation(body, {
+      receivedAt,
+      rawEventRef,
+      deviceId: null,
+      providerEventId,
     })
 
-    return NextResponse.json({ data: location }, { status: 201 })
+    const repository = new PrismaTelematicsIngestRepository()
+    const result = await ingestTelematicsEvent(
+      event,
+      {
+        rawEventRef,
+        provider: 'mobile-app',
+        deviceId: null,
+        providerEventId,
+        payloadHash,
+        payload: payloadText,
+        receivedAt,
+      },
+      repository,
+      { authoritativeAsset: { assetType: 'tractor', assetId: truck.id } },
+    )
+
+    return NextResponse.json({
+      data: {
+        id: result.legacyLocationId ?? result.eventId,
+        truckId: truck.id,
+        tripId: result.tripId,
+        latitude: event.latitude,
+        longitude: event.longitude,
+        speed: event.speedKph,
+        heading: event.headingDeg,
+        accuracy: event.accuracyMeters,
+        source: event.source,
+        timestamp: event.deviceTimestamp.toISOString(),
+        receivedAt: event.receivedAt.toISOString(),
+      },
+      telematics: {
+        eventId: result.eventId,
+        duplicate: result.duplicate,
+        liveStateUpdated: result.liveStateUpdated,
+        source: event.source,
+        trust: event.trust,
+      },
+    }, { status: result.duplicate ? 200 : 201 })
   } catch (error: unknown) {
-    console.error('Error creating location:', error)
+    if (error instanceof SyntaxError || error instanceof TelematicsNormalizationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
+    console.error('Error creating normalized phone location:', error)
     return NextResponse.json({ error: 'Failed to create location' }, { status: 500 })
   }
 }
@@ -46,10 +101,25 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const truckId = searchParams.get('truckId')
+    const isDriver = auth.roleName === ROLES.DRIVER
 
-    // Get all trucks first
+    if (isDriver && !auth.driverId) {
+      return NextResponse.json({ error: 'Driver profile is not linked to this account.' }, { status: 403 })
+    }
+
+    if (isDriver && truckId) {
+      const requestedTruck = await db.truck.findUnique({ where: { id: truckId }, select: { driverId: true } })
+      if (!requestedTruck || requestedTruck.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only view your assigned truck location.' }, { status: 403 })
+      }
+    }
+
     const trucks = await db.truck.findMany({
-      where: truckId ? { id: truckId } : undefined,
+      where: truckId
+        ? { id: truckId, ...(isDriver ? { driverId: auth.driverId } : {}) }
+        : isDriver
+          ? { driverId: auth.driverId }
+          : undefined,
       include: {
         driver: { select: { firstName: true, lastName: true } },
       },
@@ -60,7 +130,7 @@ export async function GET(request: NextRequest) {
       trucks.map(async (truck) => {
         const latestLocation = await db.truckLocation.findFirst({
           where: { truckId: truck.id },
-          orderBy: { timestamp: 'desc' },
+          orderBy: [{ createdAt: 'desc' }, { timestamp: 'desc' }],
         })
 
         if (!latestLocation) return null
@@ -78,6 +148,7 @@ export async function GET(request: NextRequest) {
           accuracy: latestLocation.accuracy,
           source: latestLocation.source,
           timestamp: latestLocation.timestamp.toISOString(),
+          receivedAt: latestLocation.createdAt.toISOString(),
         }
       })
     )
