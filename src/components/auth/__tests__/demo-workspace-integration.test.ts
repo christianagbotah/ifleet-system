@@ -6,22 +6,21 @@ const root = process.cwd()
 const read = (file: string) => existsSync(path.join(root, file)) ? readFileSync(path.join(root, file), 'utf8') : ''
 
 describe('public demo workspace isolation', () => {
-  it('routes demo users into a synthetic workspace before the production application shell mounts', () => {
+  it('routes demo users into an isolated workspace before the production application shell mounts', () => {
     const page = read('src/app/page.tsx')
     expect(page).toContain("@/components/auth/DemoWorkspace")
     expect(page).toContain('user.isDemo')
     expect(page).toContain('<DemoWorkspace')
   })
 
-  it('uses role-specific synthetic data and never calls production APIs', () => {
+  it('derives visible areas from server-issued permissions and never calls production APIs', () => {
     const workspace = read('src/components/auth/DemoWorkspace.tsx')
-    expect(workspace).toContain('Synthetic demo data')
-    expect(workspace).toContain('Administrator')
-    expect(workspace).toContain('Fleet Manager')
-    expect(workspace).toContain('Dispatcher')
-    expect(workspace).toContain('Driver')
-    expect(workspace).toContain('Mechanic')
-    expect(workspace).toContain('Accountant')
+    expect(workspace).toContain('user?.permissions')
+    expect(workspace).toContain('Configured read-only areas')
+    expect(workspace).toContain('Production APIs and customer records remain blocked')
+    expect(workspace).not.toContain('SHARED_METRICS')
+    expect(workspace).not.toContain('WORKSPACES')
+    expect(workspace).not.toContain('Synthetic demo data')
     expect(workspace).not.toContain("fetch('/api/")
     expect(workspace).not.toContain('fetch(`/api/')
   })
