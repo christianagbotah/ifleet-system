@@ -77,7 +77,7 @@ export const invoiceSchema = z.object({
       quantity: z.number().positive('Quantity must be positive'),
       unitPrice: z.number().nonnegative('Unit price must be non-negative'),
     })
-  ).min(1, 'At least one invoice item is required'),
+  ).optional().default([]),
   taxRate: z.number().min(0).max(100).optional(),
   notes: z.string().optional(),
   status: z.enum(['draft', 'sent', 'paid', 'overdue', 'cancelled']).optional(),

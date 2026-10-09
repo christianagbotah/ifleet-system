@@ -1130,6 +1130,10 @@ export interface SystemSettings {
     timezone: string
     language: string
   }
+  profitability: {
+    maintenanceAllocationEnabled: boolean
+    maintenanceCostPerKm: number
+  }
   driverId: {
     prefix: string
     counter: number

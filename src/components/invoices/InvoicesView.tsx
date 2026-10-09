@@ -60,6 +60,7 @@ import {
 } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
+  apiFetch,
   fetchInvoices,
   createInvoice,
   updateInvoice,
@@ -164,6 +165,20 @@ interface LineItemForm {
   unitPrice: number
 }
 
+interface InvoiceableTrip {
+  id: string
+  tripNumber: string
+  clientId: string | null
+  clientName: string
+  route: string
+  itemName: string
+  unit: string
+  quantity: number
+  unitPrice: number
+  total: number
+  departureTime: string
+}
+
 const emptyLineItem = (): LineItemForm => ({
   description: '',
   quantity: 1,
@@ -189,6 +204,8 @@ function CreateInvoiceDialog({
   const [notes, setNotes] = useState('')
   const [terms, setTerms] = useState('')
   const [items, setItems] = useState<LineItemForm[]>([emptyLineItem()])
+  const [invoiceableTrips, setInvoiceableTrips] = useState<InvoiceableTrip[]>([])
+  const [loadingTrips, setLoadingTrips] = useState(false)
 
   const resetForm = () => {
     setClientId('')
@@ -198,6 +215,40 @@ function CreateInvoiceDialog({
     setNotes('')
     setTerms('')
     setItems([emptyLineItem()])
+  }
+
+  useEffect(() => {
+    if (!open) return
+    let active = true
+    setLoadingTrips(true)
+    apiFetch<{ data: InvoiceableTrip[] }>('/api/invoices/invoiceable-trips')
+      .then((response) => {
+        if (active) setInvoiceableTrips(response.data)
+      })
+      .catch(() => {
+        if (active) setInvoiceableTrips([])
+      })
+      .finally(() => {
+        if (active) setLoadingTrips(false)
+      })
+    return () => { active = false }
+  }, [open])
+
+  const handleTripSourceChange = (value: string) => {
+    if (value === 'manual') {
+      setTripId('')
+      setItems([emptyLineItem()])
+      return
+    }
+    const trip = invoiceableTrips.find((item) => item.id === value)
+    if (!trip) return
+    setTripId(trip.id)
+    if (trip.clientId) setClientId(trip.clientId)
+    setItems([{
+      description: `${trip.itemName} · ${trip.tripNumber} · finalized delivery`,
+      quantity: trip.quantity,
+      unitPrice: trip.unitPrice,
+    }])
   }
 
   const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0)
@@ -229,7 +280,7 @@ function CreateInvoiceDialog({
       return
     }
     const validItems = items.filter(i => i.description.trim() && i.quantity > 0 && i.unitPrice > 0)
-    if (validItems.length === 0) {
+    if (!tripId && validItems.length === 0) {
       toast.error('Add at least one item with description, quantity, and price')
       return
     }
@@ -243,7 +294,7 @@ function CreateInvoiceDialog({
         taxRate: parseFloat(taxRate) || 0,
         notes: notes || undefined,
         terms: terms || undefined,
-        items: validItems.map((item, idx) => ({
+        items: tripId ? [] : validItems.map((item, idx) => ({
           description: item.description,
           quantity: item.quantity,
           unitPrice: item.unitPrice,
@@ -274,10 +325,33 @@ function CreateInvoiceDialog({
         </DialogHeader>
 
         <div className="space-y-4 pt-2 flex-1 min-h-0 overflow-y-auto">
+          {/* Invoice source */}
+          <div>
+            <Label className="text-sm font-medium">Invoice Source</Label>
+            <Select value={tripId || 'manual'} onValueChange={handleTripSourceChange} disabled={loadingTrips}>
+              <SelectTrigger className="mt-1.5">
+                <SelectValue placeholder={loadingTrips ? 'Loading finalized trips...' : 'Choose invoice source'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="manual">Manual invoice</SelectItem>
+                {invoiceableTrips.map((trip) => (
+                  <SelectItem key={trip.id} value={trip.id}>
+                    {trip.tripNumber} · {trip.clientName} · {formatCurrency(trip.total)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {tripId
+                ? 'Invoice from finalized trip — client, delivered quantity and commercial rate are locked to operational evidence.'
+                : 'Manual invoices remain available for charges that are not tied to a haulage trip.'}
+            </p>
+          </div>
+
           {/* Client */}
           <div>
             <Label className="text-sm font-medium">Client *</Label>
-            <Select value={clientId} onValueChange={setClientId}>
+            <Select value={clientId} onValueChange={setClientId} disabled={Boolean(tripId)}>
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select a client..." />
               </SelectTrigger>
@@ -315,7 +389,7 @@ function CreateInvoiceDialog({
           <div>
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Line Items *</Label>
-              <Button variant="outline" size="sm" onClick={handleAddItem} className="h-7 text-xs">
+              <Button variant="outline" size="sm" onClick={handleAddItem} disabled={Boolean(tripId)} className="h-7 text-xs cursor-pointer">
                 <Plus className="h-3 w-3 mr-1" />
                 Add Item
               </Button>
@@ -330,6 +404,7 @@ function CreateInvoiceDialog({
                       className="h-8 text-sm"
                       value={item.description}
                       onChange={(e) => handleItemChange(idx, 'description', e.target.value)}
+                      disabled={Boolean(tripId)}
                     />
                   </div>
                   <div>
@@ -340,6 +415,7 @@ function CreateInvoiceDialog({
                       className="h-8 text-sm"
                       value={item.quantity}
                       onChange={(e) => handleItemChange(idx, 'quantity', parseFloat(e.target.value) || 0)}
+                      disabled={Boolean(tripId)}
                     />
                   </div>
                   <div>
@@ -351,6 +427,7 @@ function CreateInvoiceDialog({
                       className="h-8 text-sm"
                       value={item.unitPrice}
                       onChange={(e) => handleItemChange(idx, 'unitPrice', parseFloat(e.target.value) || 0)}
+                      disabled={Boolean(tripId)}
                     />
                   </div>
                   <Button
@@ -358,7 +435,7 @@ function CreateInvoiceDialog({
                     size="sm"
                     className="h-8 w-7 p-0 text-muted-foreground hover:text-red-500"
                     onClick={() => handleRemoveItem(idx)}
-                    disabled={items.length <= 1}
+                    disabled={Boolean(tripId) || items.length <= 1}
                   >
                     <X className="h-3 w-3" />
                   </Button>

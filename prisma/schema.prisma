@@ -1402,6 +1402,8 @@ model SystemSettings {
   currency                String   @default("GHS")
   distanceUnit            String   @default("km")
   fuelUnit                String   @default("litres")
+  profitabilityMaintenanceAllocationEnabled Boolean @default(false)
+  profitabilityMaintenanceCostPerKm Decimal @default(0)
   dateFormat              String   @default("DD/MM/YYYY")
   timezone                String   @default("Africa/Accra")
   language                String   @default("English")

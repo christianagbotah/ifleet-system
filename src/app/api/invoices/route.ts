@@ -3,6 +3,7 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { Prisma } from '@/generated/client'
 import { invoiceSchema, parseBody } from '@/lib/schemas'
+import { deriveTripInvoiceLine } from '@/lib/domain/billing/trip-invoice'
 
 // ============ GET: List invoices ============
 export async function GET(request: NextRequest) {
@@ -131,16 +132,65 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 })
     }
 
-    // Validate optional trip
+    if (!tripId && items.length === 0) {
+      return NextResponse.json({ error: 'Manual invoices require at least one line item' }, { status: 400 })
+    }
+
+    let derivedItems = items
     if (tripId) {
-      const trip = await db.trip.findUnique({ where: { id: tripId } })
-      if (!trip) {
-        return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+      const trip = await db.trip.findUnique({
+        where: { id: tripId },
+        select: {
+          id: true,
+          clientId: true,
+          tripNumber: true,
+          status: true,
+          itemName: true,
+          unit: true,
+          quantity: true,
+          unitPrice: true,
+          totalRevenue: true,
+        },
+      })
+      if (!trip) return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+      if (trip.clientId && trip.clientId !== clientId) {
+        return NextResponse.json({ error: 'Invoice client does not match the trip client' }, { status: 409 })
+      }
+
+      const proofs = await db.proofOfDelivery.findMany({
+        where: { tripId },
+        select: { id: true, acceptedQty: true, unit: true, supersedesId: true },
+        orderBy: { createdAt: 'asc' },
+      })
+
+      try {
+        const line = deriveTripInvoiceLine({
+          tripId: trip.id,
+          tripNumber: trip.tripNumber,
+          status: trip.status,
+          itemName: trip.itemName,
+          unit: trip.unit,
+          dispatchedQuantity: trip.quantity,
+          unitPrice: trip.unitPrice == null ? null : Number(trip.unitPrice),
+          totalRevenue: trip.totalRevenue == null ? null : Number(trip.totalRevenue),
+          proofs: proofs.map((proof) => ({
+            id: proof.id,
+            acceptedQty: proof.acceptedQty,
+            unit: proof.unit,
+            supersedesId: proof.supersedesId,
+          })),
+        })
+        derivedItems = [{ description: line.description, quantity: line.quantity, unitPrice: line.unitPrice }]
+      } catch (error) {
+        return NextResponse.json(
+          { error: error instanceof Error ? error.message : 'Trip is not ready for customer invoicing' },
+          { status: 409 },
+        )
       }
     }
 
-    // Calculate subtotal
-    const subtotal = items.reduce((sum: number, item: { quantity: number; unitPrice: number }) => {
+    const effectiveItems = tripId ? derivedItems : items
+    const subtotal = effectiveItems.reduce((sum: number, item: { quantity: number; unitPrice: number }) => {
       return sum + (item.quantity * item.unitPrice)
     }, 0)
 
@@ -186,12 +236,12 @@ export async function POST(request: NextRequest) {
         notes: notes || null,
         terms: terms || null,
         InvoiceItem: {
-          create: items.map((item: { description: string; quantity: number; unitPrice: number; total: number; order: number }, index: number) => ({
+          create: effectiveItems.map((item, index) => ({
             description: item.description,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             total: item.quantity * item.unitPrice,
-            order: item.order ?? index,
+            order: index,
           })),
         },
       },

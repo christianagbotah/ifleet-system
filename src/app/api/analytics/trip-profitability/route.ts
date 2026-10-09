@@ -5,13 +5,9 @@ import { loadAuthoritativeTripProfitability } from '@/lib/domain/billing/profita
 
 function requireFinanceAccess(auth: AuthContext): true | NextResponse {
   if (auth.roleName === ROLES.ADMIN || auth.roleName === ROLES.MANAGER || auth.permissions.includes('financial.view')) return true
-  return NextResponse.json({ error: 'Financial profitability access is required.' }, { status: 403 })
+  return NextResponse.json({ error: 'Financial analytics access is required.' }, { status: 403 })
 }
 
-/**
- * Compatibility endpoint for older clients. The canonical implementation lives at
- * /api/analytics/trip-profitability and both routes delegate to the same service.
- */
 export async function GET(request: NextRequest) {
   try {
     const auth = requireAuth(request)
@@ -32,7 +28,7 @@ export async function GET(request: NextRequest) {
       limit: Number(searchParams.get('limit') || 20),
     }))
   } catch (error) {
-    console.error('Trip profitability compatibility endpoint error:', error)
-    return NextResponse.json({ error: 'Failed to load profitability data' }, { status: 500 })
+    console.error('Authoritative trip profitability error:', error)
+    return NextResponse.json({ error: 'Failed to load authoritative profitability data' }, { status: 500 })
   }
 }

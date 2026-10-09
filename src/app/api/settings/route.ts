@@ -50,6 +50,10 @@ export async function GET() {
         timezone: settings.timezone,
         language: settings.language,
       },
+      profitability: {
+        maintenanceAllocationEnabled: settings.profitabilityMaintenanceAllocationEnabled,
+        maintenanceCostPerKm: Number(settings.profitabilityMaintenanceCostPerKm),
+      },
       driverId: {
         prefix: settings.driverIdPrefix ?? 'FP-DRV-',
         counter: settings.driverIdCounter ?? 1,
@@ -72,7 +76,7 @@ export async function PUT(request: NextRequest) {
     if (auth instanceof NextResponse) return auth
 
     const body = await request.json()
-    const { company, notifications, tracking, display, driverId: driverIdCfg } = body
+    const { company, notifications, tracking, display, profitability, driverId: driverIdCfg } = body
 
     // Find or create settings row
     let settings = await db.systemSettings.findFirst()
@@ -114,6 +118,9 @@ export async function PUT(request: NextRequest) {
         dateFormat: display?.dateFormat,
         timezone: display?.timezone,
         language: display?.language,
+        // Profitability policy
+        profitabilityMaintenanceAllocationEnabled: profitability?.maintenanceAllocationEnabled,
+        profitabilityMaintenanceCostPerKm: profitability?.maintenanceCostPerKm,
         // Driver ID auto-generation
         driverIdPrefix: driverIdCfg?.prefix,
         driverIdCounter: driverIdCfg?.counter,
@@ -127,7 +134,7 @@ export async function PUT(request: NextRequest) {
       action: 'settings_change',
       entity: 'SystemSettings',
       entityId: settings.id,
-      details: { company: !!company, notifications: !!notifications, tracking: !!tracking, display: !!display },
+      details: { company: !!company, notifications: !!notifications, tracking: !!tracking, display: !!display, profitability: !!profitability },
       ipAddress: getClientIp(request),
     }).catch(() => {})
 
@@ -166,6 +173,10 @@ export async function PUT(request: NextRequest) {
         dateFormat: settings.dateFormat,
         timezone: settings.timezone,
         language: settings.language,
+      },
+      profitability: {
+        maintenanceAllocationEnabled: settings.profitabilityMaintenanceAllocationEnabled,
+        maintenanceCostPerKm: Number(settings.profitabilityMaintenanceCostPerKm),
       },
       driverId: {
         prefix: settings.driverIdPrefix ?? 'FP-DRV-',
