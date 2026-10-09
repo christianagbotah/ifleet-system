@@ -100,6 +100,24 @@ describe('resolveTransportRate', () => {
     expect(resolveTransportRate({ ...exactInput, candidates: [inactive, future, expired, active] })?.rateCardId).toBe('active')
   })
 
+  it('prefers a transporter-specific rate over an otherwise identical generic rate', () => {
+    const generic = rate({ id: 'aaa-generic', destinationZoneId: 'zone-1', rateAmount: 2000 })
+    const carrier = rate({
+      id: 'zzz-carrier',
+      transporterId: 'transporter-1',
+      destinationZoneId: 'zone-1',
+      rateAmount: 2300,
+    })
+
+    const resolved = resolveTransportRate({
+      ...exactInput,
+      transporterId: 'transporter-1',
+      candidates: [generic, carrier],
+    })
+
+    expect(resolved).toMatchObject({ rateCardId: 'zzz-carrier', transporterId: 'transporter-1', rateAmount: 2300 })
+  })
+
   it('returns null when no active candidate matches the requested dimensions', () => {
     const onlyOtherZone = rate({ id: 'other-zone', destinationZoneId: 'zone-2' })
 

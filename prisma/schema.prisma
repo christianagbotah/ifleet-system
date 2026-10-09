@@ -1785,6 +1785,7 @@ model TransportRateCard {
   isActive          Boolean            @default(true)
   sourceType        String?
   sourceId          String?
+  settlementTerms   String?            @db.Text
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   contract          TransportContract? @relation(fields: [contractId], references: [id])

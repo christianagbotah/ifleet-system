@@ -234,6 +234,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   invoices: ['financial.view'],
   payroll: ['financial.view'],
   settlements: ['financial.view'],
+  'haulier-settlements': ['financial.view'],
   'expense-approvals': ['financial.view'],
   'fuel-prices': ['financial.view'],
   'driver-incentives': ['financial.view'],

@@ -70,6 +70,10 @@ const SettlementsView = dynamic(
   () => import('@/components/settlements/SettlementsView').then(m => ({ default: m.SettlementsView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const HaulierSettlementsView = dynamic(
+  () => import('@/components/settlements/HaulierSettlementsView').then(m => ({ default: m.HaulierSettlementsView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const NotificationsView = dynamic(
   () => import('@/components/notifications/NotificationsView').then(m => ({ default: m.NotificationsView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -355,6 +359,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <PayrollView />
     case 'settlements':
       return <SettlementsView />
+    case 'haulier-settlements':
+      return <HaulierSettlementsView />
     case 'notifications':
       return <NotificationsView />
     case 'pricing':
