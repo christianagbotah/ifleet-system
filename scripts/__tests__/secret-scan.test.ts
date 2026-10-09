@@ -55,10 +55,26 @@ describe('scanText', () => {
     expect(JSON.stringify(findings)).not.toContain(githubLike)
   })
 
+  it('detects literal passwords in production source and seed code', () => {
+    const value = join('known-', 'bootstrap-password')
+    const direct = scanText('src/bootstrap.ts', `const config = { password: '${value}' }`)
+    const hashed = scanText('prisma/seed.ts', `password: await hashPassword('${value}')`)
+
+    expect(direct.map((finding) => finding.ruleId)).toContain('hardcoded-password')
+    expect(hashed.map((finding) => finding.ruleId)).toContain('hardcoded-password')
+    expect(JSON.stringify([...direct, ...hashed])).not.toContain(value)
+  })
+
+  it('allows password-shaped fixture values in test files', () => {
+    expect(scanText('src/example.test.ts', "const fixture = { password: 'test-only-value' }")).toEqual([])
+    expect(scanText('src/__tests__/example.ts', "const fixture = { password: 'test-only-value' }")).toEqual([])
+  })
+
   it('does not flag runtime variable references as hard-coded secrets', () => {
     const content = [
       'const WARMUP_SECRET = process.env.SCHEDULER_WARMUP_SECRET',
       'process.env.HUBTEL_API_SECRET = settings.hubtelApiSecret',
+      'const config = { password: process.env.BOOTSTRAP_ADMIN_PASSWORD }',
     ].join('\n')
 
     expect(scanText('runtime.ts', content)).toEqual([])
