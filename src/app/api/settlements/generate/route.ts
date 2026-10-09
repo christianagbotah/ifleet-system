@@ -1,10 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { db } from '@/lib/db'
+import { calculateDriverSettlement } from '@/lib/domain/settlements/driver-settlement'
 
-const TERMINAL_STATUSES = ['completed', 'cancelled']
+const ALLOWANCE_CATEGORIES = new Set(['allowance', 'driver_allowance', 'trip_allowance', 'overnight_allowance'])
+const TRIP_BONUS_CATEGORIES = new Set(['driver_bonus', 'trip_bonus'])
+const DRIVER_DEDUCTION_CATEGORIES = new Set(['driver_deduction', 'driver_charge', 'driver_fine'])
+const RESERVED_SOURCE_TYPES = ['incentive', 'deduction', 'advance_deduction']
 
-// POST /api/settlements/generate — auto-generate settlement from trips
+function normalizedCategory(value: string): string {
+  return value.trim().toLowerCase().replace(/[\s-]+/g, '_')
+}
+
+function sumAmounts(items: Array<{ amount: unknown }>): number {
+  return Math.round(items.reduce((total, item) => total + Number(item.amount), 0) * 100) / 100
+}
+
+function periodKey(start: Date): string {
+  return `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`
+}
+
+function validRange(start: Date, end: Date): boolean {
+  return Number.isFinite(start.getTime()) && Number.isFinite(end.getTime()) && start <= end
+}
+
+// POST /api/settlements/generate — generate a driver settlement from approved reconciled trips.
 export async function POST(request: NextRequest) {
   try {
     const auth = requireAuth(request)
@@ -12,150 +33,194 @@ export async function POST(request: NextRequest) {
     const writeGuard = requireWriteAccess(auth)
     if (writeGuard instanceof NextResponse) return writeGuard
 
-    const body = await request.json()
-    const { driverId, periodStart, periodEnd } = body
+    const body = await request.json().catch(() => ({})) as Record<string, unknown>
+    const driverId = typeof body.driverId === 'string' ? body.driverId : ''
+    const start = new Date(String(body.periodStart ?? ''))
+    const end = new Date(String(body.periodEnd ?? ''))
 
-    if (!driverId || !periodStart || !periodEnd) {
+    if (!driverId || !validRange(start, end)) {
       return NextResponse.json(
-        { error: 'Missing required fields: driverId, periodStart, periodEnd' },
-        { status: 400 }
+        { error: 'driverId and a valid periodStart/periodEnd range are required.' },
+        { status: 400 },
       )
     }
 
-    const start = new Date(periodStart)
-    const end = new Date(periodEnd)
-    // Format period as "YYYY-MM"
-    const month = start.getMonth() + 1
-    const year = start.getFullYear()
-    const period = `${year}-${String(month).padStart(2, '0')}`
+    const period = periodKey(start)
 
-    // Check for existing settlement
-    const existing = await db.driverSettlement.findFirst({
-      where: { driverId, period },
-    })
-    if (existing) {
-      return NextResponse.json(
-        { error: `Settlement already exists for this driver and period (${period})` },
-        { status: 409 }
-      )
-    }
+    const settlement = await db.$transaction(async (tx) => {
+      const existing = await tx.driverSettlement.findFirst({ where: { driverId, period }, select: { id: true } })
+      if (existing) throw new Error('SETTLEMENT_EXISTS')
 
-    // Find completed trips for this driver in the period
-    const trips = await db.trip.findMany({
-      where: {
-        driverId,
-        status: { in: TERMINAL_STATUSES },
-        createdAt: { gte: start, lte: end },
-      },
-      include: {
-        truck: { select: { plateNumber: true } },
-      },
-    })
-
-    // Find expenses for this driver in the period (via trip expenses)
-    // We look at expenses linked to trips for this driver
-    const driverTrips = await db.trip.findMany({
-      where: { driverId },
-      select: { id: true },
-    })
-    const driverTripIds = driverTrips.map(t => t.id)
-
-    const expenses = await db.expense.findMany({
-      where: {
-        tripId: { in: driverTripIds },
-        date: { gte: start, lte: end },
-        category: { not: 'fuel' }, // fuel is handled separately
-        status: 'approved',
-      },
-    })
-
-    // Build settlement lines
-    const lines: { tripId?: string; description: string; type: string; amount: number }[] = []
-
-    let grossEarnings = 0
-    let fuelDeductions = 0
-    let expenseDeductions = 0
-
-    // Trip revenue lines
-    for (const trip of trips) {
-      const revenue = trip.totalRevenue || 0
-      if (revenue > 0) {
-        grossEarnings += revenue
-        lines.push({
-          tripId: trip.id,
-          description: `Trip ${trip.tripNumber} — ${trip.loadingLocation} to ${trip.destination}`,
-          type: 'trip_revenue',
-          amount: revenue,
-        })
-      }
-
-      // Fuel deduction from trip
-      const fuelCost = trip.fuelCost || 0
-      if (fuelCost > 0) {
-        fuelDeductions += fuelCost
-        lines.push({
-          tripId: trip.id,
-          description: `Fuel cost — Trip ${trip.tripNumber} (${trip.truck.plateNumber})`,
-          type: 'fuel_deduction',
-          amount: -fuelCost,
-        })
-      }
-    }
-
-    // Expense deduction lines
-    for (const expense of expenses) {
-      expenseDeductions += expense.amount
-      lines.push({
-        description: `${expense.description} (${expense.category})`,
-        type: 'expense_deduction',
-        amount: -expense.amount,
+      const reconciliations = await tx.tripReconciliation.findMany({
+        where: {
+          status: 'approved',
+          approvedAt: { gte: start, lte: end },
+        },
+        select: { id: true, tripId: true, version: true, approvedAt: true },
+        orderBy: [{ tripId: 'asc' }, { version: 'desc' }],
       })
-    }
 
-    const bonusAmount = 0
-    const netPay = grossEarnings - fuelDeductions - expenseDeductions + bonusAmount
+      const latestByTrip = new Map<string, (typeof reconciliations)[number]>()
+      for (const reconciliation of reconciliations) {
+        if (!latestByTrip.has(reconciliation.tripId)) latestByTrip.set(reconciliation.tripId, reconciliation)
+      }
 
-    // Create settlement
-    const settlement = await db.driverSettlement.create({
-      data: {
+      const reconciliationTripIds = Array.from(latestByTrip.keys())
+      const trips = reconciliationTripIds.length > 0
+        ? await tx.trip.findMany({
+            where: { id: { in: reconciliationTripIds }, driverId },
+            select: { id: true, tripNumber: true, loadingLocation: true, destination: true },
+          })
+        : []
+
+      if (trips.length === 0) throw new Error('NO_RECONCILED_TRIPS')
+
+      const tripIds = trips.map((trip) => trip.id)
+      const existingTripLines = await tx.settlementLine.findMany({
+        where: {
+          tripId: { not: null },
+          driverSettlement: { driverId },
+        },
+        select: { tripId: true },
+      })
+      const settledTripIds = existingTripLines.flatMap((line) => line.tripId ? [line.tripId] : [])
+
+      const reservedSourceLines = await tx.settlementLine.findMany({
+        where: {
+          driverSettlement: { driverId },
+          type: { in: RESERVED_SOURCE_TYPES },
+          sourceId: { not: null },
+        },
+        select: { sourceId: true },
+      })
+      const reservedSourceIds = new Set(reservedSourceLines.flatMap((line) => line.sourceId ? [line.sourceId] : []))
+
+      const expenses = await tx.expense.findMany({
+        where: { tripId: { in: tripIds }, status: 'approved' },
+        select: { id: true, tripId: true, category: true, description: true, amount: true, status: true },
+      })
+
+      const incentives = await tx.driverIncentive.findMany({
+        where: {
+          driverId,
+          status: 'approved',
+          OR: [
+            { periodStart: { lte: end }, periodEnd: { gte: start } },
+            { createdAt: { gte: start, lte: end } },
+          ],
+        },
+        select: { id: true, amount: true, status: true, title: true },
+      })
+
+      const advances = await tx.cashAdvance.findMany({
+        where: {
+          driverId,
+          status: { in: ['disbursed', 'partially_deducted'] },
+          remainingBalance: { gt: 0 },
+        },
+        select: { id: true, amount: true, remainingBalance: true, status: true },
+      })
+
+      const tripFacts = trips.map((trip) => {
+        const tripExpenses = expenses.filter((expense) => expense.tripId === trip.id)
+        const allowance = sumAmounts(tripExpenses.filter((expense) => ALLOWANCE_CATEGORIES.has(normalizedCategory(expense.category))))
+        const tripBonus = sumAmounts(tripExpenses.filter((expense) => TRIP_BONUS_CATEGORIES.has(normalizedCategory(expense.category))))
+        const reconciliation = latestByTrip.get(trip.id)!
+        return {
+          id: trip.id,
+          reconciliationId: reconciliation.id,
+          reconciliationApproved: true,
+          tripBonus,
+          allowance,
+        }
+      })
+
+      const calculation = calculateDriverSettlement({
+        trips: tripFacts,
+        incentives: incentives
+          .filter((item) => !reservedSourceIds.has(item.id))
+          .map((item) => ({ id: item.id, amount: Number(item.amount), status: item.status })),
+        deductions: expenses
+          .filter((expense) => DRIVER_DEDUCTION_CATEGORIES.has(normalizedCategory(expense.category)))
+          .filter((expense) => !reservedSourceIds.has(expense.id))
+          .map((expense) => ({
+            id: expense.id,
+            amount: Number(expense.amount),
+            status: expense.status,
+            reason: expense.description,
+          })),
+        advances: advances
+          .filter((advance) => !reservedSourceIds.has(advance.id))
+          .map((advance) => ({
+            id: advance.id,
+            amount: Number(advance.amount),
+            remainingBalance: Number(advance.remainingBalance),
+            status: advance.status,
+          })),
+        settledTripIds,
+      })
+
+      if (calculation.includedTripIds.length === 0) throw new Error('NO_UNSETTLED_RECONCILED_TRIPS')
+
+      const snapshot = {
+        version: 1,
+        generatedAt: new Date().toISOString(),
         driverId,
         period,
-        periodStart: start,
-        periodEnd: end,
-        grossEarnings,
-        fuelDeductions,
-        expenseDeductions,
-        bonusAmount,
-        netPay,
-        SettlementLine: {
-          create: lines.map(line => ({
-            tripId: line.tripId || null,
-            description: line.description,
-            type: line.type,
-            amount: line.amount,
-          })),
+        periodStart: start.toISOString(),
+        periodEnd: end.toISOString(),
+        reconciliationIds: calculation.includedTripIds.map((tripId) => latestByTrip.get(tripId)?.id).filter(Boolean),
+        calculation,
+      }
+
+      return tx.driverSettlement.create({
+        data: {
+          driverId,
+          period,
+          periodStart: start,
+          periodEnd: end,
+          grossEarnings: calculation.totals.tripEarnings,
+          fuelDeductions: 0,
+          expenseDeductions: calculation.totals.expenseDeductions,
+          advanceDeductions: calculation.totals.advanceDeductions,
+          bonusAmount: calculation.totals.bonusAmount,
+          netPay: calculation.totals.netPay,
+          snapshotVersion: 1,
+          snapshotJson: JSON.stringify(snapshot),
+          SettlementLine: {
+            create: calculation.lines.map((line) => ({
+              tripId: line.tripId ?? null,
+              description: line.description,
+              type: line.sourceType,
+              sourceId: line.sourceId,
+              amount: line.amount,
+            })),
+          },
         },
-      },
-      include: {
-        driver: {
-          select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true },
-        },
-        SettlementLine: {
-          include: {
-            trip: {
-              select: {
-                tripNumber: true, loadingLocation: true, destination: true,
-                itemName: true, quantity: true, unit: true,
-              },
+        include: {
+          driver: { select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true } },
+          SettlementLine: {
+            include: {
+              trip: { select: { tripNumber: true, loadingLocation: true, destination: true, itemName: true, quantity: true, unit: true } },
             },
           },
-          orderBy: { createdAt: 'asc' },
         },
-      },
-    })
+      })
+    }, { isolationLevel: 'Serializable' })
 
     return NextResponse.json({ data: settlement }, { status: 201 })
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'SETTLEMENT_EXISTS') {
+        return NextResponse.json({ error: 'Settlement already exists for this driver and period.' }, { status: 409 })
+      }
+      if (error.message === 'NO_RECONCILED_TRIPS') {
+        return NextResponse.json({ error: 'No approved reconciled trips are available in this period.' }, { status: 409 })
+      }
+      if (error.message === 'NO_UNSETTLED_RECONCILED_TRIPS') {
+        return NextResponse.json({ error: 'All reconciled trips in this period are already represented by a driver settlement.' }, { status: 409 })
+      }
+    }
     console.error('POST /api/settlements/generate error:', error)
     return NextResponse.json({ error: 'Failed to generate settlement' }, { status: 500 })
   }

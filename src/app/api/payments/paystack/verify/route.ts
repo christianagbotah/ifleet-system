@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth, requireRole, ROLES } from '@/lib/auth-server'
 import { verifyPayment } from '@/lib/services/paystack'
 import { db } from '@/lib/db'
+import { markDriverSettlementPaid } from '@/lib/domain/settlements/mark-driver-settlement-paid'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 
 /**
@@ -45,21 +46,12 @@ async function processSuccessfulPayment(
     }
   }
 
-  // Update driver settlement if linked
+  // Update driver settlement and its source-linked advance/incentive effects if linked
   if (settlementId) {
     try {
-      const settlement = await db.driverSettlement.findUnique({ where: { id: settlementId } })
-      if (settlement && settlement.status !== 'paid') {
-        await db.driverSettlement.update({
-          where: { id: settlementId },
-          data: {
-            status: 'paid',
-            paidAt: new Date(),
-          },
-        })
-      }
+      await markDriverSettlementPaid(settlementId, paymentData.paid_at ? new Date(paymentData.paid_at) : new Date())
     } catch (err) {
-      console.error('[PAYSTACK] Failed to update settlement:', settlementId, err)
+      console.error('[PAYSTACK] Failed to apply settlement payment:', settlementId, err)
     }
   }
 

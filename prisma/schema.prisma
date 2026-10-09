@@ -648,8 +648,11 @@ model DriverSettlement {
   grossEarnings     Decimal
   fuelDeductions    Decimal
   expenseDeductions Decimal
+  advanceDeductions Decimal     @default(0)
   bonusAmount       Decimal
   netPay            Decimal
+  snapshotVersion   Int?
+  snapshotJson      String?     @db.LongText
   status            SettlementStatus           @default(pending)
   approvedBy        String?
   approvedAt        DateTime?
@@ -1326,11 +1329,13 @@ model SettlementLine {
   tripId           String?
   description      String
   type             String
+  sourceId         String?
   amount           Decimal
   driverSettlement DriverSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
   trip             Trip?            @relation(fields: [tripId], references: [id])
 
   @@index([settlementId])
+  @@index([type, sourceId])
   @@index([tripId], map: "SettlementLine_tripId_fkey")
 }
 

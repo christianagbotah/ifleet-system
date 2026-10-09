@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Wallet, Plus, Eye, CheckCircle, Banknote, Clock, TrendingUp,
   AlertCircle, RefreshCw, Trash2, Printer, ArrowUpRight, ArrowDownRight,
-  X, ChevronRight, CalendarDays, Truck, User,
+  X, ChevronRight, Truck, User,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -36,9 +36,9 @@ import { CURRENCY_SYMBOL, MONTHS } from '@/lib/constants'
 import {
   fetchSettlements, fetchSettlementDetail, generateSettlement,
   updateSettlement, deleteSettlement,
-  fetchDrivers, fetchTrips,
+  fetchDrivers,
   type DriverSettlement, type SettlementSummary, type SettlementLine,
-  type Driver, type Trip,
+  type Driver,
 } from '@/lib/api'
 import { useAuthStore } from '@/lib/store/auth'
 import { toast } from 'sonner'
@@ -79,10 +79,14 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 }
 
 const LINE_TYPE_CONFIG: Record<string, { label: string; color: string; icon: typeof ArrowUpRight }> = {
-  trip_revenue: { label: 'Trip Revenue', color: 'text-emerald-600', icon: ArrowUpRight },
-  fuel_deduction: { label: 'Fuel Cost', color: 'text-red-600', icon: ArrowDownRight },
-  expense_deduction: { label: 'Expense', color: 'text-red-600', icon: ArrowDownRight },
-  bonus: { label: 'Bonus', color: 'text-emerald-600', icon: ArrowUpRight },
+  trip_earning: { label: 'Reconciled Trip Earning', color: 'text-emerald-600', icon: ArrowUpRight },
+  incentive: { label: 'Approved Incentive', color: 'text-emerald-600', icon: ArrowUpRight },
+  deduction: { label: 'Driver Charge', color: 'text-red-600', icon: ArrowDownRight },
+  advance_deduction: { label: 'Cash Advance', color: 'text-red-600', icon: ArrowDownRight },
+  trip_revenue: { label: 'Legacy Trip Revenue', color: 'text-emerald-600', icon: ArrowUpRight },
+  fuel_deduction: { label: 'Legacy Fuel Cost', color: 'text-red-600', icon: ArrowDownRight },
+  expense_deduction: { label: 'Legacy Expense', color: 'text-red-600', icon: ArrowDownRight },
+  bonus: { label: 'Legacy Bonus', color: 'text-emerald-600', icon: ArrowUpRight },
   adjustment: { label: 'Adjustment', color: 'text-gray-600', icon: ArrowUpRight },
 }
 
@@ -99,47 +103,6 @@ function GenerateSettlementDialog({
   const [selectedMonth, setSelectedMonth] = React.useState(String(new Date().getMonth() + 1))
   const [selectedYear, setSelectedYear] = React.useState(String(new Date().getFullYear()))
   const [generating, setGenerating] = React.useState(false)
-  const [preview, setPreview] = React.useState<{ tripCount: number; estGross: number; estDeductions: number } | null>(null)
-  const [loadingPreview, setLoadingPreview] = React.useState(false)
-
-  React.useEffect(() => {
-    if (open) {
-      fetchDrivers({ status: 'active', limit: 100 }).then(res => setDrivers(res.data)).catch(() => {})
-    }
-  }, [open])
-
-  React.useEffect(() => {
-    if (selectedDriverId && selectedMonth && selectedYear) {
-      loadPreview()
-    } else {
-      setPreview(null)
-    }
-  }, [selectedDriverId, selectedMonth, selectedYear])
-
-  async function loadPreview() {
-    if (!selectedDriverId) return
-    setLoadingPreview(true)
-    try {
-      const month = parseInt(selectedMonth)
-      const year = parseInt(selectedYear)
-      const start = new Date(year, month - 1, 1).toISOString()
-      const end = new Date(year, month, 0, 23, 59, 59).toISOString()
-      const res = await fetchTrips({ driverId: selectedDriverId, limit: 200 })
-      const completedTrips = res.data.filter(t =>
-        (t.status === 'completed' || t.status === 'cancelled') &&
-        new Date(t.createdAt) >= new Date(start) &&
-        new Date(t.createdAt) <= new Date(end)
-      )
-      const estGross = completedTrips.reduce((sum, t) => sum + (t.totalRevenue || 0), 0)
-      const estDeductions = completedTrips.reduce((sum, t) => sum + ((t as unknown as { fuelCost?: number }).fuelCost || 0), 0)
-      setPreview({ tripCount: completedTrips.length, estGross, estDeductions })
-    } catch {
-      setPreview(null)
-    } finally {
-      setLoadingPreview(false)
-    }
-  }
-
   async function handleGenerate() {
     if (!selectedDriverId) return
     setGenerating(true)
@@ -152,7 +115,6 @@ function GenerateSettlementDialog({
       toast.success('Settlement generated successfully')
       onOpenChange(false)
       setSelectedDriverId('')
-      setPreview(null)
       onGenerated()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to generate settlement')
@@ -161,7 +123,6 @@ function GenerateSettlementDialog({
     }
   }
 
-  const monthLabel = MONTHS[parseInt(selectedMonth) - 1]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -172,7 +133,7 @@ function GenerateSettlementDialog({
             Generate Settlement
           </DialogTitle>
           <DialogDescription>
-            Auto-calculate earnings and deductions from completed trips for a driver.
+            Generate a versioned settlement from approved reconciled trips, allowances, incentives and outstanding advances.
           </DialogDescription>
         </DialogHeader>
 
@@ -223,43 +184,13 @@ function GenerateSettlementDialog({
             </div>
           </div>
 
-          {/* Preview */}
-          {selectedDriverId && loadingPreview && (
-            <div className="rounded-lg border p-4 space-y-2">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-8 w-24" />
-            </div>
-          )}
-          {preview && !loadingPreview && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-4 space-y-2"
-            >
-              <p className="text-sm font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
-                <CalendarDays className="h-4 w-4" />
-                Preview — {monthLabel} {selectedYear}
+          {selectedDriverId && (
+            <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-4 text-sm">
+              <p className="font-medium text-amber-800 dark:text-amber-300">Reconciliation-backed calculation</p>
+              <p className="mt-1 text-xs text-amber-700/80 dark:text-amber-300/70">
+                Only approved reconciled trips are eligible. The settlement will include approved trip allowances and incentives, explicit driver-charge deductions, and outstanding cash advances.
               </p>
-              <div className="grid grid-cols-3 gap-3 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Trips</p>
-                  <p className="font-semibold">{preview.tripCount}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Est. Gross</p>
-                  <p className="font-semibold text-emerald-600">{formatCurrency(preview.estGross)}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Est. Deductions</p>
-                  <p className="font-semibold text-red-600">-{formatCurrency(preview.estDeductions)}</p>
-                </div>
-              </div>
-              {preview.tripCount === 0 && (
-                <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                  No completed trips found for this period. Settlement will be created with zero values.
-                </p>
-              )}
-            </motion.div>
+            </div>
           )}
         </DialogBody>
 
@@ -301,7 +232,6 @@ function SettlementDetailSheet({
   const [bonusAmount, setBonusAmount] = React.useState('0')
   const [savingNotes, setSavingNotes] = React.useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
-  const { user } = useAuthStore()
 
   React.useEffect(() => {
     if (settlementId && open) {
@@ -332,9 +262,7 @@ function SettlementDetailSheet({
     try {
       await updateSettlement(settlement.id, {
         status: 'approved',
-        approvedBy: user?.id,
         notes,
-        bonusAmount: parseFloat(bonusAmount) || 0,
       })
       toast.success('Settlement approved successfully')
       loadSettlement()
@@ -353,7 +281,6 @@ function SettlementDetailSheet({
       await updateSettlement(settlement.id, {
         status: 'paid',
         notes,
-        bonusAmount: parseFloat(bonusAmount) || 0,
       })
       toast.success('Settlement marked as paid')
       loadSettlement()
@@ -371,7 +298,7 @@ function SettlementDetailSheet({
     try {
       await updateSettlement(settlement.id, {
         notes,
-        bonusAmount: parseFloat(bonusAmount) || 0,
+        ...(!financialsLocked && settlement.status === 'pending' ? { bonusAmount: parseFloat(bonusAmount) || 0 } : {}),
       })
       toast.success('Notes saved')
       loadSettlement()
@@ -400,10 +327,12 @@ function SettlementDetailSheet({
   }
 
   const lines = settlement?.lines || []
-  const revenueLines = lines.filter(l => l.type === 'trip_revenue')
+  const financialsLocked = Boolean(settlement?.snapshotVersion && settlement?.snapshotJson)
+  const tripEarningLines = lines.filter(l => l.type === 'trip_earning' || l.type === 'trip_revenue')
   const fuelLines = lines.filter(l => l.type === 'fuel_deduction')
-  const expenseLines = lines.filter(l => l.type === 'expense_deduction')
-  const bonusLines = lines.filter(l => l.type === 'bonus')
+  const expenseLines = lines.filter(l => l.type === 'deduction' || l.type === 'expense_deduction')
+  const advanceLines = lines.filter(l => l.type === 'advance_deduction')
+  const bonusLines = lines.filter(l => l.type === 'incentive' || l.type === 'bonus')
   const adjustmentLines = lines.filter(l => l.type === 'adjustment')
 
   return (
@@ -482,11 +411,11 @@ function SettlementDetailSheet({
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
                   <ArrowUpRight className="h-4 w-4 text-emerald-500" />
-                  Earnings ({formatCurrency(settlement.grossEarnings)})
+                  Reconciled Trip Earnings ({formatCurrency(settlement.grossEarnings)})
                 </h4>
-                {revenueLines.length > 0 ? (
+                {tripEarningLines.length > 0 ? (
                   <div className="space-y-1.5">
-                    {revenueLines.map(line => (
+                    {tripEarningLines.map(line => (
                       <div key={line.id} className="flex items-center justify-between text-sm rounded-md bg-emerald-50 dark:bg-emerald-950/20 px-3 py-2">
                         <div className="flex items-center gap-2 min-w-0">
                           <Truck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
@@ -497,7 +426,7 @@ function SettlementDetailSheet({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground italic">No trip revenue for this period</p>
+                  <p className="text-sm text-muted-foreground italic">No reconciled trip earnings for this period</p>
                 )}
 
                 {bonusLines.length > 0 && (
@@ -518,7 +447,7 @@ function SettlementDetailSheet({
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
                   <ArrowDownRight className="h-4 w-4 text-red-500" />
-                  Deductions ({formatCurrency(settlement.fuelDeductions + settlement.expenseDeductions)})
+                  Deductions ({formatCurrency(settlement.fuelDeductions + settlement.expenseDeductions + (settlement.advanceDeductions || 0))})
                 </h4>
 
                 {fuelLines.length > 0 && (
@@ -527,7 +456,7 @@ function SettlementDetailSheet({
                     {fuelLines.map(line => (
                       <div key={line.id} className="flex items-center justify-between text-sm rounded-md bg-red-50 dark:bg-red-950/20 px-3 py-2">
                         <span className="truncate text-muted-foreground">{line.description}</span>
-                        <span className="font-medium text-red-600 shrink-0 ml-2">-{formatCurrency(line.amount)}</span>
+                        <span className="font-medium text-red-600 shrink-0 ml-2">-{formatCurrency(Math.abs(line.amount))}</span>
                       </div>
                     ))}
                   </div>
@@ -539,7 +468,19 @@ function SettlementDetailSheet({
                     {expenseLines.map(line => (
                       <div key={line.id} className="flex items-center justify-between text-sm rounded-md bg-red-50 dark:bg-red-950/20 px-3 py-2">
                         <span className="truncate text-muted-foreground">{line.description}</span>
-                        <span className="font-medium text-red-600 shrink-0 ml-2">-{formatCurrency(line.amount)}</span>
+                        <span className="font-medium text-red-600 shrink-0 ml-2">-{formatCurrency(Math.abs(line.amount))}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {advanceLines.length > 0 && (
+                  <div className="space-y-1.5 mt-2">
+                    <p className="text-xs text-muted-foreground font-medium px-1">Cash Advance Deductions</p>
+                    {advanceLines.map(line => (
+                      <div key={line.id} className="flex items-center justify-between text-sm rounded-md bg-red-50 dark:bg-red-950/20 px-3 py-2">
+                        <span className="truncate text-muted-foreground">{line.description}</span>
+                        <span className="font-medium text-red-600 shrink-0 ml-2">-{formatCurrency(Math.abs(line.amount))}</span>
                       </div>
                     ))}
                   </div>
@@ -559,7 +500,7 @@ function SettlementDetailSheet({
                   </div>
                 )}
 
-                {fuelLines.length === 0 && expenseLines.length === 0 && adjustmentLines.length === 0 && (
+                {fuelLines.length === 0 && expenseLines.length === 0 && advanceLines.length === 0 && adjustmentLines.length === 0 && (
                   <p className="text-sm text-muted-foreground italic">No deductions for this period</p>
                 )}
               </div>
@@ -582,6 +523,12 @@ function SettlementDetailSheet({
                     <span className="text-muted-foreground">Expense Deductions</span>
                     <span className="text-red-600">-{formatCurrency(settlement.expenseDeductions)}</span>
                   </div>
+                  {(settlement.advanceDeductions || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Cash Advance Deductions</span>
+                      <span className="text-red-600">-{formatCurrency(settlement.advanceDeductions)}</span>
+                    </div>
+                  )}
                   {settlement.bonusAmount > 0 && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Bonus</span>
@@ -608,7 +555,7 @@ function SettlementDetailSheet({
                       onChange={e => setBonusAmount(e.target.value)}
                       placeholder="0.00"
                       className="mt-1"
-                      disabled={settlement.status === 'paid'}
+                      disabled={financialsLocked || settlement.status !== 'pending'}
                     />
                   </div>
                   <div>
@@ -716,7 +663,7 @@ function SettlementCard({
   onView: () => void
 }) {
   const statusCfg = STATUS_CONFIG[settlement.status] || STATUS_CONFIG.pending
-  const totalDeductions = settlement.fuelDeductions + settlement.expenseDeductions
+  const totalDeductions = settlement.fuelDeductions + settlement.expenseDeductions + (settlement.advanceDeductions || 0)
 
   return (
     <motion.div
@@ -1000,7 +947,7 @@ export function SettlementsView() {
                     <AnimatePresence>
                       {settlements.map((s) => {
                         const statusCfg = STATUS_CONFIG[s.status] || STATUS_CONFIG.pending
-                        const totalDeductions = s.fuelDeductions + s.expenseDeductions
+                        const totalDeductions = s.fuelDeductions + s.expenseDeductions + (s.advanceDeductions || 0)
                         return (
                           <TableRow key={s.id} className="group">
                             <TableCell>

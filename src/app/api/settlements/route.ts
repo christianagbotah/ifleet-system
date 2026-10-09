@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 
-const TERMINAL_STATUSES = ['completed', 'cancelled']
 
 // GET /api/settlements?driverId=&status=&period=&page=&limit=
 export async function GET(request: NextRequest) {
@@ -68,7 +67,10 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      data: settlements,
+      data: settlements.map((settlement) => ({
+        ...settlement,
+        _count: { lines: settlement._count.SettlementLine },
+      })),
       total,
       page,
       limit,
@@ -80,65 +82,19 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/settlements — manual create
+// POST /api/settlements — legacy manual create is retired.
 export async function POST(request: NextRequest) {
-  try {
-    const auth = requireAuth(request)
-    if (auth instanceof NextResponse) return auth
-    const writeGuard = requireWriteAccess(auth)
-    if (writeGuard instanceof NextResponse) return writeGuard
+  const auth = requireAuth(request)
+  if (auth instanceof NextResponse) return auth
+  const writeGuard = requireWriteAccess(auth)
+  if (writeGuard instanceof NextResponse) return writeGuard
 
-    const body = await request.json()
-    const {
-      driverId, period, periodStart, periodEnd,
-      grossEarnings, fuelDeductions, expenseDeductions,
-      bonusAmount, netPay, notes, lines,
-    } = body
-
-    if (!driverId || !period || !periodStart || !periodEnd) {
-      return NextResponse.json({ error: 'Missing required fields: driverId, period, periodStart, periodEnd' }, { status: 400 })
-    }
-
-    // Check for existing settlement
-    const existing = await db.driverSettlement.findFirst({
-      where: { driverId, period },
-    })
-    if (existing) {
-      return NextResponse.json({ error: `Settlement already exists for this driver and period` }, { status: 409 })
-    }
-
-    const settlement = await db.driverSettlement.create({
-      data: {
-        driverId,
-        period,
-        periodStart: new Date(periodStart),
-        periodEnd: new Date(periodEnd),
-        grossEarnings: grossEarnings || 0,
-        fuelDeductions: fuelDeductions || 0,
-        expenseDeductions: expenseDeductions || 0,
-        bonusAmount: bonusAmount || 0,
-        netPay: netPay || (grossEarnings || 0) - (fuelDeductions || 0) - (expenseDeductions || 0) + (bonusAmount || 0),
-        notes: notes || null,
-        SettlementLine: lines ? {
-          create: lines.map((line: { tripId?: string; description: string; type: string; amount: number }) => ({
-            tripId: line.tripId || null,
-            description: line.description,
-            type: line.type,
-            amount: line.amount,
-          })),
-        } : undefined,
-      },
-      include: {
-        driver: {
-          select: { id: true, firstName: true, lastName: true, employeeId: true, photo: true },
-        },
-        SettlementLine: { include: { trip: { select: { tripNumber: true, loadingLocation: true, destination: true } } } },
-      },
-    })
-
-    return NextResponse.json({ data: settlement }, { status: 201 })
-  } catch (error) {
-    console.error('POST /api/settlements error:', error)
-    return NextResponse.json({ error: 'Failed to create settlement' }, { status: 500 })
-  }
+  return NextResponse.json(
+    {
+      error: 'Manual settlement creation is retired. Generate settlements from approved reconciliation evidence instead.',
+      code: 'SETTLEMENT_GENERATION_REQUIRED',
+      generatePath: '/api/settlements/generate',
+    },
+    { status: 410 },
+  )
 }

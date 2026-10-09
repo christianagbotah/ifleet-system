@@ -1477,7 +1477,8 @@ export interface SettlementLine {
   settlementId: string
   tripId?: string | null
   description: string
-  type: string // trip_revenue, fuel_deduction, expense_deduction, bonus, adjustment
+  type: string // trip_earning, incentive, deduction, advance_deduction, plus legacy line types
+  sourceId?: string | null
   amount: number
   trip?: { tripNumber: string; loadingLocation: string; destination: string; itemName?: string; quantity?: number; unit?: string } | null
 }
@@ -1491,6 +1492,7 @@ export interface DriverSettlement {
   grossEarnings: number
   fuelDeductions: number
   expenseDeductions: number
+  advanceDeductions: number
   bonusAmount: number
   netPay: number
   status: string
@@ -1498,6 +1500,8 @@ export interface DriverSettlement {
   approvedAt?: string | null
   paidAt?: string | null
   notes?: string | null
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   createdAt: string
   updatedAt: string
   driver: { id: string; firstName: string; lastName: string; employeeId: string; photo?: string | null; phone?: string | null }
