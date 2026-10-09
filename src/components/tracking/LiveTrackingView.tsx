@@ -36,6 +36,7 @@ import {
 import { TrackingSettingsDialog } from './TrackingSettingsDialog'
 import { RouteHistoryDialog } from './RouteHistoryDialog'
 import { useAuthStore } from '@/lib/store/auth'
+import { trackingSocketEndpoint } from '@/lib/tracking/socket-endpoint'
 
 let L: typeof import('leaflet')['default'] | null = null
 
@@ -269,7 +270,7 @@ export function LiveTrackingView() {
       const ioModule = await getIo()
       if (cancelled) return
       if (!token) return
-      const socket = ioModule('/?XTransformPort=3003', {
+      const socket = ioModule(trackingSocketEndpoint(), {
         transports: ['websocket', 'polling'],
         auth: { token },
       })
