@@ -6,7 +6,6 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/home/lightworld/webapps/ifleetpro/mini-services/tracking-service
-EnvironmentFile=/home/lightworld/webapps/ifleetpro/.env
 Environment=NODE_ENV=production
 Environment=PORT=3033
 Environment=HOST=127.0.0.1
