@@ -62,6 +62,9 @@ export async function GET(request: NextRequest) {
           orderBy: { installedAt: 'desc' },
           take: 1,
         },
+        cameraChannels: {
+          orderBy: [{ isEnabled: 'desc' }, { channelKey: 'asc' }],
+        },
       },
       orderBy: [{ status: 'asc' }, { name: 'asc' }],
       take: limit,
