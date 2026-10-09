@@ -23,4 +23,11 @@ describe('tracking service socket security integration', () => {
     expect(source).toContain('socket.data.authSession')
     expect(source).toContain('Fleet tracking permission required')
   })
+
+  it('binds the tracking socket to the dedicated localhost port by default', () => {
+    expect(source).toContain("const PORT = Number(process.env.PORT || 3033)")
+    expect(source).toContain("const HOST = process.env.HOST || '127.0.0.1'")
+    expect(source).toContain('httpServer.listen(PORT, HOST')
+  })
+
 })

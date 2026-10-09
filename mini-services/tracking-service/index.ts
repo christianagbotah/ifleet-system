@@ -2,7 +2,8 @@ import http from 'http'
 import { Server, type Socket } from 'socket.io'
 import { canViewFleetTracking, loadTrackingSession, type TrackingSession } from './auth'
 
-const PORT = Number(process.env.PORT || 3003)
+const PORT = Number(process.env.PORT || 3033)
+const HOST = process.env.HOST || '127.0.0.1'
 const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '')
 const FRESH_LOCATION_MS = 5 * 60 * 1000
 const STALE_LOCATION_MS = 10 * 60 * 1000
@@ -359,8 +360,8 @@ setInterval(() => {
   }
 }, STALE_LOCATION_MS)
 
-httpServer.listen(PORT, () => {
-  console.log(`[Tracking Service] Running on port ${PORT}`)
+httpServer.listen(PORT, HOST, () => {
+  console.log(`[Tracking Service] Running on ${HOST}:${PORT}`)
   console.log(`[Tracking Service] Health: http://localhost:${PORT}/api/health`)
   console.log(`[Tracking Service] Durable API: ${APP_BASE_URL}`)
   console.log(`[Tracking Service] CORS origins: ${allowedOrigins.join(', ')}`)

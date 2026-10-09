@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 // Tracking configs no longer needed - we load trucks directly
 import { useAuthStore } from '@/lib/store/auth'
 import { useDriverTruck } from '@/hooks/useDriverTruck'
+import { trackingSocketEndpoint } from '@/lib/tracking/socket-endpoint'
 
 // Dynamic imports for react-leaflet
 const MapContainer = dynamic(
@@ -167,7 +168,7 @@ export function DriverLocationSender() {
 
     // Connect to WebSocket (lazy load socket.io-client)
     const ioModule = await getIo()
-    const socket = ioModule('/?XTransformPort=3003', {
+    const socket = ioModule(trackingSocketEndpoint(), {
       transports: ['websocket', 'polling'],
       auth: { token },
     })
