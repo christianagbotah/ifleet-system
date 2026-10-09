@@ -1,5 +1,6 @@
 import http from 'http'
 import { Server, type Socket } from 'socket.io'
+import { validateTrackingSession } from './auth'
 
 const PORT = Number(process.env.PORT || 3003)
 const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '')
@@ -83,6 +84,17 @@ const io = new Server(httpServer, {
     credentials: true,
   },
   transports: ['polling', 'websocket'],
+})
+
+io.use(async (socket, next) => {
+  const token = authToken(socket)
+  if (!token) return next(new Error('Authentication required for live tracking'))
+
+  const valid = await validateTrackingSession(APP_BASE_URL, token)
+  if (!valid) return next(new Error('Invalid or inactive authentication session'))
+
+  socket.data.authToken = token
+  next()
 })
 
 function authToken(socket: Socket): string | null {
@@ -194,7 +206,7 @@ function emitError(socket: Socket, message: string) {
 
 io.on('connection', (socket) => {
   console.log(`[Tracking] Client connected: ${socket.id}`)
-  const token = authToken(socket)
+  const token = typeof socket.data.authToken === 'string' ? socket.data.authToken : null
 
   socket.on('join-truck', (data: unknown) => {
     const truckId = data && typeof data === 'object' && typeof (data as Record<string, unknown>).truckId === 'string'
