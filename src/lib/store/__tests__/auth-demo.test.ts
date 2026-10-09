@@ -15,61 +15,62 @@ beforeEach(() => {
 })
 
 describe('demo authentication', () => {
-  it('requests a server-issued demo session and persists its demo identity', async () => {
+  it('requests a server-issued runtime profile and persists the isolated demo session', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          token: 'demo-token',
+          token: 'test-demo-token',
           user: {
-            id: 'demo-manager',
-            email: 'demo.manager@ifleetpro.local',
-            name: 'Demo Fleet Manager',
+            id: 'demo:operations-preview',
+            email: '',
+            name: 'Demo Operations User',
             phone: null,
             avatar: null,
-            role: 'Manager',
-            permissions: ['dashboard.view'],
+            role: 'Dispatcher',
+            permissions: ['dashboard.view', 'trips.view'],
             driverId: null,
             isActive: true,
             isDemo: true,
-            demoProfile: 'manager',
+            demoProfile: 'operations-preview',
+            demoLabel: 'Operations Preview',
           },
         }),
         { status: 200, headers: { 'content-type': 'application/json' } },
       ),
     )
 
-    await useAuthStore.getState().demoLogin('manager')
+    await useAuthStore.getState().demoLogin('operations-preview')
 
     expect(fetchMock).toHaveBeenCalledWith('/api/auth/demo-login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ profile: 'manager' }),
+      body: JSON.stringify({ profile: 'operations-preview' }),
     })
     expect(useAuthStore.getState()).toMatchObject({
-      token: 'demo-token',
+      token: 'test-demo-token',
       isAuthenticated: true,
-      user: { role: 'Manager', isDemo: true, demoProfile: 'manager' },
+      user: { role: 'Dispatcher', isDemo: true, demoProfile: 'operations-preview' },
     })
     expect(JSON.parse(localStorage.getItem('fleetpro-auth') || '{}').user.isDemo).toBe(true)
   })
 
-  it('keeps demo role permissions read-only even for Admin and Manager', () => {
+  it('keeps runtime demo permissions read-only regardless of the configured role name', () => {
     useAuthStore.setState({
       user: {
-        id: 'demo-admin',
-        email: 'demo.admin@ifleetpro.local',
-        name: 'Demo Administrator',
+        id: 'demo:configured-preview',
+        email: '',
+        name: 'Configured Demo User',
         phone: null,
         avatar: null,
-        role: 'Admin',
+        role: 'Manager',
         permissions: ['dashboard.view', 'trips.view', 'trips.create', 'trips.update', 'expenses.approve'],
         driverId: null,
         isActive: true,
         isDemo: true,
-        demoProfile: 'admin',
+        demoProfile: 'configured-preview',
       },
       isAuthenticated: true,
-      token: 'demo-token',
+      token: 'test-demo-token',
     })
 
     expect(useAuthStore.getState().hasPermission('trips.view')).toBe(true)
