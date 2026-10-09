@@ -39,6 +39,6 @@ describe('telematics health and retention integration contract', () => {
   it('schedules bounded periodic compaction from the deployed application path', () => {
     const cron = read('crontab')
     expect(cron).toContain('/home/lightworld/webapps/ifleetpro')
-    expect(cron).toContain('scripts/compact-location-history.ts')
+    expect(cron).toContain('.next/standalone/scripts/compact-location-history.ts')
   })
 })
