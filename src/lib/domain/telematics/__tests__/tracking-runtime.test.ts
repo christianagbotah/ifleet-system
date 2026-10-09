@@ -14,4 +14,13 @@ describe('tracking runtime deployment contract', () => {
     expect(unit).toContain('ExecStart=/root/.bun/bin/bun index.ts')
     expect(unit).toContain('Restart=always')
   })
+
+  it('ships an nginx websocket route to the localhost tracking service', () => {
+    const nginx = fs.readFileSync(path.join(process.cwd(), 'nginx-ifleetpro.conf'), 'utf8')
+    expect(nginx).toContain('location ^~ /socket.io/')
+    expect(nginx).toContain('proxy_pass http://127.0.0.1:3033')
+    expect(nginx).toContain('proxy_set_header Upgrade $http_upgrade')
+    expect(nginx).toContain('proxy_set_header Connection "upgrade"')
+  })
+
 })
