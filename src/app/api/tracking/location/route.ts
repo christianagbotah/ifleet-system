@@ -101,10 +101,25 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const truckId = searchParams.get('truckId')
+    const isDriver = auth.roleName === ROLES.DRIVER
 
-    // Get all trucks first
+    if (isDriver && !auth.driverId) {
+      return NextResponse.json({ error: 'Driver profile is not linked to this account.' }, { status: 403 })
+    }
+
+    if (isDriver && truckId) {
+      const requestedTruck = await db.truck.findUnique({ where: { id: truckId }, select: { driverId: true } })
+      if (!requestedTruck || requestedTruck.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only view your assigned truck location.' }, { status: 403 })
+      }
+    }
+
     const trucks = await db.truck.findMany({
-      where: truckId ? { id: truckId } : undefined,
+      where: truckId
+        ? { id: truckId, ...(isDriver ? { driverId: auth.driverId } : {}) }
+        : isDriver
+          ? { driverId: auth.driverId }
+          : undefined,
       include: {
         driver: { select: { firstName: true, lastName: true } },
       },

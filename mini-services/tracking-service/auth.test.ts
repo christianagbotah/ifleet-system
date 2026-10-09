@@ -17,7 +17,7 @@ describe('tracking socket session validation', () => {
   it('accepts an active standard user returned by the authenticated app boundary', async () => {
     const fetchImpl = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ user: { id: 'user-1', isActive: true } }),
+      json: async () => ({ user: { id: 'user-1', role: 'Manager', permissions: ['trucks.view'], driverId: null, isActive: true } }),
     })
     await expect(validateTrackingSession('http://127.0.0.1:3000', 'valid-token', fetchImpl)).resolves.toBe(true)
     expect(fetchImpl).toHaveBeenCalledWith(
@@ -27,5 +27,27 @@ describe('tracking socket session validation', () => {
         headers: expect.objectContaining({ authorization: 'Bearer valid-token' }),
       }),
     )
+  })
+})
+
+import { canViewFleetTracking, loadTrackingSession } from './auth'
+
+describe('tracking viewer authorization', () => {
+  it('returns role and permissions from the application session boundary', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ user: { id: 'dispatcher-1', role: 'Dispatcher', permissions: ['trucks.view'], driverId: null, isActive: true } }),
+    })
+    await expect(loadTrackingSession('http://127.0.0.1:3000', 'valid-token', fetchImpl)).resolves.toMatchObject({
+      userId: 'dispatcher-1',
+      roleName: 'Dispatcher',
+      permissions: ['trucks.view'],
+    })
+  })
+
+  it('allows fleet viewers but not driver-only sessions into live viewer rooms', () => {
+    expect(canViewFleetTracking({ userId: 'admin', roleName: 'Admin', permissions: [], driverId: null })).toBe(true)
+    expect(canViewFleetTracking({ userId: 'ops', roleName: 'Dispatcher', permissions: ['trucks.view'], driverId: null })).toBe(true)
+    expect(canViewFleetTracking({ userId: 'driver', roleName: 'Driver', permissions: ['trips.view'], driverId: 'driver-1' })).toBe(false)
   })
 })

@@ -1,6 +1,6 @@
 import http from 'http'
 import { Server, type Socket } from 'socket.io'
-import { validateTrackingSession } from './auth'
+import { canViewFleetTracking, loadTrackingSession, type TrackingSession } from './auth'
 
 const PORT = Number(process.env.PORT || 3003)
 const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '')
@@ -91,10 +91,11 @@ io.use(async (socket, next) => {
   const token = authToken(socket)
   if (!token) return next(new Error('Authentication required for live tracking'))
 
-  const valid = await validateTrackingSession(APP_BASE_URL, token)
-  if (!valid) return next(new Error('Invalid or inactive authentication session'))
+  const session = await loadTrackingSession(APP_BASE_URL, token)
+  if (!session) return next(new Error('Invalid or inactive authentication session'))
 
   socket.data.authToken = token
+  socket.data.authSession = session
   next()
 })
 
@@ -209,8 +210,15 @@ function emitError(socket: Socket, message: string) {
 io.on('connection', (socket) => {
   console.log(`[Tracking] Client connected: ${socket.id}`)
   const token = typeof socket.data.authToken === 'string' ? socket.data.authToken : null
+  const session = socket.data.authSession as TrackingSession | undefined
+  const requireFleetViewer = () => {
+    if (session && canViewFleetTracking(session)) return true
+    emitError(socket, 'Fleet tracking permission required')
+    return false
+  }
 
   socket.on('join-truck', (data: unknown) => {
+    if (!requireFleetViewer()) return
     const truckId = data && typeof data === 'object' && typeof (data as Record<string, unknown>).truckId === 'string'
       ? String((data as Record<string, unknown>).truckId)
       : ''
@@ -225,6 +233,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('join-all-trucks', async () => {
+    if (!requireFleetViewer()) return
     socket.join('all-trucks')
     if (!token) return emitError(socket, 'Authentication required for live tracking')
     try {
@@ -281,6 +290,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('viewer:subscribe', async (data: unknown) => {
+    if (!requireFleetViewer()) return
     if (!isValidSubscribe(data)) return emitError(socket, 'Invalid subscription — must contain up to 50 truck IDs')
     viewerSubscriptions.set(socket.id, data)
     if (!token) return emitError(socket, 'Authentication required for live tracking')
@@ -297,6 +307,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('get:all-locations', async () => {
+    if (!requireFleetViewer()) return
     if (!token) return emitError(socket, 'Authentication required for live tracking')
     try {
       const locations = await refreshCache(token)
@@ -309,6 +320,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('get-active-trucks', async () => {
+    if (!requireFleetViewer()) return
     if (!token) return emitError(socket, 'Authentication required for live tracking')
     try {
       const locations = await refreshCache(token)
@@ -319,6 +331,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('get:active-drivers', () => {
+    if (!requireFleetViewer()) return
     const now = Date.now()
     const active = [...activeSenders.entries()]
       .filter(([, info]) => now - info.lastSeen < FRESH_LOCATION_MS)

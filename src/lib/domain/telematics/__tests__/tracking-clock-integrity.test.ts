@@ -17,4 +17,11 @@ describe('tracking clock-integrity integration', () => {
     expect(tracking).toContain('receivedAt?: string')
     expect(tracking).toContain('location.receivedAt ?? location.timestamp')
   })
+  it('scopes the legacy tracking GET endpoint to the assigned driver', () => {
+    const route = source('src/app/api/tracking/location/route.ts')
+    expect(route).toContain("auth.roleName === ROLES.DRIVER")
+    expect(route).toContain('driverId: auth.driverId')
+    expect(route).toContain('You can only view your assigned truck location.')
+  })
+
 })
