@@ -21,6 +21,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { useAppStore, type ViewName } from '@/lib/store'
+import { getUserInitials, useAuthStore } from '@/lib/store/auth'
 import { ThemeToggle } from './ThemeToggle'
 import { NotificationBell } from './NotificationBell'
 import {
@@ -35,7 +36,6 @@ import {
   BadgeCheck,
   Search,
 } from 'lucide-react'
-import { toast } from '@/lib/toast-config'
 import { openCommandPalette } from './CommandPalette'
 
 const viewTitles: Record<ViewName, { title: string; breadcrumb: string }> = {
@@ -67,6 +67,7 @@ const shortcutItems = [
 
 export function TopHeader() {
   const { currentView, setCurrentView } = useAppStore()
+  const { user, logout } = useAuthStore()
   const [time, setTime] = useState(new Date())
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
 
@@ -76,118 +77,119 @@ export function TopHeader() {
   }, [])
 
   const info = viewTitles[currentView]
+  const displayName = user?.name || 'Account'
+  const displayRole = user?.position || user?.role || 'Authenticated user'
+  const displayEmail = user?.email || 'Authenticated session'
+  const initials = getUserInitials(displayName)
 
   return (
     <>
-    <header className="sticky top-0 z-10 h-14 backdrop-blur-xl bg-background/80 border-b border-border/50 shadow-sm flex items-center justify-between px-4 md:px-6 flex-shrink-0">
-      {/* Left: Search + Title + Breadcrumb */}
-      <div className="flex items-center gap-3 min-w-0">
-        <button
-          type="button"
-          onClick={openCommandPalette}
-          className="hidden sm:flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer border-none outline-none shrink-0"
-          title="Open command palette (Alt+K)"
-        >
-          <Search className="size-3.5" />
-          <span className="hidden md:inline">Search...</span>
-          <kbd className="pointer-events-none hidden lg:inline-flex h-4 select-none items-center rounded border bg-background/50 px-1 font-mono text-[10px] font-medium text-muted-foreground">
-            Alt+K
-          </kbd>
-        </button>
-        <h2 className="text-base font-semibold text-foreground truncate">{info.title}</h2>
-        <Separator orientation="vertical" className="h-4 hidden sm:block" />
-        <span className="text-xs text-muted-foreground hidden sm:block">{info.breadcrumb}</span>
-      </div>
+      <header className="sticky top-0 z-10 flex h-14 flex-shrink-0 items-center justify-between border-b border-border/50 bg-background/80 px-4 shadow-sm backdrop-blur-xl md:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={openCommandPalette}
+            className="hidden shrink-0 cursor-pointer items-center gap-2 rounded-lg border-none bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground outline-none transition-colors hover:bg-muted/80 sm:flex"
+            title="Open command palette (Alt+K)"
+          >
+            <Search className="size-3.5" />
+            <span className="hidden md:inline">Search...</span>
+            <kbd className="pointer-events-none hidden h-4 select-none items-center rounded border bg-background/50 px-1 font-mono text-[10px] font-medium text-muted-foreground lg:inline-flex">
+              Alt+K
+            </kbd>
+          </button>
+          <h2 className="truncate text-base font-semibold text-foreground">{info.title}</h2>
+          <Separator orientation="vertical" className="hidden h-4 sm:block" />
+          <span className="hidden text-xs text-muted-foreground sm:block">{info.breadcrumb}</span>
+        </div>
 
-      {/* Right: Date/Time + Theme + Bell + Profile */}
-      <div className="flex items-center gap-1.5 flex-shrink-0">
-        <span className="text-xs text-muted-foreground hidden lg:block px-2 py-1 rounded-md bg-muted/50 tabular-nums">
-          {format(time, 'EEE, MMM d, yyyy · h:mm a')}
-        </span>
+        <div className="flex flex-shrink-0 items-center gap-1.5">
+          <span className="hidden rounded-md bg-muted/50 px-2 py-1 text-xs tabular-nums text-muted-foreground lg:block">
+            {format(time, 'EEE, MMM d, yyyy · h:mm a')}
+          </span>
 
-        <ThemeToggle />
-        <NotificationBell />
+          <ThemeToggle />
+          <NotificationBell />
+          <Separator orientation="vertical" className="mx-1 hidden h-5 sm:block" />
 
-        <Separator orientation="vertical" className="h-5 hidden sm:block mx-1" />
-
-        {/* Profile Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="hidden sm:flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-muted/80 transition-colors cursor-pointer outline-none">
-              <Avatar className="size-7">
-                <AvatarFallback className="bg-emerald-100 text-emerald-700 text-[11px] font-semibold dark:bg-emerald-900/50 dark:text-emerald-400">
-                  AD
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden md:block text-left">
-                <p className="text-xs font-medium text-foreground leading-tight">Admin</p>
-                <p className="text-[10px] text-muted-foreground leading-tight">Fleet Manager</p>
-              </div>
-              <ChevronDown className="size-3 text-muted-foreground hidden md:block" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            <DropdownMenuLabel className="font-normal p-0">
-              <div className="rounded-lg bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 border p-3 space-y-2">
-                <div className="flex items-center gap-3">
-                  <Avatar className="size-10">
-                    <AvatarFallback className="bg-emerald-100 text-emerald-700 text-sm font-semibold dark:bg-emerald-900/50 dark:text-emerald-400">
-                      AD
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold leading-tight">Admin User</p>
-                    <p className="text-xs text-muted-foreground truncate">admin@lightworldtech.com</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="hidden cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 outline-none transition-colors hover:bg-muted/80 sm:flex">
+                <Avatar className="size-7">
+                  <AvatarFallback className="bg-emerald-100 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden text-left md:block">
+                  <p className="max-w-32 truncate text-xs font-medium leading-tight text-foreground">{user?.name || displayName}</p>
+                  <p className="max-w-32 truncate text-[10px] leading-tight text-muted-foreground">{user?.role || displayRole}</p>
+                </div>
+                <ChevronDown className="hidden size-3 text-muted-foreground md:block" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel className="p-0 font-normal">
+                <div className="space-y-2 rounded-lg border bg-gradient-to-br from-emerald-50 to-teal-50 p-3 dark:from-emerald-950/40 dark:to-teal-950/40">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-emerald-100 text-sm font-semibold text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold leading-tight">{user?.name || displayName}</p>
+                      <p className="truncate text-xs text-muted-foreground">{user?.email || displayEmail}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <BadgeCheck className="size-3 text-emerald-600 dark:text-emerald-400" />
+                    <span className="truncate text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
+                      {user?.role || displayRole}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <BadgeCheck className="size-3 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">Fleet Manager</span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => setCurrentView('settings')} className="cursor-pointer">
-                <User className="size-4 mr-2" />
-                Profile
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => setCurrentView('settings')} className="cursor-pointer">
+                  <User className="mr-2 size-4" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setCurrentView('dashboard')} className="cursor-pointer">
+                  <LayoutDashboard className="mr-2 size-4" />
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setCurrentView('reports')} className="cursor-pointer">
+                  <BarChart3 className="mr-2 size-4" />
+                  Reports
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setCurrentView('settings')} className="cursor-pointer">
+                  <Settings className="mr-2 size-4" />
+                  Settings
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => setShortcutsOpen(true)}>
+                  <Keyboard className="mr-2 size-4" />
+                  Keyboard Shortcuts
+                  <span className="ml-auto text-[10px] text-muted-foreground">Alt+1-9,0</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" disabled>
+                  <HelpCircle className="mr-2 size-4" />
+                  Help & Support
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={logout}>
+                <LogOut className="mr-2 size-4" />
+                Sign Out
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setCurrentView('dashboard')} className="cursor-pointer">
-                <LayoutDashboard className="size-4 mr-2" />
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setCurrentView('reports')} className="cursor-pointer">
-                <BarChart3 className="size-4 mr-2" />
-                Reports
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setCurrentView('settings')} className="cursor-pointer">
-                <Settings className="size-4 mr-2" />
-                Settings
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer" onClick={() => setShortcutsOpen(true)}>
-                <Keyboard className="size-4 mr-2" />
-                Keyboard Shortcuts
-                <span className="ml-auto text-[10px] text-muted-foreground">Alt+1-9,0</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer" disabled>
-                <HelpCircle className="size-4 mr-2" />
-                Help & Support
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600 focus:text-red-600 cursor-pointer" onClick={() => toast.info('Signed out (demo mode)')}>
-              <LogOut className="size-4 mr-2" />
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </header>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
 
-      {/* Keyboard Shortcuts Dialog */}
       <Dialog open={shortcutsOpen} onOpenChange={setShortcutsOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -203,8 +205,11 @@ export function TopHeader() {
             {shortcutItems.map((item) => (
               <button
                 key={item.key}
-                className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer text-left"
-                onClick={() => { setCurrentView(item.view); setShortcutsOpen(false) }}
+                className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-left transition-colors hover:bg-muted"
+                onClick={() => {
+                  setCurrentView(item.view)
+                  setShortcutsOpen(false)
+                }}
               >
                 <span className="text-sm">{item.label}</span>
                 <kbd className="pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[11px] font-medium text-muted-foreground">
