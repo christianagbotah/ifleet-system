@@ -12,8 +12,10 @@ model TelematicsDevice {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  installations DeviceInstallationHistory[]
-  events        TelematicsEvent[]
+  installations       DeviceInstallationHistory[]
+  events               TelematicsEvent[]
+  cameraChannels       CameraChannel[]
+  videoRetentionPolicy VideoRetentionPolicy?
 
   @@index([provider, status])
   @@index([deviceType, status])

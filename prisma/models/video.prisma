@@ -1,0 +1,30 @@
+model CameraChannel {
+  id           String   @id @default(cuid())
+  deviceId     String
+  key          String
+  label        String
+  orientation  String
+  privacyClass String
+  enabled      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, key])
+  @@index([deviceId, enabled])
+  @@index([privacyClass])
+}
+
+model VideoRetentionPolicy {
+  id               String   @id @default(cuid())
+  deviceId         String   @unique
+  videoEnabled     Boolean  @default(false)
+  supportsLive     Boolean  @default(false)
+  supportsPlayback Boolean  @default(false)
+  supportsSnapshot Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
