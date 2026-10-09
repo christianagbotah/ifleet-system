@@ -121,6 +121,8 @@ export async function ingestTelematicsEvent(
 
   let assetType: 'tractor' | 'trailer'
   let assetId: string
+  let canonicalEvent = event
+  let canonicalRaw = raw
 
   if (options.authoritativeAsset) {
     assetType = options.authoritativeAsset.assetType
@@ -134,14 +136,17 @@ export async function ingestTelematicsEvent(
     if (!device || device.status !== 'active') throw new Error('Unknown device or inactive device')
     if (device.provider !== event.provider) throw new Error('Device provider does not match ingestion provider')
 
-    const installation = await repository.resolveInstallation(event.deviceId, event.deviceTimestamp)
+    canonicalEvent = { ...event, deviceId: device.id }
+    canonicalRaw = { ...raw, deviceId: device.id }
+
+    const installation = await repository.resolveInstallation(device.id, event.deviceTimestamp)
     if (!installation) throw new Error('Device has no installation at the event timestamp')
     assetType = installation.assetType
     assetId = installation.assetId
   }
 
-  const duplicate = await repository.findDuplicate(raw, event)
-  const tripId = await repository.resolveTrip(assetType, assetId, event.deviceTimestamp)
+  const duplicate = await repository.findDuplicate(canonicalRaw, canonicalEvent)
+  const tripId = await repository.resolveTrip(assetType, assetId, canonicalEvent.deviceTimestamp)
   if (duplicate) {
     return {
       duplicate: true,
@@ -158,15 +163,15 @@ export async function ingestTelematicsEvent(
   const liveTiming = repository.getLiveStateTiming
     ? await repository.getLiveStateTiming(assetType, assetId)
     : null
-  const incomingOrderingTime = liveOrderingTimestamp(event.deviceTimestamp, event.receivedAt)
+  const incomingOrderingTime = liveOrderingTimestamp(canonicalEvent.deviceTimestamp, canonicalEvent.receivedAt)
   const currentOrderingTime = liveTiming
     ? liveOrderingTimestamp(liveTiming.deviceTimestamp, liveTiming.receivedAt)
     : null
   const updateLiveState = !currentOrderingTime || incomingOrderingTime.getTime() > currentOrderingTime.getTime()
 
   const persisted = await repository.persist({
-    event,
-    raw,
+    event: canonicalEvent,
+    raw: canonicalRaw,
     assetType,
     assetId,
     tripId,

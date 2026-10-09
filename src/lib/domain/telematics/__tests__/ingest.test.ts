@@ -88,6 +88,35 @@ describe('durable telematics ingest', () => {
     expect(repo.persist).not.toHaveBeenCalled()
   })
 
+  it('resolves an external IMEI/serial reference to the canonical internal device before persistence', async () => {
+    const resolveInstallation = vi.fn().mockResolvedValue({
+      id: 'install-001',
+      deviceId: 'device-internal',
+      assetType: 'tractor',
+      assetId: 'truck-authoritative',
+      installedAt: new Date('2026-10-01T00:00:00.000Z'),
+      uninstalledAt: null,
+    })
+    const persist = vi.fn().mockResolvedValue({ eventId: 'event-001', rawEventRef: 'raw-001', liveStateUpdated: true, legacyLocationId: null })
+    const repo = repository({
+      findDevice: vi.fn().mockResolvedValue({ id: 'device-internal', provider: 'generic-http', status: 'active' }),
+      resolveInstallation,
+      persist,
+    })
+
+    await ingestTelematicsEvent(
+      location({ deviceId: '352099001234567' }),
+      raw({ deviceId: '352099001234567' }),
+      repo,
+    )
+
+    expect(resolveInstallation).toHaveBeenCalledWith('device-internal', deviceTimestamp)
+    expect(persist).toHaveBeenCalledWith(expect.objectContaining({
+      event: expect.objectContaining({ deviceId: 'device-internal' }),
+      raw: expect.objectContaining({ deviceId: 'device-internal' }),
+    }))
+  })
+
   it('uses installation history as authoritative hardware asset attribution', async () => {
     const repo = repository()
     const result = await ingestTelematicsEvent(location(), raw(), repo)

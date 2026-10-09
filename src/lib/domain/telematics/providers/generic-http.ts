@@ -37,7 +37,7 @@ function numberValue(value: unknown, field: string, options?: { min?: number; ma
 }
 
 function base(payload: Record<string, unknown>, context: NormalizationContext): NormalizedEventBase {
-  const assetRef = stringValue(payload.assetRef, 'assetRef')
+  const assetRef = optionalString(payload.assetRef) ?? context.deviceId ?? 'unresolved-device'
   if (!(context.receivedAt instanceof Date) || Number.isNaN(context.receivedAt.getTime())) {
     throw new TelematicsNormalizationError('receivedAt is invalid')
   }

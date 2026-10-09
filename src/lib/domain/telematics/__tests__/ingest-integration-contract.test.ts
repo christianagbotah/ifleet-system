@@ -14,6 +14,13 @@ describe('durable telematics ingestion integration contract', () => {
     expect(route.indexOf('const auth = await verifyMachineRequest')).toBeLessThan(route.indexOf('const result = await ingestTelematicsEvent'))
   })
 
+  it('accepts hardware-facing device references without requiring an internal database id', () => {
+    const route = source('src/app/api/telematics/ingest/[provider]/route.ts')
+    expect(route).toContain('payload.imei')
+    expect(route).toContain('payload.serialNumber')
+    expect(route).toContain('payload.deviceRef')
+  })
+
   it('phone HTTP fallback uses the same normalized durable ingest service', () => {
     const route = source('src/app/api/tracking/location/route.ts')
     expect(route).toContain('MobileAppTelematicsProvider')

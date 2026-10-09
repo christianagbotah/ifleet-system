@@ -51,4 +51,14 @@ describe('provider parity', () => {
       rawEventRef: 'raw-hardware-001',
     })
   })
+  it('does not require a payload assetRef because installation history is authoritative', () => {
+    const payload = fixture('generic-http-location.json')
+    delete payload.assetRef
+    const hardware = new GenericHttpTelematicsProvider().normalizeLocation(
+      payload,
+      { receivedAt, rawEventRef: 'raw-hardware-no-asset', deviceId: '352099001234567' },
+    )
+    expect(hardware.externalAssetRef).toBe('352099001234567')
+  })
+
 })

@@ -49,17 +49,21 @@ export async function POST(request: Request, context: RouteContext) {
     const kind = eventType(payload.eventType ?? payload.type)
     if (!kind) return NextResponse.json({ error: 'Unsupported telematics event type' }, { status: 400 })
 
-    const deviceId = typeof payload.deviceId === 'string' ? payload.deviceId.trim() : ''
-    if (!deviceId) return NextResponse.json({ error: 'deviceId is required' }, { status: 400 })
+    const deviceRef = [payload.deviceId, payload.imei, payload.serialNumber, payload.deviceRef]
+      .find((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      ?.trim() ?? ''
+    if (!deviceRef) {
+      return NextResponse.json({ error: 'deviceId, imei, serialNumber or deviceRef is required' }, { status: 400 })
+    }
 
     const providerEventId = typeof payload.eventId === 'string' && payload.eventId.trim()
       ? payload.eventId.trim()
       : null
     const receivedAt = new Date()
     const payloadHash = createHash('sha256').update(payloadText).digest('hex')
-    const idempotencyKey = createTelematicsIdempotencyKey(provider, deviceId, providerEventId, payloadHash)
+    const idempotencyKey = createTelematicsIdempotencyKey(provider, deviceRef, providerEventId, payloadHash)
     const rawEventRef = `raw_${idempotencyKey}`
-    const normalizationContext = { receivedAt, rawEventRef, deviceId, providerEventId }
+    const normalizationContext = { receivedAt, rawEventRef, deviceId: deviceRef, providerEventId }
 
     const normalized = kind === 'location'
       ? adapter.normalizeLocation(payload, normalizationContext)
@@ -76,7 +80,7 @@ export async function POST(request: Request, context: RouteContext) {
       {
         rawEventRef,
         provider,
-        deviceId,
+        deviceId: deviceRef,
         providerEventId,
         payloadHash,
         payload: payloadText,

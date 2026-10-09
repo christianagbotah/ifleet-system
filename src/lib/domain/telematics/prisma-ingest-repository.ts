@@ -48,9 +48,15 @@ function idempotencyKey(raw: TelematicsRawEnvelope, event: PersistTelematicsInpu
 }
 
 export class PrismaTelematicsIngestRepository implements TelematicsIngestRepository {
-  async findDevice(deviceId: string): Promise<IngestDevice | null> {
-    return db.telematicsDevice.findUnique({
-      where: { id: deviceId },
+  async findDevice(deviceRef: string): Promise<IngestDevice | null> {
+    return db.telematicsDevice.findFirst({
+      where: {
+        OR: [
+          { id: deviceRef },
+          { imei: deviceRef },
+          { serialNumber: deviceRef },
+        ],
+      },
       select: { id: true, provider: true, status: true },
     })
   }
