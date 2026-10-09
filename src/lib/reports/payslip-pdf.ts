@@ -14,6 +14,7 @@ import { fmtDate } from './pdf-generator'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
 import { registerFonts, getFontFamily } from './pdf-font'
 import { CEDI } from './csv-generator'
+import { companyAddressLine, companyContactLine, loadCompanyProfile } from '@/lib/config/company-profile'
 
 const FF = getFontFamily()
 
@@ -42,6 +43,9 @@ function ghs(amount: number): string {
  * Portrait A4 format with branded styling.
  */
 export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
+  const company = await loadCompanyProfile()
+  const companyAddress = companyAddressLine(company)
+  const companyContact = companyContactLine(company)
   const payroll = await db.payroll.findUnique({
     where: { id: payrollId },
     include: {
@@ -86,8 +90,8 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
   doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.text(APP_TAGLINE, pw - margin, 8, { align: 'right' })
-  doc.text('37 Ring Road Central, Accra, Ghana', pw - margin, 13, { align: 'right' })
-  doc.text('+233 30 277 8899', pw - margin, 18, { align: 'right' })
+  if (companyAddress) doc.text(companyAddress, pw - margin, 13, { align: 'right' })
+  if (company.phone) doc.text(company.phone, pw - margin, 18, { align: 'right' })
 
   y = 25
 
@@ -399,7 +403,7 @@ export async function buildPayslipPdf(payrollId: string): Promise<jsPDF> {
     doc.setTextColor(...C.gray)
 
     const disclaimer = 'This payslip is a computer-generated document. It does not require a physical signature to be valid. ' +
-      'For questions regarding this payslip, please contact the HR Department at hr@fleetpro.com.gh or call +233 30 277 8899. ' +
+      (companyContact ? `For questions regarding this payslip, contact ${companyContact}. ` : '') +
       'This document is confidential and intended solely for the named employee.'
 
     const splitDisclaimer = doc.splitTextToSize(disclaimer, contentW)

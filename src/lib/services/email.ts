@@ -11,7 +11,8 @@
 // ────────────────────────────────────────────────────────────────────
 
 import nodemailer from 'nodemailer'
-import { APP_NAME, APP_COMPANY, APP_TAGLINE } from '@/lib/constants'
+import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { companyAddressLine, companyContactLine, loadCompanyProfile, type CompanyProfile } from '@/lib/config/company-profile'
 
 interface EmailResult {
   success: boolean
@@ -94,8 +95,11 @@ function buildHtmlEmail(params: {
   tripDetailsHtml?: string
   actionLabel?: string
   actionUrl?: string
+  company: CompanyProfile
 }): string {
-  const { title, messageHtml, tripDetailsHtml, actionLabel, actionUrl } = params
+  const { title, messageHtml, tripDetailsHtml, actionLabel, actionUrl, company } = params
+  const addressLine = companyAddressLine(company)
+  const contactLine = companyContactLine(company)
 
   const now = new Date().toLocaleDateString('en-GH', {
     year: 'numeric',
@@ -219,13 +223,13 @@ function buildHtmlEmail(params: {
                 <tr>
                   <td style="text-align: center;">
                     <p style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #374151;">
-                      ${APP_COMPANY}
+                      ${company.name}
                     </p>
                     <p style="margin: 0 0 2px 0; font-size: 12px; color: #6b7280;">
-                      37 Ring Road Central, Accra, Ghana
+                      ${addressLine}
                     </p>
                     <p style="margin: 0 0 2px 0; font-size: 12px; color: #6b7280;">
-                      +233 30 277 8899 &nbsp;|&nbsp; info@fleetpro.com.gh
+                      ${contactLine}
                     </p>
                     <p style="margin: 8px 0 0 0; font-size: 11px; color: #9ca3af;">
                       This is an automated message from ${APP_NAME}. Please do not reply directly to this email.
@@ -371,7 +375,10 @@ export async function sendEmail(params: {
     return { success: false, error: 'SMTP not configured' }
   }
 
-  const from = process.env.SMTP_FROM || 'noreply@fleetpro.com.gh'
+  const from = process.env.SMTP_FROM?.trim()
+  if (!from) {
+    return { success: false, error: 'SMTP_FROM not configured' }
+  }
 
   try {
     console.log(`[Email] Sending email to ${params.to}: "${params.subject}"`)
@@ -402,6 +409,7 @@ export async function sendEmail(params: {
  * Uses the ${APP_NAME} branded HTML template with trip details card.
  */
 export async function sendTripEmail(params: TripEmailParams): Promise<EmailResult> {
+  const company = await loadCompanyProfile()
   const tripDetailsHtml = buildTripDetailsCard(params.tripDetails)
 
   const html = buildHtmlEmail({
@@ -410,6 +418,7 @@ export async function sendTripEmail(params: TripEmailParams): Promise<EmailResul
     tripDetailsHtml,
     actionLabel: params.actionLabel,
     actionUrl: params.actionUrl,
+    company,
   })
 
   const plainText = [
@@ -426,9 +435,9 @@ export async function sendTripEmail(params: TripEmailParams): Promise<EmailResul
     `Cargo: ${params.tripDetails.itemName} (${params.tripDetails.quantity.toLocaleString()} ${params.tripDetails.unit})`,
     '',
     '─'.repeat(40),
-    APP_COMPANY,
-    '37 Ring Road Central, Accra, Ghana',
-    '+233 30 277 8899 | info@fleetpro.com.gh',
+    company.name,
+    companyAddressLine(company),
+    companyContactLine(company),
   ].join('\n')
 
   return sendEmail({
