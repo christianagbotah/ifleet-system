@@ -14,7 +14,7 @@ describe('DemoLoginPanel visibility', () => {
 
   it('stays hidden when the server has not enabled demo access', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      new Response(JSON.stringify({ enabled: false }), {
+      new Response(JSON.stringify({ enabled: false, profiles: [] }), {
         status: 200,
         headers: { 'content-type': 'application/json' },
       }),
@@ -26,9 +26,33 @@ describe('DemoLoginPanel visibility', () => {
     expect(screen.queryByText('Explore iFleetPro')).not.toBeInTheDocument()
   })
 
-  it('shows the six-role chooser when the server explicitly enables demo access', async () => {
+  it('renders exactly the runtime profiles returned by the server', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      new Response(JSON.stringify({ enabled: true }), {
+      new Response(JSON.stringify({
+        enabled: true,
+        profiles: [
+          {
+            key: 'operations-preview',
+            label: 'Operations Preview',
+            role: 'Dispatcher',
+            description: 'Read-only operations preview',
+            capability: 'Dispatch operations',
+            position: null,
+            department: 'Operations',
+            order: 10,
+          },
+          {
+            key: 'finance-preview',
+            label: 'Finance Preview',
+            role: 'Accountant',
+            description: 'Read-only finance preview',
+            capability: 'Finance reporting',
+            position: null,
+            department: 'Finance',
+            order: 20,
+          },
+        ],
+      }), {
         status: 200,
         headers: { 'content-type': 'application/json' },
       }),
@@ -37,10 +61,8 @@ describe('DemoLoginPanel visibility', () => {
     render(<DemoLoginPanel />)
 
     expect(await screen.findByText('Explore iFleetPro')).toBeInTheDocument()
-    expect(screen.getAllByText('Fleet Manager').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getByText('Dispatcher')).toBeInTheDocument()
-    expect(screen.getByText('Driver')).toBeInTheDocument()
-    expect(screen.getByText('Mechanic')).toBeInTheDocument()
-    expect(screen.getByText('Accountant')).toBeInTheDocument()
+    expect(screen.getAllByText('Operations Preview').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Finance Preview')).toBeInTheDocument()
+    expect(screen.queryByText('Fleet Manager')).not.toBeInTheDocument()
   })
 })
