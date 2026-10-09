@@ -35,6 +35,7 @@ import {
 } from '@/lib/trip-lifecycle'
 import { toast } from 'sonner'
 import { InvoiceDetailSheet } from '@/components/invoices/InvoiceDetailSheet'
+import { TripReconciliationPanel } from '@/components/reconciliation/TripReconciliationPanel'
 
 interface TripDetailSheetProps {
   trip: Trip | null
@@ -87,6 +88,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
   const commentsEndRef = React.useRef<HTMLDivElement>(null)
   const authUser = useAuthStore((s) => s.user)
   const canSeeFinancialData = useAuthStore((s) => s.canSeeFinancialData())
+  const canReconcileTrip = canSeeFinancialData || Boolean(authUser?.permissions?.includes('expenses.view') || authUser?.permissions?.includes('financial.view'))
 
   // Fetch full trip details when sheet opens
   React.useEffect(() => {
@@ -822,6 +824,17 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                   )}
                 </div>
               </div>
+
+              {canReconcileTrip && ['delivered', 'return_journey', 'arrived_base', 'awaiting_reconciliation', 'reconciled', 'completed'].includes(currentTrip.status) && (
+                <TripReconciliationPanel
+                  tripId={currentTrip.id}
+                  status={currentTrip.status}
+                  onFinalized={() => {
+                    apiFetch<TripFull>(`/api/trips/${currentTrip.id}`).then(setFullTrip).catch(() => {})
+                    onStatusChanged?.()
+                  }}
+                />
+              )}
 
               {/* Comments Section */}
               <Separator />

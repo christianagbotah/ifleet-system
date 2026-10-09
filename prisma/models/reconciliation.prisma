@@ -1,0 +1,78 @@
+model TripReconciliation {
+  id              String   @id @default(cuid())
+  tripId          String
+  version         Int
+  status          String   @default("draft")
+  fuelTotal       Decimal  @default(0)
+  tollTotal       Decimal  @default(0)
+  expenseTotal    Decimal  @default(0)
+  adjustmentTotal Decimal  @default(0)
+  operationalCost Decimal  @default(0)
+  advanceTotal    Decimal  @default(0)
+  snapshotJson    String   @db.LongText
+  blockersJson    String?  @db.LongText
+  createdBy       String
+  approvedBy      String?
+  approvedAt      DateTime?
+  createdAt       DateTime @default(now())
+  lines           ReconciliationLine[]
+
+  @@unique([tripId, version])
+  @@index([tripId, status])
+  @@index([createdAt])
+}
+
+model ReconciliationLine {
+  id               String             @id @default(cuid())
+  reconciliationId String
+  sourceType       String
+  sourceId         String
+  category         String?
+  reference        String?
+  amount           Decimal
+  includedInCost   Boolean            @default(true)
+  duplicateOf      String?
+  metadata         String?            @db.Text
+  createdAt        DateTime           @default(now())
+  reconciliation   TripReconciliation @relation(fields: [reconciliationId], references: [id], onDelete: Cascade)
+
+  @@unique([reconciliationId, sourceType, sourceId])
+  @@index([sourceType, sourceId])
+}
+
+model ReconciliationAdjustment {
+  id         String   @id @default(cuid())
+  tripId     String
+  amount     Decimal
+  reason     String   @db.Text
+  status     String   @default("pending")
+  createdBy  String
+  approvedBy String?
+  approvedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([tripId, status])
+  @@index([createdAt])
+}
+
+model ReconciliationException {
+  id               String   @id @default(cuid())
+  tripId           String
+  reconciliationId String?
+  type             String
+  status           String   @default("open")
+  sourceType       String?
+  sourceId         String?
+  amount           Decimal?
+  notes            String?  @db.Text
+  resolutionNotes  String?  @db.Text
+  resolvedBy       String?
+  resolvedAt       DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([tripId, status])
+  @@index([reconciliationId])
+  @@index([sourceType, sourceId])
+}
