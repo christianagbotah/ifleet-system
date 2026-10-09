@@ -1,5 +1,7 @@
 import { db } from '@/lib/db'
 import { TripStatus } from '@/generated/enums'
+import { processLocationRoutingIntelligence } from '@/lib/domain/routing/intelligence'
+import { PrismaRoutingIntelligenceRepository } from '@/lib/domain/routing/prisma-routing-repository'
 
 import type { LocationEventInput, NormalizedEventBase } from './events'
 import {
@@ -195,6 +197,17 @@ export class PrismaTelematicsIngestRepository implements TelematicsIngestReposit
           where: { id: input.event.deviceId },
           data: { lastSeenAt: input.event.receivedAt },
         })
+      }
+
+      if (input.event.kind === 'location' && liveStateUpdated) {
+        await processLocationRoutingIntelligence({
+          eventId: event.id,
+          assetType: input.assetType,
+          assetId: input.assetId,
+          tripId: input.tripId,
+          point: { latitude: input.event.latitude, longitude: input.event.longitude },
+          occurredAt: input.event.deviceTimestamp,
+        }, new PrismaRoutingIntelligenceRepository(tx))
       }
 
       return {

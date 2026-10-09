@@ -1,0 +1,78 @@
+model PlannedRoute {
+  id              String   @id @default(cuid())
+  name            String
+  tripId          String
+  assetType       String   @default("tractor")
+  assetId         String?
+  pointsJson      String   @db.LongText
+  toleranceMeters Int      @default(500)
+  status          String   @default("active")
+  createdById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tripId, status])
+  @@index([assetType, assetId, status])
+  @@index([createdAt])
+}
+
+model GeofenceAssetState {
+  id             String   @id @default(cuid())
+  assetType      String
+  assetId        String
+  geofenceZoneId String
+  inside         Boolean  @default(false)
+  enteredAt      DateTime?
+  dwellEmitted   Boolean  @default(false)
+  lastEventId    String
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+
+  @@unique([assetType, assetId, geofenceZoneId])
+  @@index([geofenceZoneId, inside])
+  @@index([assetType, assetId, updatedAt])
+}
+
+model GeofenceTransitionEvent {
+  id               String   @id @default(cuid())
+  idempotencyKey   String   @unique
+  telematicsEventId String
+  assetType        String
+  assetId          String
+  tripId           String?
+  geofenceZoneId   String
+  transition       String
+  latitude         Float
+  longitude        Float
+  occurredAt       DateTime
+  createdAt        DateTime @default(now())
+
+  @@index([assetType, assetId, occurredAt])
+  @@index([tripId, occurredAt])
+  @@index([geofenceZoneId, occurredAt])
+  @@index([transition, occurredAt])
+  @@index([telematicsEventId])
+}
+
+model RouteDeviationEvent {
+  id               String   @id @default(cuid())
+  idempotencyKey   String   @unique
+  telematicsEventId String
+  plannedRouteId   String
+  assetType        String
+  assetId          String
+  tripId           String
+  eventType        String
+  latitude         Float
+  longitude        Float
+  distanceMeters   Float
+  toleranceMeters  Int
+  occurredAt       DateTime
+  createdAt        DateTime @default(now())
+
+  @@index([plannedRouteId, occurredAt])
+  @@index([assetType, assetId, occurredAt])
+  @@index([tripId, occurredAt])
+  @@index([eventType, occurredAt])
+  @@index([telematicsEventId])
+}
