@@ -23,7 +23,7 @@ export interface VideoDeviceRequest {
   credentialRef?: string | null
 }
 
-export interface LiveVideoRequest extends VideoDeviceRequest {}
+export type LiveVideoRequest = VideoDeviceRequest
 
 export interface PlaybackClipRequest extends VideoDeviceRequest {
   startAt: Date
