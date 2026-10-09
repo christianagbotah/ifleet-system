@@ -4,6 +4,10 @@ import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { installDevice, validateDeviceIdentity } from '@/lib/domain/telematics/device-registry'
+import {
+  normalizeVideoCapabilities,
+  type CameraPrivacyClass,
+} from '@/lib/domain/video/capabilities'
 
 const RAW_CREDENTIAL_FIELDS = new Set([
   'credential',
@@ -18,14 +22,38 @@ const RAW_CREDENTIAL_FIELDS = new Set([
 ])
 
 function containsRawCredential(value: unknown): boolean {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
-  return Object.keys(value as Record<string, unknown>).some((key) => RAW_CREDENTIAL_FIELDS.has(key.toLowerCase()))
+  if (!value || typeof value !== 'object') return false
+  if (Array.isArray(value)) return value.some(containsRawCredential)
+  return Object.entries(value as Record<string, unknown>).some(([key, nested]) => (
+    RAW_CREDENTIAL_FIELDS.has(key.toLowerCase()) || containsRawCredential(nested)
+  ))
 }
 
 function optionalText(value: unknown): string | null {
   if (typeof value !== 'string') return null
   const text = value.trim()
   return text || null
+}
+
+function privacyClass(value: unknown): CameraPrivacyClass | undefined {
+  return value === 'road' || value === 'driver' || value === 'cargo' || value === 'exterior'
+    ? value
+    : undefined
+}
+
+function parseCameraChannels(value: unknown) {
+  if (!Array.isArray(value)) return []
+  return value.flatMap((raw, index) => {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return []
+    const channel = raw as Record<string, unknown>
+    return [{
+      key: optionalText(channel.channelKey) ?? optionalText(channel.key) ?? `channel-${index + 1}`,
+      label: optionalText(channel.label) ?? undefined,
+      orientation: optionalText(channel.orientation) ?? undefined,
+      privacyClass: privacyClass(channel.privacyClass),
+      enabled: channel.enabled !== false && channel.isEnabled !== false,
+    }]
+  })
 }
 
 async function ensureAssetExists(assetType: 'tractor' | 'trailer', assetId: string) {
@@ -44,7 +72,10 @@ export async function GET(
   const { id } = await params
   const device = await db.telematicsDevice.findUnique({
     where: { id },
-    include: { installations: { orderBy: { installedAt: 'desc' }, take: 100 } },
+    include: {
+      installations: { orderBy: { installedAt: 'desc' }, take: 100 },
+      cameraChannels: { orderBy: [{ isEnabled: 'desc' }, { channelKey: 'asc' }] },
+    },
   })
   if (!device) return NextResponse.json({ error: 'Telematics device not found' }, { status: 404 })
   return NextResponse.json(device)
@@ -72,6 +103,86 @@ export async function PATCH(
 
     const existingDevice = await db.telematicsDevice.findUnique({ where: { id }, select: { id: true } })
     if (!existingDevice) return NextResponse.json({ error: 'Telematics device not found' }, { status: 404 })
+
+    if (body.action === 'configure-video') {
+      const capabilities = normalizeVideoCapabilities({
+        videoEnabled: body.videoEnabled === true,
+        supportsLive: body.supportsLiveVideo === true,
+        supportsPlayback: body.supportsVideoPlayback === true,
+        supportsSnapshot: body.supportsVideoSnapshot === true,
+        channels: parseCameraChannels(body.channels),
+      })
+
+      const configured = await db.$transaction(async (tx) => {
+        await tx.telematicsDevice.update({
+          where: { id },
+          data: {
+            videoEnabled: capabilities.supported,
+            supportsLiveVideo: capabilities.liveView,
+            supportsVideoPlayback: capabilities.playback,
+            supportsVideoSnapshot: capabilities.snapshot,
+          },
+        })
+
+        const configuredKeys = capabilities.channels.map((channel) => channel.key)
+        if (configuredKeys.length > 0) {
+          await tx.cameraChannel.updateMany({
+            where: { deviceId: id, channelKey: { notIn: configuredKeys } },
+            data: { isEnabled: false },
+          })
+        } else {
+          await tx.cameraChannel.updateMany({ where: { deviceId: id }, data: { isEnabled: false } })
+        }
+
+        for (const channel of capabilities.channels) {
+          await tx.cameraChannel.upsert({
+            where: { deviceId_channelKey: { deviceId: id, channelKey: channel.key } },
+            update: {
+              label: channel.label,
+              orientation: channel.orientation,
+              privacyClass: channel.privacyClass,
+              isEnabled: channel.enabled,
+              supportsLive: capabilities.liveView,
+              supportsPlayback: capabilities.playback,
+              supportsSnapshot: capabilities.snapshot,
+            },
+            create: {
+              deviceId: id,
+              channelKey: channel.key,
+              label: channel.label,
+              orientation: channel.orientation,
+              privacyClass: channel.privacyClass,
+              isEnabled: channel.enabled,
+              supportsLive: capabilities.liveView,
+              supportsPlayback: capabilities.playback,
+              supportsSnapshot: capabilities.snapshot,
+            },
+          })
+        }
+
+        return tx.telematicsDevice.findUnique({
+          where: { id },
+          include: { cameraChannels: { orderBy: [{ isEnabled: 'desc' }, { channelKey: 'asc' }] } },
+        })
+      }, { isolationLevel: 'Serializable' })
+
+      createAuditLog({
+        userId: auth.userId,
+        action: 'configure_video',
+        entity: 'TelematicsDevice',
+        entityId: id,
+        details: {
+          videoEnabled: capabilities.supported,
+          supportsLiveVideo: capabilities.liveView,
+          supportsVideoPlayback: capabilities.playback,
+          supportsVideoSnapshot: capabilities.snapshot,
+          channelCount: capabilities.channels.length,
+        },
+        ipAddress: getClientIp(request),
+      }).catch(() => {})
+
+      return NextResponse.json(configured)
+    }
 
     if (body.action === 'install') {
       const assetType = body.assetType === 'tractor' || body.assetType === 'trailer' ? body.assetType : null
