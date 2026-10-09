@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, isDriverOrAdmin, ROLES } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { evaluateTripDeliveryReadiness } from '@/lib/domain/delivery/delivery-readiness'
 import type { DispatchClearanceCheckKey } from '@/lib/domain/dispatch/clearance'
 import { evaluateTripDispatchClearance } from '@/lib/domain/dispatch/trip-clearance'
 import {
@@ -100,6 +101,17 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           },
           ipAddress: getClientIp(request),
         }).catch(() => {})
+      }
+    }
+
+    if (to === 'delivered') {
+      const deliveryReadiness = await evaluateTripDeliveryReadiness(id)
+      if (!deliveryReadiness.passed) {
+        return NextResponse.json({
+          error: 'Proof of delivery is required for every delivery destination before this trip can be marked delivered.',
+          code: 'POD_REQUIRED',
+          deliveryReadiness,
+        }, { status: 409 })
       }
     }
 
