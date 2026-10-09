@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 
-import { createAuditLog, getClientIp } from '@/lib/audit'
-import { isDemoProfileId, type DemoProfileId } from '@/lib/auth/demo-profiles'
-import { getDemoIdentityConfig } from '@/lib/auth/demo-server'
+import { findDemoProfile, parseDemoProfilesConfig, toPublicDemoProfile } from '@/lib/auth/demo-runtime-config'
+import { resolveDemoSessionTtl } from '@/lib/auth/demo-session'
 import { db } from '@/lib/db'
 import { JWT_SECRET } from '@/lib/jwt-secret'
-
-const DEMO_SESSION_TTL = '8h'
 
 function isDemoLoginEnabled(): boolean {
   if (process.env.DEMO_LOGIN_ENABLED !== 'true') return false
@@ -15,88 +12,43 @@ function isDemoLoginEnabled(): boolean {
   return true
 }
 
-export async function GET() {
-  return NextResponse.json(
-    { enabled: isDemoLoginEnabled() },
-    { headers: { 'Cache-Control': 'no-store' } },
-  )
+function configuredProfiles() {
+  return parseDemoProfilesConfig(process.env.DEMO_PROFILES_JSON)
 }
 
-async function ensureDemoUser(profile: DemoProfileId) {
-  const identity = getDemoIdentityConfig(profile)
-  const role = await db.role.findUnique({
-    where: { name: identity.roleName },
-    select: { id: true, name: true, permissions: true },
-  })
+function readOnlyPermissions(value: string): string[] {
+  try {
+    const parsed = JSON.parse(value)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter((permission): permission is string => (
+      typeof permission === 'string' && permission.endsWith('.view')
+    ))
+  } catch {
+    return []
+  }
+}
 
-  if (!role) {
-    throw new Error(`Demo role is not configured: ${identity.roleName}`)
+export async function GET() {
+  if (!isDemoLoginEnabled()) {
+    return NextResponse.json(
+      { enabled: false, profiles: [] },
+      { headers: { 'Cache-Control': 'no-store' } },
+    )
   }
 
-  let user = await db.user.upsert({
-    where: { email: identity.email },
-    update: {
-      name: identity.name,
-      password: null,
-      roleId: role.id,
-      position: identity.position,
-      department: identity.department,
-      employeeNumber: identity.employeeNumber,
-      isActive: true,
-    },
-    create: {
-      email: identity.email,
-      name: identity.name,
-      password: null,
-      roleId: role.id,
-      position: identity.position,
-      department: identity.department,
-      employeeNumber: identity.employeeNumber,
-      isActive: true,
-    },
-    include: {
-      role: { select: { name: true, permissions: true } },
-      driver: { select: { id: true } },
-    },
-  })
-
-  if (profile === 'driver' && !user.driver) {
-    await db.driver.upsert({
-      where: { employeeId: 'DEMO-DRV-001' },
-      update: {
-        userId: user.id,
-        status: 'active',
-        verificationStatus: 'verified',
-      },
-      create: {
-        userId: user.id,
-        firstName: 'Demo',
-        lastName: 'Driver',
-        phone: '+233200000099',
-        email: 'demo.driver.profile@ifleetpro.local',
-        employeeId: 'DEMO-DRV-001',
-        ghanaCardNumber: 'DEMO-GHA-000000001',
-        ghanaCardExpiry: new Date('2035-12-31T00:00:00.000Z'),
-        licenseNumber: 'DEMO-LIC-000001',
-        licenseExpiry: new Date('2035-12-31T00:00:00.000Z'),
-        licenseClass: 'C',
-        verificationStatus: 'verified',
-        status: 'active',
-        hireDate: new Date('2026-01-01T00:00:00.000Z'),
-      },
-    })
-
-    const refreshed = await db.user.findUnique({
-      where: { id: user.id },
-      include: {
-        role: { select: { name: true, permissions: true } },
-        driver: { select: { id: true } },
-      },
-    })
-    if (refreshed) user = refreshed
+  try {
+    const profiles = configuredProfiles().map(toPublicDemoProfile)
+    return NextResponse.json(
+      { enabled: true, profiles },
+      { headers: { 'Cache-Control': 'no-store' } },
+    )
+  } catch (error) {
+    console.error('[Demo Login] Runtime configuration is invalid:', error instanceof Error ? error.message : 'unknown error')
+    return NextResponse.json(
+      { enabled: false, profiles: [] },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    )
   }
-
-  return user
 }
 
 export async function POST(request: NextRequest) {
@@ -105,66 +57,72 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Demo access is not enabled.' }, { status: 403 })
     }
 
+    const profiles = configuredProfiles()
     const body = (await request.json().catch(() => null)) as { profile?: unknown } | null
-    if (!body || !isDemoProfileId(body.profile)) {
+    const profile = findDemoProfile(profiles, body?.profile)
+    if (!profile) {
       return NextResponse.json({ error: 'Unknown demo profile.' }, { status: 400 })
     }
 
-    const profile = body.profile
-    const user = await ensureDemoUser(profile)
-    if (!user?.email) {
-      return NextResponse.json({ error: 'Demo identity could not be prepared.' }, { status: 503 })
+    const role = await db.role.findUnique({
+      where: { name: profile.roleName },
+      select: { name: true, permissions: true },
+    })
+    if (!role) {
+      console.error('[Demo Login] Configured role does not exist.')
+      return NextResponse.json({ error: 'Demo access is temporarily unavailable.' }, { status: 503 })
     }
 
-    let permissions: string[] = []
-    try {
-      permissions = JSON.parse(user.role.permissions)
-    } catch {
-      permissions = []
-    }
+    const permissions = readOnlyPermissions(role.permissions)
+    const ttl = resolveDemoSessionTtl(process.env.DEMO_SESSION_TTL)
+    const userId = `demo:${profile.key}`
 
     const token = jwt.sign(
       {
-        userId: user.id,
-        email: user.email,
-        name: user.name,
-        roleName: user.role.name,
+        userId,
+        email: '',
+        name: profile.name,
+        roleName: role.name,
         permissions,
-        driverId: user.driver?.id ?? null,
-        isActive: user.isActive,
+        driverId: null,
+        isActive: true,
         isDemo: true,
-        demoProfile: profile,
+        demoProfile: profile.key,
       },
       JWT_SECRET,
-      { expiresIn: DEMO_SESSION_TTL },
+      { expiresIn: ttl as jwt.SignOptions['expiresIn'] },
     )
 
     const userData = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      phone: user.phone,
-      avatar: user.avatar,
-      role: user.role.name,
+      id: userId,
+      email: '',
+      name: profile.name,
+      phone: null,
+      avatar: null,
+      role: role.name,
       permissions,
-      driverId: user.driver?.id ?? null,
-      isActive: user.isActive,
+      driverId: null,
+      isActive: true,
       isDemo: true,
-      demoProfile: profile,
+      demoProfile: profile.key,
+      demoLabel: profile.label,
+      demoDescription: profile.description,
+      demoCapability: profile.capability,
+      position: profile.position,
+      department: profile.department,
     }
 
-    createAuditLog({
-      userId: user.id,
-      action: 'demo_login',
-      entity: 'User',
-      entityId: user.id,
-      details: { profile },
-      ipAddress: getClientIp(request),
-    }).catch(() => {})
+    console.info('[Demo Login] Session issued', {
+      profile: profile.key,
+      role: role.name,
+    })
 
-    return NextResponse.json({ user: userData, token })
+    return NextResponse.json(
+      { user: userData, token },
+      { headers: { 'Cache-Control': 'no-store' } },
+    )
   } catch (error) {
     console.error('[Demo Login] Error:', error instanceof Error ? error.message : error)
-    return NextResponse.json({ error: 'Demo login failed.' }, { status: 500 })
+    return NextResponse.json({ error: 'Demo login failed.' }, { status: 503 })
   }
 }
