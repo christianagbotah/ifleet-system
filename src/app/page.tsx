@@ -86,6 +86,10 @@ const LiveTrackingView = dynamic(
   () => import('@/components/tracking/LiveTrackingView').then(m => ({ default: m.LiveTrackingView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const ControlTower = dynamic(
+  () => import('@/components/tracking/ControlTower').then(m => ({ default: m.ControlTower })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const DriverLocationSender = dynamic(
   () => import('@/components/tracking/DriverLocationSender').then(m => ({ default: m.DriverLocationSender })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -369,6 +373,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <FuelBudgetView />
     case 'tracking':
       return <LiveTrackingView />
+    case 'control-tower':
+      return <ControlTower />
     case 'driver-tracking':
       return <DriverLocationSender />
     case 'waybills':

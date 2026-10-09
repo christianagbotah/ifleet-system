@@ -238,6 +238,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   'fuel-prices': ['financial.view'],
   'driver-incentives': ['financial.view'],
   tracking: ['trucks.view'],
+  'control-tower': ['trucks.view'],
   'driver-tracking': ['trips.view'],
   trucks: ['trucks.view'],
   trailers: ['trucks.view'],

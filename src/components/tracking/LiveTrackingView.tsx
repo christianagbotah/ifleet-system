@@ -392,6 +392,12 @@ export function LiveTrackingView() {
           <p className="text-muted-foreground">Real-time fleet monitoring</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="default" size="sm" onClick={() => {
+            window.dispatchEvent(new CustomEvent('navigate-page', { detail: 'control-tower' }))
+          }}>
+            <Radio className="mr-2 h-4 w-4" />
+            Control Tower
+          </Button>
           <Button variant="outline" size="sm" onClick={() => {
             window.dispatchEvent(new CustomEvent('navigate-page', { detail: 'driver-tracking' }))
           }}>
