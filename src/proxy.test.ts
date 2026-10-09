@@ -14,14 +14,14 @@ function request(path: string, options?: { method?: string; token?: string }): N
   })
 }
 
-async function demoToken(): Promise<string> {
+async function demoToken(roleName = 'Admin'): Promise<string> {
   const { JWT_SECRET } = await import('./lib/jwt-secret')
   return jwt.sign(
     {
-      userId: 'demo-admin-user',
-      email: 'demo.admin@ifleetpro.local',
-      name: 'Demo Administrator',
-      roleName: 'Admin',
+      userId: 'demo-test-user',
+      email: '',
+      name: 'Demo Test User',
+      roleName,
       permissions: ['dashboard.view'],
       driverId: null,
       isActive: true,
@@ -66,7 +66,7 @@ describe('API authentication proxy', () => {
 
     expect(response.status).toBe(403)
     await expect(response.json()).resolves.toEqual({
-      error: 'Public demo sessions use synthetic data and cannot access production APIs.',
+      error: 'Public demo sessions are isolated and cannot access production APIs.',
     })
   })
 
@@ -76,8 +76,17 @@ describe('API authentication proxy', () => {
 
     expect(response.status).toBe(403)
     await expect(response.json()).resolves.toEqual({
-      error: 'Public demo sessions use synthetic data and cannot access production APIs.',
+      error: 'Public demo sessions are isolated and cannot access production APIs.',
     })
+  })
+
+  it('does not let a demo token mapped to Driver enter the real driver application shell', async () => {
+    const token = await demoToken('Driver')
+    const response = await proxy(request('/driver', { method: 'GET', token }))
+
+    expect(response.status).toBeGreaterThanOrEqual(300)
+    expect(response.status).toBeLessThan(400)
+    expect(response.headers.get('location')).toContain('auth=demo')
   })
 
   it('does not make neighboring demo-auth paths public', async () => {

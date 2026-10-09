@@ -1,5 +1,3 @@
-import type { DemoProfileId } from '@/lib/auth/demo-profiles'
-import { canDemoAccessNav } from '@/lib/auth/demo-access'
 import { create } from 'zustand'
 
 export interface AuthUser {
@@ -8,33 +6,36 @@ export interface AuthUser {
   name: string
   phone: string | null
   avatar: string | null
-  role: string           // 'Admin' | 'Manager' | 'Driver'
-  permissions: string[]  // e.g. ['trucks.view', 'trucks.create', ...]
-  driverId?: string | null   // linked Driver record ID (if role is Driver)
+  role: string
+  permissions: string[]
+  driverId?: string | null
   isActive: boolean
   isDemo?: boolean
-  demoProfile?: DemoProfileId | null
+  demoProfile?: string | null
+  demoLabel?: string | null
+  demoDescription?: string | null
+  demoCapability?: string | null
+  position?: string | null
+  department?: string | null
 }
 
 interface AuthState {
   user: AuthUser | null
   isAuthenticated: boolean
   isLoading: boolean
-  isHydrated: boolean  // true after initial localStorage check on mount
-  token: string | null  // JWT token from server
+  isHydrated: boolean
+  token: string | null
   login: (email: string, password: string) => Promise<void>
-  demoLogin: (profile: DemoProfileId) => Promise<void>
+  demoLogin: (profile: string) => Promise<void>
   logout: () => void
   setUser: (user: AuthUser | null) => void
   setToken: (token: string | null) => void
-  hydrate: () => void  // Restore session from localStorage
+  hydrate: () => void
   hasPermission: (permission: string) => boolean
   hasAnyPermission: (permissions: string[]) => boolean
   canSeeFinancialData: () => boolean
   getToken: () => string | null
 }
-
-// ── Manual localStorage helpers ────────────────────────────────────────────
 
 const STORAGE_KEY = 'fleetpro-auth'
 
@@ -78,21 +79,17 @@ function clearStorage(): void {
   }
 }
 
-/** Decode JWT payload without verification (client-side only, for expiry check) */
 function isJwtExpired(token: string): boolean {
   try {
     const base64 = token.split('.')[1]
     if (!base64) return true
     const payload = JSON.parse(atob(base64.replace(/-/g, '+').replace(/_/g, '/')))
     if (!payload.exp) return false
-    // exp is in seconds, Date.now() is in ms — add 30s buffer for clock skew
     return payload.exp * 1000 < Date.now() - 30000
   } catch {
     return true
   }
 }
-
-// ── Store ────────────────────────────────────────────────────────────────
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
   user: null,
@@ -101,24 +98,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   isHydrated: false,
   token: null,
 
-  /**
-   * Hydrate auth state from localStorage.
-   * Safe to call multiple times. If a login already happened (token is set),
-   * this is a no-op — the fresh login always wins over stale localStorage data.
-   */
   hydrate: () => {
-    // Mark hydration as complete (always, even if no stored session found)
-    // This prevents showing the login page while we check localStorage.
-
-    // If already authenticated (from a fresh login), never overwrite with
-    // stale localStorage data. This eliminates the login→dashboard→login race.
     if (get().isAuthenticated && get().token) {
       set({ isHydrated: true })
       return
     }
 
     const stored = readStorage()
-
     if (stored?.token && stored?.user && stored.isAuthenticated) {
       if (!isJwtExpired(stored.token)) {
         set({
@@ -129,11 +115,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         })
         return
       }
-      // Token expired — clear stale data
       clearStorage()
     }
 
-    // No valid session found — mark hydration done
     set({ isHydrated: true })
   },
 
@@ -153,10 +137,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       const data = await res.json()
       const token = data.token || null
-
-      // Write to localStorage for persistence across page refreshes
       writeStorage(data.user, token, true)
-
       set({
         user: data.user,
         token,
@@ -169,7 +150,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
   },
 
-  demoLogin: async (profile: DemoProfileId) => {
+  demoLogin: async (profile: string) => {
     set({ isLoading: true })
     try {
       const res = await fetch('/api/auth/demo-login', {
@@ -215,10 +196,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     const { user } = get()
     if (!user) return false
     if (user.isDemo) {
-      return permission.includes('.view') && user.permissions.includes(permission)
+      return permission.endsWith('.view') && user.permissions.includes(permission)
     }
-    if (user.role === 'Admin') return true
-    if (user.role === 'Manager') return true
+    if (user.role === 'Admin' || user.role === 'Manager') return true
     return user.permissions.includes(permission)
   },
 
@@ -226,31 +206,23 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     const { user } = get()
     if (!user) return false
     if (user.isDemo) {
-      return permissions.some((permission) => permission.includes('.view') && user.permissions.includes(permission))
+      return permissions.some((permission) => permission.endsWith('.view') && user.permissions.includes(permission))
     }
-    if (user.role === 'Admin') return true
-    if (user.role === 'Manager') return true
-    return permissions.some((p) => user.permissions.includes(p))
+    if (user.role === 'Admin' || user.role === 'Manager') return true
+    return permissions.some((permission) => user.permissions.includes(permission))
   },
 
-  /** Check if the current user can view financial data (revenue, costs, margins) */
-  canSeeFinancialData: (): boolean => {
+  canSeeFinancialData: () => {
     const { user } = get()
-    if (!user) return false
-    if (user.isDemo) return false
+    if (!user || user.isDemo) return false
     return user.role === 'Admin' || user.role === 'Manager'
   },
 
-  getToken: () => {
-    return get().token
-  },
+  getToken: () => get().token,
 }))
 
-// Navigation item permission mapping
-// Financial pages require `financial.view` — Drivers are blocked
 export const NAV_PERMISSIONS: Record<string, string[]> = {
   dashboard: ['dashboard.view'],
-  // FINANCIAL — Admin & Manager only
   'truck-financials': ['financial.view'],
   analytics: ['financial.view'],
   'cost-analytics': ['financial.view'],
@@ -265,7 +237,6 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   'expense-approvals': ['financial.view'],
   'fuel-prices': ['financial.view'],
   'driver-incentives': ['financial.view'],
-  // OPERATIONS — all roles
   tracking: ['trucks.view'],
   'driver-tracking': ['trips.view'],
   trucks: ['trucks.view'],
@@ -293,7 +264,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   documents: ['expenses.view'],
   users: ['users.view'],
   notifications: ['notifications.view'],
-  'reports': ['reports.view'],
+  reports: ['reports.view'],
   'fuel-logs': ['expenses.view'],
   'client-portal': ['trips.view'],
   'vehicle-inspections': ['maintenance.view'],
@@ -311,23 +282,21 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
 
 export function canAccessNav(itemId: string): boolean {
   const store = useAuthStore.getState()
-  if (store.user?.isDemo && !canDemoAccessNav(itemId)) return false
+  if (store.user?.isDemo) return false
   const required = NAV_PERMISSIONS[itemId]
   if (!required) return true
   return store.hasAnyPermission(required)
 }
 
-// Initials helper
 export function getUserInitials(name: string): string {
   return name
     .split(' ')
-    .map((n) => n[0])
+    .map((part) => part[0])
     .join('')
     .toUpperCase()
     .slice(0, 2)
 }
 
-// Role badge color
 export function getRoleBadgeColor(role: string): string {
   switch (role) {
     case 'Admin':

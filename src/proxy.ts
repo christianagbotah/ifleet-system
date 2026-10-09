@@ -192,6 +192,14 @@ export async function proxy(request: NextRequest) {
         const { payload } = await jwtVerify(token, getSecretKey())
         const roleName = payload.roleName as string | undefined
         const isActive = payload.isActive as boolean | undefined
+        const isDemo = payload.isDemo === true
+
+        if (isDemo) {
+          const url = request.nextUrl.clone()
+          url.pathname = '/'
+          url.searchParams.set('auth', 'demo')
+          return applySecurityHeaders(NextResponse.redirect(url))
+        }
 
         if (isActive === false) {
           const url = request.nextUrl.clone()
@@ -261,7 +269,7 @@ export async function proxy(request: NextRequest) {
           {
             error: isMutation
               ? 'Demo mode is read-only. Sign in with a standard account to make changes.'
-              : 'Public demo sessions use synthetic data and cannot access production APIs.',
+              : 'Public demo sessions are isolated and cannot access production APIs.',
           },
           { status: 403 },
         ))

@@ -12,6 +12,7 @@ import { fmtDate } from './pdf-generator'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
 import { registerFonts, getFontFamily } from './pdf-font'
 import { CEDI } from './csv-generator'
+import { companyAddressLine, companyContactLine, loadCompanyProfile } from '@/lib/config/company-profile'
 
 const FF = getFontFamily()
 
@@ -36,6 +37,9 @@ function ghs(amount: number): string {
  * Portrait A4 format with branded styling.
  */
 export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
+  const company = await loadCompanyProfile()
+  const companyAddress = companyAddressLine(company)
+  const companyContact = companyContactLine(company)
   const invoice = await db.invoice.findUnique({
     where: { id: invoiceId },
     include: {
@@ -70,8 +74,8 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.text(APP_TAGLINE, pw - margin, 8, { align: 'right' })
-  doc.text('37 Ring Road Central, Accra, Ghana', pw - margin, 13, { align: 'right' })
-  doc.text('+233 30 277 8899', pw - margin, 18, { align: 'right' })
+  if (companyAddress) doc.text(companyAddress, pw - margin, 13, { align: 'right' })
+  if (company.phone) doc.text(company.phone, pw - margin, 18, { align: 'right' })
 
   y = 25
 
@@ -418,7 +422,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
   doc.setTextColor(...C.dark)
   doc.text('Thank you for your business!', margin + 5, y + 5)
   doc.setFont(FF, 'normal')
-  doc.text('For questions, contact accounts@fleetpro.com.gh or call +233 30 277 8899.', margin + 5, y + 9)
+  doc.text(companyContact ? `For questions, contact ${companyContact}.` : 'For questions, contact your fleet administrator.', margin + 5, y + 9)
 
   y += 18
 
@@ -439,7 +443,7 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
     doc.setTextColor(...C.gray)
 
     const disclaimer = 'This is a computer-generated invoice. It does not require a physical signature to be valid. ' +
-      'For questions contact accounts@fleetpro.com.gh or call +233 30 277 8899. ' +
+      (companyContact ? `For questions contact ${companyContact}. ` : '') +
       'This document is confidential and intended solely for the named client.'
 
     const splitDisclaimer = doc.splitTextToSize(disclaimer, contentW)

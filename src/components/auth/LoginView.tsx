@@ -1,37 +1,35 @@
 'use client'
 
-import { APP_COPYRIGHT, APP_NAME } from '@/lib/constants'
 import * as React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  Activity,
-  AlertCircle,
   ArrowLeft,
   CheckCircle2,
   Eye,
   EyeOff,
   KeyRound,
+  Layers3,
   Loader2,
   Mail,
-  MapPinned,
-  Navigation,
   RadioTower,
   Route,
   ShieldCheck,
   Sparkles,
   Truck,
+  Weight,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { DemoLoginPanel } from '@/components/auth/DemoLoginPanel'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { APP_COPYRIGHT, APP_NAME } from '@/lib/constants'
 import { useAuthStore } from '@/lib/store/auth'
 
-// ── Auth view states ──
 type AuthView = 'login' | 'forgot-password' | 'reset-password' | 'reset-success'
+
+const PANEL_CLASS = 'rounded-[30px] border border-slate-200/90 bg-white p-5 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035] sm:p-8'
 
 export function LoginView() {
   const [view, setView] = React.useState<AuthView>('login')
@@ -40,8 +38,8 @@ export function LoginView() {
   const [showPassword, setShowPassword] = React.useState(false)
   const { login, isLoading } = useAuthStore()
 
-  async function handleLoginSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleLoginSubmit(event: React.FormEvent) {
+    event.preventDefault()
 
     if (!email.trim()) {
       toast.error('Please enter your email')
@@ -53,7 +51,7 @@ export function LoginView() {
     }
 
     try {
-      await login(email.trim(), password.trim())
+      await login(email.trim(), password)
       toast.success('Welcome back!')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Login failed')
@@ -67,23 +65,12 @@ export function LoginView() {
         <div className="absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
       </div>
 
-      <main className="relative mx-auto grid min-h-[100dvh] w-full max-w-[1680px] lg:grid-cols-[minmax(0,1.08fr)_minmax(500px,0.92fr)]">
+      <main className="relative mx-auto grid min-h-[100dvh] w-full max-w-[1680px] lg:grid-cols-[minmax(0,1.08fr)_minmax(500px,.92fr)]">
         <LoginShowcase />
 
         <section className="relative flex min-h-[100dvh] items-center justify-center bg-white px-4 py-8 dark:bg-[#0b111a] sm:px-8 lg:px-10 xl:px-16">
           <div className="w-full max-w-[560px]">
-            <div className="mb-7 flex items-center justify-between lg:hidden">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20">
-                  <Truck className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-base font-bold tracking-tight text-slate-950 dark:text-white">{APP_NAME}</div>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">Fleet intelligence</div>
-                </div>
-              </div>
-              <span className="rounded-full border border-slate-200 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:border-white/10 dark:text-slate-400">Ghana</span>
-            </div>
+            <MobileBrand />
 
             <AnimatePresence mode="wait">
               {view === 'login' && (
@@ -98,8 +85,8 @@ export function LoginView() {
                   isLoading={isLoading}
                   onSubmit={handleLoginSubmit}
                   onForgotPassword={() => {
-                    setView('forgot-password')
                     setPassword('')
+                    setView('forgot-password')
                   }}
                 />
               )}
@@ -130,8 +117,8 @@ export function LoginView() {
                 <ResetSuccessView
                   key="success"
                   onBackToLogin={() => {
-                    setView('login')
                     setPassword('')
+                    setView('login')
                   }}
                 />
               )}
@@ -139,7 +126,9 @@ export function LoginView() {
 
             <div className="mt-7 flex flex-col items-center justify-between gap-2 text-center text-[11px] text-slate-400 sm:flex-row sm:text-left">
               <span>{APP_COPYRIGHT}</span>
-              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Secure fleet operations</span>
+              <span className="inline-flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5" /> Secure fleet operations
+              </span>
             </div>
           </div>
         </section>
@@ -148,16 +137,49 @@ export function LoginView() {
   )
 }
 
+function MobileBrand() {
+  return (
+    <div className="mb-7 flex items-center justify-between lg:hidden">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20">
+          <Truck className="h-5 w-5" />
+        </div>
+        <div>
+          <div className="text-base font-bold tracking-tight text-slate-950 dark:text-white">{APP_NAME}</div>
+          <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">Fleet intelligence</div>
+        </div>
+      </div>
+      <span className="rounded-full border border-slate-200 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:border-white/10 dark:text-slate-400">
+        Ghana
+      </span>
+    </div>
+  )
+}
+
 function LoginShowcase() {
+  const workflow = [
+    { icon: Layers3, title: 'Plan', detail: 'Orders, assets and assignments' },
+    { icon: Weight, title: 'Verify', detail: 'Gate, weighing and compliance' },
+    { icon: RadioTower, title: 'Move', detail: 'Tracking and control-tower visibility' },
+    { icon: Route, title: 'Close', detail: 'Delivery evidence and reconciliation' },
+  ]
+
   return (
     <aside className="relative hidden min-h-[100dvh] overflow-hidden bg-[#07111d] px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-16 xl:py-14">
-      <div className="pointer-events-none absolute inset-0 opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px)',
+          backgroundSize: '44px 44px',
+        }}
+      />
       <div className="pointer-events-none absolute -left-20 top-24 h-80 w-80 rounded-full bg-amber-500/20 blur-[110px]" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-400/10 blur-[130px]" />
 
-      <div className="relative z-10 flex items-center justify-between">
+      <div className="relative z-10 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-300/30 bg-amber-400 text-slate-950 shadow-[0_12px_40px_-12px_rgba(245,158,11,0.7)]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-300/30 bg-amber-400 text-slate-950 shadow-[0_12px_40px_-12px_rgba(245,158,11,.7)]">
             <Truck className="h-6 w-6" />
           </div>
           <div>
@@ -165,8 +187,8 @@ function LoginShowcase() {
             <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300">African haulage operating system</div>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-emerald-300/15 bg-emerald-300/5 px-3 py-1.5 text-[11px] font-semibold text-emerald-200">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" /> Platform online
+        <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold text-slate-300">
+          Production-ready architecture
         </div>
       </div>
 
@@ -178,47 +200,46 @@ function LoginShowcase() {
           Command every vehicle. <span className="text-amber-400">See every risk.</span> Move every load.
         </h1>
         <p className="mt-6 max-w-xl text-base leading-7 text-slate-300 xl:text-lg">
-          One intelligent control layer for dispatch, factory loading, compliance, weighing, live fleet visibility and commercial performance.
+          One intelligent operating layer for dispatch, factory loading, compliance, weighing, fleet visibility and commercial control.
         </p>
 
-        <div className="mt-8 grid max-w-2xl grid-cols-3 gap-3">
-          {[{ icon: RadioTower, value: 'Live', label: 'Control tower' }, { icon: ShieldCheck, value: 'Guarded', label: 'Compliance' }, { icon: Activity, value: 'Unified', label: 'Operations data' }].map(({ icon: Icon, value, label }) => (
-            <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-xl">
-              <Icon className="mb-5 h-5 w-5 text-amber-300" />
-              <div className="text-sm font-bold">{value}</div>
-              <div className="mt-1 text-xs text-slate-400">{label}</div>
+        <div className="mt-9 grid max-w-2xl grid-cols-2 gap-3 xl:grid-cols-4">
+          {workflow.map(({ icon: Icon, title, detail }, index) => (
+            <div key={title} className="relative rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-xl">
+              <div className="mb-6 flex items-center justify-between">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300">
+                  <Icon className="h-4 w-4" />
+                </span>
+                <span className="text-[10px] font-bold tracking-[0.16em] text-slate-600">0{index + 1}</span>
+              </div>
+              <div className="text-sm font-bold">{title}</div>
+              <div className="mt-1 text-xs leading-5 text-slate-400">{detail}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="relative z-10 rounded-[28px] border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/20 backdrop-blur-2xl xl:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-400"><MapPinned className="h-4 w-4 text-amber-300" /> Active movement</div>
-            <div className="mt-2 text-lg font-bold">Tema Port → Kumasi</div>
-            <div className="mt-1 text-xs text-slate-400">Haulage corridor · live operations preview</div>
-          </div>
-          <div className="rounded-xl border border-emerald-300/15 bg-emerald-300/10 px-3 py-2 text-right">
-            <div className="text-xs font-bold text-emerald-200">On route</div>
-            <div className="mt-0.5 text-[10px] text-emerald-200/70">Telemetry healthy</div>
-          </div>
+      <div className="relative z-10 rounded-[28px] border border-white/10 bg-white/[0.055] p-6 shadow-2xl shadow-black/20 backdrop-blur-2xl">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">
+          <ShieldCheck className="h-4 w-4 text-amber-300" /> Operating model
         </div>
-
-        <div className="relative my-7 h-20">
-          <div className="absolute left-3 right-3 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-amber-400 via-amber-300/70 to-cyan-300/60" />
-          <div className="absolute left-3 top-1/2 -translate-y-1/2"><div className="h-3 w-3 rounded-full bg-amber-400 shadow-[0_0_0_6px_rgba(245,158,11,0.12)]" /><span className="absolute left-0 top-5 whitespace-nowrap text-[10px] text-slate-400">Tema</span></div>
-          <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2"><div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-amber-300/30 bg-[#111d2b] text-amber-300 shadow-xl"><Truck className="h-5 w-5" /></div></div>
-          <div className="absolute right-3 top-1/2 -translate-y-1/2"><div className="h-3 w-3 rounded-full border-2 border-cyan-300 bg-[#07111d] shadow-[0_0_0_6px_rgba(103,232,249,0.08)]" /><span className="absolute right-0 top-5 whitespace-nowrap text-[10px] text-slate-400">Kumasi</span></div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
-          <div><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-slate-500"><Navigation className="h-3 w-3" /> ETA</div><div className="mt-1 text-sm font-semibold">2h 18m</div></div>
-          <div><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-slate-500"><Route className="h-3 w-3" /> Corridor</div><div className="mt-1 text-sm font-semibold">Clear</div></div>
-          <div><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-slate-500"><ShieldCheck className="h-3 w-3" /> Compliance</div><div className="mt-1 text-sm font-semibold">Passed</div></div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <ShowcasePoint title="Evidence first" detail="Every critical movement is backed by auditable operational evidence." />
+          <ShowcasePoint title="Rules driven" detail="Compliance and dispatch decisions come from versioned configuration." />
+          <ShowcasePoint title="Hardware neutral" detail="Telematics integrations remain provider-independent by design." />
         </div>
       </div>
     </aside>
+  )
+}
+
+function ShowcasePoint({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div className="rounded-2xl border border-white/[0.07] bg-black/10 p-4">
+      <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+      <div className="mt-4 text-sm font-semibold">{title}</div>
+      <div className="mt-1 text-xs leading-5 text-slate-400">{detail}</div>
+    </div>
   )
 }
 
@@ -234,18 +255,18 @@ function LoginForm({
   onForgotPassword,
 }: {
   email: string
-  setEmail: (v: string) => void
+  setEmail: (value: string) => void
   password: string
-  setPassword: (v: string) => void
+  setPassword: (value: string) => void
   showPassword: boolean
-  setShowPassword: (v: boolean) => void
+  setShowPassword: (value: boolean) => void
   isLoading: boolean
-  onSubmit: (e: React.FormEvent) => void
+  onSubmit: (event: React.FormEvent) => void
   onForgotPassword: () => void
 }) {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.25 }}>
-      <div className="rounded-[30px] border border-slate-200/90 bg-white p-5 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035] sm:p-8">
+      <div className={PANEL_CLASS}>
         <div className="mb-7">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-700 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-300">
             <ShieldCheck className="h-3.5 w-3.5" /> Secure workspace
@@ -259,25 +280,50 @@ function LoginForm({
             <Label htmlFor="login-email" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Email address</Label>
             <div className="relative">
               <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <Input id="login-email" type="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} autoComplete="email" className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-none transition focus-visible:border-amber-400 focus-visible:ring-amber-400/20 dark:border-white/10 dark:bg-white/[0.045]" />
+              <Input
+                id="login-email"
+                type="email"
+                placeholder="name@company.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                disabled={isLoading}
+                autoComplete="email"
+                className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-none transition focus-visible:border-amber-400 focus-visible:ring-amber-400/20 dark:border-white/10 dark:bg-white/[0.045]"
+              />
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor="login-password" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Password</Label>
-              <button type="button" onClick={onForgotPassword} className="text-xs font-semibold text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">Forgot password?</button>
+              <button type="button" onClick={onForgotPassword} className="text-xs font-semibold text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">
+                Forgot password?
+              </button>
             </div>
             <div className="relative">
               <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} autoComplete="current-password" className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 pr-11 text-sm shadow-none transition focus-visible:border-amber-400 focus-visible:ring-amber-400/20 dark:border-white/10 dark:bg-white/[0.045]" />
-              <button type="button" className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
+              <Input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                disabled={isLoading}
+                autoComplete="current-password"
+                className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 pr-11 text-sm shadow-none transition focus-visible:border-amber-400 focus-visible:ring-amber-400/20 dark:border-white/10 dark:bg-white/[0.045]"
+              />
+              <button
+                type="button"
+                className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
 
-          <Button type="submit" className="h-12 w-full rounded-xl bg-amber-500 font-bold text-slate-950 shadow-[0_12px_28px_-14px_rgba(245,158,11,0.85)] hover:bg-amber-400" disabled={isLoading}>
+          <Button type="submit" className="h-12 w-full rounded-xl bg-amber-500 font-bold text-slate-950 shadow-[0_12px_28px_-14px_rgba(245,158,11,.85)] hover:bg-amber-400" disabled={isLoading}>
             {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…</> : 'Sign in to iFleetPro'}
           </Button>
         </form>
@@ -288,10 +334,6 @@ function LoginForm({
   )
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Forgot Password Form (Step 1: enter email)
-// ──────────────────────────────────────────────────────────────────────────────
-
 function ForgotPasswordForm({
   email,
   setEmail,
@@ -299,16 +341,14 @@ function ForgotPasswordForm({
   onTokenSent,
 }: {
   email: string
-  setEmail: (v: string) => void
+  setEmail: (value: string) => void
   onBack: () => void
   onTokenSent: (email: string) => void
 }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
-  const [devToken, setDevToken] = React.useState<string | null>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
     if (!email.trim()) {
       toast.error('Please enter your email address')
       return
@@ -316,24 +356,18 @@ function ForgotPasswordForm({
 
     setIsSubmitting(true)
     try {
-      const res = await fetch('/api/auth/forgot-password', {
+      const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim() }),
       })
-
-      const data = await res.json()
-
-      if (res.ok) {
-        toast.success(data.message || 'Reset link sent! Check your email.')
-        // In dev mode, capture the token for convenience
-        if (data.devToken) {
-          setDevToken(data.devToken)
-        }
-        onTokenSent(email.trim())
-      } else {
-        toast.error(data.error || 'Something went wrong. Please try again.')
+      const data = await response.json()
+      if (!response.ok) {
+        toast.error(data.error || 'Unable to start password recovery')
+        return
       }
+      toast.success(data.message || 'Password recovery instructions sent')
+      onTokenSent(email.trim())
     } catch {
       toast.error('Network error. Please check your connection.')
     } finally {
@@ -342,90 +376,29 @@ function ForgotPasswordForm({
   }
 
   return (
-    <motion.div
-      initial={false}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.25 }}
-    >
-      <Card className="rounded-[28px] border border-slate-200/90 bg-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035]">
-        <CardHeader className="text-center pb-2">
-          <div className="mx-auto mb-2 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30">
-            <Mail className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-          </div>
-          <CardTitle className="text-xl">Forgot Password</CardTitle>
-          <CardDescription>
-            Enter your email and we&apos;ll send you a reset link
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="forgot-email">Email Address</Label>
-              <Input
-                id="forgot-email"
-                type="email"
-                placeholder="you@fleetpro.com.gh"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isSubmitting}
-                autoComplete="email"
-                className="h-11"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full h-11 font-semibold"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                'Send Reset Link'
-              )}
-            </Button>
-          </form>
-
-          {/* Dev mode: show token for testing */}
-          {devToken && (
-            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-                <div className="text-xs text-amber-700 dark:text-amber-400 space-y-1">
-                  <p className="font-medium">Dev Mode — Reset Token</p>
-                  <p className="font-mono text-[11px] break-all select-all bg-white dark:bg-gray-900 px-2 py-1 rounded border border-amber-200 dark:border-amber-800">
-                    {devToken.slice(0, 8)}
-                  </p>
-                  <p className="text-[11px] opacity-70">Use the 8-char code above or the full token to reset.</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Back to login */}
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground font-medium transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Back to Sign In
-            </button>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+    <AuthPanel icon={Mail} title="Recover access" description="Enter your account email to continue securely.">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="forgot-email">Email address</Label>
+          <Input
+            id="forgot-email"
+            type="email"
+            placeholder="name@company.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            disabled={isSubmitting}
+            autoComplete="email"
+            className="h-12 rounded-xl"
+          />
+        </div>
+        <Button type="submit" className="h-12 w-full rounded-xl font-semibold" disabled={isSubmitting}>
+          {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending…</> : 'Send recovery instructions'}
+        </Button>
+      </form>
+      <BackButton onClick={onBack}>Back to sign in</BackButton>
+    </AuthPanel>
   )
 }
-
-// ──────────────────────────────────────────────────────────────────────────────
-// Reset Password Form (Step 2: enter token + new password)
-// ──────────────────────────────────────────────────────────────────────────────
 
 function ResetPasswordForm({
   email,
@@ -444,66 +417,44 @@ function ResetPasswordForm({
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [tokenStatus, setTokenStatus] = React.useState<'idle' | 'valid' | 'invalid'>('idle')
-  const [tokenEmail, setTokenEmail] = React.useState<string | null>(null)
-
-  // Debounced token verification
   const verifyTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  React.useEffect(() => {
-    return () => {
-      if (verifyTimerRef.current) clearTimeout(verifyTimerRef.current)
-    }
+  React.useEffect(() => () => {
+    if (verifyTimerRef.current) clearTimeout(verifyTimerRef.current)
   }, [])
 
   function handleTokenChange(value: string) {
     setToken(value)
     setTokenStatus('idle')
-    setTokenEmail(null)
-
     if (verifyTimerRef.current) clearTimeout(verifyTimerRef.current)
 
     const trimmed = value.trim()
-    if (trimmed.length >= 4) {
-      verifyTimerRef.current = setTimeout(async () => {
-        setIsVerifying(true)
-        try {
-          const res = await fetch(
-            `/api/auth/verify-reset-token?token=${encodeURIComponent(trimmed)}`
-          )
-          const data = await res.json()
-          if (data.valid) {
-            setTokenStatus('valid')
-            setTokenEmail(data.user?.email ?? null)
-          } else {
-            setTokenStatus('invalid')
-          }
-        } catch {
-          // ignore verification errors
-        } finally {
-          setIsVerifying(false)
-        }
-      }, 500)
-    }
+    if (trimmed.length < 4) return
+
+    verifyTimerRef.current = setTimeout(async () => {
+      setIsVerifying(true)
+      try {
+        const response = await fetch(`/api/auth/verify-reset-token?token=${encodeURIComponent(trimmed)}`)
+        const data = await response.json()
+        setTokenStatus(data.valid ? 'valid' : 'invalid')
+      } catch {
+        setTokenStatus('idle')
+      } finally {
+        setIsVerifying(false)
+      }
+    }, 500)
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
     if (!token.trim()) {
       toast.error('Please enter the reset code')
       return
     }
-
-    if (!newPassword) {
-      toast.error('Please enter a new password')
-      return
-    }
-
     if (newPassword.length < 8) {
       toast.error('Password must be at least 8 characters long')
       return
     }
-
     if (newPassword !== confirmPassword) {
       toast.error('Passwords do not match')
       return
@@ -511,23 +462,18 @@ function ResetPasswordForm({
 
     setIsSubmitting(true)
     try {
-      const res = await fetch('/api/auth/reset-password', {
+      const response = await fetch('/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: token.trim(),
-          newPassword,
-        }),
+        body: JSON.stringify({ token: token.trim(), newPassword }),
       })
-
-      const data = await res.json()
-
-      if (res.ok) {
-        toast.success('Password reset successfully!')
-        onSuccess()
-      } else {
+      const data = await response.json()
+      if (!response.ok) {
         toast.error(data.error || 'Failed to reset password')
+        return
       }
+      toast.success('Password reset successfully')
+      onSuccess()
     } catch {
       toast.error('Network error. Please check your connection.')
     } finally {
@@ -536,194 +482,156 @@ function ResetPasswordForm({
   }
 
   return (
-    <motion.div
-      initial={false}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.25 }}
-    >
-      <Card className="rounded-[28px] border border-slate-200/90 bg-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035]">
-        <CardHeader className="text-center pb-2">
-          <div className="mx-auto mb-2 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30">
-            <KeyRound className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+    <AuthPanel icon={KeyRound} title="Set a new password" description={`Complete password recovery for ${email || 'your account'}.`}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="reset-token">Reset code</Label>
+          <div className="relative">
+            <Input
+              id="reset-token"
+              value={token}
+              onChange={(event) => handleTokenChange(event.target.value)}
+              disabled={isSubmitting}
+              autoComplete="one-time-code"
+              placeholder="Enter your reset code"
+              className="h-12 pr-10 font-mono"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              {isVerifying && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+              {tokenStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+              {tokenStatus === 'invalid' && !isVerifying && <span className="text-xs font-bold text-red-500">×</span>}
+            </div>
           </div>
-          <CardTitle className="text-xl">Reset Password</CardTitle>
-          <CardDescription>
-            Enter the code sent to <span className="font-medium text-foreground">{email}</span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Token / Code input */}
-            <div className="space-y-2">
-              <Label htmlFor="reset-token">Reset Code</Label>
-              <div className="relative">
-                <Input
-                  id="reset-token"
-                  type="text"
-                  placeholder="Enter 8-char code or full token"
-                  value={token}
-                  onChange={(e) => handleTokenChange(e.target.value)}
-                  disabled={isSubmitting}
-                  autoComplete="one-time-code"
-                  className="h-11 pr-10 font-mono text-sm"
-                />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  {isVerifying && (
-                    <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" />
-                  )}
-                  {tokenStatus === 'valid' && (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  )}
-                  {tokenStatus === 'invalid' && token.length >= 4 && !isVerifying && (
-                    <AlertCircle className="h-4 w-4 text-red-500" />
-                  )}
-                </div>
-              </div>
-              {tokenEmail && tokenStatus === 'valid' && (
-                <p className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  Valid code for {tokenEmail}
-                </p>
-              )}
-            </div>
+        </div>
 
-            {/* New password */}
-            <div className="space-y-2">
-              <Label htmlFor="new-password">New Password</Label>
-              <div className="relative">
-                <Input
-                  id="new-password"
-                  type={showNewPassword ? 'text' : 'password'}
-                  placeholder="At least 8 characters"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  disabled={isSubmitting}
-                  autoComplete="new-password"
-                  className="h-11 pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-11 w-11 px-3 hover:bg-transparent"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  tabIndex={-1}
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </Button>
-              </div>
-              {newPassword && newPassword.length < 8 && (
-                <p className="text-xs text-red-500">Password must be at least 8 characters</p>
-              )}
-            </div>
+        <PasswordField
+          id="new-password"
+          label="New password"
+          value={newPassword}
+          setValue={setNewPassword}
+          show={showNewPassword}
+          setShow={setShowNewPassword}
+          disabled={isSubmitting}
+          autoComplete="new-password"
+        />
+        <PasswordField
+          id="confirm-password"
+          label="Confirm password"
+          value={confirmPassword}
+          setValue={setConfirmPassword}
+          show={showConfirmPassword}
+          setShow={setShowConfirmPassword}
+          disabled={isSubmitting}
+          autoComplete="new-password"
+        />
 
-            {/* Confirm password */}
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-              <div className="relative">
-                <Input
-                  id="confirm-password"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="Re-enter your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  disabled={isSubmitting}
-                  autoComplete="new-password"
-                  className="h-11 pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-11 w-11 px-3 hover:bg-transparent"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  tabIndex={-1}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </Button>
-              </div>
-              {confirmPassword && newPassword !== confirmPassword && (
-                <p className="text-xs text-red-500">Passwords do not match</p>
-              )}
-            </div>
+        <Button
+          type="submit"
+          className="h-12 w-full rounded-xl font-semibold"
+          disabled={isSubmitting || !token.trim() || newPassword.length < 8 || newPassword !== confirmPassword}
+        >
+          {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating…</> : 'Update password'}
+        </Button>
+      </form>
+      <BackButton onClick={onBack}>Request another code</BackButton>
+    </AuthPanel>
+  )
+}
 
-            <Button
-              type="submit"
-              className="w-full h-11 font-semibold"
-              disabled={isSubmitting || !token.trim() || !newPassword || newPassword !== confirmPassword || newPassword.length < 8}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Resetting Password...
-                </>
-              ) : (
-                'Reset Password'
-              )}
-            </Button>
-          </form>
+function PasswordField({
+  id,
+  label,
+  value,
+  setValue,
+  show,
+  setShow,
+  disabled,
+  autoComplete,
+}: {
+  id: string
+  label: string
+  value: string
+  setValue: (value: string) => void
+  show: boolean
+  setShow: (value: boolean) => void
+  disabled: boolean
+  autoComplete: string
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          type={show ? 'text' : 'password'}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          disabled={disabled}
+          autoComplete={autoComplete}
+          placeholder="At least 8 characters"
+          className="h-12 pr-11"
+        />
+        <button
+          type="button"
+          onClick={() => setShow(!show)}
+          className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10"
+          aria-label={show ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}
+        >
+          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+    </div>
+  )
+}
 
-          {/* Resend link */}
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground font-medium transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Didn&apos;t get the code? Try again
-            </button>
-          </div>
-        </CardContent>
-      </Card>
+function ResetSuccessView({ onBackToLogin }: { onBackToLogin: () => void }) {
+  return (
+    <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+      <div className={`${PANEL_CLASS} text-center`}>
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-300">
+          <CheckCircle2 className="h-8 w-8" />
+        </div>
+        <h3 className="mt-5 text-2xl font-black tracking-tight text-slate-950 dark:text-white">Password updated</h3>
+        <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
+          Your credentials have been changed successfully. Sign in with your new password.
+        </p>
+        <Button onClick={onBackToLogin} className="mt-6 h-12 rounded-xl px-8 font-semibold">Return to sign in</Button>
+      </div>
     </motion.div>
   )
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Reset Success View
-// ──────────────────────────────────────────────────────────────────────────────
-
-function ResetSuccessView({
-  onBackToLogin,
+function AuthPanel({
+  icon: Icon,
+  title,
+  description,
+  children,
 }: {
-  onBackToLogin: () => void
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  description: string
+  children: React.ReactNode
 }) {
   return (
-    <motion.div
-      initial={false}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card className="rounded-[28px] border border-slate-200/90 bg-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-white/[0.035]">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="mx-auto mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+    <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.22 }}>
+      <div className={PANEL_CLASS}>
+        <div className="mb-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-400/10 dark:text-amber-300">
+            <Icon className="h-5 w-5" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-2">
-            Password Reset Successfully
-          </h3>
-          <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-            Your password has been updated. You can now sign in with your new password.
-          </p>
-          <Button
-            onClick={onBackToLogin}
-            className="h-11 font-semibold px-8"
-          >
-            Sign In Now
-          </Button>
-        </CardContent>
-      </Card>
+          <h2 className="mt-5 text-2xl font-black tracking-tight text-slate-950 dark:text-white">{title}</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{description}</p>
+        </div>
+        {children}
+      </div>
     </motion.div>
+  )
+}
+
+function BackButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button type="button" onClick={onClick} className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      <ArrowLeft className="h-4 w-4" /> {children}
+    </button>
   )
 }

@@ -52,6 +52,11 @@ function isPlaceholder(value: string): boolean {
   ].some((marker) => normalized.includes(marker))
 }
 
+function isTestSource(filePath: string): boolean {
+  const normalized = filePath.replaceAll('\\', '/')
+  return normalized.includes('/__tests__/') || /\.(?:test|spec)\.[^/]+$/i.test(normalized)
+}
+
 function addFinding(findings: Finding[], filePath: string, ruleId: string, line: number): void {
   if (!findings.some((finding) => finding.ruleId === ruleId && finding.line === line)) {
     findings.push({ path: filePath, ruleId, line })
@@ -61,6 +66,7 @@ function addFinding(findings: Finding[], filePath: string, ruleId: string, line:
 export function scanText(filePath: string, content: string): Finding[] {
   const findings: Finding[] = []
   const lines = content.split(/\r?\n/)
+  const testSource = isTestSource(filePath)
 
   lines.forEach((lineText, index) => {
     const line = index + 1
@@ -97,6 +103,27 @@ export function scanText(filePath: string, content: string): Finding[] {
     const apiTokenMatch = lineText.match(/\b(?:gh[pousr]_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9_-]{24,})\b/)
     if (apiTokenMatch && !isPlaceholder(apiTokenMatch[0])) {
       addFinding(findings, filePath, 'api-token', line)
+    }
+
+    if (!testSource) {
+      const passwordPropertyMatch = lineText.match(
+        /\bpassword\s*[:=]\s*(?:await\s+)?(?:hashPassword\s*\(\s*)?['"]([^'"]+)['"]/i
+      )
+      if (passwordPropertyMatch && !isPlaceholder(passwordPropertyMatch[1])) {
+        addFinding(findings, filePath, 'hardcoded-password', line)
+      }
+
+      const passwordEnvMatch = lineText.match(/\b[A-Z][A-Z0-9_]*PASSWORD\s*[:=]\s*['"]?([^\s'"#]+)/)
+      const passwordEnvValue = passwordEnvMatch?.[1] ?? ''
+      const passwordIsRuntimeReference = /^(?:process\.env|settings|config|env)\./.test(passwordEnvValue)
+      if (
+        passwordEnvMatch &&
+        passwordEnvValue &&
+        !passwordIsRuntimeReference &&
+        !isPlaceholder(passwordEnvValue)
+      ) {
+        addFinding(findings, filePath, 'hardcoded-password', line)
+      }
     }
   })
 

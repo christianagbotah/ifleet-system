@@ -11,7 +11,8 @@
 import jsPDF from 'jspdf'
 import { db } from '@/lib/db'
 import { fmtDate, fmtDateTime } from './pdf-generator'
-import { APP_NAME, APP_COMPANY, APP_TAGLINE } from '@/lib/constants'
+import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
+import { companyAddressLine, companyContactLine, loadCompanyProfile } from '@/lib/config/company-profile'
 import { registerFonts, getFontFamily } from './pdf-font'
 import { CEDI } from './csv-generator'
 
@@ -33,6 +34,9 @@ const C = {
  * Portrait A4 format with branded styling.
  */
 export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
+  const company = await loadCompanyProfile()
+  const companyAddress = companyAddressLine(company)
+  const companyContact = companyContactLine(company)
   const trip = await db.trip.findUnique({
     where: { id: tripId },
     include: {
@@ -66,8 +70,8 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.text(APP_TAGLINE, pw - margin, 8, { align: 'right' })
-  doc.text('37 Ring Road Central, Accra, Ghana', pw - margin, 13, { align: 'right' })
-  doc.text('+233 30 277 8899', pw - margin, 18, { align: 'right' })
+  if (companyAddress) doc.text(companyAddress, pw - margin, 13, { align: 'right' })
+  if (company.phone) doc.text(company.phone, pw - margin, 18, { align: 'right' })
 
   y = 25
 
@@ -105,13 +109,13 @@ export async function buildWaybillPdf(tripId: string): Promise<jsPDF> {
   doc.setFont(FF, 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...C.dark)
-  doc.text(APP_COMPANY, margin + 4, y + 11)
+  doc.text(company.name, margin + 4, y + 11)
 
   doc.setFont(FF, 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...C.gray)
-  doc.text('37 Ring Road Central, Accra, Ghana', margin + 4, y + 16)
-  doc.text('+233 30 277 8899 | info@fleetpro.com.gh', margin + 4, y + 20)
+  doc.text(companyAddress || '-', margin + 4, y + 16)
+  doc.text(companyContact || '-', margin + 4, y + 20)
   y += 26
 
   // ── 4. Consignee (Client) Info ──
