@@ -68,6 +68,7 @@ const DEFAULT_DISPLAY = {
   dateFormat: 'DD/MM/YYYY', timezone: 'Africa/Accra', language: 'English',
 }
 const DEFAULT_DRIVER_ID = { prefix: 'FP-DRV-', counter: 7, padding: 3 }
+const DEFAULT_PROFITABILITY = { maintenanceAllocationEnabled: false, maintenanceCostPerKm: 0 }
 
 export function SettingsView() {
   const { user } = useAuthStore()
@@ -80,6 +81,7 @@ export function SettingsView() {
   const [notifications, setNotifications] = React.useState(DEFAULT_NOTIFICATIONS)
   const [tracking, setTracking] = React.useState(DEFAULT_TRACKING)
   const [display, setDisplay] = React.useState(DEFAULT_DISPLAY)
+  const [profitability, setProfitability] = React.useState(DEFAULT_PROFITABILITY)
   const [driverId, setDriverId] = React.useState(DEFAULT_DRIVER_ID)
   const [settingsId, setSettingsId] = React.useState<string>('')
   const [resetOpen, setResetOpen] = React.useState(false)
@@ -117,6 +119,7 @@ export function SettingsView() {
         setNotifications(data.notifications)
         setTracking(data.tracking)
         setDisplay(data.display)
+        if (data.profitability) setProfitability(data.profitability)
         if (data.driverId) setDriverId(data.driverId)
       } catch (err) {
         toast.error('Failed to load settings')
@@ -150,6 +153,7 @@ export function SettingsView() {
         notifications,
         tracking,
         display,
+        profitability,
         driverId,
       }
       const result = await saveSettings(payload)
@@ -161,7 +165,7 @@ export function SettingsView() {
     } finally {
       setSaving(false)
     }
-  }, [settingsId, company, notifications, tracking, display])
+  }, [settingsId, company, notifications, tracking, display, profitability, driverId])
 
   const handleNotificationToggle = React.useCallback((key: keyof typeof notifications) => {
     setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
@@ -176,6 +180,7 @@ export function SettingsView() {
         notifications: DEFAULT_NOTIFICATIONS,
         tracking: DEFAULT_TRACKING,
         display: DEFAULT_DISPLAY,
+        profitability: DEFAULT_PROFITABILITY,
         driverId: DEFAULT_DRIVER_ID,
       }
       const result = await saveSettings(payload)
@@ -184,6 +189,7 @@ export function SettingsView() {
       setNotifications(DEFAULT_NOTIFICATIONS)
       setTracking(DEFAULT_TRACKING)
       setDisplay(DEFAULT_DISPLAY)
+      setProfitability(DEFAULT_PROFITABILITY)
       setDriverId(DEFAULT_DRIVER_ID)
       setResetOpen(false)
       toast.success('Settings reset to defaults')
@@ -1302,6 +1308,50 @@ export function SettingsView() {
                 </div>
               </CardContent>
             </Card>
+
+            {!isDriver && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-emerald-100 dark:bg-emerald-900/30 p-2">
+                    <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base">Maintenance Cost Allocation</CardTitle>
+                    <CardDescription>Optionally allocate a maintenance reserve per kilometre into authoritative trip profitability.</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <Label>Enable maintenance allocation</Label>
+                    <p className="text-xs text-muted-foreground mt-1">Disabled by default. Direct approved maintenance expenses are still counted from reconciliation.</p>
+                  </div>
+                  <Switch
+                    checked={profitability.maintenanceAllocationEnabled}
+                    onCheckedChange={checked => setProfitability(prev => ({ ...prev, maintenanceAllocationEnabled: checked }))}
+                    aria-label="Enable maintenance cost allocation"
+                  />
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label htmlFor="maintenance-cost-per-km">Maintenance reserve per kilometre (₵/km)</Label>
+                  <Input
+                    id="maintenance-cost-per-km"
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    className="max-w-48"
+                    value={profitability.maintenanceCostPerKm}
+                    disabled={!profitability.maintenanceAllocationEnabled}
+                    onChange={e => setProfitability(prev => ({ ...prev, maintenanceCostPerKm: Math.max(0, Number(e.target.value) || 0) }))}
+                  />
+                  <p className="text-xs text-muted-foreground">Applied to recorded trip kilometres only. It never rewrites historical maintenance transactions.</p>
+                </div>
+              </CardContent>
+            </Card>
+            )}
 
             {/* =================== DRIVER ID AUTO-GENERATION =================== */}
             {!isDriver && (

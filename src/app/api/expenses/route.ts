@@ -4,6 +4,7 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { expenseSchema, parseBody } from '@/lib/schemas'
 import { z } from 'zod'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 /** Create expense — fields differ from shared expenseSchema (uses 'date' not 'expenseDate', requires 'truckId') */
 const expenseCreateSchema = z.object({
@@ -98,6 +99,12 @@ export async function POST(request: NextRequest) {
     const truck = await db.truck.findUnique({ where: { id: truckId } })
     if (!truck) {
       return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
+    }
+    if (tripId && await isTripFinancialSourceLocked(db, tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     const expense = await db.expense.create({

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 // GET /api/trip-expenses/[id] — Get single expense
 export async function GET(
@@ -49,6 +50,12 @@ export async function PUT(
     if (!existing) {
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 })
     }
+    if (await isTripFinancialSourceLocked(db, existing.tripId)) {
+      return NextResponse.json({
+        error: 'This expense belongs to an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+    }
 
     const updateData: Record<string, unknown> = {}
     if (category !== undefined) updateData.category = category
@@ -90,6 +97,12 @@ export async function DELETE(
     const existing = await db.expense.findUnique({ where: { id } })
     if (!existing) {
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 })
+    }
+    if (await isTripFinancialSourceLocked(db, existing.tripId)) {
+      return NextResponse.json({
+        error: 'This expense belongs to an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     await db.expense.delete({ where: { id } })

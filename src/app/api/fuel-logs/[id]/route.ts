@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 export async function GET(
   request: NextRequest,
@@ -66,6 +67,19 @@ export async function PUT(
       images,
     } = body
 
+    if (await isTripFinancialSourceLocked(db, existing.tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+    }
+    if (typeof tripId === 'string' && tripId !== existing.tripId && await isTripFinancialSourceLocked(db, tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+    }
+
     // Recalculate costPerLiter if litersFilled or totalCost changed
     const newLiters = litersFilled !== undefined ? parseFloat(litersFilled) : existing.litersFilled
     const newTotalCost = totalCost !== undefined ? parseFloat(totalCost) : existing.totalCost
@@ -130,6 +144,12 @@ export async function DELETE(
     const fuelLog = await db.fuelLog.findUnique({ where: { id } })
     if (!fuelLog) {
       return NextResponse.json({ error: 'Fuel log not found' }, { status: 404 })
+    }
+    if (await isTripFinancialSourceLocked(db, fuelLog.tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     await db.fuelLog.delete({ where: { id } })

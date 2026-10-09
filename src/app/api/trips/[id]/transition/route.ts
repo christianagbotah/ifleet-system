@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, isDriverOrAdmin, ROLES } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { evaluateTripDeliveryReadiness } from '@/lib/domain/delivery/delivery-readiness'
 import type { DispatchClearanceCheckKey } from '@/lib/domain/dispatch/clearance'
 import { evaluateTripDispatchClearance } from '@/lib/domain/dispatch/trip-clearance'
 import {
@@ -68,6 +69,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const body = await request.json().catch(() => ({})) as Record<string, unknown>
     const requestedTo = typeof body.to === 'string' ? body.to : typeof body.status === 'string' ? body.status : ''
+    const clientMutationId = typeof body.clientMutationId === 'string' ? body.clientMutationId.trim() : ''
+    if (clientMutationId.length > 191) {
+      return NextResponse.json({ error: 'clientMutationId is too long' }, { status: 400 })
+    }
+    if (clientMutationId) {
+      const replay = await db.tripEvent.findUnique({
+        where: { clientMutationId },
+        include: { trip: true },
+      })
+      if (replay) {
+        if (replay.tripId !== id) {
+          return NextResponse.json({ error: 'clientMutationId was already used for another trip' }, { status: 409 })
+        }
+        return NextResponse.json({ ...replay.trip, replayed: true })
+      }
+    }
     const to = requestedTo || getDefaultNextStatus(trip.status as TripStatusValue)
     if (!to) return NextResponse.json({ error: `Trip in ${trip.status} requires an explicit transition` }, { status: 400 })
 
@@ -103,10 +120,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       }
     }
 
+    if (to === 'delivered') {
+      const deliveryReadiness = await evaluateTripDeliveryReadiness(id)
+      if (!deliveryReadiness.passed) {
+        return NextResponse.json({
+          error: 'Proof of delivery is required for every delivery destination before this trip can be marked delivered.',
+          code: 'POD_REQUIRED',
+          deliveryReadiness,
+        }, { status: 409 })
+      }
+    }
+
     const result = await transitionTrip({
       tripId: id,
       to: to as TripStatusValue,
       actorId: auth.userId,
+      clientMutationId: clientMutationId || null,
       notes: typeof body.notes === 'string' ? body.notes.trim() || null : null,
       location: typeof body.location === 'string' ? body.location.trim() || null : null,
       evidence: body.evidence && typeof body.evidence === 'object' ? body.evidence as Record<string, unknown> : null,
@@ -121,19 +150,21 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
     })
 
-    createAuditLog({
-      userId: auth.userId,
-      action: 'status_change',
-      entity: 'Trip',
-      entityId: id,
-      details: { tripNumber: trip.tripNumber, toStatus: result.trip.status, method: 'guarded_transition' },
-      ipAddress: getClientIp(request),
-    }).catch(() => {})
-    dispatchTripStatusNotification(id, result.trip.status as TripStatusValue).catch((error) => {
-      console.error('Trip transition notification error:', error)
-    })
+    if (!result.replayed) {
+      createAuditLog({
+        userId: auth.userId,
+        action: 'status_change',
+        entity: 'Trip',
+        entityId: id,
+        details: { tripNumber: trip.tripNumber, toStatus: result.trip.status, method: 'guarded_transition' },
+        ipAddress: getClientIp(request),
+      }).catch(() => {})
+      dispatchTripStatusNotification(id, result.trip.status as TripStatusValue).catch((error) => {
+        console.error('Trip transition notification error:', error)
+      })
+    }
 
-    return NextResponse.json(result.trip)
+    return NextResponse.json(result.replayed ? { ...result.trip, replayed: true } : result.trip)
   } catch (error) {
     if (error instanceof TripTransitionError) {
       return NextResponse.json(

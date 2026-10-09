@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 export async function GET(request: NextRequest) {
   try {
@@ -96,8 +97,6 @@ export async function POST(request: NextRequest) {
   try {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
-    const writeGuard = requireWriteAccess(auth)
-    if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
 
@@ -119,7 +118,12 @@ export async function POST(request: NextRequest) {
       images,
       distanceCovered: bodyDistanceCovered,
       notes,
+      clientMutationId,
     } = body
+    const mutationId = typeof clientMutationId === 'string' ? clientMutationId.trim() : ''
+    if (mutationId.length > 191) {
+      return NextResponse.json({ error: 'clientMutationId is too long' }, { status: 400 })
+    }
 
     if (!truckId || !tripId || !litersFilled || !totalCost || !date) {
       return NextResponse.json(
@@ -134,14 +138,45 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
     }
 
-    // Post-trip workflow: look up trip for auto-calculation
+    // Post-trip workflow: look up trip for ownership, idempotency and auto-calculation.
     let resolvedEndMileage: number | null = null
     let resolvedDistanceCovered: number | null = null
     const trip = await db.trip.findUnique({
       where: { id: tripId },
-      select: { id: true, startMileage: true, truckId: true },
+      select: { id: true, startMileage: true, truckId: true, driverId: true },
     })
-    if (trip) {
+    if (!trip) {
+      return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+    }
+    if (trip.truckId !== truckId) {
+      return NextResponse.json({ error: 'Trip is not assigned to this truck' }, { status: 409 })
+    }
+    if (auth.roleName === ROLES.DRIVER) {
+      if (trip.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only log fuel for trips assigned to you' }, { status: 403 })
+      }
+    } else {
+      const writeGuard = requireWriteAccess(auth)
+      if (writeGuard instanceof NextResponse) return writeGuard
+    }
+
+    if (mutationId) {
+      const existing = await db.fuelLog.findUnique({ where: { clientMutationId: mutationId } })
+      if (existing) {
+        if (existing.tripId !== tripId) {
+          return NextResponse.json({ error: 'clientMutationId was already used for another trip' }, { status: 409 })
+        }
+        return NextResponse.json({ ...existing, replayed: true })
+      }
+    }
+    if (await isTripFinancialSourceLocked(db, tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
+    }
+
+    {
       // Parse endMileage if provided
       if (endMileage !== undefined && endMileage !== null) {
         resolvedEndMileage = parseFloat(endMileage)
@@ -168,6 +203,7 @@ export async function POST(request: NextRequest) {
 
     const fuelLog = await db.fuelLog.create({
       data: {
+        clientMutationId: mutationId || null,
         truckId,
         tripId,
         date: new Date(date),

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { ProofOfDeliveryForm } from '@/components/delivery/ProofOfDeliveryForm'
 import { DatePicker } from '@/components/ui/date-picker'
 import { apiFetch, type Trip } from '@/lib/api'
 import {
@@ -807,6 +808,15 @@ function TripDetailView({
           </AnimatePresence>
         </CardContent>
       </Card>
+
+      {(trip.status === 'arrived_destination' || trip.status === 'offloading' || trip.status === 'delivered') && (
+        <ProofOfDeliveryForm
+          tripId={tripId}
+          onSubmitted={() => {
+            setTimelineOpen(true)
+          }}
+        />
+      )}
 
       {/* ── Advance Status Button ─────────────────────────────────────── */}
       {advanceLabel && (

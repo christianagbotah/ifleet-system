@@ -648,8 +648,11 @@ model DriverSettlement {
   grossEarnings     Decimal
   fuelDeductions    Decimal
   expenseDeductions Decimal
+  advanceDeductions Decimal     @default(0)
   bonusAmount       Decimal
   netPay            Decimal
+  snapshotVersion   Int?
+  snapshotJson      String?     @db.LongText
   status            SettlementStatus           @default(pending)
   approvedBy        String?
   approvedAt        DateTime?
@@ -726,6 +729,7 @@ model DvlaRegistration {
 
 model Expense {
   id                      String                    @id @default(cuid())
+  clientMutationId String?                         @unique
   truckId         String
   category        String
   description     String
@@ -798,6 +802,7 @@ model FuelBudget {
 
 model FuelLog {
   id                      String                    @id @default(cuid())
+  clientMutationId String?                         @unique
   tripId          String
   truckId         String
   date            DateTime @default(now())
@@ -1326,11 +1331,13 @@ model SettlementLine {
   tripId           String?
   description      String
   type             String
+  sourceId         String?
   amount           Decimal
   driverSettlement DriverSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
   trip             Trip?            @relation(fields: [tripId], references: [id])
 
   @@index([settlementId])
+  @@index([type, sourceId])
   @@index([tripId], map: "SettlementLine_tripId_fkey")
 }
 
@@ -1397,6 +1404,8 @@ model SystemSettings {
   currency                String   @default("GHS")
   distanceUnit            String   @default("km")
   fuelUnit                String   @default("litres")
+  profitabilityMaintenanceAllocationEnabled Boolean @default(false)
+  profitabilityMaintenanceCostPerKm Decimal @default(0)
   dateFormat              String   @default("DD/MM/YYYY")
   timezone                String   @default("Africa/Accra")
   language                String   @default("English")
@@ -1625,6 +1634,7 @@ model TripDeliveryDestination {
 
 model TripEvent {
   id                      String                    @id @default(cuid())
+  clientMutationId String?                         @unique
   tripId     String
   fromStatus String?
   toStatus   String
@@ -1780,6 +1790,7 @@ model TransportRateCard {
   isActive          Boolean            @default(true)
   sourceType        String?
   sourceId          String?
+  settlementTerms   String?            @db.Text
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   contract          TransportContract? @relation(fields: [contractId], references: [id])

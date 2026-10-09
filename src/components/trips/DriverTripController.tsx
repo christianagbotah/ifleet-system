@@ -60,6 +60,8 @@ import {
   getStatusColor,
 } from '@/lib/trip-lifecycle'
 import { apiFetch, fetchTrips, type Trip, type DeliveryStop, fetchTripEvents, type TripEvent } from '@/lib/api'
+import { submitDriverMutation } from '@/lib/offline/driver-sync'
+import { OfflineSyncStatus } from '@/components/offline/OfflineSyncStatus'
 import { usePushNotifications, type PushNotification } from '@/lib/hooks/usePushNotifications'
 import { toast } from 'sonner'
 
@@ -1379,14 +1381,19 @@ function DriverView() {
   const handleAdvanceStatus = React.useCallback(async (tripId: string) => {
     setAdvancing(true)
     try {
-      const updated = await apiFetch<Trip>(`/api/trips/${tripId}/transition`, {
-        method: 'POST',
-        body: JSON.stringify({}),
+      const result = await submitDriverMutation<Trip>({
+        clientMutationId: crypto.randomUUID(),
+        kind: 'status',
+        request: { method: 'POST', url: `/api/trips/${tripId}/transition`, body: {} },
       })
-      toast.success('Status updated', {
-        description: `Trip is now ${TRIP_STATUS_META[updated.status]?.label || updated.status}`,
-      })
-      loadTrips()
+      if (result.queued) {
+        toast.success('Status update queued for sync')
+      } else if (result.data) {
+        toast.success('Status updated', {
+          description: `Trip is now ${TRIP_STATUS_META[result.data.status]?.label || result.data.status}`,
+        })
+        loadTrips()
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to advance status')
     } finally {
@@ -1401,23 +1408,30 @@ function DriverView() {
     }
     setSubmittingExpense(true)
     try {
-      await apiFetch(`/api/trips/${activeTrips[0].id}/expenses`, {
-        method: 'POST',
-        body: JSON.stringify({
-          category: expCategory,
-          description: expDescription,
-          amount: parseFloat(expAmount),
-          paymentMethod: 'cash',
-        }),
+      const result = await submitDriverMutation({
+        clientMutationId: crypto.randomUUID(),
+        kind: 'expense',
+        request: {
+          method: 'POST',
+          url: `/api/trips/${activeTrips[0].id}/expenses`,
+          body: {
+            category: expCategory,
+            description: expDescription,
+            amount: parseFloat(expAmount),
+            paymentMethod: 'cash',
+          },
+        },
       })
-      toast.success('Expense logged successfully')
+      toast.success(result.queued ? 'Expense queued for sync' : 'Expense logged successfully')
       setExpCategory('')
       setExpDescription('')
       setExpAmount('')
       setShowExpenseForm(false)
-      // Reload expenses
-      const expData = await apiFetch<{ data: typeof expenses }>(`/api/trips/${activeTrips[0].id}/expenses`)
-      setExpenses(expData.data || [])
+      // Reload expenses only after an immediate server acknowledgement.
+      if (!result.queued) {
+        const expData = await apiFetch<{ data: typeof expenses }>(`/api/trips/${activeTrips[0].id}/expenses`)
+        setExpenses(expData.data || [])
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to log expense')
     } finally {
@@ -1441,6 +1455,8 @@ function DriverView() {
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
+      <OfflineSyncStatus />
+
       {!truck ? (
         <NoTruckAssigned />
       ) : !currentTrip ? (

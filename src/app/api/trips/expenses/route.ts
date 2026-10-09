@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
 
 // GET /api/trips/expenses?tripId=xxx
 // POST /api/trips/expenses - Create a trip expense
@@ -49,6 +50,12 @@ export async function POST(request: NextRequest) {
     const trip = await db.trip.findUnique({ where: { id: tripId } })
     if (!trip) {
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+    }
+    if (await isTripFinancialSourceLocked(db, tripId)) {
+      return NextResponse.json({
+        error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
+        code: RECONCILED_FINANCIAL_SOURCE_LOCKED,
+      }, { status: 409 })
     }
 
     // Valid expense categories for drivers

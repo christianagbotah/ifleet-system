@@ -5,6 +5,7 @@ import type {
 } from '@/lib/domain/haulage/types'
 
 const DIMENSIONS = [
+  'transporterId',
   'shipperProfileId',
   'loadingPointId',
   'destinationZoneId',

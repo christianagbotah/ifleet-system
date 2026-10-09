@@ -74,6 +74,34 @@ describe('transitionTrip', () => {
     ).rejects.toMatchObject({ code: 'NOT_FOUND' })
     expect(calls).toHaveLength(0)
   })
+
+  it('replays a prior client mutation without reading or changing the current trip again', async () => {
+    let reads = 0
+    let commits = 0
+    const repo: TransitionRepository = {
+      async findEventByClientMutationId(id) {
+        expect(id).toBe('transition-1')
+        return {
+          trip: { id: 'trip-1', status: 'assigned' },
+          event: { id: 'event-1', fromStatus: 'scheduled', toStatus: 'assigned' },
+        }
+      },
+      async getTrip() { reads += 1; return { id: 'trip-1', status: 'scheduled', driverId: 'driver-1' } },
+      async commitTransition(input) { commits += 1; throw new Error(`must not commit ${input.tripId}`) },
+    }
+
+    const result = await transitionTrip({
+      tripId: 'trip-1',
+      to: 'assigned',
+      actorId: 'user-1',
+      clientMutationId: 'transition-1',
+    }, repo)
+
+    expect(result.replayed).toBe(true)
+    expect(result.trip.status).toBe('assigned')
+    expect(reads).toBe(0)
+    expect(commits).toBe(0)
+  })
 })
 
 

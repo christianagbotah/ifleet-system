@@ -1,0 +1,72 @@
+model ProofOfDelivery {
+  id                    String                    @id @default(cuid())
+  tripId                String
+  deliveryStopId        String?
+  deliveryDestinationId String?
+  idempotencyKey        String                    @unique
+  payloadFingerprint    String
+  activeTargetKey       String?                   @unique
+  actorId               String
+  receiverName          String
+  receiverPhone         String?
+  expectedQty           Float
+  receivedQty           Float
+  damagedQty            Float                     @default(0)
+  rejectedQty           Float                     @default(0)
+  acceptedQty           Float
+  unit                  String
+  latitude              Float?
+  longitude             Float?
+  completedAt           DateTime
+  signatureRef          String?                   @db.LongText
+  pinVerified           Boolean                   @default(false)
+  discrepancyType       String                    @default("none")
+  discrepancyQuantity   Float                     @default(0)
+  discrepancyNotes      String?                   @db.Text
+  supersedesId          String?
+  correctionReason      String?                   @db.Text
+  createdAt             DateTime                  @default(now())
+  evidence              ProofOfDeliveryEvidence[]
+  exceptions            DeliveryException[]
+
+  @@index([tripId, createdAt])
+  @@index([deliveryStopId, createdAt])
+  @@index([deliveryDestinationId, createdAt])
+  @@index([supersedesId])
+}
+
+model ProofOfDeliveryEvidence {
+  id                String          @id @default(cuid())
+  proofOfDeliveryId String
+  type              String
+  storageRef        String          @db.LongText
+  capturedAt        DateTime        @default(now())
+  metadata          String?         @db.Text
+  proofOfDelivery   ProofOfDelivery @relation(fields: [proofOfDeliveryId], references: [id], onDelete: Cascade)
+
+  @@index([proofOfDeliveryId, capturedAt])
+  @@index([type])
+}
+
+model DeliveryException {
+  id                    String          @id @default(cuid())
+  tripId                String
+  proofOfDeliveryId     String
+  deliveryStopId        String?
+  deliveryDestinationId String?
+  type                  String
+  status                String          @default("open")
+  quantity              Float?
+  notes                 String?         @db.Text
+  resolutionNotes       String?         @db.Text
+  resolvedAt            DateTime?
+  resolvedBy            String?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  proofOfDelivery       ProofOfDelivery @relation(fields: [proofOfDeliveryId], references: [id], onDelete: Cascade)
+
+  @@index([tripId, status])
+  @@index([proofOfDeliveryId])
+  @@index([deliveryStopId])
+  @@index([deliveryDestinationId])
+}

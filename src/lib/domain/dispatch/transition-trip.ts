@@ -7,6 +7,7 @@ export interface TransitionTripInput {
   tripId: string
   to: TripStatusValue
   actorId: string
+  clientMutationId?: string | null
   notes?: string | null
   location?: string | null
   evidence?: Record<string, unknown> | null
@@ -20,6 +21,10 @@ export interface TransitionCommitInput extends TransitionTripInput {
 }
 
 export interface TransitionRepository {
+  findEventByClientMutationId?(id: string): Promise<{
+    trip: { id: string; status: string; [key: string]: unknown }
+    event: { id: string; fromStatus: string | null; toStatus: string; [key: string]: unknown }
+  } | null>
   getTrip(id: string): Promise<{ id: string; status: string; driverId: string } | null>
   commitTransition(input: TransitionCommitInput): Promise<{
     trip: { id: string; status: string; [key: string]: unknown }
@@ -63,6 +68,15 @@ export class TripTransitionError extends Error {
 async function createPrismaRepository(): Promise<TransitionRepository> {
   const { db } = await import('@/lib/db')
   return {
+    async findEventByClientMutationId(id) {
+      const event = await db.tripEvent.findUnique({
+        where: { clientMutationId: id },
+        include: { trip: true },
+      })
+      if (!event) return null
+      return { trip: event.trip, event }
+    },
+
     async getTrip(id) {
       return db.trip.findUnique({
         where: { id },
@@ -115,6 +129,7 @@ async function createPrismaRepository(): Promise<TransitionRepository> {
         }
         const event = await tx.tripEvent.create({
           data: {
+            clientMutationId: input.clientMutationId?.trim() || null,
             tripId: input.tripId,
             fromStatus: input.fromStatus,
             toStatus: input.toStatus,
@@ -137,6 +152,17 @@ export async function transitionTrip(
   repository?: TransitionRepository
 ) {
   const activeRepository = repository ?? await createPrismaRepository()
+  const mutationId = input.clientMutationId?.trim() || null
+  if (mutationId && activeRepository.findEventByClientMutationId) {
+    const existing = await activeRepository.findEventByClientMutationId(mutationId)
+    if (existing) {
+      if (existing.trip.id !== input.tripId) {
+        throw new TripTransitionError('CONFLICT', 'clientMutationId was already used for another trip')
+      }
+      return { ...existing, replayed: true }
+    }
+  }
+
   const trip = await activeRepository.getTrip(input.tripId)
   if (!trip) throw new TripTransitionError('NOT_FOUND', 'Trip not found')
 
@@ -148,10 +174,12 @@ export async function transitionTrip(
     )
   }
 
-  return activeRepository.commitTransition({
+  const committed = await activeRepository.commitTransition({
     ...input,
+    clientMutationId: mutationId,
     fromStatus: trip.status,
     toStatus: decision.canonicalTo,
     driverId: trip.driverId,
   })
+  return { ...committed, replayed: false }
 }

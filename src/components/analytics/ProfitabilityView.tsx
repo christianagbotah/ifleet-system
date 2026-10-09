@@ -356,7 +356,7 @@ export function ProfitabilityView() {
       if (period === 'custom' && dateTo) params.dateTo = dateTo
 
       const sp = new URLSearchParams(params)
-      const result = await apiFetch<ProfitabilityResponse>(`/api/trips/profitability?${sp}`)
+      const result = await apiFetch<ProfitabilityResponse>(`/api/analytics/trip-profitability?${sp}`)
       setData(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load profitability data')
@@ -533,7 +533,7 @@ export function ProfitabilityView() {
               <Button
                 variant="outline"
                 onClick={() => { setPeriod('this_month'); setDateFrom(''); setDateTo('') }}
-                className="shrink-0"
+                className="shrink-0 cursor-pointer"
               >
                 Reset
               </Button>

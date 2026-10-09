@@ -1,0 +1,53 @@
+model HaulierSettlement {
+  id                  String   @id @default(cuid())
+  tripId              String   @unique
+  reconciliationId    String
+  rateCardId          String
+  contractId          String?
+  payeeType           String
+  payeeId             String
+  payeeName           String
+  currency             String   @default("GHS")
+  baseFreight          Decimal
+  detentionAmount      Decimal  @default(0)
+  extrasAmount         Decimal  @default(0)
+  shortageDeduction    Decimal  @default(0)
+  fuelAdjustment       Decimal  @default(0)
+  taxAmount            Decimal  @default(0)
+  withholdingAmount    Decimal  @default(0)
+  advanceDeduction     Decimal  @default(0)
+  netPayable           Decimal
+  status               String   @default("draft")
+  snapshotVersion      Int      @default(1)
+  snapshotJson         String   @db.LongText
+  approvedBy           String?
+  approvedAt           DateTime?
+  paidAt               DateTime?
+  notes                String?  @db.Text
+  createdBy            String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  lines                 HaulierSettlementLine[]
+
+  @@index([payeeType, payeeId, status])
+  @@index([status, createdAt])
+  @@index([reconciliationId])
+  @@index([rateCardId])
+}
+
+model HaulierSettlementLine {
+  id           String            @id @default(cuid())
+  settlementId String
+  tripId       String
+  type         String
+  sourceId     String?
+  description  String
+  amount       Decimal
+  metadata     String?           @db.Text
+  createdAt    DateTime          @default(now())
+  settlement   HaulierSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+
+  @@index([settlementId, type])
+  @@index([tripId])
+  @@index([sourceId])
+}

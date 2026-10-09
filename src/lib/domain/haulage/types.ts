@@ -16,6 +16,7 @@ export interface TransportRateCandidate {
 }
 
 export interface RateResolutionInput {
+  transporterId?: string | null
   shipperProfileId?: string | null
   loadingPointId?: string | null
   destinationZoneId?: string | null
