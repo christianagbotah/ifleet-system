@@ -40,6 +40,17 @@ describe('Control Tower live-state selection', () => {
     expect(selected?.source).toBe('phone')
   })
 
+  it('uses server receipt time so a future-skewed device clock cannot mask a fresh phone fallback', () => {
+    const futureSkewed = {
+      ...point('hardwired', -60 * 60),
+      receivedAt: new Date(NOW.getTime() - 40 * 60 * 1000),
+    }
+    const freshPhone = point('phone', 30)
+
+    expect(selectPreferredLocation([futureSkewed, freshPhone], NOW)?.source).toBe('phone')
+    expect(classifyLiveState(futureSkewed, NOW)).toBe('offline')
+  })
+
   it('marks a vehicle stale then offline by last-seen age', () => {
     expect(classifyLiveState(point('hardwired', 60), NOW)).toBe('online')
     expect(classifyLiveState(point('hardwired', 8 * 60), NOW)).toBe('stale')

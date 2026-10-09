@@ -29,7 +29,7 @@ export function selectPreferredLocation(points: ControlTowerPoint[], now: Date):
   if (points.length === 0) return null
 
   const fresh = points.filter((point) => {
-    const age = Math.max(0, now.getTime() - point.deviceTimestamp.getTime())
+    const age = Math.max(0, now.getTime() - point.receivedAt.getTime())
     return age <= SOURCE_FRESHNESS_MS[point.source]
   })
 
@@ -37,15 +37,19 @@ export function selectPreferredLocation(points: ControlTowerPoint[], now: Date):
     return [...fresh].sort((a, b) => {
       const priority = SOURCE_PRIORITY[b.source] - SOURCE_PRIORITY[a.source]
       if (priority !== 0) return priority
-      return b.deviceTimestamp.getTime() - a.deviceTimestamp.getTime()
+      const receiptOrder = b.receivedAt.getTime() - a.receivedAt.getTime()
+      return receiptOrder !== 0 ? receiptOrder : b.deviceTimestamp.getTime() - a.deviceTimestamp.getTime()
     })[0]
   }
 
-  return [...points].sort((a, b) => b.deviceTimestamp.getTime() - a.deviceTimestamp.getTime())[0]
+  return [...points].sort((a, b) => {
+    const receiptOrder = b.receivedAt.getTime() - a.receivedAt.getTime()
+    return receiptOrder !== 0 ? receiptOrder : b.deviceTimestamp.getTime() - a.deviceTimestamp.getTime()
+  })[0]
 }
 
 export function classifyLiveState(point: ControlTowerPoint, now: Date): 'online' | 'stale' | 'offline' {
-  const ageMs = Math.max(0, now.getTime() - point.deviceTimestamp.getTime())
+  const ageMs = Math.max(0, now.getTime() - point.receivedAt.getTime())
   if (ageMs <= 2 * 60 * 1000) return 'online'
   if (ageMs <= 30 * 60 * 1000) return 'stale'
   return 'offline'

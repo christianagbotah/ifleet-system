@@ -24,6 +24,7 @@ interface PersistedLocation {
   accuracy: number | null
   source: string
   timestamp: string
+  receivedAt?: string
   tripId?: string | null
 }
 
@@ -170,6 +171,7 @@ function normalizedSocketLocation(location: PersistedLocation) {
     accuracy: location.accuracy,
     source: location.source,
     timestamp: location.timestamp,
+    receivedAt: location.receivedAt,
     tripId: location.tripId ?? null,
     plateNumber: location.plateNumber,
     driverName: location.driverName,
@@ -336,7 +338,7 @@ io.on('connection', (socket) => {
 setInterval(() => {
   const now = Date.now()
   for (const [truckId, location] of locationCache) {
-    const timestamp = new Date(location.timestamp).getTime()
+    const timestamp = new Date(location.receivedAt ?? location.timestamp).getTime()
     if (!Number.isFinite(timestamp) || now - timestamp > STALE_LOCATION_MS) locationCache.delete(truckId)
   }
   for (const [truckId, info] of activeSenders) {

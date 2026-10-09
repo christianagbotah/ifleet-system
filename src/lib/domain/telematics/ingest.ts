@@ -62,12 +62,17 @@ export interface TelematicsRawEnvelope {
   receivedAt: Date
 }
 
+export interface LiveStateTiming {
+  deviceTimestamp: Date
+  receivedAt: Date
+}
+
 export interface TelematicsIngestRepository {
   findDevice(deviceId: string): Promise<IngestDevice | null>
   resolveInstallation(deviceId: string, at: Date): Promise<IngestInstallation | null>
   resolveTrip(assetType: 'tractor' | 'trailer', assetId: string, at: Date): Promise<string | null>
   findDuplicate(raw: TelematicsRawEnvelope, event: LocationEventInput): Promise<DuplicateTelematicsEvent | null>
-  getLiveStateTimestamp?(assetType: 'tractor' | 'trailer', assetId: string): Promise<Date | null>
+  getLiveStateTiming?(assetType: 'tractor' | 'trailer', assetId: string): Promise<LiveStateTiming | null>
   persist(input: PersistTelematicsInput): Promise<PersistTelematicsResult>
 }
 
@@ -80,6 +85,22 @@ export interface IngestResult extends PersistTelematicsResult {
   assetType: 'tractor' | 'trailer'
   assetId: string
   tripId: string | null
+}
+
+const MAX_FUTURE_DEVICE_SKEW_MS = 5 * 60 * 1000
+
+export function liveOrderingTimestamp(
+  deviceTimestamp: Date,
+  receivedAt: Date,
+  maxFutureSkewMs: number = MAX_FUTURE_DEVICE_SKEW_MS,
+): Date {
+  const deviceMs = deviceTimestamp.getTime()
+  const receivedMs = receivedAt.getTime()
+  if (!Number.isFinite(receivedMs)) throw new Error('receivedAt is invalid')
+  if (!Number.isFinite(deviceMs)) return new Date(receivedMs)
+  return deviceMs > receivedMs + maxFutureSkewMs
+    ? new Date(receivedMs)
+    : new Date(deviceMs)
 }
 
 function assertEnvelopeMatchesEvent(event: LocationEventInput, raw: TelematicsRawEnvelope): void {
@@ -134,10 +155,14 @@ export async function ingestTelematicsEvent(
     }
   }
 
-  const liveTimestamp = repository.getLiveStateTimestamp
-    ? await repository.getLiveStateTimestamp(assetType, assetId)
+  const liveTiming = repository.getLiveStateTiming
+    ? await repository.getLiveStateTiming(assetType, assetId)
     : null
-  const updateLiveState = !liveTimestamp || event.deviceTimestamp.getTime() > liveTimestamp.getTime()
+  const incomingOrderingTime = liveOrderingTimestamp(event.deviceTimestamp, event.receivedAt)
+  const currentOrderingTime = liveTiming
+    ? liveOrderingTimestamp(liveTiming.deviceTimestamp, liveTiming.receivedAt)
+    : null
+  const updateLiveState = !currentOrderingTime || incomingOrderingTime.getTime() > currentOrderingTime.getTime()
 
   const persisted = await repository.persist({
     event,

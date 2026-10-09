@@ -26,11 +26,11 @@ export async function GET(request: NextRequest) {
       devices.map(async (device) => {
         const latestEvents = await db.telematicsEvent.findMany({
           where: { deviceId: device.id },
-          orderBy: { deviceTimestamp: 'desc' },
+          orderBy: { receivedAt: 'desc' },
           take: 5,
           select: {
             eventType: true,
-            deviceTimestamp: true,
+            receivedAt: true,
             alarmType: true,
           },
         })
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
           lastSeenAt: device.lastSeenAt,
           latestEvents: latestEvents.map((event) => ({
             eventType: event.eventType,
-            occurredAt: event.deviceTimestamp,
+            occurredAt: event.receivedAt,
             alarmType: event.alarmType,
           })),
         }, now)

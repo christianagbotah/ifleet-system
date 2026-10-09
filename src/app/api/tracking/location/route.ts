@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
         accuracy: event.accuracyMeters,
         source: event.source,
         timestamp: event.deviceTimestamp.toISOString(),
+        receivedAt: event.receivedAt.toISOString(),
       },
       telematics: {
         eventId: result.eventId,
@@ -114,7 +115,7 @@ export async function GET(request: NextRequest) {
       trucks.map(async (truck) => {
         const latestLocation = await db.truckLocation.findFirst({
           where: { truckId: truck.id },
-          orderBy: { timestamp: 'desc' },
+          orderBy: [{ createdAt: 'desc' }, { timestamp: 'desc' }],
         })
 
         if (!latestLocation) return null
@@ -132,6 +133,7 @@ export async function GET(request: NextRequest) {
           accuracy: latestLocation.accuracy,
           source: latestLocation.source,
           timestamp: latestLocation.timestamp.toISOString(),
+          receivedAt: latestLocation.createdAt.toISOString(),
         }
       })
     )

@@ -121,7 +121,7 @@ describe('durable telematics ingest', () => {
     }))
     const repo = repository({
       persist,
-      getLiveStateTimestamp: vi.fn().mockResolvedValue(new Date('2026-10-08T10:00:30.000Z')),
+      getLiveStateTiming: vi.fn().mockResolvedValue({ deviceTimestamp: new Date('2026-10-08T10:00:30.000Z'), receivedAt: new Date('2026-10-08T10:00:31.000Z') }),
     })
 
     const result = await ingestTelematicsEvent(
@@ -132,6 +132,41 @@ describe('durable telematics ingest', () => {
 
     expect(persist).toHaveBeenCalledWith(expect.objectContaining({ updateLiveState: false }))
     expect(result.liveStateUpdated).toBe(false)
+  })
+
+  it('recovers from a future-skewed live snapshot using server receipt time for ordering', async () => {
+    const persist = vi.fn().mockImplementation(async (input) => ({
+      eventId: 'event-recovered',
+      rawEventRef: input.raw.rawEventRef,
+      liveStateUpdated: input.updateLiveState,
+      legacyLocationId: 'legacy-recovered',
+    }))
+    const repo = repository({
+      persist,
+      getLiveStateTiming: vi.fn().mockResolvedValue({
+        deviceTimestamp: new Date('2026-10-08T11:00:00.000Z'),
+        receivedAt: new Date('2026-10-08T10:00:00.000Z'),
+      }),
+    })
+
+    const nextReceivedAt = new Date('2026-10-08T10:00:05.000Z')
+    const result = await ingestTelematicsEvent(
+      location({
+        providerEventId: 'evt-recovered',
+        deviceTimestamp: new Date('2026-10-08T10:00:04.000Z'),
+        receivedAt: nextReceivedAt,
+        rawEventRef: 'raw-recovered',
+      }),
+      raw({
+        providerEventId: 'evt-recovered',
+        receivedAt: nextReceivedAt,
+        rawEventRef: 'raw-recovered',
+      }),
+      repo,
+    )
+
+    expect(persist).toHaveBeenCalledWith(expect.objectContaining({ updateLiveState: true }))
+    expect(result.liveStateUpdated).toBe(true)
   })
 
   it('allows phone fallback without a registered device when the route supplies an authoritative tractor', async () => {

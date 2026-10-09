@@ -15,6 +15,8 @@ describe('Control Tower integration contract', () => {
     expect(repo).toMatch(/PARTITION BY\s+assetType,\s*assetId,\s*source/i)
     expect(repo).toContain('listLatestSnapshots')
     expect(repo).toContain('listTripLocationHistory')
+    expect(repo).toMatch(/receivedAt\s*>=/)
+    expect(repo).toMatch(/ORDER BY\s+receivedAt DESC,\s*deviceTimestamp DESC/i)
   })
 
   it('exposes authenticated normalized live and bounded history APIs', () => {

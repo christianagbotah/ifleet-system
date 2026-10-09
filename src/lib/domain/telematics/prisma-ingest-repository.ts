@@ -6,6 +6,7 @@ import { PrismaRoutingIntelligenceRepository } from '@/lib/domain/routing/prisma
 import type { LocationEventInput, NormalizedEventBase } from './events'
 import {
   createTelematicsIdempotencyKey,
+  liveOrderingTimestamp,
   type DuplicateTelematicsEvent,
   type IngestDevice,
   type IngestInstallation,
@@ -94,12 +95,11 @@ export class PrismaTelematicsIngestRepository implements TelematicsIngestReposit
     return existing ? { eventId: existing.id, rawEventRef: existing.rawEventRef } : null
   }
 
-  async getLiveStateTimestamp(assetType: 'tractor' | 'trailer', assetId: string): Promise<Date | null> {
-    const state = await db.vehicleLiveState.findUnique({
+  async getLiveStateTiming(assetType: 'tractor' | 'trailer', assetId: string) {
+    return db.vehicleLiveState.findUnique({
       where: { assetType_assetId: { assetType, assetId } },
-      select: { deviceTimestamp: true },
+      select: { deviceTimestamp: true, receivedAt: true },
     })
-    return state?.deviceTimestamp ?? null
   }
 
   async persist(input: PersistTelematicsInput): Promise<PersistTelematicsResult> {
@@ -162,10 +162,15 @@ export class PrismaTelematicsIngestRepository implements TelematicsIngestReposit
       if (input.updateLiveState) {
         const current = await tx.vehicleLiveState.findUnique({
           where: { assetType_assetId: { assetType: input.assetType, assetId: input.assetId } },
-          select: { deviceTimestamp: true },
+          select: { deviceTimestamp: true, receivedAt: true },
         })
 
-        if (!current || input.event.deviceTimestamp.getTime() > current.deviceTimestamp.getTime()) {
+        const incomingOrderingTime = liveOrderingTimestamp(input.event.deviceTimestamp, input.event.receivedAt)
+        const currentOrderingTime = current
+          ? liveOrderingTimestamp(current.deviceTimestamp, current.receivedAt)
+          : null
+
+        if (!currentOrderingTime || incomingOrderingTime.getTime() > currentOrderingTime.getTime()) {
           const liveData = {
             latestEventId: event.id,
             deviceId: input.event.deviceId,

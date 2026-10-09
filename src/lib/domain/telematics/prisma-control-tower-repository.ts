@@ -79,11 +79,11 @@ export class PrismaControlTowerRepository implements ControlTowerRepository {
                headingDeg, accuracyMeters, ignitionOn,
                ROW_NUMBER() OVER (
                  PARTITION BY assetType, assetId, source
-                 ORDER BY deviceTimestamp DESC, receivedAt DESC
+                 ORDER BY receivedAt DESC, deviceTimestamp DESC
                ) AS row_num
         FROM TelematicsEvent
         WHERE eventType = 'location'
-          AND deviceTimestamp >= ${since}
+          AND receivedAt >= ${since}
           AND assetType IS NOT NULL
           AND assetId IS NOT NULL
           AND latitude IS NOT NULL
