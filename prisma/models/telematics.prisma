@@ -119,3 +119,27 @@ model VehicleLiveState {
   @@index([deviceId, deviceTimestamp])
   @@index([deviceTimestamp])
 }
+
+model TelematicsHistorySummary {
+  id              String   @id @default(cuid())
+  idempotencyKey  String   @unique
+  assetType       String
+  assetId         String
+  tripId          String?
+  bucketStart     DateTime
+  bucketEnd       DateTime
+  bucketMinutes   Int
+  pointCount      Int
+  minSpeedKph     Float?
+  maxSpeedKph     Float?
+  startLatitude   Float
+  startLongitude  Float
+  endLatitude     Float
+  endLongitude    Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([assetType, assetId, bucketStart])
+  @@index([tripId, bucketStart])
+  @@index([bucketEnd])
+}

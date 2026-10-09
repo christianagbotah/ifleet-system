@@ -14,3 +14,8 @@ CRON_TZ=Africa/Accra
 # Command    : cd /home/z/my-project && bun run lint 2>&1 | grep -v "ifleet-fresh" | tail -5
 # ──────────────────────────────────────────────────────────
 */15 * * * * cd /home/z/my-project && bun run lint 2>&1 | grep -v "ifleet-fresh" | tail -5
+
+# ── iFleetPro telematics history compaction ─────────────────
+# Daily at 02:15 Africa/Accra. The compactor is idempotent and writes summaries
+# before deleting only redundant interior location points.
+15 2 * * * cd /home/lightworld/webapps/ifleetpro && NODE_ENV=production /root/.bun/bin/bun scripts/compact-location-history.ts >> /home/lightworld/logs/ifleetpro-telematics-compaction.log 2>&1
