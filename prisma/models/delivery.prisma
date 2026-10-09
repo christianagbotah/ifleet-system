@@ -24,6 +24,7 @@ model ProofOfDelivery {
   discrepancyQuantity   Float                     @default(0)
   discrepancyNotes      String?                   @db.Text
   supersedesId          String?
+  correctionReason      String?                   @db.Text
   createdAt             DateTime                  @default(now())
   evidence              ProofOfDeliveryEvidence[]
   exceptions            DeliveryException[]

@@ -41,4 +41,25 @@ describe('Phase 4 ePOD integration contract', () => {
     expect(podForm).toContain('proof-of-delivery')
     expect(podForm).toContain('idempotencyKey')
   })
+
+  it('supports append-only privileged POD corrections and opens financial review after reconciliation', () => {
+    const route = source('src/app/api/trips/[id]/proof-of-delivery/route.ts')
+    expect(route).toContain('export async function PUT')
+    expect(route).toContain('planPodCorrection')
+    const schema = source('prisma/models/delivery.prisma')
+    expect(schema).toContain('correctionReason')
+    expect(route).toContain('supersedesId')
+    expect(route).toContain("activeTargetKey: null")
+    expect(route).toContain('reconciliationException.create')
+    expect(route).toContain('pod_correction_after_financial_approval')
+    expect(route).toContain("isolationLevel: 'Serializable'")
+  })
+
+  it('exposes POD correction controls only through the privileged delivery workspace', () => {
+    const podForm = source('src/components/delivery/ProofOfDeliveryForm.tsx')
+    expect(podForm).toContain('Correct recorded POD')
+    expect(podForm).toContain("method: 'PUT'")
+    expect(podForm).toContain('correctionReason')
+    expect(podForm).toContain('useAuthStore')
+  })
 })

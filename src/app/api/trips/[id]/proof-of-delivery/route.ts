@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { isDriverOrAdmin, requireAuth, ROLES } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { planPodCorrection } from '@/lib/domain/delivery/pod-correction'
 import {
+  buildPodFingerprint,
+  evaluateProofOfDelivery,
   parsePodRequirements,
   redactProofOfDelivery,
   type PodEvidenceInput,
@@ -168,6 +171,44 @@ function parseEvidence(value: unknown): PodEvidenceInput[] {
   })
 }
 
+function targetFromStoredProof(
+  trip: NonNullable<TripContext>,
+  proof: { deliveryStopId: string | null; deliveryDestinationId: string | null },
+): DeliveryTarget {
+  if (proof.deliveryDestinationId) {
+    const target = destinationTarget(trip, proof.deliveryDestinationId)
+    if (!target) throw new Error('DELIVERY_TARGET_NOT_FOUND')
+    return target
+  }
+  if (proof.deliveryStopId) {
+    const target = stopTarget(trip, proof.deliveryStopId)
+    if (!target) throw new Error('DELIVERY_TARGET_NOT_FOUND')
+    return target
+  }
+  const targets = allTargets(trip)
+  if (targets.length !== 1 || targets[0].kind !== 'trip') throw new Error('DELIVERY_TARGET_NOT_FOUND')
+  return targets[0]
+}
+
+function correctedProofFromBody(body: Record<string, unknown>, target: DeliveryTarget): ProofOfDeliveryInput {
+  return {
+    receiverName: typeof body.receiverName === 'string' ? body.receiverName : '',
+    receiverPhone: typeof body.receiverPhone === 'string' ? body.receiverPhone : null,
+    expectedQty: target.expectedQty,
+    receivedQty: Number(body.receivedQty),
+    damagedQty: body.damagedQty == null ? 0 : Number(body.damagedQty),
+    rejectedQty: body.rejectedQty == null ? 0 : Number(body.rejectedQty),
+    unit: target.unit,
+    latitude: body.latitude == null ? null : Number(body.latitude),
+    longitude: body.longitude == null ? null : Number(body.longitude),
+    completedAt: new Date().toISOString(),
+    signatureRef: typeof body.signatureRef === 'string' ? body.signatureRef : null,
+    pinVerified: body.pinVerified === true,
+    evidence: parseEvidence(body.evidence),
+    discrepancyNotes: typeof body.discrepancyNotes === 'string' ? body.discrepancyNotes : null,
+  }
+}
+
 function mapStored(row: any): StoredPod {
   return {
     id: row.id,
@@ -224,7 +265,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({
       requirements: requirementsForTrip(trip),
       targets,
-      proofs: auth.roleName === ROLES.DRIVER ? proofs.map(driverSafe) : proofs.map((proof) => ({ ...driverSafe(proof), exceptions: proof.exceptions })),
+      proofs: auth.roleName === ROLES.DRIVER ? proofs.map(driverSafe) : proofs.map((proof) => ({
+        ...driverSafe(proof),
+        deliveryStopId: proof.deliveryStopId,
+        deliveryDestinationId: proof.deliveryDestinationId,
+        activeTargetKey: proof.activeTargetKey,
+        supersedesId: proof.supersedesId,
+        correctionReason: proof.correctionReason,
+        exceptions: proof.exceptions,
+      })),
     })
   } catch (error) {
     if (error instanceof Error && error.message === 'MIXED_DESTINATION_UNITS') {
@@ -379,5 +428,203 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
     console.error('Proof of delivery POST error:', error)
     return NextResponse.json({ error: 'Failed to submit proof of delivery' }, { status: 500 })
+  }
+}
+
+
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+    if (auth.roleName !== ROLES.ADMIN && auth.roleName !== ROLES.MANAGER) {
+      return NextResponse.json({ error: 'Admin or Manager access is required to correct proof of delivery.' }, { status: 403 })
+    }
+
+    const { id } = await params
+    const trip = await loadTripContext(id)
+    if (!trip) return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+
+    const body = await request.json().catch(() => ({})) as Record<string, unknown>
+    const proofOfDeliveryId = typeof body.proofOfDeliveryId === 'string' ? body.proofOfDeliveryId.trim() : ''
+    const correctionReason = typeof body.correctionReason === 'string' ? body.correctionReason.trim() : ''
+    const idempotencyKey = typeof body.idempotencyKey === 'string' ? body.idempotencyKey.trim() : ''
+    if (!proofOfDeliveryId || !idempotencyKey) {
+      return NextResponse.json({ error: 'proofOfDeliveryId and idempotencyKey are required.' }, { status: 400 })
+    }
+
+    const existingProof = await db.proofOfDelivery.findFirst({
+      where: { id: proofOfDeliveryId, tripId: id },
+      select: { id: true, deliveryStopId: true, deliveryDestinationId: true },
+    })
+    if (!existingProof) return NextResponse.json({ error: 'Proof of delivery not found.' }, { status: 404 })
+
+    const target = targetFromStoredProof(trip, existingProof)
+    const correctedProof = correctedProofFromBody(body, target)
+    const evaluation = evaluateProofOfDelivery(correctedProof, requirementsForTrip(trip))
+    if (!evaluation.valid) {
+      return NextResponse.json({
+        error: 'Corrected proof of delivery is incomplete.',
+        code: 'VALIDATION_FAILED',
+        details: { missingRequirements: evaluation.missingRequirements, discrepancy: evaluation.discrepancy },
+      }, { status: 400 })
+    }
+    const payloadFingerprint = buildPodFingerprint(correctedProof)
+
+    const result = await db.$transaction(async (tx) => {
+      const current = await tx.proofOfDelivery.findFirst({
+        where: { id: proofOfDeliveryId, tripId: id },
+        include: { evidence: true },
+      })
+      if (!current) throw new Error('POD_NOT_FOUND')
+
+      const replay = await tx.proofOfDelivery.findUnique({
+        where: { idempotencyKey },
+        include: { evidence: true },
+      })
+      if (replay) {
+        if (
+          replay.supersedesId === current.id
+          && replay.payloadFingerprint === payloadFingerprint
+          && replay.correctionReason?.trim() === correctionReason
+        ) {
+          return { proof: replay, replayed: true, financialReviewRequired: false }
+        }
+        throw new Error('IDEMPOTENCY_CONFLICT')
+      }
+
+      const approvedReconciliation = await tx.tripReconciliation.findFirst({
+        where: { tripId: id, status: 'approved' },
+        select: { id: true },
+        orderBy: { version: 'desc' },
+      })
+      const plan = planPodCorrection({
+        current: {
+          id: current.id,
+          tripId: current.tripId,
+          deliveryStopId: current.deliveryStopId,
+          deliveryDestinationId: current.deliveryDestinationId,
+          activeTargetKey: current.activeTargetKey ?? '',
+        },
+        reason: correctionReason,
+        hasApprovedFinancialHistory: Boolean(approvedReconciliation),
+      })
+
+      await tx.proofOfDelivery.update({
+        where: { id: current.id },
+        data: { activeTargetKey: null },
+      })
+      await tx.deliveryException.updateMany({
+        where: {
+          proofOfDeliveryId: current.id,
+          status: { notIn: ['resolved', 'closed'] },
+        },
+        data: {
+          status: 'closed',
+          resolutionNotes: `Superseded by corrected proof of delivery: ${correctionReason}`,
+          resolvedBy: auth.userId,
+          resolvedAt: new Date(),
+        },
+      })
+
+      const acceptedQty = correctedProof.receivedQty - (correctedProof.damagedQty ?? 0) - (correctedProof.rejectedQty ?? 0)
+      const created = await tx.proofOfDelivery.create({
+        data: {
+          tripId: id,
+          deliveryStopId: current.deliveryStopId,
+          deliveryDestinationId: current.deliveryDestinationId,
+          idempotencyKey,
+          payloadFingerprint,
+          activeTargetKey: plan.activeTargetKey,
+          actorId: auth.userId,
+          receiverName: correctedProof.receiverName,
+          receiverPhone: correctedProof.receiverPhone,
+          expectedQty: correctedProof.expectedQty,
+          receivedQty: correctedProof.receivedQty,
+          damagedQty: correctedProof.damagedQty ?? 0,
+          rejectedQty: correctedProof.rejectedQty ?? 0,
+          acceptedQty,
+          unit: correctedProof.unit,
+          latitude: correctedProof.latitude,
+          longitude: correctedProof.longitude,
+          completedAt: new Date(correctedProof.completedAt),
+          signatureRef: correctedProof.signatureRef,
+          pinVerified: correctedProof.pinVerified === true,
+          discrepancyType: evaluation.discrepancy.type,
+          discrepancyQuantity: evaluation.discrepancy.quantity,
+          discrepancyNotes: correctedProof.discrepancyNotes,
+          supersedesId: plan.supersedesId,
+          correctionReason,
+          evidence: { create: correctedProof.evidence.map((item) => ({ type: item.type, storageRef: item.ref })) },
+        },
+        include: { evidence: true },
+      })
+
+      const exceptions: Array<{ type: string; quantity: number }> = []
+      if (evaluation.discrepancy.quantity > 0) exceptions.push({ type: 'shortage', quantity: evaluation.discrepancy.quantity })
+      if ((correctedProof.damagedQty ?? 0) > 0) exceptions.push({ type: 'damage', quantity: correctedProof.damagedQty ?? 0 })
+      if ((correctedProof.rejectedQty ?? 0) > 0) exceptions.push({ type: 'rejection', quantity: correctedProof.rejectedQty ?? 0 })
+      if (exceptions.length > 0) {
+        await tx.deliveryException.createMany({
+          data: exceptions.map((exception) => ({
+            tripId: id,
+            proofOfDeliveryId: created.id,
+            deliveryStopId: current.deliveryStopId,
+            deliveryDestinationId: current.deliveryDestinationId,
+            type: exception.type,
+            quantity: exception.quantity,
+            notes: correctedProof.discrepancyNotes,
+          })),
+        })
+      }
+
+      if (current.deliveryStopId) {
+        await tx.deliveryStop.update({
+          where: { id: current.deliveryStopId },
+          data: { actualQty: correctedProof.receivedQty, status: 'completed', offloadCompleted: new Date(correctedProof.completedAt) },
+        })
+      } else if (current.deliveryDestinationId) {
+        await tx.tripDeliveryDestination.update({
+          where: { id: current.deliveryDestinationId },
+          data: { actualQty: correctedProof.receivedQty, status: 'completed' },
+        })
+      }
+
+      if (plan.requiresFinancialReview && plan.financialReviewType) {
+        await tx.reconciliationException.create({
+          data: {
+            tripId: id,
+            reconciliationId: approvedReconciliation?.id ?? null,
+            type: 'pod_correction_after_financial_approval',
+            sourceType: 'proof_of_delivery',
+            sourceId: created.id,
+            status: 'open',
+            notes: correctionReason,
+          },
+        })
+      }
+
+      return {
+        proof: created,
+        replayed: false,
+        financialReviewRequired: plan.requiresFinancialReview,
+      }
+    }, { isolationLevel: 'Serializable' })
+
+    return NextResponse.json({
+      proof: driverSafe(result.proof),
+      replayed: result.replayed,
+      financialReviewRequired: result.financialReviewRequired,
+    }, { status: result.replayed ? 200 : 201 })
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'POD_NOT_FOUND') return NextResponse.json({ error: 'Proof of delivery not found.' }, { status: 404 })
+      if (error.message === 'IDEMPOTENCY_CONFLICT') return NextResponse.json({ error: 'Idempotency key was already used for a different POD correction.', code: 'IDEMPOTENCY_CONFLICT' }, { status: 409 })
+      if (/correction reason/i.test(error.message)) return NextResponse.json({ error: error.message, code: 'CORRECTION_REASON_REQUIRED' }, { status: 400 })
+      if (/active proof/i.test(error.message)) return NextResponse.json({ error: error.message, code: 'POD_ALREADY_SUPERSEDED' }, { status: 409 })
+      if (error.message === 'DELIVERY_TARGET_NOT_FOUND') return NextResponse.json({ error: 'Delivery destination not found for this proof.' }, { status: 404 })
+      if (error.message === 'MIXED_DESTINATION_UNITS') return NextResponse.json({ error: 'A destination contains mixed cargo units and needs line-level POD handling.' }, { status: 409 })
+    }
+    console.error('Proof of delivery PUT error:', error)
+    return NextResponse.json({ error: 'Failed to correct proof of delivery' }, { status: 500 })
   }
 }

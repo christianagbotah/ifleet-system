@@ -5,6 +5,7 @@ import { requireAuth, ROLES, type AuthContext } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { canTransition, type TripStatusValue } from '@/lib/domain/dispatch/trip-state-machine'
 import { buildTripTransitionUpdate } from '@/lib/domain/dispatch/transition-trip'
+import { planReconciliationExceptionResolution } from '@/lib/domain/reconciliation/exception-resolution'
 import {
   buildReconciliationSnapshot,
   canFinalizeReconciliation,
@@ -99,6 +100,67 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json(updated)
     }
 
+    if (action === 'resolve_exception') {
+      if (auth.roleName !== ROLES.ADMIN && auth.roleName !== ROLES.MANAGER) {
+        return NextResponse.json({ error: 'Admin or Manager review is required.' }, { status: 403 })
+      }
+      const exceptionId = typeof body.exceptionId === 'string' ? body.exceptionId.trim() : ''
+      const resolutionNotes = typeof body.resolutionNotes === 'string' ? body.resolutionNotes : ''
+      const adjustmentAmount = body.adjustmentAmount == null || body.adjustmentAmount === '' ? 0 : Number(body.adjustmentAmount)
+      const adjustmentReason = typeof body.adjustmentReason === 'string' ? body.adjustmentReason : null
+      if (!exceptionId) return NextResponse.json({ error: 'exceptionId is required.' }, { status: 400 })
+
+      const reviewed = await db.$transaction(async (tx) => {
+        const exception = await tx.reconciliationException.findFirst({ where: { id: exceptionId, tripId: id } })
+        if (!exception) throw new Error('RECONCILIATION_EXCEPTION_NOT_FOUND')
+        const plan = planReconciliationExceptionResolution({
+          status: exception.status,
+          resolutionNotes,
+          adjustmentAmount,
+          adjustmentReason,
+        })
+
+        const adjustment = plan.adjustment
+          ? await tx.reconciliationAdjustment.create({
+            data: {
+              tripId: id,
+              amount: plan.adjustment.amount,
+              reason: plan.adjustment.reason,
+              status: 'approved',
+              createdBy: auth.userId,
+              approvedBy: auth.userId,
+              approvedAt: new Date(),
+            },
+          })
+          : null
+
+        const resolved = await tx.reconciliationException.update({
+          where: { id: exception.id },
+          data: {
+            status: 'resolved',
+            resolutionNotes: resolutionNotes.trim(),
+            resolvedBy: auth.userId,
+            resolvedAt: new Date(),
+          },
+        })
+        return { exception: resolved, adjustment }
+      }, { isolationLevel: 'Serializable' })
+
+      createAuditLog({
+        userId: auth.userId,
+        action: 'reconciliation_exception_resolved',
+        entity: 'ReconciliationException',
+        entityId: reviewed.exception.id,
+        details: {
+          tripId: id,
+          adjustmentId: reviewed.adjustment?.id ?? null,
+          adjustmentAmount: reviewed.adjustment ? Number(reviewed.adjustment.amount) : 0,
+        },
+        ipAddress: getClientIp(request),
+      }).catch(() => {})
+      return NextResponse.json(reviewed)
+    }
+
     if (action !== 'finalize') return NextResponse.json({ error: 'Unsupported reconciliation action.' }, { status: 400 })
 
     const result = await db.$transaction(async (tx) => {
@@ -190,6 +252,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === 'TRIP_NOT_FOUND') return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+      if (error.message === 'RECONCILIATION_EXCEPTION_NOT_FOUND') return NextResponse.json({ error: 'Reconciliation exception not found.' }, { status: 404 })
+      if (/already resolved/i.test(error.message)) return NextResponse.json({ error: error.message, code: 'RECONCILIATION_EXCEPTION_ALREADY_RESOLVED' }, { status: 409 })
+      if (/resolution notes|adjustment reason|finite number/i.test(error.message)) return NextResponse.json({ error: error.message, code: 'INVALID_RECONCILIATION_EXCEPTION_RESOLUTION' }, { status: 400 })
       if (error.message.startsWith('INVALID_STATE:')) return NextResponse.json({ error: error.message.slice('INVALID_STATE:'.length), code: 'INVALID_RECONCILIATION_STATE' }, { status: 409 })
       if (error.message === 'RECONCILIATION_BLOCKED') return NextResponse.json({ error: 'Reconciliation has unresolved blockers.', code: 'RECONCILIATION_BLOCKED', snapshot: (error as Error & { snapshot?: ReconciliationSnapshot }).snapshot }, { status: 409 })
     }

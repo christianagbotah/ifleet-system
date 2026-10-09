@@ -5,8 +5,12 @@ import { AlertTriangle, CheckCircle2, Loader2, RefreshCw, WalletCards } from 'lu
 import { toast } from 'sonner'
 
 import { apiFetch } from '@/lib/api'
+import { useAuthStore } from '@/lib/store/auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 
 interface ReconciliationResponse {
   trip: { id: string; tripNumber: string; status: string }
@@ -19,9 +23,16 @@ interface ReconciliationResponse {
 }
 
 export function TripReconciliationPanel({ tripId, status, onFinalized }: { tripId: string; status: string; onFinalized?: () => void }) {
+  const user = useAuthStore((store) => store.user)
+  const canResolve = user?.role === 'Admin' || user?.role === 'Manager'
   const [data, setData] = React.useState<ReconciliationResponse | null>(null)
   const [loading, setLoading] = React.useState(false)
   const [finalizing, setFinalizing] = React.useState(false)
+  const [resolvingId, setResolvingId] = React.useState<string | null>(null)
+  const [resolutionNotes, setResolutionNotes] = React.useState('')
+  const [adjustmentAmount, setAdjustmentAmount] = React.useState('0')
+  const [adjustmentReason, setAdjustmentReason] = React.useState('')
+  const [savingResolution, setSavingResolution] = React.useState(false)
 
   const load = React.useCallback(async () => {
     setLoading(true)
@@ -47,6 +58,46 @@ export function TripReconciliationPanel({ tripId, status, onFinalized }: { tripI
       toast.error(error instanceof Error ? error.message : 'Reconciliation could not be finalized')
     } finally {
       setFinalizing(false)
+    }
+  }
+
+  async function resolveFinancialReview() {
+    if (!resolvingId || !resolutionNotes.trim()) {
+      toast.error('Resolution notes are required')
+      return
+    }
+    const amount = Number(adjustmentAmount || 0)
+    if (!Number.isFinite(amount)) {
+      toast.error('Adjustment amount must be a valid number')
+      return
+    }
+    if (amount !== 0 && !adjustmentReason.trim()) {
+      toast.error('Explain the financial adjustment before resolving this review')
+      return
+    }
+
+    setSavingResolution(true)
+    try {
+      await apiFetch(`/api/trips/${tripId}/reconciliation`, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'resolve_exception',
+          exceptionId: resolvingId,
+          resolutionNotes: resolutionNotes.trim(),
+          adjustmentAmount: amount,
+          adjustmentReason: amount === 0 ? null : adjustmentReason.trim(),
+        }),
+      })
+      toast.success(amount === 0 ? 'Financial review resolved with no adjustment' : 'Financial review resolved and adjustment recorded')
+      setResolvingId(null)
+      setResolutionNotes('')
+      setAdjustmentAmount('0')
+      setAdjustmentReason('')
+      await load()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Financial review could not be resolved')
+    } finally {
+      setSavingResolution(false)
     }
   }
 
@@ -84,7 +135,68 @@ export function TripReconciliationPanel({ tripId, status, onFinalized }: { tripI
 
         {blockers.length > 0 ? (
           <div className="space-y-2">
-            {blockers.map((blocker) => <div key={`${blocker.code}-${blocker.sourceId}`} className="flex gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900"><AlertTriangle className="h-4 w-4 shrink-0" />{blocker.message}</div>)}
+            {blockers.map((blocker) => (
+              <div key={`${blocker.code}-${blocker.sourceId}`} className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                <div className="flex gap-2"><AlertTriangle className="h-4 w-4 shrink-0" />{blocker.message}</div>
+                {canResolve && blocker.code === 'RECONCILIATION_EXCEPTION_OPEN' && resolvingId !== blocker.sourceId && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 bg-white"
+                    onClick={() => {
+                      setResolvingId(blocker.sourceId)
+                      setResolutionNotes('')
+                      setAdjustmentAmount('0')
+                      setAdjustmentReason('')
+                    }}
+                  >
+                    Resolve financial review
+                  </Button>
+                )}
+                {canResolve && resolvingId === blocker.sourceId && (
+                  <div className="mt-3 space-y-3 rounded-lg border border-amber-200 bg-white p-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor={`resolution-notes-${blocker.sourceId}`}>Resolution notes *</Label>
+                      <Textarea
+                        id={`resolution-notes-${blocker.sourceId}`}
+                        value={resolutionNotes}
+                        onChange={(event) => setResolutionNotes(event.target.value)}
+                        placeholder="Record what was reviewed and why this closes the exception"
+                      />
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label htmlFor={`adjustment-amount-${blocker.sourceId}`}>Financial adjustment (GHS)</Label>
+                        <Input
+                          id={`adjustment-amount-${blocker.sourceId}`}
+                          inputMode="decimal"
+                          value={adjustmentAmount}
+                          onChange={(event) => setAdjustmentAmount(event.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor={`adjustment-reason-${blocker.sourceId}`}>Adjustment reason</Label>
+                        <Input
+                          id={`adjustment-reason-${blocker.sourceId}`}
+                          value={adjustmentReason}
+                          onChange={(event) => setAdjustmentReason(event.target.value)}
+                          placeholder="Required when amount is not zero"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button type="button" size="sm" onClick={resolveFinancialReview} disabled={savingResolution || !resolutionNotes.trim()}>
+                        {savingResolution && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
+                        Save review decision
+                      </Button>
+                      <Button type="button" size="sm" variant="ghost" onClick={() => setResolvingId(null)} disabled={savingResolution}>Cancel</Button>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">Use 0.00 when the corrected evidence has no financial impact. Non-zero adjustments are recorded as approved reconciliation adjustments; prior paid snapshots are not rewritten.</p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         ) : (
           <div className="flex gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800"><CheckCircle2 className="h-4 w-4" />No blocking delivery or financial exceptions.</div>

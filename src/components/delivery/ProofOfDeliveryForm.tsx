@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Camera, CheckCircle2, Loader2, MapPin, PackageCheck, ShieldCheck } from 'lucide-react'
+import { Camera, CheckCircle2, Loader2, MapPin, PackageCheck, RotateCcw, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { apiFetch } from '@/lib/api'
 import { submitDriverMutation } from '@/lib/offline/driver-sync'
+import { useAuthStore } from '@/lib/store/auth'
 
 interface PodTarget {
   kind: 'destination' | 'delivery_stop' | 'trip'
@@ -23,10 +24,26 @@ interface PodTarget {
   completed: boolean
 }
 
+interface PodProofSummary {
+  id: string
+  receiverName: string
+  receiverPhone: string | null
+  receivedQty: number
+  damagedQty: number
+  rejectedQty: number
+  discrepancyNotes: string | null
+  completedAt: string
+  deliveryStopId?: string | null
+  deliveryDestinationId?: string | null
+  activeTargetKey?: string | null
+  supersedesId?: string | null
+  correctionReason?: string | null
+}
+
 interface PodState {
   requirements: string[]
   targets: PodTarget[]
-  proofs: Array<{ id: string; receivedQty: number; completedAt: string }>
+  proofs: PodProofSummary[]
 }
 
 interface Props {
@@ -57,10 +74,14 @@ function fileAsDataUrl(file: File | null): Promise<string | null> {
 }
 
 export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
+  const user = useAuthStore((store) => store.user)
+  const canCorrect = user?.role === 'Admin' || user?.role === 'Manager'
   const [state, setState] = React.useState<PodState | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [submitting, setSubmitting] = React.useState(false)
   const [selectedKey, setSelectedKey] = React.useState('')
+  const [correctionProofId, setCorrectionProofId] = React.useState<string | null>(null)
+  const [correctionReason, setCorrectionReason] = React.useState('')
   const [receiverName, setReceiverName] = React.useState('')
   const [receiverPhone, setReceiverPhone] = React.useState('')
   const [receivedQty, setReceivedQty] = React.useState('')
@@ -100,9 +121,42 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
 
   const selected = state?.targets.find((target) => targetKey(target) === selectedKey) ?? null
   const allComplete = Boolean(state?.targets.length) && state!.targets.every((target) => target.completed)
+  const activeProofs = canCorrect ? (state?.proofs.filter((proof) => proof.activeTargetKey) ?? []) : []
+
+  function targetForProof(proof: PodProofSummary) {
+    if (!state) return null
+    if (proof.deliveryDestinationId) return state.targets.find((target) => target.kind === 'destination' && target.id === proof.deliveryDestinationId) ?? null
+    if (proof.deliveryStopId) return state.targets.find((target) => target.kind === 'delivery_stop' && target.id === proof.deliveryStopId) ?? null
+    return state.targets.find((target) => target.kind === 'trip') ?? null
+  }
+
+  function beginCorrection(proof: PodProofSummary) {
+    const target = targetForProof(proof)
+    if (!target) {
+      toast.error('The delivery target for this POD is no longer available')
+      return
+    }
+    setCorrectionProofId(proof.id)
+    setCorrectionReason('')
+    setSelectedKey(targetKey(target))
+    setReceiverName(proof.receiverName)
+    setReceiverPhone(proof.receiverPhone ?? '')
+    setReceivedQty(String(proof.receivedQty))
+    setDamagedQty(String(proof.damagedQty ?? 0))
+    setRejectedQty(String(proof.rejectedQty ?? 0))
+    setNotes(proof.discrepancyNotes ?? '')
+    setLatitude(null)
+    setLongitude(null)
+    setDeliveryPhoto(null)
+    setReceiverPhoto(null)
+    setDocumentPhoto(null)
+    setSignaturePhoto(null)
+    setPinVerified(false)
+    mutationIdRef.current = crypto.randomUUID()
+  }
 
   React.useEffect(() => {
-    if (!selected) return
+    if (!selected || correctionProofId) return
     setReceivedQty(String(selected.expectedQty))
     setReceiverName(selected.customerName ?? '')
     setReceiverPhone(selected.customerPhone ?? '')
@@ -115,7 +169,7 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
     setSignaturePhoto(null)
     setPinVerified(false)
     mutationIdRef.current = crypto.randomUUID()
-  }, [selectedKey])
+  }, [selectedKey, correctionProofId])
 
   function captureLocation() {
     if (!navigator.geolocation) {
@@ -140,7 +194,11 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
 
   async function submit(event: React.FormEvent) {
     event.preventDefault()
-    if (!selected || selected.completed || submitting) return
+    if (!selected || (!correctionProofId && selected.completed) || submitting) return
+    if (correctionProofId && !correctionReason.trim()) {
+      toast.error('Enter a correction reason before saving the corrected POD')
+      return
+    }
     setSubmitting(true)
     try {
       const [deliveryRef, receiverRef, documentRef, signatureRef] = await Promise.all([
@@ -169,25 +227,44 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
         pinVerified,
         evidence,
       }
-      if (selected.kind === 'destination') payload.deliveryDestinationId = selected.id
-      if (selected.kind === 'delivery_stop') payload.deliveryStopId = selected.id
-
-      const result = await submitDriverMutation({
-        clientMutationId: mutationIdRef.current,
-        kind: 'pod',
-        request: {
-          method: 'POST',
-          url: `/api/trips/${tripId}/proof-of-delivery`,
-          body: payload,
-        },
-      })
-      mutationIdRef.current = crypto.randomUUID()
-      if (result.queued) {
-        toast.success('Proof of delivery queued for sync')
-      } else {
-        toast.success('Proof of delivery recorded')
+      if (correctionProofId) {
+        const result = await apiFetch<{ financialReviewRequired?: boolean }>(`/api/trips/${tripId}/proof-of-delivery`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            ...payload,
+            proofOfDeliveryId: correctionProofId,
+            correctionReason: correctionReason.trim(),
+          }),
+        })
+        mutationIdRef.current = crypto.randomUUID()
+        setCorrectionProofId(null)
+        setCorrectionReason('')
+        toast.success(result.financialReviewRequired
+          ? 'Corrected POD recorded. Finance review is now required.'
+          : 'Corrected POD recorded')
         await load()
         onSubmitted?.()
+      } else {
+        if (selected.kind === 'destination') payload.deliveryDestinationId = selected.id
+        if (selected.kind === 'delivery_stop') payload.deliveryStopId = selected.id
+
+        const result = await submitDriverMutation({
+          clientMutationId: mutationIdRef.current,
+          kind: 'pod',
+          request: {
+            method: 'POST',
+            url: `/api/trips/${tripId}/proof-of-delivery`,
+            body: payload,
+          },
+        })
+        mutationIdRef.current = crypto.randomUUID()
+        if (result.queued) {
+          toast.success('Proof of delivery queued for sync')
+        } else {
+          toast.success('Proof of delivery recorded')
+          await load()
+          onSubmitted?.()
+        }
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to record proof of delivery')
@@ -223,12 +300,50 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
           </span>
         </div>
 
-        {allComplete ? (
+        {canCorrect && activeProofs.length > 0 && !correctionProofId && (
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50/80 p-3">
+            <div className="text-xs font-bold uppercase tracking-wide text-amber-800">Auditable POD corrections</div>
+            <p className="mt-1 text-xs leading-5 text-amber-700">Corrections preserve the original proof. If finance has already approved the trip, a reconciliation review is opened automatically.</p>
+            <div className="mt-3 space-y-2">
+              {activeProofs.map((proof) => {
+                const target = targetForProof(proof)
+                return (
+                  <div key={proof.id} className="flex flex-col gap-2 rounded-lg border border-amber-200 bg-white p-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0 text-xs text-gray-600">
+                      <div className="font-semibold text-gray-900">{target?.label ?? 'Delivery target'}</div>
+                      <div className="mt-0.5">{proof.receivedQty} {target?.unit ?? ''} · {new Date(proof.completedAt).toLocaleString()}</div>
+                    </div>
+                    <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => beginCorrection(proof)}>
+                      <RotateCcw className="mr-1.5 h-3.5 w-3.5" /> Correct recorded POD
+                    </Button>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {allComplete && !correctionProofId ? (
           <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-white p-3 text-sm font-medium text-emerald-700">
             <CheckCircle2 className="h-4 w-4" /> All required delivery destinations have POD evidence.
           </div>
         ) : (
           <form onSubmit={submit} className="mt-4 space-y-4">
+            {correctionProofId && (
+              <div className="rounded-xl border border-amber-300 bg-amber-50 p-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-amber-900">
+                  <RotateCcw className="h-4 w-4" /> Correction mode
+                </div>
+                <p className="mt-1 text-xs leading-5 text-amber-800">The original POD remains in the audit history. Re-capture the required evidence and explain why this correction is necessary.</p>
+                <div className="mt-3 space-y-2">
+                  <Label htmlFor="pod-correction-reason">Correction reason *</Label>
+                  <Textarea id="pod-correction-reason" value={correctionReason} onChange={(event) => setCorrectionReason(event.target.value)} placeholder="Explain the correction and supporting evidence" />
+                </div>
+                <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={() => { setCorrectionProofId(null); setCorrectionReason('') }}>
+                  Cancel correction
+                </Button>
+              </div>
+            )}
             {state.targets.length > 1 && (
               <div className="space-y-2">
                 <Label>Delivery destination</Label>
@@ -238,7 +353,11 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
                   className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm"
                 >
                   {state.targets.map((target) => (
-                    <option key={targetKey(target)} value={targetKey(target)} disabled={target.completed}>
+                    <option
+                      key={targetKey(target)}
+                      value={targetKey(target)}
+                      disabled={target.completed && !(correctionProofId && targetKey(target) === selectedKey)}
+                    >
                       {target.label} · {target.expectedQty} {target.unit}{target.completed ? ' · completed' : ''}
                     </option>
                   ))}
@@ -317,9 +436,13 @@ export function ProofOfDeliveryForm({ tripId, onSubmitted }: Props) {
               ))}
             </div>
 
-            <Button type="submit" className="h-11 w-full bg-emerald-600 hover:bg-emerald-700" disabled={!selected || selected.completed || submitting}>
-              {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
-              {submitting ? 'Recording POD…' : 'Record proof of delivery'}
+            <Button
+              type="submit"
+              className="h-11 w-full bg-emerald-600 hover:bg-emerald-700"
+              disabled={!selected || (!correctionProofId && selected.completed) || submitting || Boolean(correctionProofId && !correctionReason.trim())}
+            >
+              {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : correctionProofId ? <RotateCcw className="mr-2 h-4 w-4" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
+              {submitting ? (correctionProofId ? 'Correcting POD…' : 'Recording POD…') : correctionProofId ? 'Save corrected POD' : 'Record proof of delivery'}
             </Button>
           </form>
         )}

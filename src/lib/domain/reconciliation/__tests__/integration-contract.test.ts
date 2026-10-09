@@ -34,4 +34,16 @@ describe('Phase 4 trip reconciliation integration contract', () => {
     expect(panel).toContain('blockers')
     expect(panel).toContain('Finalize reconciliation')
   })
+
+  it('resolves post-approval evidence exceptions through an explicit reviewed adjustment workflow', () => {
+    const route = source('src/app/api/trips/[id]/reconciliation/route.ts')
+    const panel = source('src/components/reconciliation/TripReconciliationPanel.tsx')
+    expect(route).toContain("action === 'resolve_exception'")
+    expect(route).toContain('planReconciliationExceptionResolution')
+    expect(route).toContain('reconciliationException.update')
+    expect(route).toContain('reconciliationAdjustment.create')
+    expect(route).toContain("status: 'approved'")
+    expect(panel).toContain('Resolve financial review')
+    expect(panel).toContain("action: 'resolve_exception'")
+  })
 })
