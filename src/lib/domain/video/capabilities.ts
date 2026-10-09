@@ -34,6 +34,15 @@ export interface VideoCapabilities {
   availableChannels: string[]
 }
 
+export interface VideoRetentionPolicy {
+  routineRetentionDays: number
+  incidentRetentionDays: number
+  cloudCopyEnabled: boolean
+  legalHoldEnabled: boolean
+  allowedPrivacyClasses: CameraPrivacyClass[]
+  privacyNoticeVersion?: string | null
+}
+
 function normalizeOrientation(value: string | undefined): CameraOrientation {
   const normalized = value?.trim().toLowerCase().replace(/[_\s]+/g, '-') ?? ''
 
