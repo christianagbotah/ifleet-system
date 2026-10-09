@@ -5,6 +5,7 @@ model ProofOfDelivery {
   deliveryDestinationId String?
   idempotencyKey        String                    @unique
   payloadFingerprint    String
+  activeTargetKey       String?                   @unique
   actorId               String
   receiverName          String
   receiverPhone         String?

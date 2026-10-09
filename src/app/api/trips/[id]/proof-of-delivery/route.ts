@@ -176,6 +176,7 @@ function mapStored(row: any): StoredPod {
     deliveryDestinationId: row.deliveryDestinationId,
     idempotencyKey: row.idempotencyKey,
     payloadFingerprint: row.payloadFingerprint,
+    activeTargetKey: row.activeTargetKey ?? '',
     actorId: row.actorId,
     receiverName: row.receiverName,
     receiverPhone: row.receiverPhone,
@@ -277,6 +278,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         const existing = await db.proofOfDelivery.findUnique({ where: { idempotencyKey: key }, include: { evidence: true } })
         return existing ? mapStored(existing) : null
       },
+      async findCurrentByTarget(targetKey: string) {
+        const existing = await db.proofOfDelivery.findUnique({ where: { activeTargetKey: targetKey }, include: { evidence: true } })
+        return existing ? mapStored(existing) : null
+      },
       async create(input: Omit<StoredPod, 'id'>) {
         return db.$transaction(async (tx) => {
           const acceptedQty = input.receivedQty - (input.damagedQty ?? 0) - (input.rejectedQty ?? 0)
@@ -287,6 +292,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
               deliveryDestinationId: target.kind === 'destination' ? target.id : null,
               idempotencyKey: input.idempotencyKey,
               payloadFingerprint: input.payloadFingerprint,
+              activeTargetKey: input.activeTargetKey,
               actorId: input.actorId,
               receiverName: input.receiverName,
               receiverPhone: input.receiverPhone,
@@ -364,7 +370,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ proof: driverSafe({ ...result.proof, evidence: result.proof.evidence }), replayed: result.replayed }, { status: result.replayed ? 200 : 201 })
   } catch (error) {
     if (error instanceof PodSubmissionError) {
-      return NextResponse.json({ error: error.message, code: error.code, details: error.details }, { status: error.code === 'IDEMPOTENCY_CONFLICT' ? 409 : 400 })
+      return NextResponse.json({ error: error.message, code: error.code, details: error.details }, { status: ['IDEMPOTENCY_CONFLICT', 'TARGET_ALREADY_COMPLETED'].includes(error.code) ? 409 : 400 })
     }
     if (error instanceof Error) {
       if (error.message === 'DELIVERY_TARGET_REQUIRED') return NextResponse.json({ error: 'Select a delivery destination before submitting POD.' }, { status: 400 })

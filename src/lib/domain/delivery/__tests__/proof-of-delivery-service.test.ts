@@ -8,10 +8,11 @@ const proof = {
   evidence: [{ type: 'delivery_photo' as const, ref: 'private://photo' }], discrepancyNotes: null,
 }
 
-function repo(existing: StoredPod | null = null) {
+function repo(existing: StoredPod | null = null, currentTarget: StoredPod | null = null) {
   const created: StoredPod[] = []
   const implementation: PodRepository = {
     findByIdempotencyKey: async () => existing,
+    findCurrentByTarget: async () => currentTarget,
     create: async (input) => {
       const value: StoredPod = { id: 'pod-new', ...input }
       created.push(value)
@@ -84,4 +85,18 @@ describe('submitProofOfDelivery', () => {
     }, r.implementation)).rejects.toBeInstanceOf(PodSubmissionError)
     expect(r.created).toHaveLength(0)
   })
+  it('rejects a second mutation id for a delivery target that already has an active POD', async () => {
+    const firstRepo = repo()
+    const first = await submitProofOfDelivery({
+      tripId: 'trip-1', deliveryStopId: 'stop-1', idempotencyKey: 'offline-target-first', actorId: 'user-1', proof, requirements: [],
+    }, firstRepo.implementation)
+
+    const secondRepo = repo(null, first.proof)
+
+    await expect(submitProofOfDelivery({
+      tripId: 'trip-1', deliveryStopId: 'stop-1', idempotencyKey: 'offline-target-second', actorId: 'user-1', proof, requirements: [],
+    }, secondRepo.implementation)).rejects.toMatchObject({ code: 'TARGET_ALREADY_COMPLETED' })
+    expect(secondRepo.created).toHaveLength(0)
+  })
+
 })

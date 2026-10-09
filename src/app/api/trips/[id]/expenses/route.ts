@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
+import { initialTripExpenseStatus } from '@/lib/domain/reconciliation/trip-expense-policy'
 
 export async function GET(
   request: NextRequest,
@@ -108,7 +109,7 @@ export async function POST(
         date: new Date(),
         paymentMethod: paymentMethod || 'cash',
         reference,
-        status: 'approved',
+        status: initialTripExpenseStatus(auth.roleName),
         tripId: id,
       },
     })

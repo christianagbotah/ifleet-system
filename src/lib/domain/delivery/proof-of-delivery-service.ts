@@ -4,8 +4,9 @@ import {
   type PodRequirement,
   type ProofOfDeliveryInput,
 } from './proof-of-delivery'
+import { buildPodTargetKey, ensurePodTargetOpen } from './pod-target'
 
-export type PodSubmissionErrorCode = 'VALIDATION_FAILED' | 'IDEMPOTENCY_CONFLICT'
+export type PodSubmissionErrorCode = 'VALIDATION_FAILED' | 'IDEMPOTENCY_CONFLICT' | 'TARGET_ALREADY_COMPLETED'
 
 export class PodSubmissionError extends Error {
   constructor(public readonly code: PodSubmissionErrorCode, message: string, public readonly details?: unknown) {
@@ -21,6 +22,7 @@ export interface StoredPod extends ProofOfDeliveryInput {
   deliveryDestinationId?: string | null
   idempotencyKey: string
   payloadFingerprint: string
+  activeTargetKey: string
   actorId: string
   discrepancyType: 'none' | 'shortage' | 'overage'
   discrepancyQuantity: number
@@ -30,6 +32,7 @@ export type CreatePodInput = Omit<StoredPod, 'id'>
 
 export interface PodRepository {
   findByIdempotencyKey(key: string): Promise<StoredPod | null>
+  findCurrentByTarget(targetKey: string): Promise<StoredPod | null>
   create(input: CreatePodInput): Promise<StoredPod>
 }
 
@@ -64,6 +67,16 @@ export async function submitProofOfDelivery(input: SubmitPodInput, repository: P
     return { proof: existing, replayed: true }
   }
 
+  const targetKind = input.deliveryDestinationId ? 'destination' : input.deliveryStopId ? 'delivery_stop' : 'trip'
+  const targetId = input.deliveryDestinationId ?? input.deliveryStopId ?? null
+  const activeTargetKey = buildPodTargetKey(input.tripId, targetKind, targetId)
+  const existingTarget = await repository.findCurrentByTarget(activeTargetKey)
+  try {
+    ensurePodTargetOpen(existingTarget)
+  } catch {
+    throw new PodSubmissionError('TARGET_ALREADY_COMPLETED', 'This delivery target already has an active proof of delivery')
+  }
+
   const proof = await repository.create({
     ...input.proof,
     tripId: input.tripId,
@@ -71,6 +84,7 @@ export async function submitProofOfDelivery(input: SubmitPodInput, repository: P
     deliveryDestinationId: input.deliveryDestinationId ?? null,
     idempotencyKey: key,
     payloadFingerprint,
+    activeTargetKey,
     actorId: input.actorId,
     discrepancyType: evaluation.discrepancy.type,
     discrepancyQuantity: evaluation.discrepancy.quantity,
