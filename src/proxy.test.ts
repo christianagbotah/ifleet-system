@@ -115,6 +115,19 @@ describe('API authentication proxy', () => {
     expect(response.status).toBe(401)
   })
 
+  it('lets the exact HMAC-authenticated video ingestion route reach its handler', async () => {
+    const response = await proxy(request('/api/video/ingest/generic-http'))
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('x-middleware-next')).toBe('1')
+  })
+
+  it('does not open neighboring video ingestion routes', async () => {
+    const response = await proxy(request('/api/video/ingest/admin'))
+
+    expect(response.status).toBe(401)
+  })
+
   it('does not open neighboring internal ingest routes', async () => {
     const response = await proxy(request('/api/internal/ingest/admin'))
 

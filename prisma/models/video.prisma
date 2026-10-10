@@ -28,3 +28,59 @@ model VideoRetentionPolicy {
 
   device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
+
+model VideoAlarmEvent {
+  id                String   @id @default(cuid())
+  dedupeKey         String   @unique
+  provider          String
+  deviceId          String
+  providerEventId   String?
+  providerAlarmCode String
+  alarmType         String
+  severity          String
+  message           String?  @db.Text
+  channelKey        String?
+  assetType         String?
+  assetId           String?
+  tripId            String?
+  latitude          Float?
+  longitude         Float?
+  occurredAt        DateTime
+  receivedAt        DateTime
+  createdAt         DateTime @default(now())
+
+  device   TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+  incident VideoIncident?
+
+  @@index([deviceId, occurredAt])
+  @@index([tripId, occurredAt])
+  @@index([assetType, assetId, occurredAt])
+  @@index([alarmType, severity, occurredAt])
+  @@index([provider, providerEventId])
+}
+
+model VideoIncident {
+  id           String   @id @default(cuid())
+  alarmEventId String   @unique
+  deviceId     String
+  tripId       String?
+  assetType    String?
+  assetId      String?
+  incidentType String
+  severity     String
+  status       String   @default("open")
+  title        String
+  message      String?  @db.Text
+  latitude     Float?
+  longitude    Float?
+  occurredAt   DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  alarmEvent VideoAlarmEvent @relation(fields: [alarmEventId], references: [id], onDelete: Restrict)
+
+  @@index([deviceId, occurredAt])
+  @@index([tripId, occurredAt])
+  @@index([status, severity, occurredAt])
+  @@index([incidentType, occurredAt])
+}
