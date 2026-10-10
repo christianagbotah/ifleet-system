@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
+import { validateDriverEvidenceRefs } from '@/lib/domain/evidence/driver-evidence-server'
 
 const inspectionInclude = {
   truck: { select: { id: true, plateNumber: true, make: true, model: true } },
@@ -50,46 +51,6 @@ function stableJson(value: unknown): string {
 
 function inspectionPayloadHash(input: Record<string, unknown>): string {
   return createHash('sha256').update(stableJson(input)).digest('hex')
-}
-
-const DRIVER_EVIDENCE_REF_PATTERN = /^\/uploads\/images\/driver-evidence-([A-Za-z0-9-]{8,128})-\d+\.(?:jpg|png|webp)$/
-
-function parseEvidenceRefs(value: string | null): string[] {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : []
-  } catch {
-    return []
-  }
-}
-
-async function validateDriverEvidenceRefs(
-  auth: { userId: string; driverId: string },
-  tripId: string | null,
-  photoRefs: string[],
-): Promise<boolean> {
-  const refsByMutation = new Map<string, string[]>()
-  for (const ref of photoRefs) {
-    const match = DRIVER_EVIDENCE_REF_PATTERN.exec(ref)
-    if (!match) return false
-    const evidenceMutationId = match[1]
-    const refs = refsByMutation.get(evidenceMutationId) ?? []
-    refs.push(ref)
-    refsByMutation.set(evidenceMutationId, refs)
-  }
-
-  for (const [evidenceMutationId, refs] of refsByMutation) {
-    const event = await db.operationalEvent.findUnique({
-      where: { idempotencyKey: `driver-evidence-upload:${evidenceMutationId}` },
-    })
-    if (!event || event.actorId !== auth.userId || event.entityType !== 'driver_evidence_upload') return false
-    const metadata = parseReplayMetadata(event.metadata)
-    if (metadata.driverId !== auth.driverId || (metadata.tripId ?? null) !== tripId) return false
-    const eventRefs = new Set(parseEvidenceRefs(event.evidenceRefs))
-    if (refs.some((ref) => !eventRefs.has(ref))) return false
-  }
-  return true
 }
 
 async function findInspectionReplay(

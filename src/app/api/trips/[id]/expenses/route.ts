@@ -2,7 +2,43 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { initialTripExpenseStatus } from '@/lib/domain/reconciliation/trip-expense-policy'
+import { validateDriverEvidenceRefs } from '@/lib/domain/evidence/driver-evidence-server'
 import { isTripFinancialSourceLocked, RECONCILED_FINANCIAL_SOURCE_LOCKED } from '@/lib/domain/reconciliation/expense-source-lock'
+
+const DRIVER_MUTATION_ID_PATTERN = /^[A-Za-z0-9-]{8,191}$/
+
+function sameOptionalString(left: string | null | undefined, right: string | null): boolean {
+  return (left ?? null) === right
+}
+
+function expenseReplayMatches(
+  existing: {
+    tripId: string | null
+    category: string
+    description: string
+    amount: unknown
+    paymentMethod: string
+    reference: string | null
+    receiptUrl: string | null
+  },
+  input: {
+    tripId: string
+    category: string
+    description: string
+    amount: number
+    paymentMethod: string
+    reference: string | null
+    receiptUrl: string | null
+  },
+): boolean {
+  return existing.tripId === input.tripId
+    && existing.category === input.category
+    && existing.description === input.description
+    && Number(existing.amount) === input.amount
+    && existing.paymentMethod === input.paymentMethod
+    && sameOptionalString(existing.reference, input.reference)
+    && sameOptionalString(existing.receiptUrl, input.receiptUrl)
+}
 
 export async function GET(
   request: NextRequest,
@@ -53,21 +89,29 @@ export async function POST(
 
     const { id } = await params
 
-    const body = await request.json()
-    const { category, description, amount, paymentMethod, reference, clientMutationId } = body as {
-      category: string
-      description: string
-      amount: number
-      paymentMethod?: string
-      reference?: string
-      clientMutationId?: string
+    const body = await request.json() as Record<string, unknown>
+    const normalizedCategory = typeof body.category === 'string' ? body.category.trim() : ''
+    const normalizedDescription = typeof body.description === 'string' ? body.description.trim() : ''
+    const normalizedAmount = Number(body.amount)
+    const normalizedPaymentMethod = typeof body.paymentMethod === 'string' && body.paymentMethod.trim()
+      ? body.paymentMethod.trim()
+      : 'cash'
+    const normalizedReference = typeof body.reference === 'string' && body.reference.trim()
+      ? body.reference.trim()
+      : null
+    const normalizedReceiptUrl = typeof body.receiptUrl === 'string' && body.receiptUrl.trim()
+      ? body.receiptUrl.trim()
+      : null
+    const mutationId = typeof body.clientMutationId === 'string' ? body.clientMutationId.trim() : ''
+
+    if (auth.roleName === ROLES.DRIVER && !mutationId) {
+      return NextResponse.json({ error: 'clientMutationId is required for driver expenses' }, { status: 400 })
     }
-    const mutationId = typeof clientMutationId === 'string' ? clientMutationId.trim() : ''
-    if (mutationId.length > 191) {
-      return NextResponse.json({ error: 'clientMutationId is too long' }, { status: 400 })
+    if (mutationId && !DRIVER_MUTATION_ID_PATTERN.test(mutationId)) {
+      return NextResponse.json({ error: 'clientMutationId is invalid' }, { status: 400 })
     }
 
-    if (!category || !description || !amount) {
+    if (!normalizedCategory || !normalizedDescription || !Number.isFinite(normalizedAmount) || normalizedAmount <= 0) {
       return NextResponse.json(
         { error: 'category, description, and amount are required' },
         { status: 400 }
@@ -96,9 +140,31 @@ export async function POST(
         if (existing.tripId !== id) {
           return NextResponse.json({ error: 'clientMutationId was already used for another trip' }, { status: 409 })
         }
+        if (!expenseReplayMatches(existing, {
+          tripId: id,
+          category: normalizedCategory,
+          description: normalizedDescription,
+          amount: normalizedAmount,
+          paymentMethod: normalizedPaymentMethod,
+          reference: normalizedReference,
+          receiptUrl: normalizedReceiptUrl,
+        })) {
+          return NextResponse.json({ error: 'clientMutationId has already been used for a different expense' }, { status: 409 })
+        }
         return NextResponse.json({ ...existing, replayed: true })
       }
     }
+
+    if (auth.roleName === ROLES.DRIVER && normalizedReceiptUrl) {
+      if (!auth.driverId || !(await validateDriverEvidenceRefs(
+        { userId: auth.userId, driverId: auth.driverId },
+        id,
+        [normalizedReceiptUrl],
+      ))) {
+        return NextResponse.json({ error: 'Expense receipt is invalid or does not belong to this driver/trip' }, { status: 409 })
+      }
+    }
+
     if (await isTripFinancialSourceLocked(db, id)) {
       return NextResponse.json({
         error: 'This trip has an approved reconciliation. Create a reconciliation adjustment instead of changing historical source data.',
@@ -110,12 +176,13 @@ export async function POST(
       data: {
         clientMutationId: mutationId || null,
         truckId: trip.truckId,
-        category,
-        description,
-        amount: parseFloat(String(amount)),
+        category: normalizedCategory,
+        description: normalizedDescription,
+        amount: normalizedAmount,
         date: new Date(),
-        paymentMethod: paymentMethod || 'cash',
-        reference,
+        paymentMethod: normalizedPaymentMethod,
+        reference: normalizedReference,
+        receiptUrl: normalizedReceiptUrl,
         status: initialTripExpenseStatus(auth.roleName),
         tripId: id,
       },

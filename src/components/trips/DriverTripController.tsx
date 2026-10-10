@@ -12,7 +12,7 @@ import {
   BarChart3, Users, Filter, RefreshCw, Eye,
   ArrowRight, Timer, MapPinned, TrendingUp,
   PackageCheck, TruckIcon, Radio, Shield, Hourglass,
-  Ban, ClipboardList, Undo2, Warehouse,
+  Ban, ClipboardList, Undo2, Warehouse, Camera,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -61,8 +61,10 @@ import {
 } from '@/lib/trip-lifecycle'
 import { apiFetch, fetchTrips, type Trip, type DeliveryStop, fetchTripEvents, type TripEvent } from '@/lib/api'
 import { submitDriverMutation } from '@/lib/offline/driver-sync'
+import { DRIVER_EVIDENCE_ALLOWED_MIME_TYPES, driverEvidenceUrl } from '@/lib/offline/driver-evidence'
 import { OfflineSyncStatus } from '@/components/offline/OfflineSyncStatus'
 import { DriverInspectionDialog } from '@/components/maintenance/DriverInspectionDialog'
+import { DriverStatusUpdateDialog } from '@/components/trips/DriverStatusUpdateDialog'
 import { usePushNotifications, type PushNotification } from '@/lib/hooks/usePushNotifications'
 import { toast } from 'sonner'
 
@@ -1329,7 +1331,6 @@ function DriverView() {
   const user = useAuthStore((s) => s.user)
   const [activeTrips, setActiveTrips] = React.useState<Trip[]>([])
   const [loading, setLoading] = React.useState(true)
-  const [advancing, setAdvancing] = React.useState(false)
   const [showExpenseForm, setShowExpenseForm] = React.useState(false)
   const [activeTab, setActiveTab] = React.useState('overview')
   const [expenses, setExpenses] = React.useState<Array<{
@@ -1341,6 +1342,9 @@ function DriverView() {
   const [expCategory, setExpCategory] = React.useState('')
   const [expDescription, setExpDescription] = React.useState('')
   const [expAmount, setExpAmount] = React.useState('')
+  const [expReceiptFile, setExpReceiptFile] = React.useState<File | null>(null)
+  const expenseMutationIdRef = React.useRef(crypto.randomUUID())
+  const expenseEvidenceMutationIdRef = React.useRef(crypto.randomUUID())
 
   // ALL hooks before conditional returns
   const loadTrips = React.useCallback(async () => {
@@ -1379,29 +1383,6 @@ function DriverView() {
   }, [loadTrips])
   usePushNotifications(handlePushNotification)
 
-  const handleAdvanceStatus = React.useCallback(async (tripId: string) => {
-    setAdvancing(true)
-    try {
-      const result = await submitDriverMutation<Trip>({
-        clientMutationId: crypto.randomUUID(),
-        kind: 'status',
-        request: { method: 'POST', url: `/api/trips/${tripId}/transition`, body: {} },
-      })
-      if (result.queued) {
-        toast.success('Status update queued for sync')
-      } else if (result.data) {
-        toast.success('Status updated', {
-          description: `Trip is now ${TRIP_STATUS_META[result.data.status]?.label || result.data.status}`,
-        })
-        loadTrips()
-      }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to advance status')
-    } finally {
-      setAdvancing(false)
-    }
-  }, [loadTrips])
-
   const handleLogExpense = React.useCallback(async () => {
     if (!activeTrips.length || !expCategory || !expDescription || !expAmount) {
       toast.error('Please fill in all expense fields')
@@ -1409,36 +1390,63 @@ function DriverView() {
     }
     setSubmittingExpense(true)
     try {
+      const tripId = activeTrips[0].id
+      const receiptDependencyIds: string[] = []
+      let receiptUrl: string | undefined
+
+      if (expReceiptFile) {
+        const evidenceMutationId = expenseEvidenceMutationIdRef.current
+        receiptUrl = driverEvidenceUrl(evidenceMutationId, 0, expReceiptFile.type)
+        await submitDriverMutation({
+          clientMutationId: evidenceMutationId,
+          kind: 'upload',
+          request: {
+            method: 'POST',
+            url: '/api/upload',
+            bodyEncoding: 'multipart',
+            body: { files: [expReceiptFile], tripId },
+          },
+        })
+        receiptDependencyIds.push(evidenceMutationId)
+      }
+
       const result = await submitDriverMutation({
-        clientMutationId: crypto.randomUUID(),
+        clientMutationId: expenseMutationIdRef.current,
         kind: 'expense',
+        dependencyIds: receiptDependencyIds,
         request: {
           method: 'POST',
-          url: `/api/trips/${activeTrips[0].id}/expenses`,
+          url: `/api/trips/${tripId}/expenses`,
           body: {
             category: expCategory,
             description: expDescription,
             amount: parseFloat(expAmount),
             paymentMethod: 'cash',
+            receiptUrl,
           },
         },
       })
-      toast.success(result.queued ? 'Expense queued for sync' : 'Expense logged successfully')
+      expenseMutationIdRef.current = crypto.randomUUID()
+      expenseEvidenceMutationIdRef.current = crypto.randomUUID()
+      toast.success(result.queued ? 'Expense queued for sync' : result.replayed ? 'Expense already synced' : 'Expense logged successfully')
       setExpCategory('')
       setExpDescription('')
       setExpAmount('')
+      setExpReceiptFile(null)
       setShowExpenseForm(false)
-      // Reload expenses only after an immediate server acknowledgement.
       if (!result.queued) {
-        const expData = await apiFetch<{ data: typeof expenses }>(`/api/trips/${activeTrips[0].id}/expenses`)
+        const expData = await apiFetch<{ data: typeof expenses }>(`/api/trips/${tripId}/expenses`)
         setExpenses(expData.data || [])
       }
     } catch (err) {
+      expenseMutationIdRef.current = crypto.randomUUID()
+      expenseEvidenceMutationIdRef.current = crypto.randomUUID()
       toast.error(err instanceof Error ? err.message : 'Failed to log expense')
     } finally {
       setSubmittingExpense(false)
     }
-  }, [activeTrips, expCategory, expDescription, expAmount])
+  }, [activeTrips, expCategory, expDescription, expAmount, expReceiptFile])
+
 
   const currentTrip = activeTrips[0] || null
 
@@ -1467,7 +1475,6 @@ function DriverView() {
           trip={currentTrip}
           truck={truck}
           expenses={expenses}
-          advancing={advancing}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           showExpenseForm={showExpenseForm}
@@ -1478,8 +1485,10 @@ function DriverView() {
           setExpDescription={setExpDescription}
           expAmount={expAmount}
           setExpAmount={setExpAmount}
+          expReceiptFile={expReceiptFile}
+          setExpReceiptFile={setExpReceiptFile}
           submittingExpense={submittingExpense}
-          onAdvanceStatus={handleAdvanceStatus}
+          onStatusSynced={loadTrips}
           onLogExpense={handleLogExpense}
         />
       )}
@@ -1503,7 +1512,6 @@ interface DriverActiveTripContentProps {
   trip: Trip
   truck: { id: string; plateNumber: string; make: string; model: string }
   expenses: Array<{ id: string; category: string; description: string; amount: number; date: string }>
-  advancing: boolean
   activeTab: string
   setActiveTab: (v: string) => void
   showExpenseForm: boolean
@@ -1514,8 +1522,10 @@ interface DriverActiveTripContentProps {
   setExpDescription: (v: string) => void
   expAmount: string
   setExpAmount: (v: string) => void
+  expReceiptFile: File | null
+  setExpReceiptFile: (file: File | null) => void
   submittingExpense: boolean
-  onAdvanceStatus: (tripId: string) => void
+  onStatusSynced: () => void
   onLogExpense: () => void
 }
 
@@ -1523,7 +1533,6 @@ function DriverActiveTripContent({
   trip,
   truck,
   expenses,
-  advancing,
   activeTab,
   setActiveTab,
   showExpenseForm,
@@ -1534,13 +1543,16 @@ function DriverActiveTripContent({
   setExpDescription,
   expAmount,
   setExpAmount,
+  expReceiptFile,
+  setExpReceiptFile,
   submittingExpense,
-  onAdvanceStatus,
+  onStatusSynced,
   onLogExpense,
 }: DriverActiveTripContentProps) {
   const canSeeFinancialData = useAuthStore((s) => s.canSeeFinancialData())
   const user = useAuthStore((s) => s.user)
   const [inspectionOpen, setInspectionOpen] = React.useState(false)
+  const [statusUpdateOpen, setStatusUpdateOpen] = React.useState(false)
   const progress = getTripProgress(trip.status)
   const totalExpenses = expenses.reduce((sum, e) => sum + parseFloat(String(e.amount)), 0)
   const isTerminal = isTerminalStatus(trip.status)
@@ -1565,6 +1577,15 @@ function DriverActiveTripContent({
         driverId={trip.driverId}
         plateNumber={truck.plateNumber}
         inspectorName={user?.name}
+      />
+
+      <DriverStatusUpdateDialog
+        open={statusUpdateOpen}
+        onOpenChange={setStatusUpdateOpen}
+        tripId={trip.id}
+        targetStatus={getNextStatus(trip.status) || 'completed'}
+        actionLabel={actionLabel || 'Complete Trip'}
+        onSynced={onStatusSynced}
       />
 
       {/* ── Waiting Banner ── */}
@@ -1797,16 +1818,10 @@ function DriverActiveTripContent({
                         Advance the trip to the next stage to keep everyone updated.
                       </p>
                       <Button
-                        onClick={() => onAdvanceStatus(trip.id)}
-                        disabled={advancing}
+                        onClick={() => setStatusUpdateOpen(true)}
                         className="w-full h-11 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold shadow-sm"
                       >
-                        {advancing ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Updating...
-                          </>
-                        ) : actionLabel ? (
+                        {actionLabel ? (
                           <>
                             <ChevronRight className="h-4 w-4 mr-2" />
                             {actionLabel}
@@ -2061,6 +2076,8 @@ function DriverActiveTripContent({
             setExpDescription={setExpDescription}
             expAmount={expAmount}
             setExpAmount={setExpAmount}
+            expReceiptFile={expReceiptFile}
+            setExpReceiptFile={setExpReceiptFile}
             submittingExpense={submittingExpense}
             onLogExpense={onLogExpense}
             disabled={isTerminal}
@@ -2349,6 +2366,8 @@ interface ExpensesPanelProps {
   setExpDescription: (v: string) => void
   expAmount: string
   setExpAmount: (v: string) => void
+  expReceiptFile: File | null
+  setExpReceiptFile: (file: File | null) => void
   submittingExpense: boolean
   onLogExpense: () => void
   disabled: boolean
@@ -2364,6 +2383,8 @@ function ExpensesPanel({
   setExpDescription,
   expAmount,
   setExpAmount,
+  expReceiptFile,
+  setExpReceiptFile,
   submittingExpense,
   onLogExpense,
   disabled,
@@ -2433,6 +2454,40 @@ function ExpensesPanel({
                       className="h-10 text-sm pl-8"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <Camera className="h-3.5 w-3.5" /> Receipt photo
+                    </label>
+                    {expReceiptFile && (
+                      <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={() => setExpReceiptFile(null)} disabled={submittingExpense}>Clear</Button>
+                    )}
+                  </div>
+                  <Input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    capture="environment"
+                    disabled={submittingExpense}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0] ?? null
+                      event.target.value = ''
+                      if (!file) return
+                      if (!DRIVER_EVIDENCE_ALLOWED_MIME_TYPES.includes(file.type as (typeof DRIVER_EVIDENCE_ALLOWED_MIME_TYPES)[number])) {
+                        toast.error('Only JPG, PNG and WebP receipt photos are supported')
+                        return
+                      }
+                      if (file.size > 5 * 1024 * 1024) {
+                        toast.error('Receipt photo must be 5MB or smaller')
+                        return
+                      }
+                      setExpReceiptFile(file)
+                    }}
+                  />
+                  {expReceiptFile && (
+                    <p className="truncate text-[11px] text-muted-foreground">{expReceiptFile.name} · {(expReceiptFile.size / 1024 / 1024).toFixed(1)}MB</p>
+                  )}
                 </div>
 
                 <Button

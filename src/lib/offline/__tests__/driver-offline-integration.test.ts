@@ -22,8 +22,10 @@ describe('driver offline integration', () => {
 
   it('routes driver status and expense writes through the offline submission service', () => {
     const controller = source('src/components/trips/DriverTripController.tsx')
+    const statusDialog = source('src/components/trips/DriverStatusUpdateDialog.tsx')
     expect(controller).toContain('submitDriverMutation')
-    expect(controller).toContain("kind: 'status'")
+    expect(statusDialog).toContain('submitDriverMutation')
+    expect(statusDialog).toContain("kind: 'status'")
     expect(controller).toContain("kind: 'expense'")
     expect(controller).toContain('<OfflineSyncStatus')
   })
@@ -45,6 +47,7 @@ describe('driver offline integration', () => {
     expect(dialog).toContain('driverEvidenceUrl')
     expect(dialog).toContain("kind: 'status'")
     expect(dialog).toContain('dependencyIds: evidenceDependencyIds')
+    expect(dialog).toContain('to: targetStatus')
     expect(dialog).toContain('photos: evidenceUrls')
   })
 

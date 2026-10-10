@@ -34,6 +34,7 @@ describe('offline driver mutation server idempotency', () => {
 
   it('deduplicates inspection retries atomically through the operational event ledger', () => {
     const route = source('src/app/api/inspections/route.ts')
+    const evidenceValidator = source('src/lib/domain/evidence/driver-evidence-server.ts')
     expect(route).toContain('clientMutationId')
     expect(route).toContain('db.operationalEvent.findUnique')
     expect(route).toContain('db.vehicleInspection.findUnique')
@@ -42,8 +43,8 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('replayed: true')
     expect(route).toContain("if (auth.roleName === ROLES.DRIVER && !mutationId)")
     expect(route).toContain('validateDriverEvidenceRefs')
-    expect(route).toContain('driver-evidence-upload:${evidenceMutationId}')
-    expect(route).toContain('event.actorId !== auth.userId')
+    expect(evidenceValidator).toContain('driver-evidence-upload:${evidenceMutationId}')
+    expect(evidenceValidator).toContain('event.actorId !== auth.userId')
   })
 
   it('binds inspection replay identity to the submitted inspection payload', () => {
@@ -61,6 +62,8 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('driverReplay')
     expect(route).toContain('payloadHash')
     expect(route).toContain('validateDriverEvidenceRefs')
+    expect(route).toContain("auth.roleName === ROLES.DRIVER ? {} : rawUserMetadata")
+    expect(route).toContain('Driver status evidence only supports photo references')
     expect(route).toContain('clientMutationId has already been used for a different status update')
   })
 
@@ -71,6 +74,7 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('validateDriverEvidenceRefs')
     expect(route).toContain('clientMutationId has already been used for a different expense')
     expect(route).toContain('receiptUrl: normalizedReceiptUrl')
+    expect(route).toContain('normalizedAmount <= 0')
   })
 
   it('shares driver evidence ownership validation across inspections and trip writes', () => {
