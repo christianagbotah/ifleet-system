@@ -3,10 +3,25 @@ import path from 'node:path'
 
 const FORBIDDEN_FIELDS = new Set([
   'userid', 'driverid', 'truckid', 'trailerid', 'employeeid',
-  'drivername', 'name', 'email', 'phone', 'address',
-  'ghanacardnumber', 'licensenumber', 'vin', 'vinnumber',
-  'registrationnumber', 'policynumber', 'password', 'token', 'secret',
+  'drivername', 'customername', 'contactname', 'recipientname', 'ownername',
+  'name', 'email', 'phone', 'address', 'contactphone', 'contactemail',
+  'ghanacardnumber', 'licensenumber', 'vin', 'vinnumber', 'platenumber',
+  'vehicleplatenumber', 'registrationnumber', 'policynumber',
+  'password', 'token', 'secret',
 ])
+
+function normalizedFieldName(field: string): string {
+  return field.toLowerCase().replace(/[^a-z0-9]/g, '')
+}
+
+function isSensitiveIdentityField(field: string): boolean {
+  const normalized = normalizedFieldName(field)
+  if (FORBIDDEN_FIELDS.has(normalized)) return true
+  if (/(email|phone|password|token|secret)$/.test(normalized)) return true
+  if (/^(driver|customer|contact|recipient|owner|user|employee).*(id|name|email|phone|address)$/.test(normalized)) return true
+  if (/(ghanacardnumber|licensenumber|vinnumber|platenumber|registrationnumber|policynumber)$/.test(normalized)) return true
+  return false
+}
 
 export interface TrainingExportConfig {
   featureFields: string[]
@@ -18,10 +33,10 @@ export function sanitizeTrainingRows(
   config: TrainingExportConfig,
 ): Array<Record<string, unknown>> {
   const operationalFields = [...config.featureFields, ...config.labelFields].filter(
-    (field, index, all) => all.indexOf(field) === index && !FORBIDDEN_FIELDS.has(field.toLowerCase()),
+    (field, index, all) => all.indexOf(field) === index && !isSensitiveIdentityField(field),
   )
   const operationalFeatures = config.featureFields.filter(
-    (field) => !FORBIDDEN_FIELDS.has(field.toLowerCase()),
+    (field) => !isSensitiveIdentityField(field),
   )
 
   if (operationalFeatures.length === 0) {

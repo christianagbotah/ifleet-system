@@ -31,6 +31,12 @@ describe('AiModelRegistry', () => {
     expect(result.output.value).toBe(4)
   })
 
+  it('rejects data-quality scores outside the 0..1 range', async () => {
+    const registry = new AiModelRegistry().register(model('1.0.0', 'shadow', 0.2))
+    await expect(registry.predict('eta-learned', '1.0.0', { value: 1 }, 1.01)).rejects.toThrow(/between 0 and 1/i)
+    await expect(registry.predict('eta-learned', '1.0.0', { value: 1 }, -0.01)).rejects.toThrow(/between 0 and 1/i)
+  })
+
   it('rejects inputs below the model minimum data quality', async () => {
     const registry = new AiModelRegistry().register(model('1.0.0', 'shadow', 0.8))
     await expect(registry.predict('eta-learned', '1.0.0', { value: 1 }, 0.79)).rejects.toThrow(/data quality/i)

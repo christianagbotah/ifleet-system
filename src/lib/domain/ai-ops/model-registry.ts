@@ -61,7 +61,10 @@ export class AiModelRegistry {
   async predict<Input, Output>(modelKey: string, version: string, input: Input, dataQualityScore: number): Promise<AiModelPrediction<Output>> {
     const model = this.resolve<Input, Output>(modelKey, version)
     if (model.status === 'disabled') throw new Error(`AI model is disabled: ${modelKey}@${version}`)
-    if (!Number.isFinite(dataQualityScore) || dataQualityScore < model.minimumDataQuality) {
+    if (!Number.isFinite(dataQualityScore) || dataQualityScore < 0 || dataQualityScore > 1) {
+      throw new Error('data quality must be between 0 and 1')
+    }
+    if (dataQualityScore < model.minimumDataQuality) {
       throw new Error(`data quality ${dataQualityScore} is below model minimum ${model.minimumDataQuality}`)
     }
     const output = await model.predict(input)

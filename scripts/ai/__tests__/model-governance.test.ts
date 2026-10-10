@@ -22,6 +22,23 @@ describe('AI training dataset export', () => {
     })).toEqual([{ routeClass: 'tema-kumasi', distanceKm: 255, dwellMinutes: 42, lateDelivery: true }])
   })
 
+  it('removes common identity/contact aliases even when explicitly allow-listed', () => {
+    const [row] = sanitizeTrainingRows([{
+      driver_id: 'driver-secret',
+      contactPhone: '+233000000000',
+      customerName: 'Private Customer',
+      plateNumber: 'GT-1234-24',
+      routeClass: 'tema-kumasi',
+      distanceKm: 255,
+      lateDelivery: false,
+    }], {
+      featureFields: ['driver_id', 'contactPhone', 'customerName', 'plateNumber', 'routeClass', 'distanceKm'],
+      labelFields: ['lateDelivery'],
+    })
+
+    expect(row).toEqual({ routeClass: 'tema-kumasi', distanceKm: 255, lateDelivery: false })
+  })
+
   it('rejects exports with no usable operational features', () => {
     expect(() => sanitizeTrainingRows([{ driverId: 'd1', phone: '1' }], {
       featureFields: ['driverId', 'phone'],
