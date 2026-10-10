@@ -363,10 +363,10 @@ export async function loadClientShipmentDetail(clientId: string, tripId: string,
 
   if (!trip || !trip.client?.isActive) return null
 
-  const [locationHistory, liveStateRows] = await Promise.all([
+  const [recentLocationHistory, liveStateRows] = await Promise.all([
     db.truckLocation.findMany({
       where: { tripId: trip.id },
-      orderBy: { timestamp: 'asc' },
+      orderBy: { timestamp: 'desc' },
       take: 2000,
       select: {
         latitude: true,
@@ -390,6 +390,7 @@ export async function loadClientShipmentDetail(clientId: string, tripId: string,
     }),
   ])
 
+  const locationHistory = [...recentLocationHistory].reverse()
   const historicalLatest = locationHistory.at(-1) ?? undefined
   const liveState = liveStateRows[0]
   const latestLocation = resolvePublicLocation(trip.id, liveState, historicalLatest, now)
