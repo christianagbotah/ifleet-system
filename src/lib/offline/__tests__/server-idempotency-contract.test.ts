@@ -6,10 +6,10 @@ const root = process.cwd()
 const source = (relative: string) => fs.readFileSync(path.join(root, relative), 'utf8')
 
 describe('offline driver mutation server idempotency', () => {
-  it('stores client mutation identities on expense, fuel and trip event records', () => {
+  it('stores client mutation identities on expense, fuel, trip event and inspection records', () => {
     const schema = source('prisma/schema.prisma')
     const matches = schema.match(/clientMutationId\s+String\?\s+@unique/g) ?? []
-    expect(matches.length).toBeGreaterThanOrEqual(3)
+    expect(matches.length).toBeGreaterThanOrEqual(4)
   })
 
   it('deduplicates trip expense retries by client mutation id', () => {
@@ -30,5 +30,13 @@ describe('offline driver mutation server idempotency', () => {
     const service = source('src/lib/domain/dispatch/transition-trip.ts')
     expect(service).toContain('clientMutationId')
     expect(service).toContain('findEventByClientMutationId')
+  })
+
+  it('deduplicates inspection retries by client mutation id', () => {
+    const route = source('src/app/api/inspections/route.ts')
+    expect(route).toContain('clientMutationId')
+    expect(route).toContain('db.vehicleInspection.findUnique')
+    expect(route).toContain('clientMutationId: mutationId')
+    expect(route).toContain('replayed: true')
   })
 })
