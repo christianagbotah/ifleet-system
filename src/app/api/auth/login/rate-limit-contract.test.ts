@@ -16,8 +16,11 @@ describe('login abuse protection contract', () => {
     expect(source).toContain('resetRateLimit(failureKey)')
   })
 
-  it('normalizes account identity without changing the generic invalid-credential response', () => {
+  it('normalizes account identity and routes credential failures through one generic response', () => {
     expect(source).toContain('email.trim().toLowerCase()')
-    expect(source.match(/Invalid email or password/g)?.length ?? 0).toBeGreaterThanOrEqual(2)
+    expect(source).toContain("NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })")
+    expect(source).toMatch(/if \(!user\) \{\s*return recordCredentialFailure\(\)/s)
+    expect(source).toMatch(/if \(!user\.password\) \{\s*return recordCredentialFailure\(\)/s)
+    expect(source).toMatch(/if \(!isPasswordValid\) \{\s*return recordCredentialFailure\(\)/s)
   })
 })
