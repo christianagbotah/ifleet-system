@@ -1,41 +1,32 @@
 'use client'
 
-import React, { useState, useMemo, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { apiFetch } from '@/lib/api'
-import { GHANA_CITIES } from '@/lib/ghana-routes'
+import { useCallback, useMemo, useState } from 'react'
 import {
+  AlertTriangle,
+  ArrowRightLeft,
+  Calculator,
+  CheckCircle2,
+  Clock,
+  Database,
+  Fuel,
+  Gauge,
   MapPin,
   Navigation,
-  Fuel,
-  Clock,
-  DollarSign,
-  Truck,
   Plus,
-  X,
-  ChevronRight,
-  ArrowRightLeft,
-  Gauge,
   Route as RouteIcon,
-  Loader2,
-  AlertCircle,
-  TrendingUp,
-  MapPinned,
-  Calculator,
-  Zap,
-  ArrowDown,
-  Waypoints,
-  Star,
-  Phone,
-  BadgeCheck,
+  Satellite,
+  ShieldCheck,
+  Sparkles,
+  Truck,
+  X,
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { toast } from 'sonner'
+
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
   SelectContent,
@@ -43,9 +34,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { toast } from 'sonner'
+import { apiFetch } from '@/lib/api'
+import { GHANA_CITIES } from '@/lib/ghana-routes'
 
-// ============ Types ============
+interface RouteLeg {
+  from: string
+  to: string
+  distanceKm: number
+  estimatedHours: number
+  tollCost: number
+  fuelCost: number
+  totalCost: number
+}
 
 interface RouteResult {
   from: string
@@ -56,23 +56,10 @@ interface RouteResult {
   fuelCost: number
   tollCost: number
   totalCost: number
-  legs?: Array<{
-    from: string
-    to: string
-    distanceKm: number
-    estimatedHours: number
-    tollCost: number
-    fuelCost: number
-    totalCost: number
-  }>
-}
-
-interface AlternativeRoute {
-  from: string
-  via: string
-  to: string
-  totalDistance: number
-  totalCost: number
+  legs?: RouteLeg[]
+  source: 'static_fallback' | string
+  dataQuality: number
+  dataQualityGrade: 'trusted' | 'usable' | 'limited'
 }
 
 interface RecommendedTruck {
@@ -83,93 +70,144 @@ interface RecommendedTruck {
   driver: string
   currentLocation: string
   distanceToPickup: number | null
-  fuelLevel: number | null
-  tankCapacity: number | null
+  fuelLevel: null
+  tankCapacity: null
+  locationSource: string
+  locationFreshness: 'fresh' | 'stale' | 'unknown'
+  locationReceivedAt: string | null
+  confidence: number
+  dataQuality: number
+  dataQualityGrade: 'trusted' | 'usable' | 'limited'
+  reasons: string[]
+  warnings: string[]
+  fuelEvidenceSource: 'truck_history' | 'fleet_history' | 'configured_default'
 }
 
 interface FuelEstimate {
   liters: number
   costAtCurrentPrice: number
-  recommendedPricePerLiter: number
+  pricePerLiter: number
+  priceSource: 'request' | 'configured_default'
+  source: 'truck_history' | 'fleet_history' | 'configured_default'
   fuelPer100km: number
   weightAdjustment: number
+  cargoAdjustmentFactor: number
+  dataQuality: number
+  assumptions: string[]
 }
 
 interface OptimizeResponse {
+  advisoryVersion: string
+  generatedAt: string
+  recommendationsAvailable: boolean
   route: RouteResult
-  alternatives: AlternativeRoute[]
+  alternatives: Array<{
+    from: string
+    via: string
+    to: string
+    totalDistance: number
+    totalCost: number
+  }>
   recommendedTrucks: RecommendedTruck[]
   fuelEstimate: FuelEstimate
+  dataQuality: number
+  dataQualityGrade: 'trusted' | 'usable' | 'limited'
+  confidence: number
+  notices: string[]
 }
 
-// ============ Constants ============
-
+const CITY_NAMES = GHANA_CITIES.map((city) => city.name)
 const POPULAR_ROUTES = [
-  { from: 'Accra', to: 'Kumasi', label: 'Accra → Kumasi', tag: 'Major trunk' },
-  { from: 'Accra', to: 'Tamale', label: 'Accra → Tamale', tag: 'Northern' },
-  { from: 'Accra', to: 'Takoradi', label: 'Accra → Takoradi', tag: 'Coastal' },
-  { from: 'Kumasi', to: 'Tamale', label: 'Kumasi → Tamale', tag: 'Ashanti' },
-  { from: 'Accra', to: 'Cape Coast', label: 'Accra → Cape Coast', tag: 'Central' },
-  { from: 'Tema', to: 'Kumasi', label: 'Tema → Kumasi', tag: 'Industrial' },
-]
+  ['Accra', 'Kumasi'],
+  ['Tema', 'Kumasi'],
+  ['Accra', 'Takoradi'],
+  ['Accra', 'Tamale'],
+  ['Kumasi', 'Tamale'],
+  ['Accra', 'Cape Coast'],
+] as const
 
-const CITY_NAMES = GHANA_CITIES.map(c => c.name)
+function percentage(value: number): string {
+  return `${Math.round(value * 100)}%`
+}
 
-// ============ Component ============
+function qualityLabel(value: string): string {
+  if (value === 'trusted') return 'Trusted evidence'
+  if (value === 'usable') return 'Usable evidence'
+  return 'Limited evidence'
+}
+
+function routeSourceLabel(source: string): string {
+  if (source === 'static_fallback') return 'Static Ghana route fallback'
+  return source.replaceAll('_', ' ')
+}
+
+function fuelSourceLabel(source: FuelEstimate['source'] | RecommendedTruck['fuelEvidenceSource']): string {
+  if (source === 'truck_history') return 'Truck trip history'
+  if (source === 'fleet_history') return 'Fleet trip history'
+  return 'Configured conservative fallback'
+}
+
+function freshnessLabel(value: RecommendedTruck['locationFreshness']): string {
+  if (value === 'fresh') return 'Fresh telematics'
+  if (value === 'stale') return 'Stale telematics'
+  return 'Location evidence unavailable'
+}
+
+function noticeLabel(value: string): string {
+  const labels: Record<string, string> = {
+    route_uses_static_ghana_graph: 'Distance and ETA use the built-in Ghana route graph, not live traffic.',
+    fuel_price_default_used: 'Fuel price uses the configured fallback because no operator price was supplied.',
+    truck_efficiency_history_insufficient: 'Truck-specific fuel history is not yet sufficient for this estimate.',
+    fleet_efficiency_used: 'Fuel consumption is estimated from recent fleet trip evidence.',
+    fleet_efficiency_history_insufficient: 'Fleet fuel history is not yet sufficient for a calibrated estimate.',
+    configured_efficiency_default_used: 'Fuel consumption uses a conservative configured fallback.',
+  }
+  return labels[value] ?? value.replaceAll('_', ' ')
+}
 
 export function RouteOptimizerView() {
-  // Form state
   const [origin, setOrigin] = useState('')
   const [destination, setDestination] = useState('')
   const [intermediateStops, setIntermediateStops] = useState<string[]>([])
-  const [fuelPrice, setFuelPrice] = useState('15')
+  const [fuelPrice, setFuelPrice] = useState('')
   const [cargoWeight, setCargoWeight] = useState('')
-
-  // UI state
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<OptimizeResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'planner' | 'calculator'>('planner')
+  const [result, setResult] = useState<OptimizeResponse | null>(null)
+  const [mode, setMode] = useState<'planner' | 'cost'>('planner')
 
-  // Derived: all stops for the route
-  const allStops = useMemo(() => {
-    const stops = [origin, ...intermediateStops, destination].filter(Boolean)
-    return stops
-  }, [origin, intermediateStops, destination])
+  const routePath = useMemo(
+    () => [origin, ...intermediateStops.filter(Boolean), destination].filter(Boolean),
+    [origin, intermediateStops, destination],
+  )
 
-  // Add intermediate stop
   const addStop = useCallback(() => {
     if (intermediateStops.length >= 5) {
-      toast.error('Maximum 5 intermediate stops allowed')
+      toast.error('A route can contain up to five intermediate stops.')
       return
     }
-    setIntermediateStops(prev => [...prev, ''])
+    setIntermediateStops((current) => [...current, ''])
+    setResult(null)
   }, [intermediateStops.length])
 
-  // Remove intermediate stop
+  const updateStop = useCallback((index: number, city: string) => {
+    setIntermediateStops((current) => current.map((value, itemIndex) => itemIndex === index ? city : value))
+    setResult(null)
+  }, [])
+
   const removeStop = useCallback((index: number) => {
-    setIntermediateStops(prev => prev.filter((_, i) => i !== index))
+    setIntermediateStops((current) => current.filter((_, itemIndex) => itemIndex !== index))
+    setResult(null)
   }, [])
 
-  // Update intermediate stop
-  const updateStop = useCallback((index: number, value: string) => {
-    setIntermediateStops(prev => {
-      const updated = [...prev]
-      updated[index] = value
-      return updated
-    })
-  }, [])
-
-  // Swap origin and destination
-  const swapRoute = useCallback(() => {
+  const swapEndpoints = useCallback(() => {
     setOrigin(destination)
     setDestination(origin)
-    setIntermediateStops(prev => [...prev].reverse())
+    setIntermediateStops((current) => [...current].reverse())
     setResult(null)
-  }, [origin, destination])
+  }, [destination, origin])
 
-  // Quick route selection
-  const selectQuickRoute = useCallback((from: string, to: string) => {
+  const choosePopularRoute = useCallback((from: string, to: string) => {
     setOrigin(from)
     setDestination(to)
     setIntermediateStops([])
@@ -177,899 +215,485 @@ export function RouteOptimizerView() {
     setError(null)
   }, [])
 
-  // Calculate route
-  const calculateRoute = useCallback(async () => {
+  const clear = useCallback(() => {
+    setOrigin('')
+    setDestination('')
+    setIntermediateStops([])
+    setFuelPrice('')
+    setCargoWeight('')
+    setResult(null)
+    setError(null)
+  }, [])
+
+  const calculate = useCallback(async () => {
     if (!origin || !destination) {
-      toast.error('Please select both origin and destination cities')
+      toast.error('Select both an origin and destination.')
       return
     }
     if (origin === destination) {
-      toast.error('Origin and destination cannot be the same')
+      toast.error('Origin and destination must be different.')
       return
     }
 
     setLoading(true)
     setError(null)
-    setResult(null)
-
     try {
-      const params = new URLSearchParams({ from, to })
-      if (intermediateStops.filter(Boolean).length > 0) {
-        params.set('stops', intermediateStops.filter(Boolean).join(','))
-      }
-      if (cargoWeight) {
-        params.set('weight', cargoWeight)
-      }
-      if (fuelPrice && parseFloat(fuelPrice) > 0) {
-        params.set('fuelPrice', fuelPrice)
-      }
+      const params = new URLSearchParams({ from: origin, to: destination })
+      const stops = intermediateStops.filter(Boolean)
+      if (stops.length > 0) params.set('stops', stops.join(','))
+      if (cargoWeight.trim()) params.set('weight', cargoWeight.trim())
+      if (fuelPrice.trim()) params.set('fuelPrice', fuelPrice.trim())
 
       const data = await apiFetch<OptimizeResponse>(`/api/routes/optimize?${params.toString()}`)
       setResult(data)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to calculate route'
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'Route intelligence could not calculate this route.'
       setError(message)
+      setResult(null)
       toast.error(message)
     } finally {
       setLoading(false)
     }
-  }, [origin, destination, intermediateStops, cargoWeight, fuelPrice])
+  }, [cargoWeight, destination, fuelPrice, intermediateStops, origin])
 
-  // Clear form
-  const clearForm = useCallback(() => {
-    setOrigin('')
-    setDestination('')
-    setIntermediateStops([])
-    setCargoWeight('')
-    setFuelPrice('15')
-    setResult(null)
-    setError(null)
-  }, [])
-
-  // Live cost calculator totals
-  const calcTotals = useMemo(() => {
-    if (!result) return null
-    return {
-      distance: result.route.totalDistance,
-      hours: result.route.totalHours,
-      fuelCost: result.fuelEstimate.costAtCurrentPrice,
-      tollCost: result.route.tollCost,
-      totalCost: result.fuelEstimate.costAtCurrentPrice + result.route.tollCost,
-      fuelLiters: result.fuelEstimate.liters,
-    }
-  }, [result])
+  const totalTripCost = result ? result.fuelEstimate.costAtCurrentPrice + result.route.tollCost : 0
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Navigation className="h-6 w-6 text-amber-500" />
-            Route Optimizer
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Plan optimized routes across Ghana with fuel cost estimation and truck recommendations
+    <div className="space-y-5">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+        <div className="space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight">Route Intelligence</h1>
+            <Badge variant="outline" className="gap-1">
+              <Sparkles className="h-3 w-3" />
+              Advisory only
+            </Badge>
+          </div>
+          <p className="max-w-3xl text-sm text-muted-foreground">
+            Plan Ghana haulage routes with evidence-labelled distance, fuel and eligible fleet recommendations. Dispatch authority remains in the guarded assignment workflow.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className={activeTab === 'planner' ? 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400' : ''}
-            onClick={() => setActiveTab('planner')}
-          >
-            <RouteIcon className="h-4 w-4 mr-1" />
-            Route Planner
+          <Button variant={mode === 'planner' ? 'default' : 'outline'} size="sm" onClick={() => setMode('planner')}>
+            <RouteIcon className="mr-2 h-4 w-4" />
+            Planner
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className={activeTab === 'calculator' ? 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400' : ''}
-            onClick={() => setActiveTab('calculator')}
-          >
-            <Calculator className="h-4 w-4 mr-1" />
-            Cost Calculator
+          <Button variant={mode === 'cost' ? 'default' : 'outline'} size="sm" onClick={() => setMode('cost')}>
+            <Calculator className="mr-2 h-4 w-4" />
+            Cost evidence
           </Button>
         </div>
       </div>
 
-      {/* Route Planner Tab */}
-      {activeTab === 'planner' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column: Route Input */}
-          <div className="lg:col-span-1 space-y-4">
-            {/* Route Selection Card */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-amber-500" />
-                  Plan Your Route
-                </CardTitle>
-                <CardDescription>Select origin, destination, and optional stops</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Origin */}
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Origin</Label>
-                  <Select value={origin} onValueChange={(v) => { setOrigin(v); setResult(null) }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select origin city" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CITY_NAMES.map(city => (
-                        <SelectItem key={city} value={city}>{city}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+      <Card>
+        <CardContent className="p-4 sm:p-5">
+          <div className="grid gap-3 xl:grid-cols-[1fr_auto_1fr_0.7fr_0.7fr_auto] xl:items-end">
+            <div className="space-y-2">
+              <Label>Origin</Label>
+              <Select value={origin} onValueChange={(value) => { setOrigin(value); setResult(null) }}>
+                <SelectTrigger><SelectValue placeholder="Select origin" /></SelectTrigger>
+                <SelectContent>
+                  {CITY_NAMES.map((city) => <SelectItem key={city} value={city}>{city}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
 
-                {/* Swap Button */}
-                <div className="flex justify-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 rounded-full hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-amber-950/30"
-                    onClick={swapRoute}
-                    disabled={!origin && !destination}
-                  >
-                    <ArrowRightLeft className="h-4 w-4" />
-                  </Button>
-                </div>
+            <Button variant="outline" size="icon" className="hidden xl:inline-flex" onClick={swapEndpoints} aria-label="Swap origin and destination">
+              <ArrowRightLeft className="h-4 w-4" />
+            </Button>
 
-                {/* Destination */}
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Destination</Label>
-                  <Select value={destination} onValueChange={(v) => { setDestination(v); setResult(null) }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select destination city" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CITY_NAMES.map(city => (
-                        <SelectItem key={city} value={city}>{city}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+            <div className="space-y-2">
+              <Label>Destination</Label>
+              <Select value={destination} onValueChange={(value) => { setDestination(value); setResult(null) }}>
+                <SelectTrigger><SelectValue placeholder="Select destination" /></SelectTrigger>
+                <SelectContent>
+                  {CITY_NAMES.map((city) => <SelectItem key={city} value={city}>{city}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
 
-                <Separator />
+            <div className="space-y-2">
+              <Label>Fuel price (₵/L)</Label>
+              <Input
+                type="number"
+                min="0.01"
+                max="100"
+                step="0.01"
+                value={fuelPrice}
+                onChange={(event) => { setFuelPrice(event.target.value); setResult(null) }}
+                placeholder="Use configured fallback"
+              />
+            </div>
 
-                {/* Intermediate Stops */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Intermediate Stops ({intermediateStops.length}/5)
-                    </Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 text-amber-600 hover:text-amber-700 dark:text-amber-400"
-                      onClick={addStop}
-                      disabled={intermediateStops.length >= 5}
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Add Stop
-                    </Button>
-                  </div>
-                  <AnimatePresence>
-                    {intermediateStops.map((stop, idx) => (
-                      <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex flex-col items-center">
-                          <div className="w-2 h-2 rounded-full bg-amber-400" />
-                          <div className="w-0.5 h-6 bg-amber-200 dark:bg-amber-800" />
-                        </div>
-                        <Select
-                          value={stop}
-                          onValueChange={(v) => updateStop(idx, v)}
-                        >
-                          <SelectTrigger className="flex-1">
-                            <SelectValue placeholder={`Stop ${idx + 1}`} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {CITY_NAMES.map(city => (
-                              <SelectItem key={city} value={city}>{city}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-9 w-9 text-muted-foreground hover:text-red-500 shrink-0"
-                          onClick={() => removeStop(idx)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
+            <div className="space-y-2">
+              <Label>Cargo (tonnes)</Label>
+              <Input
+                type="number"
+                min="0"
+                max="100"
+                step="0.5"
+                value={cargoWeight}
+                onChange={(event) => { setCargoWeight(event.target.value); setResult(null) }}
+                placeholder="Optional"
+              />
+            </div>
 
-                <Separator />
-
-                {/* Cost Parameters */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <Label className="text-xs font-medium text-muted-foreground">Fuel Price (\u20B5/L)</Label>
-                    <Input
-                      type="number"
-                      value={fuelPrice}
-                      onChange={(e) => setFuelPrice(e.target.value)}
-                      placeholder="15"
-                      min="0"
-                      step="0.5"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-xs font-medium text-muted-foreground">Cargo Weight (t)</Label>
-                    <Input
-                      type="number"
-                      value={cargoWeight}
-                      onChange={(e) => setCargoWeight(e.target.value)}
-                      placeholder="0"
-                      min="0"
-                      step="0.5"
-                    />
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-2 pt-2">
-                  <Button
-                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-white"
-                    onClick={calculateRoute}
-                    disabled={loading || !origin || !destination}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Calculating...
-                      </>
-                    ) : (
-                      <>
-                        <Navigation className="h-4 w-4 mr-2" />
-                        Calculate Route
-                      </>
-                    )}
-                  </Button>
-                  <Button variant="outline" onClick={clearForm} disabled={loading}>
-                    Clear
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Popular Routes */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" />
-                  Popular Routes
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 gap-2">
-                  {POPULAR_ROUTES.map((route) => (
-                    <button
-                      key={route.label}
-                      onClick={() => selectQuickRoute(route.from, route.to)}
-                      className="flex items-center justify-between p-2.5 rounded-lg border hover:bg-amber-50 hover:border-amber-200 dark:hover:bg-amber-950/20 dark:hover:border-amber-800 transition-colors text-left"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1 text-sm font-medium">
-                          <MapPinned className="h-3.5 w-3.5 text-muted-foreground" />
-                          {route.label}
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="text-[10px] font-normal shrink-0">
-                        {route.tag}
-                      </Badge>
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="flex gap-2">
+              <Button className="flex-1 xl:flex-none" disabled={loading || !origin || !destination} onClick={calculate}>
+                <Navigation className="mr-2 h-4 w-4" />
+                {loading ? 'Calculating…' : 'Run advisory'}
+              </Button>
+              <Button variant="outline" onClick={clear}>Clear</Button>
+            </div>
           </div>
 
-          {/* Right Column: Results */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Loading State */}
-            {loading && (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <Skeleton className="h-6 w-48" />
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      {[...Array(4)].map((_, i) => (
-                        <Skeleton key={i} className="h-24 rounded-lg" />
-                      ))}
-                    </div>
-                    <Skeleton className="h-48 rounded-lg" />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Error State */}
-            {error && !loading && (
-              <Card className="border-red-200 dark:border-red-800">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
-                    <div>
-                      <h3 className="font-medium text-red-700 dark:text-red-400">Route Error</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{error}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Results */}
-            {result && !loading && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key="results"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4"
-                >
-                  {/* Route Summary KPIs */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.05 }}
-                    >
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                              <Gauge className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                            </div>
-                            <span className="text-xs text-muted-foreground font-medium">Distance</span>
-                          </div>
-                          <p className="text-2xl font-bold">{result.route.totalDistance.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">kilometers</p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                              <Clock className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                            </div>
-                            <span className="text-xs text-muted-foreground font-medium">Est. Time</span>
-                          </div>
-                          <p className="text-2xl font-bold">{result.route.totalHours}</p>
-                          <p className="text-xs text-muted-foreground">hours</p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.15 }}
-                    >
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="h-8 w-8 rounded-lg bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center">
-                              <Fuel className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-                            </div>
-                            <span className="text-xs text-muted-foreground font-medium">Fuel Cost</span>
-                          </div>
-                          <p className="text-2xl font-bold">\u20B5{result.fuelEstimate.costAtCurrentPrice.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">{result.fuelEstimate.liters}L @ \u20B5{fuelPrice}/L</p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <Card className="overflow-hidden border-amber-200 dark:border-amber-800">
-                        <CardContent className="p-4 bg-gradient-to-br from-amber-50 to-transparent dark:from-amber-950/20 dark:to-transparent">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                              <DollarSign className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                            </div>
-                            <span className="text-xs text-muted-foreground font-medium">Total Cost</span>
-                          </div>
-                          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">
-                            \u20B5{(result.fuelEstimate.costAtCurrentPrice + result.route.tollCost).toLocaleString()}
-                          </p>
-                          <p className="text-xs text-muted-foreground">incl. \u20B5{result.route.tollCost} tolls</p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </div>
-
-                  {/* Route Visualization */}
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Waypoints className="h-4 w-4 text-amber-500" />
-                        Route Details
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {/* Route Path Visualization */}
-                      <div className="flex items-center gap-1 flex-wrap mb-4">
-                        <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 px-3 py-1">
-                          <MapPin className="h-3 w-3 mr-1" />
-                          {result.route.from}
-                        </Badge>
-                        {result.route.stops.map((stop, idx) => (
-                          <React.Fragment key={idx}>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                            <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-400 px-3 py-1">
-                              {stop}
-                            </Badge>
-                          </React.Fragment>
-                        ))}
-                        <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <Badge variant="outline" className="border-red-300 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/30 dark:text-red-400 px-3 py-1">
-                          <MapPin className="h-3 w-3 mr-1" />
-                          {result.route.to}
-                        </Badge>
-                      </div>
-
-                      {/* Legs Table (for multi-stop) */}
-                      {result.route.legs && result.route.legs.length > 1 && (
-                        <>
-                          <div className="rounded-lg border overflow-hidden mb-4">
-                            <div className="overflow-x-auto max-h-60 overflow-y-auto hidden md:block">
-                              <table className="w-full text-sm">
-                                <thead className="bg-muted/50 sticky top-0">
-                                  <tr>
-                                    <th className="text-left px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Leg</th>
-                                    <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Distance</th>
-                                    <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Time</th>
-                                    <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Toll</th>
-                                    <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Cost</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {result.route.legs.map((leg, idx) => (
-                                    <tr key={idx} className="border-t">
-                                      <td className="px-4 py-2.5">
-                                        <span className="font-medium">{leg.from}</span>
-                                        <ChevronRight className="h-3 w-3 inline mx-1 text-muted-foreground" />
-                                        <span className="font-medium">{leg.to}</span>
-                                      </td>
-                                      <td className="text-right px-4 py-2.5 font-mono">{leg.distanceKm} km</td>
-                                      <td className="text-right px-4 py-2.5">{leg.estimatedHours}h</td>
-                                      <td className="text-right px-4 py-2.5">\u20B5{leg.tollCost}</td>
-                                      <td className="text-right px-4 py-2.5 font-medium">\u20B5{leg.totalCost}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                          {/* Mobile legs cards */}
-                          <div className="md:hidden divide-y rounded-lg border mb-4 overflow-hidden">
-                            {result.route.legs.map((leg, idx) => (
-                              <div key={idx} className="mobile-card p-4 space-y-2">
-                                <p className="font-semibold text-sm">
-                                  <MapPin className="h-3.5 w-3.5 inline mr-1 text-emerald-500" />
-                                  {leg.from}
-                                  <ChevronRight className="h-3 w-3 inline mx-1 text-muted-foreground" />
-                                  {leg.to}
-                                </p>
-                                <div className="flex items-center gap-3 text-sm">
-                                  <span className="text-muted-foreground">{leg.distanceKm} km</span>
-                                  <span className="text-muted-foreground">{leg.estimatedHours}h</span>
-                                  <span className="text-muted-foreground">Toll \u20B5{leg.tollCost}</span>
-                                </div>
-                                <p className="font-semibold text-sm">\u20B5{leg.totalCost}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </>
-                      )}
-
-                      {/* Cost Breakdown */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div className="rounded-lg border p-3 space-y-1">
-                          <div className="flex items-center gap-2">
-                            <Fuel className="h-3.5 w-3.5 text-sky-500" />
-                            <span className="text-xs font-medium text-muted-foreground">Fuel</span>
-                          </div>
-                          <p className="text-lg font-bold">\u20B5{result.fuelEstimate.costAtCurrentPrice.toLocaleString()}</p>
-                          <p className="text-[11px] text-muted-foreground">
-                            {result.fuelEstimate.liters}L at \u20B5{fuelPrice}/L
-                            {parseFloat(cargoWeight) > 0 && (
-                              <span className="text-amber-600 dark:text-amber-400">
-                                {' '}(+{result.fuelEstimate.weightAdjustment}L/100km for {cargoWeight}t)
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                        <div className="rounded-lg border p-3 space-y-1">
-                          <div className="flex items-center gap-2">
-                            <RouteIcon className="h-3.5 w-3.5 text-violet-500" />
-                            <span className="text-xs font-medium text-muted-foreground">Tolls</span>
-                          </div>
-                          <p className="text-lg font-bold">\u20B5{result.route.tollCost.toLocaleString()}</p>
-                          <p className="text-[11px] text-muted-foreground">
-                            {result.route.legs ? `${result.route.legs.length} toll point${result.route.legs.length > 1 ? 's' : ''}` : 'Ghana highway tolls'}
-                          </p>
-                        </div>
-                        <div className="rounded-lg border p-3 space-y-1 bg-amber-50/50 dark:bg-amber-950/10">
-                          <div className="flex items-center gap-2">
-                            <DollarSign className="h-3.5 w-3.5 text-amber-500" />
-                            <span className="text-xs font-medium text-muted-foreground">Total Trip Cost</span>
-                          </div>
-                          <p className="text-lg font-bold text-amber-700 dark:text-amber-400">
-                            \u20B5{(result.fuelEstimate.costAtCurrentPrice + result.route.tollCost).toLocaleString()}
-                          </p>
-                          <p className="text-[11px] text-muted-foreground">
-                            Fuel + Tolls (one-way)
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Alternative Routes */}
-                  {result.alternatives.length > 0 && (
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-amber-500" />
-                          Alternative Routes
-                        </CardTitle>
-                        <CardDescription>Other possible routes with cost comparison</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2 max-h-48 overflow-y-auto">
-                          {result.alternatives.map((alt, idx) => {
-                            const costDiff = alt.totalCost - result.fuelEstimate.costAtCurrentPrice
-                            const isCheaper = costDiff < 0
-                            return (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <span className="text-sm font-medium">
-                                    {alt.from} → <span className="text-amber-600 dark:text-amber-400">{alt.via}</span> → {alt.to}
-                                  </span>
-                                  <Badge variant="outline" className="text-[10px]">
-                                    via {alt.via}
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center gap-4 text-sm">
-                                  <span className="text-muted-foreground">
-                                    {alt.totalDistance} km
-                                  </span>
-                                  <div className="flex items-center gap-1">
-                                    <span className="font-medium">\u20B5{alt.totalCost.toLocaleString()}</span>
-                                    {isCheaper && (
-                                      <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-300 dark:text-emerald-400 dark:border-emerald-700">
-                                        -\u20B5{Math.abs(costDiff).toLocaleString()}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {/* Recommended Trucks */}
-                  {result.recommendedTrucks.length > 0 && (
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <Truck className="h-4 w-4 text-amber-500" />
-                          Recommended Trucks
-                        </CardTitle>
-                        <CardDescription>
-                          Available trucks sorted by proximity to {result.route.from}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
-                          {result.recommendedTrucks.map((truck, idx) => (
-                            <motion.div
-                              key={truck.truckId}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.05 }}
-                              className="flex items-center gap-4 p-3 rounded-lg border hover:border-amber-200 dark:hover:border-amber-800 transition-colors"
-                            >
-                              {/* Rank badge */}
-                              <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                                idx === 0
-                                  ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                                  : 'bg-muted text-muted-foreground'
-                              }`}>
-                                {idx + 1}
-                              </div>
-
-                              {/* Truck info */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium text-sm truncate">
-                                    {truck.plateNumber}
-                                  </span>
-                                  <Badge variant="outline" className="text-[10px] shrink-0">
-                                    {truck.make}
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                                  <span className="flex items-center gap-1">
-                                    <BadgeCheck className="h-3 w-3" />
-                                    {truck.driver}
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <MapPin className="h-3 w-3" />
-                                    {truck.currentLocation}
-                                  </span>
-                                </div>
-                              </div>
-
-                              {/* Distance + Fuel */}
-                              <div className="text-right shrink-0">
-                                {truck.distanceToPickup !== null ? (
-                                  <div>
-                                    <p className={`text-sm font-semibold ${
-                                      truck.distanceToPickup === 0
-                                        ? 'text-emerald-600 dark:text-emerald-400'
-                                        : truck.distanceToPickup <= 50
-                                        ? 'text-amber-600 dark:text-amber-400'
-                                        : 'text-muted-foreground'
-                                    }`}>
-                                      {truck.distanceToPickup === 0 ? 'At origin' : `${truck.distanceToPickup} km away`}
-                                    </p>
-                                    {truck.fuelLevel !== null && (
-                                      <p className="text-[11px] text-muted-foreground">
-                                        Fuel: {Math.round(truck.fuelLevel)}%
-                                      </p>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <p className="text-sm text-muted-foreground">Location unknown</p>
-                                )}
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-            {/* Empty State (no result yet, not loading) */}
-            {!result && !loading && !error && (
-              <Card>
-                <CardContent className="p-12 flex flex-col items-center justify-center text-center">
-                  <div className="h-16 w-16 rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center mb-4">
-                    <Navigation className="h-8 w-8 text-amber-500" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-1">Plan a Route</h3>
-                  <p className="text-sm text-muted-foreground max-w-sm">
-                    Select an origin and destination to see distance, fuel costs, toll estimates, and recommended trucks for your trip.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-4 justify-center">
-                    {POPULAR_ROUTES.slice(0, 3).map((route) => (
-                      <Button
-                        key={route.label}
-                        variant="outline"
-                        size="sm"
-                        className="text-xs"
-                        onClick={() => selectQuickRoute(route.from, route.to)}
-                      >
-                        <MapPin className="h-3 w-3 mr-1" />
-                        {route.label}
-                      </Button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t pt-4">
+            <Button variant="outline" size="sm" onClick={addStop} disabled={intermediateStops.length >= 5}>
+              <Plus className="mr-1 h-3.5 w-3.5" />
+              Stop
+            </Button>
+            {intermediateStops.map((stop, index) => (
+              <div key={index} className="flex min-w-[180px] items-center gap-1">
+                <Select value={stop} onValueChange={(value) => updateStop(index, value)}>
+                  <SelectTrigger className="h-9"><SelectValue placeholder={`Stop ${index + 1}`} /></SelectTrigger>
+                  <SelectContent>
+                    {CITY_NAMES.map((city) => <SelectItem key={city} value={city}>{city}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => removeStop(index)} aria-label={`Remove stop ${index + 1}`}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            {intermediateStops.length === 0 && (
+              <span className="text-xs text-muted-foreground">Add up to five intermediate delivery or transit cities.</span>
             )}
           </div>
-        </div>
-      )}
+        </CardContent>
+      </Card>
 
-      {/* Cost Calculator Tab */}
-      {activeTab === 'calculator' && (
-        <div className="max-w-3xl mx-auto">
+      {!result && !loading && !error && (
+        <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="h-5 w-5 text-amber-500" />
-                Trip Cost Calculator
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ShieldCheck className="h-4 w-4" />
+                Evidence-first planning
               </CardTitle>
-              <CardDescription>
-                Estimate trip costs based on distance, fuel price, and cargo weight
-              </CardDescription>
+              <CardDescription>No dispatch action is performed from this screen.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Fuel Price per Liter (\u20B5)</Label>
-                  <Input
-                    type="number"
-                    value={fuelPrice}
-                    onChange={(e) => setFuelPrice(e.target.value)}
-                    placeholder="15"
-                    min="0"
-                    step="0.5"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Cargo Weight (tonnes)</Label>
-                  <Input
-                    type="number"
-                    value={cargoWeight}
-                    onChange={(e) => setCargoWeight(e.target.value)}
-                    placeholder="0"
-                    min="0"
-                    max="50"
-                    step="0.5"
-                  />
-                </div>
-              </div>
+            <CardContent className="grid gap-3 sm:grid-cols-3">
+              <EvidenceIntro icon={<RouteIcon className="h-4 w-4" />} title="Route provenance" text="Static route fallback is clearly separated from live road or traffic data." />
+              <EvidenceIntro icon={<Satellite className="h-4 w-4" />} title="Live fleet evidence" text="Eligible fleet ranking uses telematics freshness and server-owned safety gates." />
+              <EvidenceIntro icon={<Database className="h-4 w-4" />} title="Fuel evidence" text="Truck history is preferred, then fleet history, then a labelled conservative fallback." />
+            </CardContent>
+          </Card>
 
-              <Separator />
-
-              {/* Formula explanation */}
-              <div className="rounded-lg bg-muted/50 p-4 space-y-3">
-                <h4 className="text-sm font-semibold">Fuel Consumption Formula</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                  <div className="space-y-1">
-                    <p className="font-medium text-muted-foreground text-xs">Base Consumption</p>
-                    <p className="font-mono font-bold">32 L/100km</p>
-                    <p className="text-xs text-muted-foreground">Empty truck average</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="font-medium text-muted-foreground text-xs">Weight Adjustment</p>
-                    <p className="font-mono font-bold">+{cargoWeight ? (parseFloat(cargoWeight) * 2).toFixed(1) : '0'} L/100km</p>
-                    <p className="text-xs text-muted-foreground">2L extra per tonne</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="font-medium text-muted-foreground text-xs">Total Rate</p>
-                    <p className="font-mono font-bold">{(32 + (parseFloat(cargoWeight) || 0) * 2).toFixed(1)} L/100km</p>
-                    <p className="text-xs text-muted-foreground">With {cargoWeight || '0'}t cargo</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Reference Table */}
-              <div>
-                <h4 className="text-sm font-semibold mb-3">Quick Cost Reference (Round Trip)</h4>
-                <>
-                  <div className="rounded-lg border overflow-hidden">
-                    <div className="overflow-x-auto max-h-72 overflow-y-auto hidden md:block">
-                      <table className="w-full text-sm">
-                        <thead className="bg-muted/50 sticky top-0">
-                          <tr>
-                            <th className="text-left px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Route</th>
-                            <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">One-way (km)</th>
-                            <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">One-way Cost</th>
-                            <th className="text-right px-4 py-2.5 font-medium text-xs uppercase tracking-wider text-muted-foreground">Round Trip</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {POPULAR_ROUTES.map((route) => {
-                            const fp = parseFloat(fuelPrice) || 15
-                            const weight = parseFloat(cargoWeight) || 0
-                            // Approximate distances from popular routes
-                            const distances: Record<string, number> = {
-                              'Accra → Kumasi': 254,
-                              'Accra → Tamale': 670,
-                              'Accra → Takoradi': 220,
-                              'Kumasi → Tamale': 420,
-                              'Accra → Cape Coast': 150,
-                              'Tema → Kumasi': 225,
-                            }
-                            const dist = distances[route.label] || 200
-                            const fuelPer100 = 32 + weight * 2
-                            const fuelLiters = (dist * fuelPer100) / 100
-                            const oneWayCost = fuelLiters * fp + dist * 0.06 // approximate tolls
-                            const roundTrip = oneWayCost * 2
-                            return (
-                              <tr
-                                key={route.label}
-                                className="border-t hover:bg-muted/30 transition-colors cursor-pointer"
-                                onClick={() => { setOrigin(route.from); setDestination(route.to); setActiveTab('planner') }}
-                                title={`Plan route: ${route.label}`}
-                              >
-                                <td className="px-4 py-2.5 font-medium">{route.label} <span className="text-xs text-muted-foreground ml-1">→ Plan</span></td>
-                                <td className="text-right px-4 py-2.5 font-mono">{dist} km</td>
-                                <td className="text-right px-4 py-2.5 font-mono">\u20B5{Math.round(oneWayCost).toLocaleString()}</td>
-                                <td className="text-right px-4 py-2.5 font-mono font-semibold text-amber-700 dark:text-amber-400">
-                                  \u20B5{Math.round(roundTrip).toLocaleString()}
-                                </td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                    {/* Mobile cost reference cards */}
-                    <div className="md:hidden divide-y rounded-lg border overflow-hidden">
-                      {POPULAR_ROUTES.map((route) => {
-                        const fp = parseFloat(fuelPrice) || 15
-                        const weight = parseFloat(cargoWeight) || 0
-                        const distances: Record<string, number> = {
-                          'Accra → Kumasi': 254,
-                          'Accra → Tamale': 670,
-                          'Accra → Takoradi': 220,
-                          'Kumasi → Tamale': 420,
-                          'Accra → Cape Coast': 150,
-                          'Tema → Kumasi': 225,
-                        }
-                        const dist = distances[route.label] || 200
-                        const fuelPer100 = 32 + weight * 2
-                        const fuelLiters = (dist * fuelPer100) / 100
-                        const oneWayCost = fuelLiters * fp + dist * 0.06
-                        const roundTrip = oneWayCost * 2
-                        return (
-                          <div
-                            key={route.label}
-                            className="mobile-card p-4 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                            onClick={() => { setOrigin(route.from); setDestination(route.to); setActiveTab('planner') }}
-                            title={`Plan route: ${route.label}`}
-                          >
-                            <p className="font-semibold text-sm">{route.label} <span className="text-xs text-muted-foreground font-normal">→ Plan</span></p>
-                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                              <span>{dist} km</span>
-                              <span>One-way \u20B5{Math.round(oneWayCost).toLocaleString()}</span>
-                            </div>
-                            <p className="font-semibold text-sm text-amber-700 dark:text-amber-400">Round Trip \u20B5{Math.round(roundTrip).toLocaleString()}</p>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </>
-              </div>
-
-              {/* Fuel price comparison */}
-              <div className="rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 p-4">
-                <div className="flex items-start gap-3">
-                  <Star className="h-5 w-5 text-amber-500 mt-0.5 shrink-0" />
-                  <div>
-                    <h4 className="text-sm font-semibold text-amber-700 dark:text-amber-400">Ghana Fuel Price Tips</h4>
-                    <ul className="text-xs text-muted-foreground mt-1 space-y-1 list-disc list-inside">
-                      <li>Diesel prices typically range from \u20B514-16/liter at major fuel stations</li>
-                      <li>Tema and Accra industrial areas often have bulk pricing discounts</li>
-                      <li>Fuel prices may be higher in northern regions (Tamale, Wa, Bolgatanga)</li>
-                      <li>Consider carrying extra fuel for routes over 300km with limited stations</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Common corridors</CardTitle>
+              <CardDescription>Load a route without inventing live traffic conditions.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+              {POPULAR_ROUTES.map(([from, to]) => (
+                <button
+                  key={`${from}-${to}`}
+                  type="button"
+                  onClick={() => choosePopularRoute(from, to)}
+                  className="flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60"
+                >
+                  <span className="font-medium">{from} → {to}</span>
+                  <Navigation className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
+              ))}
             </CardContent>
           </Card>
         </div>
       )}
+
+      {loading && (
+        <Card>
+          <CardContent className="flex min-h-48 items-center justify-center p-8">
+            <div className="space-y-2 text-center">
+              <Navigation className="mx-auto h-7 w-7 animate-pulse" />
+              <p className="font-medium">Building route advisory</p>
+              <p className="text-sm text-muted-foreground">Checking route evidence, fuel history and eligible fleet signals.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {error && !loading && (
+        <Card className="border-destructive/40">
+          <CardContent className="flex items-start gap-3 p-5">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+            <div>
+              <p className="font-medium">Route advisory unavailable</p>
+              <p className="mt-1 text-sm text-muted-foreground">{error}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {result && !loading && mode === 'planner' && (
+        <div className="space-y-4">
+          <Card>
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-lg font-semibold">{routePath.join(' → ')}</p>
+                    <Badge variant="outline">{routeSourceLabel(result.route.source)}</Badge>
+                    <Badge variant="outline">{qualityLabel(result.dataQualityGrade)}</Badge>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Generated {new Date(result.generatedAt).toLocaleString()} · {result.advisoryVersion}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <Badge variant="outline">Quality {percentage(result.dataQuality)}</Badge>
+                  <Badge variant="outline">Confidence {percentage(result.confidence)}</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+            <MetricCard icon={<Gauge className="h-4 w-4" />} label="Distance" value={`${result.route.totalDistance.toLocaleString()} km`} sublabel={routeSourceLabel(result.route.source)} />
+            <MetricCard icon={<Clock className="h-4 w-4" />} label="Estimated time" value={`${result.route.totalHours} h`} sublabel="No live-traffic claim" />
+            <MetricCard icon={<Fuel className="h-4 w-4" />} label="Fuel estimate" value={`₵${result.fuelEstimate.costAtCurrentPrice.toLocaleString()}`} sublabel={`${result.fuelEstimate.liters} L · ${fuelSourceLabel(result.fuelEstimate.source)}`} />
+            <MetricCard icon={<Calculator className="h-4 w-4" />} label="Trip estimate" value={`₵${totalTripCost.toLocaleString()}`} sublabel={`Includes ₵${result.route.tollCost.toLocaleString()} route toll estimate`} />
+          </div>
+
+          <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <RouteIcon className="h-4 w-4" />
+                  Route legs
+                </CardTitle>
+                <CardDescription>Each leg uses the same evidence-labelled advisory calculation.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {result.route.legs && result.route.legs.length > 0 ? (
+                  <div className="space-y-2">
+                    {result.route.legs.map((leg, index) => (
+                      <div key={`${leg.from}-${leg.to}-${index}`} className="grid gap-3 rounded-lg border p-3 sm:grid-cols-[1.5fr_0.7fr_0.7fr_0.7fr] sm:items-center">
+                        <div className="flex items-center gap-2 font-medium">
+                          <MapPin className="h-4 w-4 text-muted-foreground" />
+                          {leg.from} → {leg.to}
+                        </div>
+                        <div className="text-sm"><span className="text-muted-foreground">Distance </span>{leg.distanceKm} km</div>
+                        <div className="text-sm"><span className="text-muted-foreground">Time </span>{leg.estimatedHours} h</div>
+                        <div className="text-sm sm:text-right"><span className="text-muted-foreground">Estimate </span>₵{leg.totalCost.toLocaleString()}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border p-4 text-sm text-muted-foreground">
+                    Direct route: {result.route.from} → {result.route.to} · {result.route.totalDistance} km
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <ShieldCheck className="h-4 w-4" />
+                  Evidence notes
+                </CardTitle>
+                <CardDescription>These assumptions limit how strongly the advisory should be used.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {result.notices.length > 0 ? result.notices.map((notice) => (
+                  <div key={notice} className="flex items-start gap-2 rounded-lg border p-3 text-sm">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span>{noticeLabel(notice)}</span>
+                  </div>
+                )) : (
+                  <div className="flex items-center gap-2 rounded-lg border p-3 text-sm">
+                    <CheckCircle2 className="h-4 w-4" />
+                    No additional fallback notices.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {result.recommendationsAvailable ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Truck className="h-4 w-4" />
+                  Eligible fleet recommendations
+                </CardTitle>
+                <CardDescription>Hard eligibility blockers are excluded before ranking. This list does not assign or dispatch a vehicle.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {result.recommendedTrucks.length > 0 ? (
+                  <div className="grid gap-3 lg:grid-cols-2 2xl:grid-cols-3">
+                    {result.recommendedTrucks.map((truck, index) => (
+                      <div key={truck.truckId} className="rounded-xl border p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold">#{index + 1} · {truck.plateNumber}</span>
+                              <Badge variant="outline">{truck.make}</Badge>
+                            </div>
+                            <p className="mt-1 text-sm text-muted-foreground">{truck.driver} · {truck.model}</p>
+                          </div>
+                          <Badge variant="outline">{percentage(truck.confidence)} confidence</Badge>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <p className="text-xs text-muted-foreground">Deadhead</p>
+                            <p className="font-medium">{truck.distanceToPickup == null ? 'Unknown' : `${truck.distanceToPickup} km`}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Evidence quality</p>
+                            <p className="font-medium">{percentage(truck.dataQuality)} · {truck.dataQualityGrade}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Location</p>
+                            <p className="font-medium">{freshnessLabel(truck.locationFreshness)}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Source</p>
+                            <p className="font-medium">{truck.locationSource}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 rounded-lg bg-muted/40 p-3 text-xs">
+                          <p className="font-medium">Fuel evidence: {fuelSourceLabel(truck.fuelEvidenceSource)}</p>
+                          {truck.locationReceivedAt && (
+                            <p className="mt-1 text-muted-foreground">Telematics received {new Date(truck.locationReceivedAt).toLocaleString()}</p>
+                          )}
+                        </div>
+
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {truck.reasons.map((reason) => <Badge key={reason} variant="outline">{reason.replaceAll('_', ' ')}</Badge>)}
+                          {truck.warnings.map((warning) => <Badge key={warning} variant="outline">{warning.replaceAll('_', ' ')}</Badge>)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border p-5 text-sm text-muted-foreground">
+                    No currently eligible fleet candidate has sufficient operational evidence for this advisory. Review dispatch blockers rather than bypassing them.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="flex items-start gap-3 p-5">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" />
+                <div>
+                  <p className="font-medium">Fleet recommendations are permission-scoped</p>
+                  <p className="mt-1 text-sm text-muted-foreground">You can view the route advisory, but fleet-wide ranking requires assignment authority.</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {result && !loading && mode === 'cost' && (
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Fuel className="h-4 w-4" />
+                Cost evidence
+              </CardTitle>
+              <CardDescription>Fuel consumption is evidence-based and its fallback source is explicit.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <CostFact label="Fuel litres" value={`${result.fuelEstimate.liters} L`} />
+                <CostFact label="Fuel estimate" value={`₵${result.fuelEstimate.costAtCurrentPrice.toLocaleString()}`} />
+                <CostFact label="Toll estimate" value={`₵${result.route.tollCost.toLocaleString()}`} />
+                <CostFact label="Total" value={`₵${totalTripCost.toLocaleString()}`} />
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <EvidenceRow label="Fuel-efficiency evidence" value={fuelSourceLabel(result.fuelEstimate.source)} />
+                <EvidenceRow label="Fuel price evidence" value={result.fuelEstimate.priceSource === 'request' ? `Operator input · ₵${result.fuelEstimate.pricePerLiter}/L` : `Configured fallback · ₵${result.fuelEstimate.pricePerLiter}/L`} />
+                <EvidenceRow label="Estimated rate" value={`${result.fuelEstimate.fuelPer100km} L/100km`} />
+                <EvidenceRow label="Cargo adjustment" value={`${result.fuelEstimate.cargoAdjustmentFactor.toFixed(3)}× bounded factor`} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Database className="h-4 w-4" />
+                Assumptions
+              </CardTitle>
+              <CardDescription>Missing history reduces confidence instead of being hidden.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex items-center justify-between rounded-lg border p-3 text-sm">
+                <span>Fuel evidence quality</span>
+                <Badge variant="outline">{percentage(result.fuelEstimate.dataQuality)}</Badge>
+              </div>
+              {result.fuelEstimate.assumptions.length > 0 ? result.fuelEstimate.assumptions.map((assumption) => (
+                <div key={assumption} className="flex items-start gap-2 rounded-lg border p-3 text-sm">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                  {noticeLabel(assumption)}
+                </div>
+              )) : (
+                <div className="flex items-center gap-2 rounded-lg border p-3 text-sm">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Truck-specific fuel history is sufficient for the current estimate.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MetricCard({ icon, label, value, sublabel }: { icon: React.ReactNode; label: string; value: string; sublabel: string }) {
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">{icon}{label}</div>
+        <p className="mt-2 text-xl font-bold tracking-tight">{value}</p>
+        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{sublabel}</p>
+      </CardContent>
+    </Card>
+  )
+}
+
+function EvidenceIntro({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
+  return (
+    <div className="rounded-lg border p-3">
+      <div className="flex items-center gap-2 text-sm font-medium">{icon}{title}</div>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">{text}</p>
+    </div>
+  )
+}
+
+function CostFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border p-3">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-1 font-semibold">{value}</p>
+    </div>
+  )
+}
+
+function EvidenceRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border p-3">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm font-medium">{value}</p>
     </div>
   )
 }
