@@ -111,6 +111,7 @@ export const navigationGroups: NavGroup[] = [
     label: "Main",
     items: [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { id: "operations-center", label: "Operations Center", icon: RadioTower },
       { id: "analytics", label: "Analytics", icon: BarChart3 },
       { id: "reports", label: "Reports", icon: FileText },
       { id: "cost-analytics", label: "Cost Analytics", icon: Calculator },
