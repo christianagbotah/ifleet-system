@@ -4,10 +4,23 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   loadFleetEvidence: vi.fn(),
+  truckFindMany: vi.fn(),
+  tripFindFirst: vi.fn(),
+  fuelLogFindFirst: vi.fn(),
 }))
 
 vi.mock('@/lib/jwt-secret', () => ({
   JWT_SECRET: 'route-optimizer-test-secret-not-for-production-1234567890',
+}))
+
+// The old prototype imports db directly. Keep this mock until the hardened route
+// stops doing so; it also prevents unit tests from opening a real database.
+vi.mock('@/lib/db', () => ({
+  db: {
+    truck: { findMany: mocks.truckFindMany },
+    trip: { findFirst: mocks.tripFindFirst },
+    fuelLog: { findFirst: mocks.fuelLogFindFirst },
+  },
 }))
 
 vi.mock('@/lib/domain/route-intelligence/prisma-route-advisory-repository', () => ({
@@ -73,6 +86,9 @@ function fleetEvidence() {
 beforeEach(() => {
   vi.clearAllMocks()
   mocks.loadFleetEvidence.mockResolvedValue(fleetEvidence())
+  mocks.truckFindMany.mockResolvedValue([])
+  mocks.tripFindFirst.mockResolvedValue(null)
+  mocks.fuelLogFindFirst.mockResolvedValue(null)
 })
 
 describe('GET /api/routes/optimize', () => {
