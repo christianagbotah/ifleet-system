@@ -207,6 +207,12 @@ export const RATE_LIMITS = {
     blockDurationMs: 30 * 60 * 1000,
   },
 
+  loginAccountFailure: {
+    maxRequests: 10,
+    windowMs: 15 * 60 * 1000,
+    blockDurationMs: 30 * 60 * 1000,
+  },
+
   login: {
     maxRequests: 5,
     windowMs: 15 * 60 * 1000,
