@@ -33,6 +33,24 @@ interface DriverOption { id: string; firstName: string; lastName: string; licens
 interface TruckOption { id: string; plateNumber: string; make: string; model: string; status: string }
 interface TrailerOption { id: string; plateNumber: string; trailerType: string; status: string }
 interface EligibilityPreview { passed: boolean; blocking: string[]; warnings: string[]; overrideApplied: boolean }
+interface AssignmentRecommendation {
+  candidateId: string
+  driverId: string
+  tractorId: string
+  trailerId: string | null
+  score: number
+  confidence: number
+  scoreComponents: Record<string, number>
+  reasons: string[]
+  warnings: string[]
+  fallbackAssumptions: string[]
+}
+interface RecommendationResponse {
+  recommendationId: string
+  recommendations: AssignmentRecommendation[]
+  configVersion: string
+  modelVersion: string
+}
 
 const labels: Record<string, string> = {
   driver_status: 'Driver is not active',
@@ -86,6 +104,10 @@ export function AssignmentDialog({
   const [loadingOptions, setLoadingOptions] = React.useState(false)
   const [checking, setChecking] = React.useState(false)
   const [submitting, setSubmitting] = React.useState(false)
+  const [recommendations, setRecommendations] = React.useState<AssignmentRecommendation[]>([])
+  const [recommendationId, setRecommendationId] = React.useState<string | null>(null)
+  const [selectedRecommendationCandidateId, setSelectedRecommendationCandidateId] = React.useState<string | null>(null)
+  const [recommendationsLoading, setRecommendationsLoading] = React.useState(false)
 
   React.useEffect(() => {
     if (!open || !order) return
@@ -95,8 +117,16 @@ export function AssignmentDialog({
     setOverride(false)
     setOverrideReason('')
     setEligibility(null)
+    setRecommendations([])
+    setRecommendationId(null)
+    setSelectedRecommendationCandidateId(null)
     setAllocations(Object.fromEntries(order.lines.map((line) => [line.id, String(line.remaining)])))
     setLoadingOptions(true)
+    setRecommendationsLoading(true)
+    apiFetch<RecommendationResponse>(`/api/load-orders/${order.id}/recommendations`)
+      .then((result) => { setRecommendations(result.recommendations); setRecommendationId(result.recommendationId) })
+      .catch(() => { setRecommendations([]); setRecommendationId(null) })
+      .finally(() => setRecommendationsLoading(false))
     Promise.all([
       apiFetch<{ data: DriverOption[] }>('/api/drivers?status=active&limit=100'),
       apiFetch<{ data: TruckOption[] }>('/api/trucks?status=active&limit=100'),
@@ -115,9 +145,19 @@ export function AssignmentDialog({
     trailerId: trailerId === 'none' ? null : trailerId,
     override,
     overrideReason,
+    recommendationId: selectedRecommendationCandidateId ? recommendationId : null,
     preview,
     allocations: order?.lines.map((line) => ({ lineId: line.id, quantity: Number(allocations[line.id] || 0) })) ?? [],
-  }), [allocations, driverId, order, override, overrideReason, tractorId, trailerId])
+  }), [allocations, driverId, order, override, overrideReason, recommendationId, selectedRecommendationCandidateId, tractorId, trailerId])
+
+  const applyRecommendation = (recommendation: AssignmentRecommendation) => {
+    setDriverId(recommendation.driverId)
+    setTractorId(recommendation.tractorId)
+    setTrailerId(recommendation.trailerId ?? 'none')
+    setEligibility(null)
+    setSelectedRecommendationCandidateId(recommendation.candidateId)
+    toast.success('AI recommendation applied. Run eligibility before assignment.')
+  }
 
   const checkEligibility = async () => {
     if (!order || !driverId || !tractorId) return toast.error('Select a driver and tractor first')
@@ -163,10 +203,46 @@ export function AssignmentDialog({
           <DialogDescription>{order?.shipperName} · {order?.loadingPointName}. Select resources, confirm quantities, then run eligibility before assignment.</DialogDescription>
         </DialogHeader>
 
+        <div className="rounded-lg border border-sky-200 bg-sky-50/60 p-4 dark:border-sky-900 dark:bg-sky-950/20">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 className="font-semibold">AI recommendation</h3>
+              <p className="text-xs text-muted-foreground">Advisory ranking only. Compliance eligibility remains authoritative and assignment still requires your confirmation.</p>
+            </div>
+            {recommendationsLoading && <Badge variant="outline">Analyzing…</Badge>}
+          </div>
+          {!recommendationsLoading && recommendations.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No eligible recommendation is available from the current evidence.</p>
+          ) : (
+            <div className="grid gap-2 lg:grid-cols-3">
+              {recommendations.slice(0, 3).map((recommendation, index) => {
+                const driver = drivers.find((item) => item.id === recommendation.driverId)
+                const truck = trucks.find((item) => item.id === recommendation.tractorId)
+                const trailer = trailers.find((item) => item.id === recommendation.trailerId)
+                return (
+                  <button
+                    key={recommendation.candidateId}
+                    type="button"
+                    onClick={() => applyRecommendation(recommendation)}
+                    className={`rounded-md border bg-background p-3 text-left transition hover:border-sky-400 ${selectedRecommendationCandidateId === recommendation.candidateId ? 'border-sky-500 ring-1 ring-sky-500' : ''}`}
+                  >
+                    <div className="flex items-center justify-between gap-2"><span className="text-sm font-semibold">#{index + 1} · {recommendation.score.toFixed(1)}</span><Badge variant="secondary">{Math.round(recommendation.confidence * 100)}% confidence</Badge></div>
+                    <p className="mt-2 text-xs font-medium">{driver ? `${driver.firstName} ${driver.lastName}` : recommendation.driverId}</p>
+                    <p className="text-xs text-muted-foreground">{truck?.plateNumber ?? recommendation.tractorId}{trailer ? ` · ${trailer.plateNumber}` : ''}</p>
+                    <p className="mt-2 text-[11px] text-muted-foreground">Reasons: {recommendation.reasons.join(' · ')}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">Score components: {Object.entries(recommendation.scoreComponents).slice(0, 4).map(([key, value]) => `${key} ${value.toFixed(1)}`).join(' · ')}</p>
+                    {recommendation.fallbackAssumptions.length > 0 && <p className="mt-1 text-[11px] text-amber-700 dark:text-amber-400">Fallback assumptions: {recommendation.fallbackAssumptions.join(' · ')}</p>}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="space-y-2"><Label>Driver</Label><Select value={driverId || 'none'} onValueChange={(value) => { setDriverId(value === 'none' ? '' : value); setEligibility(null) }} disabled={loadingOptions}><SelectTrigger><SelectValue placeholder="Select driver" /></SelectTrigger><SelectContent><SelectItem value="none">Select driver</SelectItem>{drivers.map((driver) => <SelectItem key={driver.id} value={driver.id}>{driver.firstName} {driver.lastName} · Class {driver.licenseClass}</SelectItem>)}</SelectContent></Select></div>
-          <div className="space-y-2"><Label>Tractor</Label><Select value={tractorId || 'none'} onValueChange={(value) => { setTractorId(value === 'none' ? '' : value); setEligibility(null) }} disabled={loadingOptions}><SelectTrigger><SelectValue placeholder="Select tractor" /></SelectTrigger><SelectContent><SelectItem value="none">Select tractor</SelectItem>{trucks.map((truck) => <SelectItem key={truck.id} value={truck.id}>{truck.plateNumber} · {truck.make} {truck.model}</SelectItem>)}</SelectContent></Select></div>
-          <div className="space-y-2"><Label>Trailer {order?.requiredTrailerType ? `(${order.requiredTrailerType} required)` : '(optional)'}</Label><Select value={trailerId} onValueChange={(value) => { setTrailerId(value); setEligibility(null) }} disabled={loadingOptions}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="none">No trailer / rigid truck</SelectItem>{trailers.map((trailer) => <SelectItem key={trailer.id} value={trailer.id}>{trailer.plateNumber} · {trailer.trailerType}</SelectItem>)}</SelectContent></Select></div>
+          <div className="space-y-2"><Label>Driver</Label><Select value={driverId || 'none'} onValueChange={(value) => { setDriverId(value === 'none' ? '' : value); setEligibility(null); setSelectedRecommendationCandidateId(null) }} disabled={loadingOptions}><SelectTrigger><SelectValue placeholder="Select driver" /></SelectTrigger><SelectContent><SelectItem value="none">Select driver</SelectItem>{drivers.map((driver) => <SelectItem key={driver.id} value={driver.id}>{driver.firstName} {driver.lastName} · Class {driver.licenseClass}</SelectItem>)}</SelectContent></Select></div>
+          <div className="space-y-2"><Label>Tractor</Label><Select value={tractorId || 'none'} onValueChange={(value) => { setTractorId(value === 'none' ? '' : value); setEligibility(null); setSelectedRecommendationCandidateId(null) }} disabled={loadingOptions}><SelectTrigger><SelectValue placeholder="Select tractor" /></SelectTrigger><SelectContent><SelectItem value="none">Select tractor</SelectItem>{trucks.map((truck) => <SelectItem key={truck.id} value={truck.id}>{truck.plateNumber} · {truck.make} {truck.model}</SelectItem>)}</SelectContent></Select></div>
+          <div className="space-y-2"><Label>Trailer {order?.requiredTrailerType ? `(${order.requiredTrailerType} required)` : '(optional)'}</Label><Select value={trailerId} onValueChange={(value) => { setTrailerId(value); setEligibility(null); setSelectedRecommendationCandidateId(null) }} disabled={loadingOptions}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="none">No trailer / rigid truck</SelectItem>{trailers.map((trailer) => <SelectItem key={trailer.id} value={trailer.id}>{trailer.plateNumber} · {trailer.trailerType}</SelectItem>)}</SelectContent></Select></div>
         </div>
 
         <div className="rounded-lg border p-4 space-y-3">

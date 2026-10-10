@@ -1,0 +1,71 @@
+model AiRecommendation {
+  id                 String    @id @default(cuid())
+  recommendationType String
+  subjectType        String
+  subjectId          String?
+  modelKey           String
+  modelVersion       String
+  confidence         Float
+  dataQualityScore   Float
+  dataQualityGrade   String
+  inputSnapshotRef   String
+  explanation        String    @db.Text
+  payload            String?   @db.LongText
+  status             String    @default("advisory")
+  createdBy          String?
+  acceptedAt         DateTime?
+  dismissedAt        DateTime?
+  createdAt          DateTime  @default(now())
+
+  @@index([modelKey, modelVersion, createdAt])
+  @@index([subjectType, subjectId, createdAt])
+  @@index([status, createdAt])
+}
+
+model AiPrediction {
+  id                String    @id @default(cuid())
+  predictionType    String
+  subjectType       String
+  subjectId         String?
+  modelKey          String
+  modelVersion      String
+  confidence        Float
+  dataQualityScore  Float
+  dataQualityGrade  String
+  inputSnapshotRef  String
+  explanation       String    @db.Text
+  predictionPayload String?   @db.LongText
+  predictionFor     DateTime?
+  createdAt         DateTime  @default(now())
+
+  @@index([modelKey, modelVersion, createdAt])
+  @@index([subjectType, subjectId, createdAt])
+  @@index([predictionType, createdAt])
+}
+
+model AiReviewCase {
+  id               String    @id @default(cuid())
+  caseType         String
+  subjectType      String
+  subjectId        String?
+  severity         String    @default("review")
+  status           String    @default("open")
+  modelKey         String
+  modelVersion     String
+  confidence       Float
+  dataQualityScore Float
+  dataQualityGrade String
+  inputSnapshotRef String
+  explanation      String    @db.Text
+  evidence         String?   @db.LongText
+  assignedTo       String?
+  resolution       String?   @db.Text
+  resolvedBy       String?
+  resolvedAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([caseType, status, createdAt])
+  @@index([modelKey, modelVersion, createdAt])
+  @@index([subjectType, subjectId, createdAt])
+}

@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { motion } from 'framer-motion'
+import { toast } from 'sonner'
 import {
   AlertTriangle,
   ShieldAlert,
@@ -56,7 +57,8 @@ import {
   ReferenceArea,
 } from 'recharts'
 import { CURRENCY_SYMBOL } from '@/lib/constants'
-import { fetchAnomalyDashboard, fetchTrucks, type AnomalyDashboardData, type AnomalyDashboardAnomaly, type AnomalyDashboardByTruck, type Truck } from '@/lib/api'
+import { apiFetch, fetchAnomalyDashboard, fetchTrucks, type AnomalyDashboardData, type AnomalyDashboardAnomaly, type AnomalyDashboardByTruck, type Truck } from '@/lib/api'
+import { FuelAiReviewQueue } from '@/components/fuel/FuelAiReviewQueue'
 
 // ============ Constants ============
 
@@ -161,6 +163,7 @@ export function FuelAnomalyDashboard() {
   const [typeFilter, setTypeFilter] = React.useState('all')
   const [expandedAnomaly, setExpandedAnomaly] = React.useState<string | null>(null)
   const [activeTab, setActiveTab] = React.useState('anomalies')
+  const [aiReviewBusy, setAiReviewBusy] = React.useState<string | null>(null)
 
   // Load data
   const loadData = React.useCallback(async () => {
@@ -189,6 +192,28 @@ export function FuelAnomalyDashboard() {
       .then(result => setTrucks(result.data))
       .catch(() => {})
   }, [])
+
+  async function requestAiReview(anomaly: AnomalyDashboardAnomaly) {
+    setAiReviewBusy(anomaly.id)
+    try {
+      const result = await apiFetch<{ created: boolean; reviewCase: { id: string } | null; assessment: { classification: string } }>(
+        '/api/ai-ops/fuel/review-cases',
+        { method: 'POST', body: JSON.stringify({ fuelLogId: anomaly.fuelLogId }) },
+      )
+      if (result.reviewCase) {
+        toast.success(result.created ? 'AI review case created' : 'Existing AI review case opened')
+        setActiveTab('ai-review')
+      } else {
+        toast.info(result.assessment.classification === 'data_issue'
+          ? 'Fuel evidence needs data correction before operational review.'
+          : 'Deterministic AI checks found no case requiring human review.')
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to analyze fuel evidence')
+    } finally {
+      setAiReviewBusy(null)
+    }
+  }
 
   // Filter anomalies by type
   const filteredAnomalies = React.useMemo(() => {
@@ -296,6 +321,18 @@ export function FuelAnomalyDashboard() {
                 </div>
               )}
             </div>
+            <div className="mt-3 flex justify-end">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={aiReviewBusy === anomaly.id}
+                onClick={() => void requestAiReview(anomaly)}
+              >
+                <Zap className="mr-2 h-4 w-4" />
+                {aiReviewBusy === anomaly.id ? 'Analyzing…' : 'Analyze with AI'}
+              </Button>
+            </div>
           </motion.div>
         )}
       </motion.div>
@@ -333,7 +370,7 @@ export function FuelAnomalyDashboard() {
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Fuel Anomaly Detection</h1>
-          <p className="text-muted-foreground">Detect suspicious fuel patterns, consumption outliers, and potential theft</p>
+          <p className="text-muted-foreground">Detect fuel operating anomalies, data-quality issues, and consumption outliers for human review</p>
         </div>
         <Button onClick={loadData} variant="outline" disabled={loading}>
           <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -474,7 +511,7 @@ export function FuelAnomalyDashboard() {
       {/* Main Content Tabs */}
       <motion.div variants={itemVariants}>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="anomalies" className="text-xs sm:text-sm">
               <AlertTriangle className="h-4 w-4 mr-1 sm:mr-2" />
               Anomalies
@@ -488,6 +525,10 @@ export function FuelAnomalyDashboard() {
             <TabsTrigger value="trends" className="text-xs sm:text-sm">
               <BarChart3 className="h-4 w-4 mr-1 sm:mr-2" />
               Trends
+            </TabsTrigger>
+            <TabsTrigger value="ai-review" className="text-xs sm:text-sm">
+              <Zap className="h-4 w-4 mr-1 sm:mr-2" />
+              AI Review Queue
             </TabsTrigger>
           </TabsList>
 
@@ -623,6 +664,11 @@ export function FuelAnomalyDashboard() {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          {/* Tab: AI human review queue */}
+          <TabsContent value="ai-review" className="mt-4">
+            <FuelAiReviewQueue />
           </TabsContent>
 
           {/* Tab: Consumption Trends */}

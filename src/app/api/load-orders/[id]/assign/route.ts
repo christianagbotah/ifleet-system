@@ -55,6 +55,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const trailerId = typeof body.trailerId === 'string' && body.trailerId.trim() ? body.trailerId.trim() : null
     const existingTripId = typeof body.tripId === 'string' && body.tripId.trim() ? body.tripId.trim() : null
     const overrideReason = typeof body.overrideReason === 'string' ? body.overrideReason.trim() : ''
+    const recommendationId = typeof body.recommendationId === 'string' && body.recommendationId.trim() ? body.recommendationId.trim() : null
     if (!driverId || !tractorId) {
       return NextResponse.json({ error: 'driverId and tractorId are required' }, { status: 400 })
     }
@@ -194,6 +195,35 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         { error: `Assignment blocked: ${eligibility.blocking.join(', ')}`, eligibility },
         { status: 409 }
       )
+    }
+
+    if (recommendationId) {
+      const recommendation = await db.aiRecommendation.findFirst({
+        where: {
+          id: recommendationId,
+          recommendationType: 'assignment_ranking',
+          subjectType: 'LoadOrder',
+          subjectId: order.id,
+          status: 'advisory',
+        },
+        select: { payload: true },
+      })
+      let matchesSelection = false
+      if (recommendation?.payload) {
+        try {
+          const payload = JSON.parse(recommendation.payload) as { recommendations?: Array<{ driverId?: string; tractorId?: string; trailerId?: string | null }> }
+          matchesSelection = Boolean(payload.recommendations?.some((candidate) =>
+            candidate.driverId === driverId
+            && candidate.tractorId === tractorId
+            && (candidate.trailerId ?? null) === trailerId
+          ))
+        } catch {
+          matchesSelection = false
+        }
+      }
+      if (!matchesSelection) {
+        return NextResponse.json({ error: 'AI recommendation no longer matches the selected resources. Refresh recommendations and retry.' }, { status: 409 })
+      }
     }
 
     const currentAllocation = allocateLoadOrderQuantity(
@@ -386,6 +416,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       const fullyAllocated = liveAllocation.lines.every((line) => line.remaining - (selected.get(line.lineId) ?? 0) <= 0.000001)
       await tx.loadOrder.update({ where: { id: order.id }, data: { status: fullyAllocated ? 'allocated' : 'partially_allocated' } })
 
+      if (recommendationId) {
+        await tx.aiRecommendation.updateMany({
+          where: {
+            id: recommendationId,
+            recommendationType: 'assignment_ranking',
+            subjectType: 'LoadOrder',
+            subjectId: order.id,
+            status: 'advisory',
+          },
+          data: { status: 'accepted', acceptedAt: new Date() },
+        })
+      }
+
       return tx.trip.findUniqueOrThrow({
         where: { id: tripId! },
         include: {
@@ -408,6 +451,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         tripNumber: trip.tripNumber,
         driverId,
         tractorId,
+        recommendationId,
         trailerId,
         eligibility,
         overrideReason: eligibility.overrideApplied ? overrideReason : undefined,

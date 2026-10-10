@@ -226,6 +226,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   'operations-center': ['trips.view'],
   'truck-financials': ['financial.view'],
   analytics: ['financial.view'],
+  'model-health': ['reports.view'],
   'cost-analytics': ['financial.view'],
   'trip-profitability': ['financial.view'],
   'fuel-analytics': ['financial.view'],
