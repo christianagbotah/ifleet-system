@@ -36,6 +36,7 @@ import {
 import { toast } from 'sonner'
 import { InvoiceDetailSheet } from '@/components/invoices/InvoiceDetailSheet'
 import { TripReconciliationPanel } from '@/components/reconciliation/TripReconciliationPanel'
+import { OperationalTimeline } from '@/components/trips/OperationalTimeline'
 
 interface TripDetailSheetProps {
   trip: Trip | null
@@ -316,7 +317,7 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
         </span>
       }
       description="Trip details and management"
-      width="sm:max-w-lg"
+      width="sm:max-w-2xl"
     >
       {/* Image Preview Overlay */}
       <AnimatePresence>
@@ -823,6 +824,20 @@ export function TripDetailSheet({ trip, open, onOpenChange, onStatusChanged }: T
                     </>
                   )}
                 </div>
+              </div>
+
+              <Separator />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Operational Timeline</h4>
+                    <p className="text-xs text-muted-foreground">Dispatch, factory, weighing, waybill, delivery and financial-close events in one immutable history.</p>
+                  </div>
+                  <Button type="button" variant="outline" size="sm" onClick={() => window.dispatchEvent(new CustomEvent('navigate-page', { detail: 'control-tower' }))}>
+                    <MapPin className="mr-1.5 h-3.5 w-3.5" />Live map
+                  </Button>
+                </div>
+                <OperationalTimeline tripId={currentTrip.id} />
               </div>
 
               {canReconcileTrip && ['delivered', 'return_journey', 'arrived_base', 'awaiting_reconciliation', 'reconciled', 'completed'].includes(currentTrip.status) && (

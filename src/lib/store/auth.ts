@@ -223,6 +223,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
 export const NAV_PERMISSIONS: Record<string, string[]> = {
   dashboard: ['dashboard.view'],
+  'operations-center': ['trips.view'],
   'truck-financials': ['financial.view'],
   analytics: ['financial.view'],
   'cost-analytics': ['financial.view'],
@@ -268,6 +269,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   users: ['users.view'],
   notifications: ['notifications.view'],
   reports: ['reports.view'],
+  'haulage-reports': ['reports.view'],
   'fuel-logs': ['expenses.view'],
   'client-portal': ['trips.view'],
   'vehicle-inspections': ['maintenance.view'],

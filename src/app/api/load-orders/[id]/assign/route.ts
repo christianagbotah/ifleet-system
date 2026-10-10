@@ -5,6 +5,7 @@ import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { evaluateAssignmentEligibility } from '@/lib/domain/dispatch/eligibility'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import { validateCoupling } from '@/lib/domain/fleet-assets/coupling'
 import { allocateLoadOrderQuantity } from '@/lib/domain/orders/load-order'
 import { dispatchTripStatusNotification } from '@/lib/services/trip-status-notifier'
@@ -415,6 +416,26 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }).catch(() => {})
     dispatchTripStatusNotification(trip.id, 'assigned').catch((error) => {
       console.error('Dispatch assignment notification error:', error)
+    })
+    await appendOperationalEvent({
+      idempotencyKey: `dispatch-assignment:${trip.id}:${trip.updatedAt.toISOString()}`,
+      eventKey: 'trip.assigned',
+      type: 'dispatch.assignment',
+      entityType: 'Trip',
+      entityId: trip.id,
+      tripId: trip.id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: trip.updatedAt,
+      source: 'dispatch',
+      metadata: {
+        loadOrderId: order.id,
+        tripNumber: trip.tripNumber,
+        driverId,
+        tractorId,
+        trailerId,
+        overrideApplied: eligibility.overrideApplied,
+      },
     })
 
     return NextResponse.json({ trip, eligibility }, { status: existingTripId ? 200 : 201 })

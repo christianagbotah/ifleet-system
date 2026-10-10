@@ -22,6 +22,10 @@ const DashboardView = dynamic(
   () => import('@/components/dashboard/DashboardView').then(m => ({ default: m.DashboardView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const OperationsDashboard = dynamic(
+  () => import('@/components/operations/OperationsDashboard').then(m => ({ default: m.OperationsDashboard })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const TrucksView = dynamic(
   () => import('@/components/trucks/TrucksView').then(m => ({ default: m.TrucksView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -164,6 +168,10 @@ const DocumentsView = dynamic(
 )
 const ReportsView = dynamic(
   () => import('@/components/pages/ReportsPage'),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
+const HaulageReportsView = dynamic(
+  () => import('@/components/reports/HaulageReportsView').then(m => ({ default: m.HaulageReportsView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
 const CostAnalyticsView = dynamic(
@@ -321,6 +329,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
   switch (page) {
     case 'dashboard':
       return <DashboardView onNavigate={onNavigate} />
+    case 'operations-center':
+      return <OperationsDashboard onNavigate={onNavigate} />
     case 'analytics':
       return <AnalyticsView />
     case 'driver-performance':
@@ -395,6 +405,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <DocumentsView />
     case 'reports':
       return <ReportsView />
+    case 'haulage-reports':
+      return <HaulageReportsView />
     case 'cost-analytics':
       return <CostAnalyticsView />
     case 'invoices':

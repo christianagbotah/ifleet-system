@@ -1,7 +1,9 @@
+import { createHash } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import {
   type DispatchClearanceCheckKey,
 } from '@/lib/domain/dispatch/clearance'
@@ -77,6 +79,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    const overrideFingerprint = createHash('sha256').update(JSON.stringify({ id, actorId: auth.userId, checks: [...checks].sort(), reason, passed: clearance.passed, overriddenChecks: clearance.overriddenChecks })).digest('hex').slice(0, 24)
+    await appendOperationalEvent({
+      idempotencyKey: `dispatch-clearance:${overrideFingerprint}`,
+      eventKey: 'dispatch.clearance_override_evaluated',
+      type: 'dispatch.clearance',
+      entityType: 'Trip',
+      entityId: id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: new Date(),
+      source: 'dispatch-clearance',
+      metadata: { passed: clearance.passed, requestedChecks: checks, overriddenChecks: clearance.overriddenChecks, reason },
+    })
 
     return NextResponse.json({ clearance })
   } catch (error) {

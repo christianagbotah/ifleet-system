@@ -1,0 +1,29 @@
+model OperationalEvent {
+  id                String   @id @default(cuid())
+  idempotencyKey    String   @unique
+  eventKey          String
+  type              String
+  entityType        String
+  entityId          String
+  tripId            String?
+  actorType         String?
+  actorId           String?
+  occurredAt        DateTime
+  receivedAt        DateTime @default(now())
+  latitude          Float?
+  longitude         Float?
+  evidenceRefs      String?  @db.Text
+  metadata          String?  @db.LongText
+  source            String
+  supersedesEventId String?
+  createdAt         DateTime @default(now())
+
+  supersedes OperationalEvent?  @relation("OperationalEventCorrections", fields: [supersedesEventId], references: [id], onDelete: Restrict)
+  corrections OperationalEvent[] @relation("OperationalEventCorrections")
+
+  @@index([tripId, occurredAt])
+  @@index([entityType, entityId, occurredAt])
+  @@index([eventKey, occurredAt])
+  @@index([receivedAt])
+  @@index([supersedesEventId])
+}

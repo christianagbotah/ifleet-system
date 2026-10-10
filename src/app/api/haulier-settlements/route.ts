@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, ROLES, type AuthContext } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import { resolveTransportRate } from '@/lib/domain/haulage/rate-card'
 import type { TransportRateCandidate } from '@/lib/domain/haulage/types'
 import {
@@ -331,6 +332,19 @@ export async function POST(request: NextRequest) {
       details: { tripId: settlement.tripId, payeeType: settlement.payeeType, payeeId: settlement.payeeId, netPayable: Number(settlement.netPayable) },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `haulier-settlement:${settlement.id}:generated`,
+      eventKey: 'settlement.generated',
+      type: 'finance.haulier_settlement',
+      entityType: 'HaulierSettlement',
+      entityId: settlement.id,
+      tripId: settlement.tripId,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: settlement.createdAt,
+      source: 'haulier-settlement',
+      metadata: { status: settlement.status, payeeType: settlement.payeeType, payeeId: settlement.payeeId, netPayable: Number(settlement.netPayable) },
+    })
 
     return NextResponse.json(publicSettlement(settlement), { status: 201 })
   } catch (error) {

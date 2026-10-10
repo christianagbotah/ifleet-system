@@ -1,3 +1,5 @@
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
+
 import {
   canTransition,
   type TripStatusValue,
@@ -147,6 +149,38 @@ async function createPrismaRepository(): Promise<TransitionRepository> {
 }
 
 
+
+async function recordOperationalTransition(
+  input: TransitionTripInput,
+  result: { trip: { id: string; status: string; [key: string]: unknown }; event: { id: string; fromStatus: string | null; toStatus: string; [key: string]: unknown } },
+) {
+  const eventOccurredAt = result.event.createdAt instanceof Date
+    ? result.event.createdAt
+    : typeof result.event.createdAt === 'string'
+      ? new Date(result.event.createdAt)
+      : new Date()
+  await appendOperationalEvent({
+    idempotencyKey: `trip-transition:${result.event.id}`,
+    eventKey: `trip.${result.event.toStatus}`,
+    type: 'trip.status_changed',
+    entityType: 'Trip',
+    entityId: result.trip.id,
+    tripId: result.trip.id,
+    actorType: 'user',
+    actorId: input.actorId,
+    occurredAt: eventOccurredAt,
+    source: 'trip-lifecycle',
+    metadata: {
+      fromStatus: result.event.fromStatus,
+      toStatus: result.event.toStatus,
+      notes: input.notes ?? null,
+      location: input.location ?? null,
+      evidence: input.evidence ?? null,
+      ...(input.metadata ?? {}),
+    },
+  })
+}
+
 export async function transitionTrip(
   input: TransitionTripInput,
   repository?: TransitionRepository
@@ -159,6 +193,7 @@ export async function transitionTrip(
       if (existing.trip.id !== input.tripId) {
         throw new TripTransitionError('CONFLICT', 'clientMutationId was already used for another trip')
       }
+      if (!repository) await recordOperationalTransition(input, existing)
       return { ...existing, replayed: true }
     }
   }
@@ -181,5 +216,6 @@ export async function transitionTrip(
     toStatus: decision.canonicalTo,
     driverId: trip.driverId,
   })
+  if (!repository) await recordOperationalTransition(input, committed)
   return { ...committed, replayed: false }
 }

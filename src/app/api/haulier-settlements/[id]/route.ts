@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, ROLES, type AuthContext } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 
 function requireFinanceAccess(auth: AuthContext): true | NextResponse {
   if (auth.roleName === ROLES.ADMIN || auth.roleName === ROLES.MANAGER || auth.permissions.includes('financial.view')) return true
@@ -107,6 +108,19 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       details: { status: target, tripId: updated.tripId, payeeId: updated.payeeId, netPayable: Number(updated.netPayable) },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `haulier-settlement:${id}:${target}`,
+      eventKey: `settlement.${target}`,
+      type: 'finance.haulier_settlement',
+      entityType: 'HaulierSettlement',
+      entityId: id,
+      tripId: updated.tripId,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: target === 'paid' ? updated.paidAt ?? new Date() : updated.approvedAt ?? new Date(),
+      source: 'haulier-settlement',
+      metadata: { status: target, payeeId: updated.payeeId, netPayable: Number(updated.netPayable) },
+    })
 
     return NextResponse.json(serialize(updated))
   } catch (error) {

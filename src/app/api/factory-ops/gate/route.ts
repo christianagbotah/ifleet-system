@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import {
   createGateService,
   FactoryOpsError,
@@ -152,6 +153,21 @@ export async function POST(request: NextRequest) {
       details: { siteId, truckId, tripId, direction, duplicate: result.duplicate },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `gate-event:${result.event.id}`,
+      eventKey: `factory.gate_${direction}`,
+      type: 'factory.gate_scan',
+      entityType: 'GateEvent',
+      entityId: result.event.id,
+      tripId,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: result.event.occurredAt,
+      latitude: result.event.latitude,
+      longitude: result.event.longitude,
+      source: 'factory-ops',
+      metadata: { siteId, truckId, direction, duplicate: result.duplicate },
+    })
 
     return NextResponse.json(result, { status: result.duplicate ? 200 : 201 })
   } catch (error) {

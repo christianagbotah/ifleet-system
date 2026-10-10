@@ -39,6 +39,11 @@ const MACHINE_AUTH_API_ROUTES = [
   '/api/telematics/ingest/generic-http',
 ]
 
+function isMachineAuthRoute(pathname: string): boolean {
+  if (MACHINE_AUTH_API_ROUTES.includes(pathname)) return true
+  return /^\/api\/integrations\/load-orders\/[^/]+\/webhook$/.test(pathname)
+}
+
 const PUBLIC_GET_ONLY_ROUTES = [
   '/api/settings',
   '/api/settings/channels',
@@ -231,7 +236,7 @@ export async function proxy(request: NextRequest) {
     return applySecurityHeaders(NextResponse.next())
   }
 
-  if (MACHINE_AUTH_API_ROUTES.includes(pathname)) {
+  if (isMachineAuthRoute(pathname)) {
     return applySecurityHeaders(NextResponse.next())
   }
 

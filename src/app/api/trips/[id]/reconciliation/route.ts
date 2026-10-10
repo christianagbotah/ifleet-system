@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, ROLES, type AuthContext } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import { canTransition, type TripStatusValue } from '@/lib/domain/dispatch/trip-state-machine'
 import { buildTripTransitionUpdate } from '@/lib/domain/dispatch/transition-trip'
 import { planReconciliationExceptionResolution } from '@/lib/domain/reconciliation/exception-resolution'
@@ -247,6 +248,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       details: { reconciliationId: result.reconciliation.id, version: result.reconciliation.version, operationalCost: result.snapshot.totals.operationalCost },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `trip-reconciliation:${result.reconciliation.id}`,
+      eventKey: 'trip.reconciled',
+      type: 'finance.reconciliation_approved',
+      entityType: 'TripReconciliation',
+      entityId: result.reconciliation.id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: result.reconciliation.approvedAt ?? result.reconciliation.createdAt,
+      source: 'reconciliation',
+      metadata: { version: result.reconciliation.version, operationalCost: result.snapshot.totals.operationalCost, advanceTotal: result.snapshot.totals.advances },
+    })
 
     return NextResponse.json(result, { status: 201 })
   } catch (error) {
