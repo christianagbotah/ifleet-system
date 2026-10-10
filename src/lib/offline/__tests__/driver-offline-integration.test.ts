@@ -34,6 +34,14 @@ describe('driver offline integration', () => {
     expect(form).toContain("kind: 'fuel'")
   })
 
+  it('routes driver-created inspections through the offline submission service', () => {
+    const form = source('src/components/maintenance/VehicleInspectionsView.tsx')
+    expect(form).toContain("user?.role === 'Driver'")
+    expect(form).toContain('submitDriverMutation')
+    expect(form).toContain("kind: 'inspection'")
+    expect(form).toContain("url: '/api/inspections'")
+  })
+
   it('shows pending, offline and permanent-failure state with manual retry', () => {
     const status = source('src/components/offline/OfflineSyncStatus.tsx')
     expect(status).toContain('pending')
