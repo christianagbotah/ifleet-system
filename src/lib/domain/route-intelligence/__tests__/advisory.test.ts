@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import {
   buildRouteAdvisory,
+  rankRouteCandidates,
   selectFuelEfficiencyEvidence,
   validateRouteAdvisoryInput,
+  type RouteCandidateInput,
 } from '../advisory'
 
 describe('route advisory input validation', () => {
@@ -85,5 +87,79 @@ describe('buildRouteAdvisory', () => {
     if (result.ok) return
     expect(result.error).toBe('route_data_missing')
     expect(result.missingRoutes.length).toBeGreaterThan(0)
+  })
+})
+
+function candidate(overrides: Partial<RouteCandidateInput> = {}): RouteCandidateInput {
+  return {
+    tractorId: 'truck-a',
+    plateNumber: 'GT 1000-26',
+    make: 'MAN',
+    model: 'TGS',
+    driverId: 'driver-a',
+    driverName: 'Demo Driver',
+    eligible: true,
+    blocking: [],
+    warnings: [],
+    deadheadKm: 25,
+    location: {
+      latitude: 5.66,
+      longitude: -0.01,
+      source: 'teltonika',
+      trust: 'trusted',
+      receivedAt: new Date('2026-10-10T12:00:00.000Z'),
+      freshness: 'fresh',
+    },
+    fuelSamples: [
+      { distanceKm: 300, fuelLiters: 100 },
+      { distanceKm: 240, fuelLiters: 80 },
+      { distanceKm: 270, fuelLiters: 90 },
+    ],
+    dataQualityScore: 0.92,
+    ...overrides,
+  }
+}
+
+describe('rankRouteCandidates', () => {
+  it('hard-excludes blocked, busy or maintenance-held candidates', () => {
+    const results = rankRouteCandidates([
+      candidate({ tractorId: 'eligible' }),
+      candidate({ tractorId: 'busy', eligible: false, blocking: ['tractor_active_trip'] }),
+      candidate({ tractorId: 'maintenance', eligible: false, blocking: ['tractor_maintenance_block'] }),
+    ], [])
+
+    expect(results.map((item) => item.tractorId)).toEqual(['eligible'])
+  })
+
+  it('prefers fresh live telematics over stale evidence when candidates are otherwise equal', () => {
+    const results = rankRouteCandidates([
+      candidate({
+        tractorId: 'stale',
+        location: {
+          latitude: 5.66,
+          longitude: -0.01,
+          source: 'teltonika',
+          trust: 'trusted',
+          receivedAt: new Date('2026-10-10T10:00:00.000Z'),
+          freshness: 'stale',
+        },
+        dataQualityScore: 0.62,
+      }),
+      candidate({ tractorId: 'fresh' }),
+    ], [])
+
+    expect(results[0].tractorId).toBe('fresh')
+    expect(results[1].location.freshness).toBe('stale')
+    expect(results[1].dataQuality).toBeLessThan(results[0].dataQuality)
+  })
+
+  it('uses deterministic tractor id tie-breaking and never reports confidence above quality', () => {
+    const results = rankRouteCandidates([
+      candidate({ tractorId: 'truck-z' }),
+      candidate({ tractorId: 'truck-b' }),
+    ], [])
+
+    expect(results.map((item) => item.tractorId)).toEqual(['truck-b', 'truck-z'])
+    for (const result of results) expect(result.confidence).toBeLessThanOrEqual(result.dataQuality)
   })
 })
