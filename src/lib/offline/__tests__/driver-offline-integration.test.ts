@@ -34,12 +34,31 @@ describe('driver offline integration', () => {
     expect(form).toContain("kind: 'fuel'")
   })
 
-  it('routes driver-created inspections through the offline submission service', () => {
-    const form = source('src/components/maintenance/VehicleInspectionsView.tsx')
-    expect(form).toContain("user?.role === 'Driver'")
-    expect(form).toContain('submitDriverMutation')
-    expect(form).toContain("kind: 'inspection'")
-    expect(form).toContain("url: '/api/inspections'")
+  it('routes driver-created inspections through an offline-safe trip dialog', () => {
+    const dialog = source('src/components/maintenance/DriverInspectionDialog.tsx')
+    const controller = source('src/components/trips/DriverTripController.tsx')
+    expect(dialog).toContain('submitDriverMutation')
+    expect(dialog).toContain("kind: 'inspection'")
+    expect(dialog).toContain("url: '/api/inspections'")
+    expect(dialog).not.toContain('fetchTrucks')
+    expect(dialog).not.toContain('fetchDrivers')
+    expect(controller).toContain('DriverInspectionDialog')
+    expect(controller).toContain('tripId={trip.id}')
+  })
+
+  it('queues inspection photos as an upload dependency before inspection sync', () => {
+    const dialog = source('src/components/maintenance/DriverInspectionDialog.tsx')
+    const sync = source('src/lib/offline/driver-sync.ts')
+    const uploadRoute = source('src/app/api/upload/route.ts')
+    expect(dialog).toContain("kind: 'upload'")
+    expect(dialog).toContain("bodyEncoding: 'multipart'")
+    expect(dialog).toContain('dependencyIds: evidenceDependencyIds')
+    expect(dialog).toContain('photos: evidenceUrls')
+    expect(sync).toContain("bodyEncoding === 'multipart'")
+    expect(sync).toContain('new FormData()')
+    expect(uploadRoute).toContain('clientMutationId')
+    expect(uploadRoute).toContain('driver-evidence-upload:')
+    expect(uploadRoute).toContain('replayed: true')
   })
 
   it('shows pending, offline and permanent-failure state with manual retry', () => {

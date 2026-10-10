@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 
 const inspectionInclude = {
   truck: { select: { id: true, plateNumber: true, make: true, model: true } },
@@ -86,7 +86,14 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {}
 
     if (truckId) where.truckId = truckId
-    if (driverId) where.driverId = driverId
+    if (auth.roleName === ROLES.DRIVER) {
+      if (!auth.driverId) {
+        return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+      }
+      where.driverId = auth.driverId
+    } else if (driverId) {
+      where.driverId = driverId
+    }
     if (type) where.type = type
     if (result) where.result = result
 
@@ -118,8 +125,6 @@ export async function POST(request: NextRequest) {
   try {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
-    const writeGuard = requireWriteAccess(auth)
-    if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
 
@@ -157,9 +162,55 @@ export async function POST(request: NextRequest) {
     }
 
     const mutationId = typeof clientMutationId === 'string' ? clientMutationId.trim() : ''
+    if (mutationId.length > 191) {
+      return NextResponse.json({ error: 'clientMutationId is too long' }, { status: 400 })
+    }
+
+    const truck = await db.truck.findUnique({ where: { id: truckId } })
+    if (!truck) {
+      return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
+    }
+
+    let effectiveDriverId = driverId ? String(driverId) : null
+    if (auth.roleName === ROLES.DRIVER) {
+      if (auth.isDemo) {
+        return NextResponse.json({ error: 'Demo mode is read-only. Sign in with a standard account to make changes.' }, { status: 403 })
+      }
+      if (!auth.driverId) {
+        return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+      }
+      if (truck.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only inspect trucks assigned to you' }, { status: 403 })
+      }
+      effectiveDriverId = auth.driverId
+    } else {
+      const writeGuard = requireWriteAccess(auth)
+      if (writeGuard instanceof NextResponse) return writeGuard
+    }
+
+    if (tripId) {
+      const trip = await db.trip.findUnique({
+        where: { id: String(tripId) },
+        select: { id: true, truckId: true, driverId: true },
+      })
+      if (!trip) {
+        return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+      }
+      if (trip.truckId !== truckId) {
+        return NextResponse.json({ error: 'Trip is not assigned to this truck' }, { status: 409 })
+      }
+      if (auth.roleName === ROLES.DRIVER && trip.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only inspect trips assigned to you' }, { status: 403 })
+      }
+      if (effectiveDriverId && trip.driverId && effectiveDriverId !== trip.driverId) {
+        return NextResponse.json({ error: 'Inspection driver does not match the trip driver' }, { status: 409 })
+      }
+      effectiveDriverId = effectiveDriverId || trip.driverId || null
+    }
+
     const replayIdentity = {
       truckId: String(truckId),
-      driverId: driverId ? String(driverId) : null,
+      driverId: effectiveDriverId,
       tripId: tripId ? String(tripId) : null,
       type: String(type),
     }
@@ -167,11 +218,6 @@ export async function POST(request: NextRequest) {
     if (mutationId) {
       const replay = await findInspectionReplay(mutationId, replayIdentity)
       if (replay) return replay
-    }
-
-    const truck = await db.truck.findUnique({ where: { id: truckId } })
-    if (!truck) {
-      return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
     }
 
     let parsedItems: { name: string; category: string; status: string; notes?: string; severity?: string }[] = []
@@ -218,7 +264,7 @@ export async function POST(request: NextRequest) {
           data: {
             id: inspectionId,
             truckId,
-            driverId: driverId || null,
+            driverId: effectiveDriverId,
             tripId: tripId || null,
             type,
             odometerReading: odometerReading ? parseFloat(odometerReading) : null,

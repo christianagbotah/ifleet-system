@@ -62,6 +62,7 @@ import {
 import { apiFetch, fetchTrips, type Trip, type DeliveryStop, fetchTripEvents, type TripEvent } from '@/lib/api'
 import { submitDriverMutation } from '@/lib/offline/driver-sync'
 import { OfflineSyncStatus } from '@/components/offline/OfflineSyncStatus'
+import { DriverInspectionDialog } from '@/components/maintenance/DriverInspectionDialog'
 import { usePushNotifications, type PushNotification } from '@/lib/hooks/usePushNotifications'
 import { toast } from 'sonner'
 
@@ -1538,6 +1539,8 @@ function DriverActiveTripContent({
   onLogExpense,
 }: DriverActiveTripContentProps) {
   const canSeeFinancialData = useAuthStore((s) => s.canSeeFinancialData())
+  const user = useAuthStore((s) => s.user)
+  const [inspectionOpen, setInspectionOpen] = React.useState(false)
   const progress = getTripProgress(trip.status)
   const totalExpenses = expenses.reduce((sum, e) => sum + parseFloat(String(e.amount)), 0)
   const isTerminal = isTerminalStatus(trip.status)
@@ -1553,6 +1556,16 @@ function DriverActiveTripContent({
     <>
       {/* ── Hero Header with Phase Indicator ── */}
       <TripHeroHeader trip={trip} truck={truck} progress={progress} phase={phase} phaseData={phaseData} />
+
+      <DriverInspectionDialog
+        open={inspectionOpen}
+        onOpenChange={setInspectionOpen}
+        truckId={truck.id}
+        tripId={trip.id}
+        driverId={trip.driverId}
+        plateNumber={truck.plateNumber}
+        inspectorName={user?.name}
+      />
 
       {/* ── Waiting Banner ── */}
       {waitingReason && (
@@ -1820,14 +1833,24 @@ function DriverActiveTripContent({
                   )}
 
                   {!isTerminal && (
-                    <Button
-                      variant="outline"
-                      className="w-full h-10 text-sm"
-                      onClick={() => { setActiveTab('expenses'); setShowExpenseForm(true) }}
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Log Quick Expense
-                    </Button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <Button
+                        variant="outline"
+                        className="w-full h-10 text-sm"
+                        onClick={() => setInspectionOpen(true)}
+                      >
+                        <ClipboardList className="h-4 w-4 mr-2" />
+                        Vehicle Inspection
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full h-10 text-sm"
+                        onClick={() => { setActiveTab('expenses'); setShowExpenseForm(true) }}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Log Quick Expense
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
