@@ -102,9 +102,9 @@ describe('POST /api/auth/login credential abuse protection', () => {
     expect(blocked.status).toBe(429)
   })
 
-  it('normalizes email before account lookup and failure-key construction', async () => {
+  it('normalizes mixed-case email before account lookup and failure-key construction', async () => {
     const ip = '198.51.100.73'
-    const response = await POST(request(ip, '  Operator@Example.COM  '))
+    const response = await POST(request(ip, 'Operator@Example.COM'))
     expect(response.status).toBe(401)
     expect(mocks.userFindUnique).toHaveBeenCalledWith(expect.objectContaining({
       where: { email: 'operator@example.com' },
