@@ -1,0 +1,140 @@
+model CameraChannel {
+  id           String   @id @default(cuid())
+  deviceId     String
+  key          String
+  label        String
+  orientation  String
+  privacyClass String
+  enabled      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, key])
+  @@index([deviceId, enabled])
+  @@index([privacyClass])
+}
+
+model VideoRetentionPolicy {
+  id               String   @id @default(cuid())
+  deviceId         String   @unique
+  videoEnabled     Boolean  @default(false)
+  supportsLive     Boolean  @default(false)
+  supportsPlayback Boolean  @default(false)
+  supportsSnapshot Boolean  @default(false)
+  policyVersion         Int      @default(1)
+  effectiveAt           DateTime @default(now())
+  routineRetentionDays  Int      @default(7)
+  incidentRetentionDays Int      @default(30)
+  applyToExisting       Boolean  @default(false)
+  cloudUploadEnabled    Boolean  @default(false)
+  allowedRoles          String?  @db.Text
+  allowedChannels       String?  @db.Text
+  privacyNoticeVersion  String   @default("1")
+  privacyNoticeText     String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  acknowledgements VideoPrivacyAcknowledgement[]
+
+  @@index([effectiveAt])
+}
+
+model VideoMediaRecord {
+  id                     String    @id @default(cuid())
+  deviceId               String
+  incidentId             String?
+  kind                   String
+  storageKind            String
+  storageBackend         String
+  storageKey             String    @db.Text
+  recordedAt             DateTime
+  retentionPolicyVersion Int
+  retainUntil            DateTime
+  legalHoldUntil         DateTime?
+  auditHoldUntil         DateTime?
+  deletedAt              DateTime?
+  deletionReason         String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  device TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+
+  @@index([deviceId, recordedAt])
+  @@index([incidentId, recordedAt])
+  @@index([storageKind, deletedAt, retainUntil])
+}
+
+model VideoPrivacyAcknowledgement {
+  id             String   @id @default(cuid())
+  policyId       String
+  subjectType    String
+  subjectId      String
+  policyVersion  Int
+  noticeVersion  String
+  acknowledgedAt DateTime @default(now())
+  metadata       String?  @db.Text
+
+  policy VideoRetentionPolicy @relation(fields: [policyId], references: [id], onDelete: Restrict)
+
+  @@unique([policyId, subjectType, subjectId, policyVersion, noticeVersion])
+  @@index([subjectType, subjectId, acknowledgedAt])
+}
+
+model VideoAlarmEvent {
+  id                String   @id @default(cuid())
+  dedupeKey         String   @unique
+  provider          String
+  deviceId          String
+  providerEventId   String?
+  providerAlarmCode String
+  alarmType         String
+  severity          String
+  message           String?  @db.Text
+  channelKey        String?
+  assetType         String?
+  assetId           String?
+  tripId            String?
+  latitude          Float?
+  longitude         Float?
+  occurredAt        DateTime
+  receivedAt        DateTime
+  createdAt         DateTime @default(now())
+
+  device   TelematicsDevice @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+  incident VideoIncident?
+
+  @@index([deviceId, occurredAt])
+  @@index([tripId, occurredAt])
+  @@index([assetType, assetId, occurredAt])
+  @@index([alarmType, severity, occurredAt])
+  @@index([provider, providerEventId])
+}
+
+model VideoIncident {
+  id           String   @id @default(cuid())
+  alarmEventId String   @unique
+  deviceId     String
+  tripId       String?
+  assetType    String?
+  assetId      String?
+  incidentType String
+  severity     String
+  status       String   @default("open")
+  title        String
+  message      String?  @db.Text
+  latitude     Float?
+  longitude    Float?
+  occurredAt   DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  alarmEvent VideoAlarmEvent @relation(fields: [alarmEventId], references: [id], onDelete: Restrict)
+
+  @@index([deviceId, occurredAt])
+  @@index([tripId, occurredAt])
+  @@index([status, severity, occurredAt])
+  @@index([incidentType, occurredAt])
+}

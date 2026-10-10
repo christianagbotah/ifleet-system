@@ -245,6 +245,8 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   trucks: ['trucks.view'],
   trailers: ['trucks.view'],
   'telematics-devices': ['trucks.view'],
+  'video-incidents': ['trucks.view'],
+  'video-privacy': ['admin.settings'],
   'load-orders': ['trips.view'],
   dispatch: ['trips.create'],
   'shipper-profiles': ['trips.view'],

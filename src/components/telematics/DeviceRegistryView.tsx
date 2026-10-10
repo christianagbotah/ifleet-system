@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Activity, Cable, Link2, Link2Off, Plus, RadioTower, RefreshCw, Search, ShieldCheck } from 'lucide-react'
+import { Activity, Cable, Camera, Link2, Link2Off, Plus, RadioTower, RefreshCw, Search, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +25,22 @@ interface Installation {
   uninstalledAt: string | null
 }
 
+interface CameraChannelRecord {
+  id?: string
+  key: string
+  label: string
+  orientation: string
+  privacyClass: string
+  enabled: boolean
+}
+
+interface VideoRetentionPolicyRecord {
+  videoEnabled: boolean
+  supportsLive: boolean
+  supportsPlayback: boolean
+  supportsSnapshot: boolean
+}
+
 interface DeviceRecord {
   id: string
   name: string
@@ -36,6 +52,8 @@ interface DeviceRecord {
   status: string
   lastSeenAt: string | null
   currentInstallation: Installation | null
+  cameraChannels: CameraChannelRecord[]
+  videoRetentionPolicy: VideoRetentionPolicyRecord | null
 }
 
 interface AssetOption {
@@ -52,6 +70,20 @@ const blankForm = {
   credentialRef: '',
 }
 
+const blankVideoPolicy: VideoRetentionPolicyRecord = {
+  videoEnabled: false,
+  supportsLive: false,
+  supportsPlayback: false,
+  supportsSnapshot: false,
+}
+
+const defaultCameraChannels: CameraChannelRecord[] = [
+  { key: 'front', label: 'Front road', orientation: 'front', privacyClass: 'road', enabled: true },
+  { key: 'cabin', label: 'Driver cabin', orientation: 'cabin', privacyClass: 'driver', enabled: false },
+  { key: 'rear', label: 'Rear', orientation: 'rear', privacyClass: 'exterior', enabled: false },
+  { key: 'cargo', label: 'Cargo', orientation: 'cargo', privacyClass: 'cargo', enabled: false },
+]
+
 export function DeviceRegistryView() {
   const { user } = useAuthStore()
   const canWrite = user?.role === 'Admin' || user?.role === 'Manager'
@@ -62,6 +94,8 @@ export function DeviceRegistryView() {
   const [installOpen, setInstallOpen] = React.useState(false)
   const [selectedDevice, setSelectedDevice] = React.useState<DeviceRecord | null>(null)
   const [form, setForm] = React.useState(blankForm)
+  const [videoRetentionPolicy, setVideoRetentionPolicy] = React.useState<VideoRetentionPolicyRecord>(blankVideoPolicy)
+  const [cameraChannels, setCameraChannels] = React.useState<CameraChannelRecord[]>(defaultCameraChannels)
   const [assetType, setAssetType] = React.useState<AssetType>('tractor')
   const [assetId, setAssetId] = React.useState('')
   const [assets, setAssets] = React.useState<AssetOption[]>([])
@@ -97,10 +131,14 @@ export function DeviceRegistryView() {
           imei: form.imei || null,
           serialNumber: form.serialNumber || null,
           credentialRef: form.credentialRef || null,
+          videoRetentionPolicy,
+          cameraChannels: videoRetentionPolicy.videoEnabled ? cameraChannels : [],
         }),
       })
       toast.success('Telematics device registered')
       setForm(blankForm)
+      setVideoRetentionPolicy(blankVideoPolicy)
+      setCameraChannels(defaultCameraChannels)
       setFormOpen(false)
       await loadDevices()
     } catch (error) {
@@ -157,6 +195,10 @@ export function DeviceRegistryView() {
     } finally {
       setSaving(false)
     }
+  }
+
+  function updateCameraChannel(key: string, patch: Partial<CameraChannelRecord>) {
+    setCameraChannels((current) => current.map((channel) => channel.key === key ? { ...channel, ...patch } : channel))
   }
 
   const online = devices.filter((device) => device.lastSeenAt && Date.now() - new Date(device.lastSeenAt).getTime() < 15 * 60_000).length
@@ -225,6 +267,16 @@ export function DeviceRegistryView() {
                     <Detail label="Credential" value={device.credentialRef ? 'Server reference set' : 'Not configured'} />
                     <Detail label="Installed on" value={device.currentInstallation ? `${device.currentInstallation.assetType} · ${device.currentInstallation.assetId.slice(-8)}` : 'Not installed'} />
                   </div>
+                  {device.videoRetentionPolicy?.videoEnabled && (
+                    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-amber-50 px-3 py-2 text-xs dark:bg-amber-950/20">
+                      <Camera className="h-4 w-4 text-amber-600" />
+                      <span className="font-semibold">Video enabled</span>
+                      <span className="text-muted-foreground">{device.cameraChannels.filter((channel) => channel.enabled).length} active channels</span>
+                      {device.videoRetentionPolicy.supportsLive && <Badge variant="outline">Live</Badge>}
+                      {device.videoRetentionPolicy.supportsPlayback && <Badge variant="outline">Playback</Badge>}
+                      {device.videoRetentionPolicy.supportsSnapshot && <Badge variant="outline">Snapshot</Badge>}
+                    </div>
+                  )}
                   {canWrite && (
                     <div className="mt-4 flex gap-2 border-t pt-3">
                       <Button size="sm" variant="outline" onClick={() => openInstall(device)} disabled={saving}>
@@ -245,7 +297,7 @@ export function DeviceRegistryView() {
       </Card>
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-w-3xl">
           <form onSubmit={saveDevice}>
             <DialogHeader><DialogTitle>Register telematics device</DialogTitle></DialogHeader>
             <DialogBody className="grid gap-4 sm:grid-cols-2">
@@ -256,6 +308,61 @@ export function DeviceRegistryView() {
               <Field label="Serial number"><Input value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} /></Field>
               <Field label="Credential reference"><Input value={form.credentialRef} onChange={(e) => setForm({ ...form, credentialRef: e.target.value })} placeholder="vault://provider/device" /></Field>
               <p className="sm:col-span-2 text-xs leading-5 text-muted-foreground">Raw API keys, passwords and provider secrets are rejected. Store them server-side and enter only the credential reference.</p>
+
+              <div className="sm:col-span-2 rounded-2xl border p-4">
+                <label className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-semibold">Video telematics</div>
+                    <p className="mt-1 text-xs text-muted-foreground">Enable only when this hardware/provider supports MDVR or dashcam channels.</p>
+                  </div>
+                  <input type="checkbox" checked={videoRetentionPolicy.videoEnabled} onChange={(e) => setVideoRetentionPolicy({ ...videoRetentionPolicy, videoEnabled: e.target.checked })} className="h-4 w-4" />
+                </label>
+
+                {videoRetentionPolicy.videoEnabled && (
+                  <div className="mt-4 space-y-4 border-t pt-4">
+                    <div className="flex flex-wrap gap-4 text-xs">
+                      {[
+                        ['supportsLive', 'Live view'],
+                        ['supportsPlayback', 'Playback'],
+                        ['supportsSnapshot', 'Snapshot'],
+                      ].map(([key, label]) => (
+                        <label key={key} className="flex items-center gap-2 font-medium">
+                          <input
+                            type="checkbox"
+                            checked={videoRetentionPolicy[key as keyof VideoRetentionPolicyRecord]}
+                            onChange={(e) => setVideoRetentionPolicy({ ...videoRetentionPolicy, [key]: e.target.checked })}
+                            className="h-4 w-4"
+                          />
+                          {label}
+                        </label>
+                      ))}
+                    </div>
+
+                    <div>
+                      <div className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">Camera channels</div>
+                      <div className="space-y-2">
+                        {cameraChannels.map((channel) => (
+                          <div key={channel.key} className="grid gap-2 rounded-xl bg-muted/40 p-3 sm:grid-cols-[auto_1.2fr_1fr_1fr] sm:items-center">
+                            <label className="flex items-center gap-2 text-xs font-medium">
+                              <input type="checkbox" checked={channel.enabled} onChange={(e) => updateCameraChannel(channel.key, { enabled: e.target.checked })} className="h-4 w-4" />
+                              {channel.key}
+                            </label>
+                            <Input value={channel.label} onChange={(e) => updateCameraChannel(channel.key, { label: e.target.value })} aria-label={`${channel.key} camera label`} />
+                            <Select value={channel.orientation} onValueChange={(value) => updateCameraChannel(channel.key, { orientation: value })}>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                              <SelectContent>{['front', 'cabin', 'rear', 'left', 'right', 'cargo', 'unknown'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent>
+                            </Select>
+                            <Select value={channel.privacyClass} onValueChange={(value) => updateCameraChannel(channel.key, { privacyClass: value })}>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                              <SelectContent>{['road', 'driver', 'cargo', 'exterior'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent>
+                            </Select>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </DialogBody>
             <DialogFooter><Button type="button" variant="outline" onClick={() => setFormOpen(false)}>Cancel</Button><Button type="submit" disabled={saving}>{saving ? 'Registering…' : 'Register device'}</Button></DialogFooter>
           </form>

@@ -16,6 +16,7 @@ export interface AuditParams {
     | 'settings_change'
     | 'approval'
     | 'rejection'
+    | 'access'
   entity: string // 'Truck', 'Driver', 'Trip', etc.
   entityId?: string | null
   details?: Record<string, unknown> | null

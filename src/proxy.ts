@@ -37,6 +37,7 @@ const PUBLIC_API_ROUTES = [
 const MACHINE_AUTH_API_ROUTES = [
   '/api/internal/ingest/health',
   '/api/telematics/ingest/generic-http',
+  '/api/video/ingest/generic-http',
 ]
 
 function isMachineAuthRoute(pathname: string): boolean {

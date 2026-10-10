@@ -44,6 +44,7 @@ import {
   Scale,
   Store,
   RadioTower,
+  Camera,
   type LucideIcon,
 } from "lucide-react"
 
@@ -127,6 +128,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "trucks", label: "Trucks", icon: Truck },
       { id: "trailers", label: "Trailers", icon: Truck },
       { id: "telematics-devices", label: "Device Registry", icon: RadioTower },
+      { id: "video-incidents", label: "Video Incidents", icon: Camera },
       { id: "load-orders", label: "Load Orders", icon: Truck },
       { id: "dispatch", label: "Dispatch Control", icon: Route },
       { id: "shipper-profiles", label: "Shipper Profiles", icon: Truck },
@@ -202,6 +204,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "audit-log", label: "Audit Log", icon: ScrollText },
       { id: "notifications", label: "Notifications", icon: Bell },
       { id: "settings", label: "Settings", icon: Settings },
+      { id: "video-privacy", label: "Video Privacy", icon: ShieldCheck },
     ],
   },
 ]
@@ -508,6 +511,11 @@ export const PERMISSIONS = {
   "roadworthy.view": "View Roadworthy Inspections",
   "roadworthy.create": "Create Roadworthy Inspections",
   "roadworthy.edit": "Edit Roadworthy Inspections",
+
+  // Video telematics
+  "video.live": "View Live Camera",
+  "video.playback": "View Incident Playback",
+  "video.driver.view": "View Driver-Facing Camera",
 
   // Reports
   "reports.view": "View Reports",

@@ -38,6 +38,14 @@ const DeviceRegistryView = dynamic(
   () => import('@/components/telematics/DeviceRegistryView').then(m => ({ default: m.DeviceRegistryView })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const VideoIncidentsView = dynamic(
+  () => import('@/components/video/VideoIncidentsView').then(m => ({ default: m.VideoIncidentsView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
+const VideoPrivacySettingsView = dynamic(
+  () => import('@/components/video/VideoPrivacySettingsView').then(m => ({ default: m.VideoPrivacySettingsView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const LoadOrdersView = dynamic(
   () => import('@/components/orders/LoadOrdersView').then(m => ({ default: m.LoadOrdersView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -345,6 +353,10 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <TrailersView />
     case 'telematics-devices':
       return <DeviceRegistryView />
+    case 'video-incidents':
+      return <VideoIncidentsView />
+    case 'video-privacy':
+      return <VideoPrivacySettingsView />
     case 'load-orders':
       return <LoadOrdersView />
     case 'dispatch':

@@ -28,6 +28,36 @@ function optionalText(value: unknown): string | null {
   return text || null
 }
 
+function parseCameraChannels(value: unknown) {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== 'object') return null
+      const row = entry as Record<string, unknown>
+      const key = optionalText(row.key)
+      if (!key) return null
+      return {
+        key,
+        label: optionalText(row.label) ?? key,
+        orientation: optionalText(row.orientation) ?? 'unknown',
+        privacyClass: optionalText(row.privacyClass) ?? 'exterior',
+        enabled: row.enabled !== false,
+      }
+    })
+    .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
+}
+
+function parseVideoRetentionPolicy(value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const policy = value as Record<string, unknown>
+  return {
+    videoEnabled: policy.videoEnabled === true,
+    supportsLive: policy.supportsLive === true,
+    supportsPlayback: policy.supportsPlayback === true,
+    supportsSnapshot: policy.supportsSnapshot === true,
+  }
+}
+
 export async function GET(request: NextRequest) {
   const auth = requireAuth(request)
   if (auth instanceof NextResponse) return auth
@@ -62,6 +92,8 @@ export async function GET(request: NextRequest) {
           orderBy: { installedAt: 'desc' },
           take: 1,
         },
+        cameraChannels: { orderBy: { key: 'asc' } },
+        videoRetentionPolicy: true,
       },
       orderBy: [{ status: 'asc' }, { name: 'asc' }],
       take: limit,
@@ -101,6 +133,8 @@ export async function POST(request: NextRequest) {
     const serialNumber = optionalText(body.serialNumber)
     const credentialRef = optionalText(body.credentialRef)
     const metadata = typeof body.metadata === 'string' ? body.metadata : body.metadata ? JSON.stringify(body.metadata) : null
+    const cameraChannels = parseCameraChannels(body.cameraChannels)
+    const videoRetentionPolicy = parseVideoRetentionPolicy(body.videoRetentionPolicy)
 
     if (!name || !provider || !deviceType) {
       return NextResponse.json({ error: 'name, provider and deviceType are required' }, { status: 400 })
@@ -130,6 +164,12 @@ export async function POST(request: NextRequest) {
         credentialRef,
         metadata,
         status: 'active',
+        ...(cameraChannels.length > 0 ? { cameraChannels: { create: cameraChannels } } : {}),
+        ...(videoRetentionPolicy ? { videoRetentionPolicy: { create: videoRetentionPolicy } } : {}),
+      },
+      include: {
+        cameraChannels: { orderBy: { key: 'asc' } },
+        videoRetentionPolicy: true,
       },
     })
 
