@@ -1,6 +1,126 @@
+import { createHash, randomUUID } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
+
+const inspectionInclude = {
+  truck: { select: { id: true, plateNumber: true, make: true, model: true } },
+  driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
+  trip: { select: { id: true, tripNumber: true } },
+} as const
+
+type InspectionReplayMetadata = {
+  truckId?: string
+  driverId?: string | null
+  tripId?: string | null
+  type?: string
+  payloadHash?: string
+}
+
+function parseReplayMetadata(value: string | null): InspectionReplayMetadata {
+  if (!value) return {}
+  try {
+    const parsed = JSON.parse(value)
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? parsed as InspectionReplayMetadata
+      : {}
+  } catch {
+    return {}
+  }
+}
+
+function replayMatches(
+  metadata: InspectionReplayMetadata,
+  input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string; payloadHash: string },
+) {
+  return metadata.truckId === input.truckId
+    && (metadata.driverId ?? null) === (input.driverId ?? null)
+    && (metadata.tripId ?? null) === (input.tripId ?? null)
+    && metadata.type === input.type
+    && metadata.payloadHash === input.payloadHash
+}
+
+function stableJson(value: unknown): string {
+  if (value === undefined) return 'null'
+  if (value === null || typeof value !== 'object') return JSON.stringify(value)
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`
+  const record = value as Record<string, unknown>
+  return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${stableJson(record[key])}`).join(',')}}`
+}
+
+function inspectionPayloadHash(input: Record<string, unknown>): string {
+  return createHash('sha256').update(stableJson(input)).digest('hex')
+}
+
+const DRIVER_EVIDENCE_REF_PATTERN = /^\/uploads\/images\/driver-evidence-([A-Za-z0-9-]{8,128})-\d+\.(?:jpg|png|webp)$/
+
+function parseEvidenceRefs(value: string | null): string[] {
+  if (!value) return []
+  try {
+    const parsed = JSON.parse(value)
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : []
+  } catch {
+    return []
+  }
+}
+
+async function validateDriverEvidenceRefs(
+  auth: { userId: string; driverId: string },
+  tripId: string | null,
+  photoRefs: string[],
+): Promise<boolean> {
+  const refsByMutation = new Map<string, string[]>()
+  for (const ref of photoRefs) {
+    const match = DRIVER_EVIDENCE_REF_PATTERN.exec(ref)
+    if (!match) return false
+    const evidenceMutationId = match[1]
+    const refs = refsByMutation.get(evidenceMutationId) ?? []
+    refs.push(ref)
+    refsByMutation.set(evidenceMutationId, refs)
+  }
+
+  for (const [evidenceMutationId, refs] of refsByMutation) {
+    const event = await db.operationalEvent.findUnique({
+      where: { idempotencyKey: `driver-evidence-upload:${evidenceMutationId}` },
+    })
+    if (!event || event.actorId !== auth.userId || event.entityType !== 'driver_evidence_upload') return false
+    const metadata = parseReplayMetadata(event.metadata)
+    if (metadata.driverId !== auth.driverId || (metadata.tripId ?? null) !== tripId) return false
+    const eventRefs = new Set(parseEvidenceRefs(event.evidenceRefs))
+    if (refs.some((ref) => !eventRefs.has(ref))) return false
+  }
+  return true
+}
+
+async function findInspectionReplay(
+  mutationId: string,
+  input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string; payloadHash: string },
+) {
+  const idempotencyKey = `driver-inspection:${mutationId}`
+  const event = await db.operationalEvent.findUnique({ where: { idempotencyKey } })
+  if (!event) return null
+
+  const metadata = parseReplayMetadata(event.metadata)
+  if (!replayMatches(metadata, input)) {
+    return NextResponse.json(
+      { error: 'clientMutationId has already been used for a different inspection' },
+      { status: 409 },
+    )
+  }
+
+  const inspection = await db.vehicleInspection.findUnique({
+    where: { id: event.entityId },
+    include: inspectionInclude,
+  })
+  if (!inspection) {
+    return NextResponse.json(
+      { error: 'Inspection replay record is unavailable' },
+      { status: 409 },
+    )
+  }
+
+  return NextResponse.json({ ...inspection, replayed: true })
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,7 +140,14 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {}
 
     if (truckId) where.truckId = truckId
-    if (driverId) where.driverId = driverId
+    if (auth.roleName === ROLES.DRIVER) {
+      if (!auth.driverId) {
+        return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+      }
+      where.driverId = auth.driverId
+    } else if (driverId) {
+      where.driverId = driverId
+    }
     if (type) where.type = type
     if (result) where.result = result
 
@@ -33,11 +160,7 @@ export async function GET(request: NextRequest) {
     const [records, total] = await Promise.all([
       db.vehicleInspection.findMany({
         where,
-        include: {
-          truck: { select: { id: true, plateNumber: true, make: true, model: true } },
-          driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
-          trip: { select: { id: true, tripNumber: true } },
-        },
+        include: inspectionInclude,
         orderBy: { inspectionDate: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
@@ -56,8 +179,6 @@ export async function POST(request: NextRequest) {
   try {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
-    const writeGuard = requireWriteAccess(auth)
-    if (writeGuard instanceof NextResponse) return writeGuard
 
     const body = await request.json()
 
@@ -77,6 +198,7 @@ export async function POST(request: NextRequest) {
       longitude,
       requiresFollowUp,
       followUpNotes,
+      clientMutationId,
     } = body
 
     if (!truckId || !type) {
@@ -93,20 +215,100 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify truck exists
+    const mutationId = typeof clientMutationId === 'string' ? clientMutationId.trim() : ''
+    if (auth.roleName === ROLES.DRIVER && !mutationId) {
+      return NextResponse.json({ error: 'clientMutationId is required for driver inspections' }, { status: 400 })
+    }
+    if (mutationId && !/^[A-Za-z0-9-]{8,128}$/.test(mutationId)) {
+      return NextResponse.json({ error: 'clientMutationId is invalid' }, { status: 400 })
+    }
+
     const truck = await db.truck.findUnique({ where: { id: truckId } })
     if (!truck) {
       return NextResponse.json({ error: 'Truck not found' }, { status: 404 })
     }
 
-    // Process checkItems to compute counts and result
+    let effectiveDriverId = driverId ? String(driverId) : null
+    if (auth.roleName === ROLES.DRIVER) {
+      if (auth.isDemo) {
+        return NextResponse.json({ error: 'Demo mode is read-only. Sign in with a standard account to make changes.' }, { status: 403 })
+      }
+      if (!auth.driverId) {
+        return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+      }
+      if (!tripId && truck.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only inspect trucks assigned to you' }, { status: 403 })
+      }
+      effectiveDriverId = auth.driverId
+    } else {
+      const writeGuard = requireWriteAccess(auth)
+      if (writeGuard instanceof NextResponse) return writeGuard
+    }
+
+    if (tripId) {
+      const trip = await db.trip.findUnique({
+        where: { id: String(tripId) },
+        select: { id: true, truckId: true, driverId: true },
+      })
+      if (!trip) {
+        return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
+      }
+      if (trip.truckId !== truckId) {
+        return NextResponse.json({ error: 'Trip is not assigned to this truck' }, { status: 409 })
+      }
+      if (auth.roleName === ROLES.DRIVER && trip.driverId !== auth.driverId) {
+        return NextResponse.json({ error: 'You can only inspect trips assigned to you' }, { status: 403 })
+      }
+      if (effectiveDriverId && trip.driverId && effectiveDriverId !== trip.driverId) {
+        return NextResponse.json({ error: 'Inspection driver does not match the trip driver' }, { status: 409 })
+      }
+      effectiveDriverId = effectiveDriverId || trip.driverId || null
+    }
+
+    const normalizedTripId = tripId ? String(tripId) : null
+    const parsedOdometerReading = odometerReading ? parseFloat(odometerReading) : null
+    const parsedLatitude = latitude ? parseFloat(latitude) : null
+    const parsedLongitude = longitude ? parseFloat(longitude) : null
+    const photoRefs = Array.isArray(photos)
+      ? photos.filter((photo): photo is string => typeof photo === 'string' && photo.trim().length > 0)
+      : []
+    const payloadHash = inspectionPayloadHash({
+      truckId: String(truckId),
+      driverId: effectiveDriverId,
+      tripId: normalizedTripId,
+      type: String(type),
+      odometerReading: parsedOdometerReading,
+      overallNotes: overallNotes || null,
+      checkItems: Array.isArray(checkItems) ? checkItems : [],
+      photos: photoRefs,
+      inspectorName: inspectorName || null,
+      signature: signature || null,
+      location: location || null,
+      latitude: parsedLatitude,
+      longitude: parsedLongitude,
+      requiresFollowUp: Boolean(requiresFollowUp),
+      followUpNotes: followUpNotes || null,
+    })
+    const replayIdentity = {
+      truckId: String(truckId),
+      driverId: effectiveDriverId,
+      tripId: normalizedTripId,
+      type: String(type),
+      payloadHash,
+    }
+
+    if (mutationId) {
+      const replay = await findInspectionReplay(mutationId, replayIdentity)
+      if (replay) return replay
+    }
+
     let parsedItems: { name: string; category: string; status: string; notes?: string; severity?: string }[] = []
     let totalChecks = 0
     let passCount = 0
     let warningCount = 0
     let failCount = 0
     let defectsFound = false
-    let defectDetails: { item: string; severity: string; description: string; photoUrl?: string }[] = []
+    const defectDetails: { item: string; severity: string; description: string; photoUrl?: string }[] = []
 
     if (Array.isArray(checkItems)) {
       parsedItems = checkItems
@@ -126,50 +328,86 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Determine overall result
     let result: string
-    if (failCount > 0) {
-      result = 'fail'
-    } else if (warningCount > 0) {
-      result = 'conditional_pass'
-    } else {
-      result = 'pass'
+    if (failCount > 0) result = 'fail'
+    else if (warningCount > 0) result = 'conditional_pass'
+    else result = 'pass'
+
+    const inspectionId = randomUUID()
+    const occurredAt = new Date()
+    if (auth.roleName === ROLES.DRIVER && photoRefs.length > 0) {
+      if (photoRefs.length > 5 || !auth.driverId || !(await validateDriverEvidenceRefs(
+        { userId: auth.userId, driverId: auth.driverId },
+        tripId ? String(tripId) : null,
+        photoRefs,
+      ))) {
+        return NextResponse.json({ error: 'Inspection evidence is invalid or does not belong to this driver/trip' }, { status: 409 })
+      }
     }
+    const idempotencyKey = mutationId ? `driver-inspection:${mutationId}` : `inspection-created:${inspectionId}`
 
-    const record = await db.vehicleInspection.create({
-      data: {
-        truckId,
-        driverId: driverId || null,
-        tripId: tripId || null,
-        type,
-        odometerReading: odometerReading ? parseFloat(odometerReading) : null,
-        result,
-        overallNotes: overallNotes || null,
-        checkItems: JSON.stringify(parsedItems),
-        totalChecks,
-        passCount,
-        warningCount,
-        failCount,
-        defectsFound,
-        defectDetails: defectDetails.length > 0 ? JSON.stringify(defectDetails) : null,
-        photos: Array.isArray(photos) && photos.length > 0 ? JSON.stringify(photos) : null,
-        inspectedBy: auth.userId,
-        inspectorName: inspectorName || null,
-        signature: signature || null,
-        location: location || null,
-        latitude: latitude ? parseFloat(latitude) : null,
-        longitude: longitude ? parseFloat(longitude) : null,
-        requiresFollowUp: requiresFollowUp || defectsFound,
-        followUpNotes: followUpNotes || null,
-      },
-      include: {
-        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
-        driver: { select: { id: true, firstName: true, lastName: true, phone: true } },
-        trip: { select: { id: true, tripNumber: true } },
-      },
-    })
+    try {
+      const record = await db.$transaction(async (tx) => {
+        const created = await tx.vehicleInspection.create({
+          data: {
+            id: inspectionId,
+            truckId,
+            driverId: effectiveDriverId,
+            tripId: normalizedTripId,
+            type,
+            odometerReading: parsedOdometerReading,
+            result,
+            overallNotes: overallNotes || null,
+            checkItems: JSON.stringify(parsedItems),
+            totalChecks,
+            passCount,
+            warningCount,
+            failCount,
+            defectsFound,
+            defectDetails: defectDetails.length > 0 ? JSON.stringify(defectDetails) : null,
+            photos: photoRefs.length > 0 ? JSON.stringify(photoRefs) : null,
+            inspectedBy: auth.userId,
+            inspectorName: inspectorName || null,
+            signature: signature || null,
+            location: location || null,
+            latitude: parsedLatitude,
+            longitude: parsedLongitude,
+            requiresFollowUp: requiresFollowUp || defectsFound,
+            followUpNotes: followUpNotes || null,
+          },
+          include: inspectionInclude,
+        })
 
-    return NextResponse.json(record, { status: 201 })
+        await tx.operationalEvent.create({
+          data: {
+            idempotencyKey,
+            eventKey: 'inspection.created',
+            type: 'inspection.created',
+            entityType: 'vehicle_inspection',
+            entityId: inspectionId,
+            tripId: normalizedTripId,
+            actorType: auth.roleName,
+            actorId: auth.userId,
+            occurredAt,
+            latitude: parsedLatitude,
+            longitude: parsedLongitude,
+            evidenceRefs: photoRefs.length > 0 ? JSON.stringify(photoRefs) : null,
+            metadata: JSON.stringify({ ...replayIdentity, result }),
+            source: 'api.inspections',
+          },
+        })
+
+        return created
+      })
+
+      return NextResponse.json(record, { status: 201 })
+    } catch (error) {
+      if (mutationId) {
+        const replay = await findInspectionReplay(mutationId, replayIdentity)
+        if (replay) return replay
+      }
+      throw error
+    }
   } catch (error) {
     console.error('Inspection create error:', error)
     return NextResponse.json({ error: 'Failed to create inspection' }, { status: 500 })

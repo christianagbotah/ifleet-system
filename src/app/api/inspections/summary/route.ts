@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireAuth } from '@/lib/auth-server'
+import { requireAuth, ROLES } from '@/lib/auth-server'
 import { Prisma } from '@/generated/client'
 
 export async function GET(request: NextRequest) {
@@ -8,10 +8,18 @@ export async function GET(request: NextRequest) {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
 
+    if (auth.roleName === ROLES.DRIVER && !auth.driverId) {
+      return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+    }
+
+    const driverScope: Prisma.VehicleInspectionWhereInput = auth.roleName === ROLES.DRIVER
+      ? { driverId: auth.driverId! }
+      : {}
     const now = new Date()
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
     const monthWhere: Prisma.VehicleInspectionWhereInput = {
+      ...driverScope,
       inspectionDate: { gte: startOfMonth },
     }
 
@@ -34,6 +42,7 @@ export async function GET(request: NextRequest) {
       // Failed inspections requiring follow-up (not yet completed)
       db.vehicleInspection.count({
         where: {
+          ...driverScope,
           result: 'fail',
           requiresFollowUp: true,
           followUpCompletedAt: null,
@@ -42,7 +51,7 @@ export async function GET(request: NextRequest) {
 
       // Recent 5 failed inspections with details
       db.vehicleInspection.findMany({
-        where: { result: 'fail' },
+        where: { ...driverScope, result: 'fail' },
         include: {
           truck: { select: { id: true, plateNumber: true, make: true, model: true } },
           driver: { select: { id: true, firstName: true, lastName: true } },
@@ -56,14 +65,14 @@ export async function GET(request: NextRequest) {
 
     // All-time stats
     const [allTimeTotal, allTimePass, allTimeFail] = await Promise.all([
-      db.vehicleInspection.count(),
-      db.vehicleInspection.count({ where: { result: 'pass' } }),
-      db.vehicleInspection.count({ where: { result: 'fail' } }),
+      db.vehicleInspection.count({ where: driverScope }),
+      db.vehicleInspection.count({ where: { ...driverScope, result: 'pass' } }),
+      db.vehicleInspection.count({ where: { ...driverScope, result: 'fail' } }),
     ])
 
     // Defect trends by category (from checkItems JSON)
     const recentInspections = await db.vehicleInspection.findMany({
-      where: { defectsFound: true },
+      where: { ...driverScope, defectsFound: true },
       select: { checkItems: true, inspectionDate: true },
       orderBy: { inspectionDate: 'desc' },
       take: 50,

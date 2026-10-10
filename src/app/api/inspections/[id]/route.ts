@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
+import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 
 export async function GET(
   request: NextRequest,
@@ -9,6 +9,9 @@ export async function GET(
   try {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
+    if (auth.roleName === ROLES.DRIVER && !auth.driverId) {
+      return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+    }
 
     const { id } = await params
 
@@ -23,6 +26,9 @@ export async function GET(
 
     if (!record) {
       return NextResponse.json({ error: 'Inspection not found' }, { status: 404 })
+    }
+    if (auth.roleName === ROLES.DRIVER && record.driverId !== auth.driverId) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 })
     }
 
     return NextResponse.json(record)
