@@ -109,6 +109,21 @@ function topReasons(scores: Record<keyof AssignmentWeights, number>): string[] {
     .map(([key]) => key)
 }
 
+export function hasTrailerCouplingConflict(
+  tractorId: string,
+  trailerId: string | null,
+  activeCouplings: Array<{ tractorId: string; trailerId: string }>,
+): boolean {
+  if (!trailerId) return false
+  const coupling = activeCouplings.find((item) => item.trailerId === trailerId)
+  return Boolean(coupling && coupling.tractorId !== tractorId)
+}
+
+export function buildTrailerAssignmentOptions<T>(requiresTrailer: boolean, availableTrailers: T[]): Array<T | null> {
+  if (!requiresTrailer) return [null]
+  return availableTrailers.length > 0 ? [...availableTrailers] : [null]
+}
+
 export function rankAssignmentCandidates(input: AssignmentRecommendationInput): AssignmentRecommendation[] {
   const weights = normalizeWeights(input.weights)
 

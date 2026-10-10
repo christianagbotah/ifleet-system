@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { rankAssignmentCandidates, type AssignmentRecommendationInput } from '../assignment'
+import { buildTrailerAssignmentOptions, hasTrailerCouplingConflict, rankAssignmentCandidates, type AssignmentRecommendationInput } from '../assignment'
 
 const BASE: AssignmentRecommendationInput = {
   modelKey: 'deterministic-assignment',
@@ -42,6 +42,37 @@ function candidate(id: string, overrides: Record<string, unknown> = {}) {
     ...overrides,
   }
 }
+
+describe('buildTrailerAssignmentOptions', () => {
+  it('enumerates every available trailer when the load requires one', () => {
+    const trailers = [{ id: 'trailer-a' }, { id: 'trailer-b' }]
+    expect(buildTrailerAssignmentOptions(true, trailers)).toEqual(trailers)
+  })
+
+  it('returns a null placeholder when a required trailer is unavailable', () => {
+    expect(buildTrailerAssignmentOptions(true, [])).toEqual([null])
+  })
+
+  it('does not attach a trailer when the load does not require one', () => {
+    expect(buildTrailerAssignmentOptions(false, [{ id: 'trailer-a' }])).toEqual([null])
+  })
+})
+
+describe('hasTrailerCouplingConflict', () => {
+  const couplings = [{ tractorId: 'truck-a', trailerId: 'trailer-a' }]
+
+  it('allows the currently coupled tractor and trailer to remain a candidate', () => {
+    expect(hasTrailerCouplingConflict('truck-a', 'trailer-a', couplings)).toBe(false)
+  })
+
+  it('blocks a trailer that is coupled to a different tractor', () => {
+    expect(hasTrailerCouplingConflict('truck-b', 'trailer-a', couplings)).toBe(true)
+  })
+
+  it('allows an uncoupled trailer', () => {
+    expect(hasTrailerCouplingConflict('truck-b', 'trailer-b', couplings)).toBe(false)
+  })
+})
 
 describe('rankAssignmentCandidates', () => {
   it('excludes any candidate that fails the authoritative eligibility gate even with a high margin', () => {

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requirePermission } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { ASSIGNMENT_RECOMMENDATION_CONFIG } from '@/lib/domain/ai-ops/assignment-config'
-import { rankAssignmentCandidates, type AssignmentCandidate } from '@/lib/domain/ai-ops/assignment'
+import { buildTrailerAssignmentOptions, hasTrailerCouplingConflict, rankAssignmentCandidates, type AssignmentCandidate } from '@/lib/domain/ai-ops/assignment'
 import { evaluateAssignmentEligibility } from '@/lib/domain/dispatch/eligibility'
 
 function stringList(value: string | null | undefined): string[] {
@@ -124,7 +124,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const busyDrivers = new Set(activeTrips.map((trip) => trip.driverId).filter(Boolean))
   const busyTractors = new Set(activeTrips.map((trip) => trip.truckId).filter(Boolean))
   const busyTrailers = new Set(activeTrips.map((trip) => trip.trailerId).filter(Boolean))
-  for (const coupling of activeCouplings) busyTrailers.add(coupling.trailerId)
 
   const siteRule = order.shipperProfile.ShipperSiteRule.find((rule) => rule.loadingPointId === order.loadingPointId && rule.isActive)
   const profileSettings = settings(order.shipperProfile.extensibleSettings)
@@ -143,7 +142,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!order.requiredTrailerType) return true
     return token(trailer.trailerType) === token(order.requiredTrailerType)
   })
-  const selectedTrailer = order.requiredTrailerType ? availableTrailers[0] ?? null : null
+  const trailerOptions = buildTrailerAssignmentOptions(Boolean(order.requiredTrailerType), availableTrailers)
 
   const fleetEfficiencySamples = history.flatMap((trip) => trip.totalMileage && trip.totalMileage > 0 && trip.fuelUsed && trip.fuelUsed > 0
     ? [trip.totalMileage / trip.fuelUsed]
@@ -164,7 +163,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       : null
 
     for (const tractor of tractors) {
-      const trailer = selectedTrailer
+      for (const trailer of trailerOptions) {
       const genericDocs = documents.filter((doc) =>
         (doc.entityType === 'Driver' && doc.entityId === driver.id)
         || (doc.entityType === 'Truck' && doc.entityId === tractor.id)
@@ -201,6 +200,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       if (busyDrivers.has(driver.id)) blocking.push('driver_active_trip')
       if (busyTractors.has(tractor.id)) blocking.push('tractor_active_trip')
       if (order.requiredTrailerType && !trailer) blocking.push('trailer_unavailable')
+      if (trailer && hasTrailerCouplingConflict(tractor.id, trailer.id, activeCouplings)) blocking.push('trailer_coupled_to_other_tractor')
       const registration = tractor.DvlaRegistration[0]
       if (allowedVehicleTypes.length > 0 && !allowedVehicleTypes.some((required) => vehicleMatches(required, registration?.vehicleClass, registration?.bodyType))) {
         blocking.push('vehicle_type_restricted')
@@ -248,6 +248,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         evidenceCount,
         dataQualityScore,
       })
+      }
     }
   }
 
