@@ -14,8 +14,9 @@ describe('client portal repository contract', () => {
     expect(source).toContain('tripId: { in: activeTripIds }')
   })
 
-  it('does not select public driver PII or internal trip notes', () => {
-    expect(source).not.toContain('phone: true')
+  it('exposes only driver display names and omits driver PII/internal trip notes', () => {
+    expect(source).toContain("driver: { select: { firstName: true, lastName: true } }")
+    expect(source).not.toMatch(/driver:\s*\{\s*select:\s*\{[^}]*phone:\s*true/s)
     expect(source).not.toContain('employeeId: true')
     expect(source).not.toContain('licenseNumber: true')
     expect(source).not.toContain('ghanaCardNumber: true')
