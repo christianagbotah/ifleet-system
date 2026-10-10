@@ -15,11 +15,15 @@ afterEach(() => {
 })
 
 describe('rate limit hardening', () => {
-  it('separates coarse login request throttling from strict failed-credential policy', () => {
+  it('separates coarse requests, source/account failures, and distributed account failures', () => {
     expect(RATE_LIMITS.loginRequest.maxRequests).toBeGreaterThan(RATE_LIMITS.loginFailure.maxRequests)
     expect(RATE_LIMITS.loginFailure.maxRequests).toBe(5)
     expect(RATE_LIMITS.loginFailure.windowMs).toBe(15 * 60 * 1000)
     expect(RATE_LIMITS.loginFailure.blockDurationMs).toBe(30 * 60 * 1000)
+
+    expect(RATE_LIMITS.loginAccountFailure.maxRequests).toBeGreaterThan(RATE_LIMITS.loginFailure.maxRequests)
+    expect(RATE_LIMITS.loginAccountFailure.windowMs).toBe(15 * 60 * 1000)
+    expect(RATE_LIMITS.loginAccountFailure.blockDurationMs).toBe(30 * 60 * 1000)
   })
 
   it('can inspect a bucket without consuming another request and reset it after success', () => {
