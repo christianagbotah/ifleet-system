@@ -63,6 +63,15 @@ describe('driver offline integration', () => {
     expect(uploadRoute).toContain('replayed: true')
   })
 
+  it('uses fresh mutation identities after a permanently rejected inspection attempt', () => {
+    const dialog = source('src/components/maintenance/DriverInspectionDialog.tsx')
+    expect(dialog).toContain('inspectionMutationIdRef.current = crypto.randomUUID()')
+    expect(dialog).toContain('evidenceMutationIdRef.current = crypto.randomUUID()')
+    const catchBlock = dialog.slice(dialog.indexOf('} catch (error) {'), dialog.indexOf('} finally {'))
+    expect(catchBlock).toContain('inspectionMutationIdRef.current = crypto.randomUUID()')
+    expect(catchBlock).toContain('evidenceMutationIdRef.current = crypto.randomUUID()')
+  })
+
   it('shows pending, offline and permanent-failure state with manual retry', () => {
     const status = source('src/components/offline/OfflineSyncStatus.tsx')
     expect(status).toContain('pending')

@@ -40,6 +40,10 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('driver-inspection:${mutationId}')
     expect(route).toContain('db.$transaction')
     expect(route).toContain('replayed: true')
+    expect(route).toContain("if (auth.roleName === ROLES.DRIVER && !mutationId)")
+    expect(route).toContain('validateDriverEvidenceRefs')
+    expect(route).toContain('driver-evidence-upload:${evidenceMutationId}')
+    expect(route).toContain('event.actorId !== auth.userId')
   })
 
   it('deduplicates driver evidence uploads and refuses mutation collisions', () => {
@@ -66,6 +70,7 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain("You can only inspect trucks assigned to you")
     expect(summary).toContain("auth.roleName === ROLES.DRIVER")
     expect(summary).toContain('driverId: auth.driverId')
+    expect(detail).toContain("if (auth.roleName === ROLES.DRIVER && !auth.driverId)")
     expect(detail).toContain("auth.roleName === ROLES.DRIVER && record.driverId !== auth.driverId")
   })
 })

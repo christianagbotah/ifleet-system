@@ -38,6 +38,46 @@ function replayMatches(
     && metadata.type === input.type
 }
 
+const DRIVER_EVIDENCE_REF_PATTERN = /^\/uploads\/images\/driver-evidence-([A-Za-z0-9-]{8,128})-\d+\.(?:jpg|png|webp)$/
+
+function parseEvidenceRefs(value: string | null): string[] {
+  if (!value) return []
+  try {
+    const parsed = JSON.parse(value)
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : []
+  } catch {
+    return []
+  }
+}
+
+async function validateDriverEvidenceRefs(
+  auth: { userId: string; driverId: string },
+  tripId: string | null,
+  photoRefs: string[],
+): Promise<boolean> {
+  const refsByMutation = new Map<string, string[]>()
+  for (const ref of photoRefs) {
+    const match = DRIVER_EVIDENCE_REF_PATTERN.exec(ref)
+    if (!match) return false
+    const evidenceMutationId = match[1]
+    const refs = refsByMutation.get(evidenceMutationId) ?? []
+    refs.push(ref)
+    refsByMutation.set(evidenceMutationId, refs)
+  }
+
+  for (const [evidenceMutationId, refs] of refsByMutation) {
+    const event = await db.operationalEvent.findUnique({
+      where: { idempotencyKey: `driver-evidence-upload:${evidenceMutationId}` },
+    })
+    if (!event || event.actorId !== auth.userId || event.entityType !== 'driver_evidence_upload') return false
+    const metadata = parseReplayMetadata(event.metadata)
+    if (metadata.driverId !== auth.driverId || (metadata.tripId ?? null) !== tripId) return false
+    const eventRefs = new Set(parseEvidenceRefs(event.evidenceRefs))
+    if (refs.some((ref) => !eventRefs.has(ref))) return false
+  }
+  return true
+}
+
 async function findInspectionReplay(
   mutationId: string,
   input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string },
@@ -162,8 +202,11 @@ export async function POST(request: NextRequest) {
     }
 
     const mutationId = typeof clientMutationId === 'string' ? clientMutationId.trim() : ''
-    if (mutationId.length > 191) {
-      return NextResponse.json({ error: 'clientMutationId is too long' }, { status: 400 })
+    if (auth.roleName === ROLES.DRIVER && !mutationId) {
+      return NextResponse.json({ error: 'clientMutationId is required for driver inspections' }, { status: 400 })
+    }
+    if (mutationId && !/^[A-Za-z0-9-]{8,128}$/.test(mutationId)) {
+      return NextResponse.json({ error: 'clientMutationId is invalid' }, { status: 400 })
     }
 
     const truck = await db.truck.findUnique({ where: { id: truckId } })
@@ -256,6 +299,15 @@ export async function POST(request: NextRequest) {
     const parsedLatitude = latitude ? parseFloat(latitude) : null
     const parsedLongitude = longitude ? parseFloat(longitude) : null
     const photoRefs = Array.isArray(photos) ? photos.filter((photo): photo is string => typeof photo === 'string' && photo.trim().length > 0) : []
+    if (auth.roleName === ROLES.DRIVER && photoRefs.length > 0) {
+      if (photoRefs.length > 5 || !auth.driverId || !(await validateDriverEvidenceRefs(
+        { userId: auth.userId, driverId: auth.driverId },
+        tripId ? String(tripId) : null,
+        photoRefs,
+      ))) {
+        return NextResponse.json({ error: 'Inspection evidence is invalid or does not belong to this driver/trip' }, { status: 409 })
+      }
+    }
     const idempotencyKey = mutationId ? `driver-inspection:${mutationId}` : `inspection-created:${inspectionId}`
 
     try {

@@ -182,6 +182,8 @@ export function DriverInspectionDialog({
       toast.success(result.queued ? 'Inspection saved offline and queued for sync' : result.replayed ? 'Inspection already synced' : 'Inspection submitted')
       onOpenChange(false)
     } catch (error) {
+      inspectionMutationIdRef.current = crypto.randomUUID()
+      evidenceMutationIdRef.current = crypto.randomUUID()
       toast.error(error instanceof Error ? error.message : 'Failed to submit inspection')
     } finally {
       setSaving(false)

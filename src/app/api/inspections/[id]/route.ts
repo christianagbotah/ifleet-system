@@ -9,6 +9,9 @@ export async function GET(
   try {
     const auth = requireAuth(request)
     if (auth instanceof NextResponse) return auth
+    if (auth.roleName === ROLES.DRIVER && !auth.driverId) {
+      return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
+    }
 
     const { id } = await params
 
