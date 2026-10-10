@@ -66,48 +66,52 @@ beforeEach(() => {
 })
 
 describe('POST /api/auth/login credential abuse protection', () => {
-  it('returns generic credential failures for five attempts and blocks the next attempt', async () => {
+  it('returns generic credential failures for five attempts and blocks the next attempt before account/password work', async () => {
     const ip = '198.51.100.71'
+    const email = 'threshold@example.com'
 
     for (let attempt = 0; attempt < 5; attempt += 1) {
-      const response = await POST(request(ip))
+      const response = await POST(request(ip, email))
       expect(response.status).toBe(401)
       await expect(response.json()).resolves.toEqual({ error: 'Invalid email or password' })
     }
 
-    const blocked = await POST(request(ip))
+    const blocked = await POST(request(ip, email))
     expect(blocked.status).toBe(429)
     expect(blocked.headers.get('retry-after')).toBeTruthy()
     expect(blocked.headers.get('x-ratelimit-limit')).toBe('5')
-    expect(mocks.comparePassword).toHaveBeenCalledTimes(6)
+    expect(mocks.userFindUnique).toHaveBeenCalledTimes(5)
+    expect(mocks.comparePassword).toHaveBeenCalledTimes(5)
   })
 
   it('clears accumulated credential-failure debt after successful authentication', async () => {
     const ip = '198.51.100.72'
+    const email = 'reset@example.com'
 
     for (let attempt = 0; attempt < 4; attempt += 1) {
-      expect((await POST(request(ip))).status).toBe(401)
+      expect((await POST(request(ip, email))).status).toBe(401)
     }
 
     mocks.comparePassword.mockResolvedValueOnce(true)
-    const success = await POST(request(ip))
+    const success = await POST(request(ip, email))
     expect(success.status).toBe(200)
 
     mocks.comparePassword.mockResolvedValue(false)
     for (let attempt = 0; attempt < 5; attempt += 1) {
-      expect((await POST(request(ip))).status).toBe(401)
+      expect((await POST(request(ip, email))).status).toBe(401)
     }
 
-    const blocked = await POST(request(ip))
+    const blocked = await POST(request(ip, email))
     expect(blocked.status).toBe(429)
+    expect(mocks.comparePassword).toHaveBeenCalledTimes(10)
   })
 
   it('normalizes mixed-case email before account lookup and failure-key construction', async () => {
     const ip = '198.51.100.73'
-    const response = await POST(request(ip, 'Operator@Example.COM'))
+    const response = await POST(request(ip, 'Operator73@Example.COM'))
     expect(response.status).toBe(401)
     expect(mocks.userFindUnique).toHaveBeenCalledWith(expect.objectContaining({
-      where: { email: 'operator@example.com' },
+      where: { email: 'operator73@example.com' },
     }))
   })
 })
