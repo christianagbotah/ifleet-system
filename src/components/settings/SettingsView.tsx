@@ -31,6 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuthStore } from '@/lib/store/auth'
 import { APP_COMPANY } from '@/lib/constants'
 import { CurrencyConverter } from '@/components/settings/CurrencyConverter'
+import { IntegrationConnections } from '@/components/settings/IntegrationConnections'
 
 function navigateToReports(reportType: string, format: 'pdf' | 'xlsx' | 'csv') {
   // Navigate to Reports page and trigger generation
@@ -331,7 +332,7 @@ export function SettingsView() {
       {/* Settings Tabs */}
       <motion.div variants={itemVariants}>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className={`grid gap-1 h-auto p-1 ${isDriver ? 'grid-cols-2' : 'grid-cols-3 sm:grid-cols-5'}`}>
+          <TabsList className={`grid gap-1 h-auto p-1 ${isDriver ? 'grid-cols-2' : 'grid-cols-3 sm:grid-cols-6'}`}>
             {!isDriver && (
             <TabsTrigger value="company" className="text-xs sm:text-sm gap-1.5 py-2">
               <Building2 className="h-3.5 w-3.5 hidden sm:block" />
@@ -352,6 +353,12 @@ export function SettingsView() {
             <TabsTrigger value="tracking" className="text-xs sm:text-sm gap-1.5 py-2">
               <MapPin className="h-3.5 w-3.5 hidden sm:block" />
               Tracking
+            </TabsTrigger>
+            )}
+            {!isDriver && (
+            <TabsTrigger value="integrations" className="text-xs sm:text-sm gap-1.5 py-2">
+              <Globe className="h-3.5 w-3.5 hidden sm:block" />
+              Integrations
             </TabsTrigger>
             )}
             <TabsTrigger value="display" className="text-xs sm:text-sm gap-1.5 py-2">
@@ -1210,6 +1217,13 @@ export function SettingsView() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+          )}
+
+          {/* =================== INTEGRATIONS TAB =================== */}
+          {!isDriver && (
+          <TabsContent value="integrations" className="mt-4 space-y-4">
+            <IntegrationConnections />
           </TabsContent>
           )}
 

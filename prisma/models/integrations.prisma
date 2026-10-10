@@ -1,0 +1,20 @@
+model IntegrationConnection {
+  id            String   @id @default(cuid())
+  name          String
+  provider      String
+  type          String
+  config        String   @db.Text
+  secretRef     String?
+  status        String   @default("inactive")
+  lastSuccessAt DateTime?
+  lastErrorAt   DateTime?
+  lastError     String?  @db.Text
+  createdBy     String?
+  updatedBy     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([provider, status])
+  @@index([type, status])
+  @@index([updatedAt])
+}
