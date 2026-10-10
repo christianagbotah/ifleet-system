@@ -35,6 +35,22 @@ const STATUS_ORDER: Record<string, number> = {
 
 export type PortalLocationFreshness = 'fresh' | 'stale' | 'unknown'
 
+type LiveStateEvidence = {
+  tripId: string | null
+  latitude: number | null
+  longitude: number | null
+  speedKph: number | null
+  source: string
+  receivedAt: Date
+}
+
+type TripLocationEvidence = {
+  latitude: number
+  longitude: number
+  speed: number | null
+  timestamp: Date
+}
+
 function progress(status: string): number {
   return Math.min(100, Math.round(((STATUS_ORDER[status] ?? 0) / 12) * 100))
 }
@@ -47,6 +63,43 @@ function money(value: unknown): number {
 function locationFreshness(timestamp: Date | null, now: Date): PortalLocationFreshness {
   if (!timestamp) return 'unknown'
   return now.getTime() - timestamp.getTime() <= 15 * 60 * 1000 ? 'fresh' : 'stale'
+}
+
+function resolvePublicLocation(
+  tripId: string,
+  live: LiveStateEvidence | undefined,
+  fallback: TripLocationEvidence | undefined,
+  now: Date,
+) {
+  if (
+    live
+    && live.tripId === tripId
+    && live.latitude !== null
+    && live.longitude !== null
+  ) {
+    const receivedAt = live.receivedAt.toISOString()
+    return {
+      latitude: live.latitude,
+      longitude: live.longitude,
+      timestamp: receivedAt,
+      receivedAt,
+      speed: live.speedKph,
+      source: live.source,
+      freshness: locationFreshness(live.receivedAt, now),
+    }
+  }
+
+  if (!fallback) return null
+  const receivedAt = fallback.timestamp.toISOString()
+  return {
+    latitude: fallback.latitude,
+    longitude: fallback.longitude,
+    timestamp: receivedAt,
+    receivedAt,
+    speed: fallback.speed,
+    source: 'trip_location_history',
+    freshness: locationFreshness(fallback.timestamp, now),
+  }
 }
 
 function shipmentSteps(status: string) {
@@ -90,13 +143,22 @@ export async function loadClientPortalDashboard(clientId: string, now = new Date
   if (!client) return { kind: 'not_found' as const }
   if (!client.isActive) return { kind: 'inactive' as const }
 
-  const [activeTrips, recentDeliveries, invoices, totalTrips, completedTrips, pendingTrips, revenue] = await Promise.all([
+  const [
+    activeTrips,
+    recentDeliveries,
+    invoices,
+    totalTrips,
+    completedTrips,
+    activeTripsCount,
+    pendingTrips,
+    revenue,
+  ] = await Promise.all([
     db.trip.findMany({
       where: { clientId, status: { in: [...ACTIVE_STATUSES] } },
       orderBy: { departureTime: 'desc' },
       take: 100,
       include: {
-        truck: { select: { plateNumber: true, make: true, model: true } },
+        truck: { select: { id: true, plateNumber: true, make: true, model: true } },
         driver: { select: { firstName: true, lastName: true } },
         deliveryStops: {
           orderBy: { stopOrder: 'asc' },
@@ -137,30 +199,54 @@ export async function loadClientPortalDashboard(clientId: string, now = new Date
       where: { clientId },
       orderBy: { issueDate: 'desc' },
       take: 20,
-      include: { trip: { select: { tripNumber: true } } },
+      select: {
+        id: true,
+        invoiceNumber: true,
+        issueDate: true,
+        dueDate: true,
+        totalAmount: true,
+        paidAmount: true,
+        status: true,
+        trip: { select: { tripNumber: true } },
+      },
     }),
     db.trip.count({ where: { clientId } }),
     db.trip.count({ where: { clientId, status: 'completed' } }),
+    db.trip.count({ where: { clientId, status: { in: [...ACTIVE_STATUSES] } } }),
     db.trip.count({ where: { clientId, status: { in: [...PENDING_STATUSES] } } }),
     db.trip.aggregate({ where: { clientId }, _sum: { totalRevenue: true } }),
   ])
 
   const activeTripIds = activeTrips.map((trip) => trip.id)
-  const locationRows = activeTripIds.length > 0
-    ? await db.truckLocation.findMany({
-        where: { tripId: { in: activeTripIds } },
-        orderBy: { timestamp: 'desc' },
-        distinct: ['tripId'],
-        select: {
-          tripId: true,
-          latitude: true,
-          longitude: true,
-          speed: true,
-          timestamp: true,
-        },
-      })
-    : []
+  const activeTruckIds = [...new Set(activeTrips.map((trip) => trip.truck.id))]
+  const [liveStateRows, locationRows] = await Promise.all([
+    db.vehicleLiveState.findMany({
+      where: { assetType: 'tractor', assetId: { in: activeTruckIds } },
+      select: {
+        assetId: true,
+        tripId: true,
+        latitude: true,
+        longitude: true,
+        speedKph: true,
+        source: true,
+        receivedAt: true,
+      },
+    }),
+    db.truckLocation.findMany({
+      where: { tripId: { in: activeTripIds } },
+      orderBy: { timestamp: 'desc' },
+      distinct: ['tripId'],
+      select: {
+        tripId: true,
+        latitude: true,
+        longitude: true,
+        speed: true,
+        timestamp: true,
+      },
+    }),
+  ])
 
+  const liveStateByTruck = new Map(liveStateRows.map((row) => [row.assetId, row]))
   const latestLocationByTrip = new Map(locationRows.map((row) => [row.tripId, row]))
   const totalRevenue = money(revenue._sum.totalRevenue)
 
@@ -177,51 +263,45 @@ export async function loadClientPortalDashboard(clientId: string, now = new Date
       stats: {
         totalTrips,
         completedTrips,
-        activeTrips: activeTrips.length,
+        activeTrips: activeTripsCount,
         pendingTrips,
         totalRevenue,
         avgTripValue: totalTrips > 0 ? money(totalRevenue / totalTrips) : 0,
       },
-      activeShipments: activeTrips.map((trip) => {
-        const latest = latestLocationByTrip.get(trip.id) ?? null
-        return {
-          id: trip.id,
-          tripNumber: trip.tripNumber,
-          status: trip.status,
-          loadingLocation: trip.loadingLocation,
-          destination: trip.destination,
-          itemName: trip.itemName,
-          quantity: trip.quantity,
-          unit: trip.unit,
-          totalRevenue: money(trip.totalRevenue),
-          departureTime: trip.departureTime.toISOString(),
-          estimatedArrival: trip.arrivalTime?.toISOString() ?? null,
-          truck: {
-            plateNumber: trip.truck.plateNumber,
-            make: trip.truck.make,
-            model: trip.truck.model,
-          },
-          driver: {
-            firstName: trip.driver.firstName,
-            lastName: trip.driver.lastName,
-          },
-          progress: progress(trip.status),
-          deliveryStops: trip.deliveryStops.map((stop) => ({
-            ...stop,
-            arrivalTime: stop.arrivalTime?.toISOString() ?? null,
-            offloadCompleted: stop.offloadCompleted?.toISOString() ?? null,
-          })),
-          latestLocation: latest ? {
-            latitude: latest.latitude,
-            longitude: latest.longitude,
-            timestamp: latest.timestamp.toISOString(),
-            receivedAt: latest.timestamp.toISOString(),
-            speed: latest.speed,
-            source: 'trip_location_history',
-            freshness: locationFreshness(latest.timestamp, now),
-          } : null,
-        }
-      }),
+      activeShipments: activeTrips.map((trip) => ({
+        id: trip.id,
+        tripNumber: trip.tripNumber,
+        status: trip.status,
+        loadingLocation: trip.loadingLocation,
+        destination: trip.destination,
+        itemName: trip.itemName,
+        quantity: trip.quantity,
+        unit: trip.unit,
+        totalRevenue: money(trip.totalRevenue),
+        departureTime: trip.departureTime.toISOString(),
+        estimatedArrival: trip.arrivalTime?.toISOString() ?? null,
+        truck: {
+          plateNumber: trip.truck.plateNumber,
+          make: trip.truck.make,
+          model: trip.truck.model,
+        },
+        driver: {
+          firstName: trip.driver.firstName,
+          lastName: trip.driver.lastName,
+        },
+        progress: progress(trip.status),
+        deliveryStops: trip.deliveryStops.map((stop) => ({
+          ...stop,
+          arrivalTime: stop.arrivalTime?.toISOString() ?? null,
+          offloadCompleted: stop.offloadCompleted?.toISOString() ?? null,
+        })),
+        latestLocation: resolvePublicLocation(
+          trip.id,
+          liveStateByTruck.get(trip.truck.id),
+          latestLocationByTrip.get(trip.id),
+          now,
+        ),
+      })),
       recentDeliveries: recentDeliveries.map((trip) => ({
         id: trip.id,
         tripNumber: trip.tripNumber,
@@ -254,7 +334,7 @@ export async function loadClientShipmentDetail(clientId: string, tripId: string,
   const trip = await db.trip.findFirst({
     where: { id: tripId, clientId },
     include: {
-      truck: { select: { plateNumber: true, make: true, model: true } },
+      truck: { select: { id: true, plateNumber: true, make: true, model: true } },
       driver: { select: { firstName: true, lastName: true } },
       deliveryStops: {
         orderBy: { stopOrder: 'asc' },
@@ -283,18 +363,36 @@ export async function loadClientShipmentDetail(clientId: string, tripId: string,
 
   if (!trip || !trip.client?.isActive) return null
 
-  const locationHistory = await db.truckLocation.findMany({
-    where: { tripId: trip.id },
-    orderBy: { timestamp: 'asc' },
-    take: 2000,
-    select: {
-      latitude: true,
-      longitude: true,
-      speed: true,
-      timestamp: true,
-    },
-  })
-  const latest = locationHistory.at(-1) ?? null
+  const [locationHistory, liveStateRows] = await Promise.all([
+    db.truckLocation.findMany({
+      where: { tripId: trip.id },
+      orderBy: { timestamp: 'asc' },
+      take: 2000,
+      select: {
+        latitude: true,
+        longitude: true,
+        speed: true,
+        timestamp: true,
+      },
+    }),
+    db.vehicleLiveState.findMany({
+      where: { assetType: 'tractor', assetId: { in: [trip.truck.id] } },
+      take: 1,
+      select: {
+        assetId: true,
+        tripId: true,
+        latitude: true,
+        longitude: true,
+        speedKph: true,
+        source: true,
+        receivedAt: true,
+      },
+    }),
+  ])
+
+  const historicalLatest = locationHistory.at(-1) ?? undefined
+  const liveState = liveStateRows[0]
+  const latestLocation = resolvePublicLocation(trip.id, liveState, historicalLatest, now)
   const sampleEvery = Math.max(1, Math.ceil(locationHistory.length / 200))
   const routeCoordinates = locationHistory
     .filter((_, index) => index % sampleEvery === 0 || index === locationHistory.length - 1)
@@ -354,15 +452,7 @@ export async function loadClientShipmentDetail(clientId: string, tripId: string,
       location: event.location ?? undefined,
     })),
     steps: shipmentSteps(trip.status),
-    latestLocation: latest ? {
-      latitude: latest.latitude,
-      longitude: latest.longitude,
-      speed: latest.speed,
-      timestamp: latest.timestamp.toISOString(),
-      receivedAt: latest.timestamp.toISOString(),
-      source: 'trip_location_history',
-      freshness: locationFreshness(latest.timestamp, now),
-    } : null,
+    latestLocation,
     routeCoordinates,
   }
 }
