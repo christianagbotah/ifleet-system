@@ -88,6 +88,68 @@ describe('driver offline outbox', () => {
     await expect(store.list()).resolves.toHaveLength(0)
   })
 
+  it('retries status evidence before sending the dependent status exactly once', async () => {
+    const store = new MemoryDriverOutboxStore()
+    await enqueueDriverMutation(store, {
+      clientMutationId: 'status-photo-1',
+      kind: 'upload',
+      request: { method: 'POST', url: '/upload', body: { ref: 'status-photo' } },
+    })
+    await enqueueDriverMutation(store, {
+      clientMutationId: 'status-1',
+      kind: 'status',
+      dependencyIds: ['status-photo-1'],
+      request: { method: 'POST', url: '/transition', body: { to: 'in_transit' } },
+    })
+
+    const firstOrder: string[] = []
+    const first = await flushDriverOutbox(store, async (item) => {
+      firstOrder.push(item.clientMutationId)
+      return { ok: false, status: 503, error: 'temporary outage' }
+    })
+    expect(firstOrder).toEqual(['status-photo-1'])
+    expect(first.retryableFailures).toBe(1)
+
+    const reconnectOrder: string[] = []
+    const reconnect = await flushDriverOutbox(store, async (item) => {
+      reconnectOrder.push(item.clientMutationId)
+      return { ok: true, status: 201 }
+    })
+    expect(reconnectOrder).toEqual(['status-photo-1', 'status-1'])
+    expect(reconnect.synced).toBe(2)
+
+    const afterSyncOrder: string[] = []
+    await flushDriverOutbox(store, async (item) => {
+      afterSyncOrder.push(item.clientMutationId)
+      return { ok: true, status: 200 }
+    })
+    expect(afterSyncOrder).toEqual([])
+  })
+
+  it('sends an expense receipt before the dependent expense mutation', async () => {
+    const store = new MemoryDriverOutboxStore()
+    await enqueueDriverMutation(store, {
+      clientMutationId: 'receipt-photo-1',
+      kind: 'upload',
+      request: { method: 'POST', url: '/upload', body: { ref: 'receipt-photo' } },
+    })
+    await enqueueDriverMutation(store, {
+      clientMutationId: 'expense-2',
+      kind: 'expense',
+      dependencyIds: ['receipt-photo-1'],
+      request: { method: 'POST', url: '/expense', body: { amount: 25, receiptUrl: '/receipt.jpg' } },
+    })
+
+    const order: string[] = []
+    await flushDriverOutbox(store, async (item) => {
+      order.push(item.clientMutationId)
+      return { ok: true, status: 201 }
+    })
+
+    expect(order).toEqual(['receipt-photo-1', 'expense-2'])
+    await expect(store.list()).resolves.toHaveLength(0)
+  })
+
   it('does not send a dependent inspection before its evidence upload has synced', async () => {
     const store = new MemoryDriverOutboxStore()
     await enqueueDriverMutation(store, {

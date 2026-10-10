@@ -57,6 +57,23 @@ export function buildTripTransitionUpdate(
   return data
 }
 
+function readDriverReplayPayloadHash(metadata: unknown): string | null {
+  if (!metadata) return null
+  let parsed = metadata
+  if (typeof metadata === 'string') {
+    try {
+      parsed = JSON.parse(metadata)
+    } catch {
+      return null
+    }
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null
+  const driverReplay = (parsed as Record<string, unknown>).driverReplay
+  if (!driverReplay || typeof driverReplay !== 'object' || Array.isArray(driverReplay)) return null
+  const payloadHash = (driverReplay as Record<string, unknown>).payloadHash
+  return typeof payloadHash === 'string' && payloadHash ? payloadHash : null
+}
+
 export class TripTransitionError extends Error {
   constructor(
     public code: 'NOT_FOUND' | 'INVALID_TRANSITION' | 'CONFLICT',
@@ -192,6 +209,13 @@ export async function transitionTrip(
     if (existing) {
       if (existing.trip.id !== input.tripId) {
         throw new TripTransitionError('CONFLICT', 'clientMutationId was already used for another trip')
+      }
+      const requestedDriverReplayHash = readDriverReplayPayloadHash(input.metadata)
+      if (requestedDriverReplayHash) {
+        const existingDriverReplayHash = readDriverReplayPayloadHash(existing.event.metadata)
+        if (existingDriverReplayHash !== requestedDriverReplayHash) {
+          throw new TripTransitionError('CONFLICT', 'clientMutationId has already been used for a different status update')
+        }
       }
       if (!repository) await recordOperationalTransition(input, existing)
       return { ...existing, replayed: true }

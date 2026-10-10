@@ -34,6 +34,7 @@ describe('offline driver mutation server idempotency', () => {
 
   it('deduplicates inspection retries atomically through the operational event ledger', () => {
     const route = source('src/app/api/inspections/route.ts')
+    const evidenceValidator = source('src/lib/domain/evidence/driver-evidence-server.ts')
     expect(route).toContain('clientMutationId')
     expect(route).toContain('db.operationalEvent.findUnique')
     expect(route).toContain('db.vehicleInspection.findUnique')
@@ -42,8 +43,8 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('replayed: true')
     expect(route).toContain("if (auth.roleName === ROLES.DRIVER && !mutationId)")
     expect(route).toContain('validateDriverEvidenceRefs')
-    expect(route).toContain('driver-evidence-upload:${evidenceMutationId}')
-    expect(route).toContain('event.actorId !== auth.userId')
+    expect(evidenceValidator).toContain('driver-evidence-upload:${evidenceMutationId}')
+    expect(evidenceValidator).toContain('event.actorId !== auth.userId')
   })
 
   it('binds inspection replay identity to the submitted inspection payload', () => {
@@ -53,6 +54,41 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('payloadHash: string')
     expect(route).toContain('metadata.payloadHash === input.payloadHash')
     expect(route).toContain('clientMutationId has already been used for a different inspection')
+  })
+
+  it('binds driver status replay to payload content and validates owned evidence', () => {
+    const route = source('src/app/api/trips/[id]/transition/route.ts')
+    expect(route).toContain("clientMutationId is required for driver status updates")
+    expect(route).toContain('driverReplay')
+    expect(route).toContain('payloadHash')
+    expect(route).toContain('validateDriverEvidenceRefs')
+    expect(route).toContain("auth.roleName === ROLES.DRIVER ? {} : rawUserMetadata")
+    expect(route).toContain('Driver status evidence only supports photo references')
+    expect(route).toContain('clientMutationId has already been used for a different status update')
+  })
+
+  it('binds driver expense replay to amount and receipt while validating owned evidence', () => {
+    const route = source('src/app/api/trips/[id]/expenses/route.ts')
+    expect(route).toContain("clientMutationId is required for driver expenses")
+    expect(route).toContain('receiptUrl')
+    expect(route).toContain('validateDriverEvidenceRefs')
+    expect(route).toContain('clientMutationId has already been used for a different expense')
+    expect(route).toContain('receiptUrl: normalizedReceiptUrl')
+    expect(route).toContain('normalizedAmount <= 0')
+  })
+
+  it('shares driver evidence ownership validation across inspections and trip writes', () => {
+    const helperPath = 'src/lib/domain/evidence/driver-evidence-server.ts'
+    expect(fs.existsSync(path.join(root, helperPath))).toBe(true)
+    if (!fs.existsSync(path.join(root, helperPath))) return
+
+    const helper = source(helperPath)
+    const inspections = source('src/app/api/inspections/route.ts')
+    expect(helper).toContain('driver-evidence-upload:')
+    expect(helper).toContain('event.actorId !== auth.userId')
+    expect(helper).toContain('metadata.driverId !== auth.driverId')
+    expect(helper).toContain('(metadata.tripId ?? null) !== tripId')
+    expect(inspections).toContain("from '@/lib/domain/evidence/driver-evidence-server'")
   })
 
   it('deduplicates driver evidence uploads and refuses mutation collisions', () => {
