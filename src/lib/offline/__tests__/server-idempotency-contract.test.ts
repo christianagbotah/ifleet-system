@@ -49,6 +49,8 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('replayed: true')
     expect(route).toContain("flag: 'wx'")
     expect(route).toContain('mimeTypes')
+    expect(route).toContain('contentHashes')
+    expect(route).toContain("createHash('sha256')")
     expect(route).toContain('clientMutationId has already been used for different evidence')
   })
 
