@@ -131,23 +131,25 @@ export function rateLimit(identifier: string, config: RateLimitConfig): RateLimi
       count: 1,
       resetAt: now + config.windowMs,
     }
+    if (created.count >= config.maxRequests) {
+      created.blockedUntil = now + blockDuration
+    }
     store.set(identifier, created)
     return {
       success: true,
       remaining: Math.max(0, config.maxRequests - 1),
-      resetAt: created.resetAt,
+      resetAt: created.blockedUntil ?? created.resetAt,
     }
   }
 
   entry.count += 1
 
-  if (entry.count > config.maxRequests) {
+  if (entry.count >= config.maxRequests) {
     entry.blockedUntil = now + blockDuration
     return {
-      success: false,
+      success: true,
       remaining: 0,
       resetAt: entry.blockedUntil,
-      retryAfter: Math.ceil(blockDuration / 1000),
     }
   }
 
