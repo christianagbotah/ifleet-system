@@ -1,18 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
-import { APP_NAME } from '@/lib/constants'
-import { getJwtSecretKey } from '@/lib/jwt-secret'
-import { canDemoAccessApi } from '@/lib/auth/demo-access'
+import { NextRequest, NextResponse } from 'next/server'
 
-// ${APP_NAME} — API Authentication Proxy
-//
-// Protects all /api/* routes except explicitly public or machine-auth routes.
-// Validates JWT tokens from Authorization headers using `jose` and injects
-// authenticated user context for downstream route handlers.
-//
-// Public client-portal GET routes are exempt from session auth at this layer,
-// but the route handlers independently verify the signed X-Portal-Token before
-// reading any customer data.
+import { canDemoAccessApi } from '@/lib/auth/demo-access'
+import { getJwtSecretKey } from '@/lib/jwt-secret'
+import { getClientIp, rateLimit, rateLimitHeaders, RATE_LIMITS } from '@/lib/rate-limit'
 
 let secretKey: Uint8Array | null = null
 function getSecretKey(): Uint8Array {
@@ -41,110 +32,27 @@ function isMachineAuthRoute(pathname: string): boolean {
   return /^\/api\/integrations\/load-orders\/[^/]+\/webhook$/.test(pathname)
 }
 
-const PUBLIC_GET_ONLY_ROUTES = [
+const PUBLIC_GET_EXACT_ROUTES = [
   '/api/settings',
   '/api/settings/channels',
-  '/api/public/waybills/',
   '/api/portal/public/client',
+]
+
+const PUBLIC_GET_PREFIX_ROUTES = [
+  '/api/public/waybills/',
   '/api/portal/public/shipment/',
 ]
 
+function isPublicGetRoute(pathname: string): boolean {
+  return PUBLIC_GET_EXACT_ROUTES.includes(pathname)
+    || PUBLIC_GET_PREFIX_ROUTES.some((prefix) => pathname.startsWith(prefix))
+}
+
 const NEXTAUTH_ROUTE = '/api/auth/'
-
-interface RateLimitEntry {
-  count: number
-  resetAt: number
-  blocked: boolean
-  blockedUntil?: number
-}
-
-interface RateLimitConfig {
-  maxRequests: number
-  windowMs: number
-  blockDurationMs?: number
-}
-
-interface RateLimitResult {
-  success: boolean
-  remaining: number
-  resetAt: number
-  retryAfter?: number
-}
-
-const GLOBAL_RATE_LIMIT: RateLimitConfig = {
-  maxRequests: 100,
-  windowMs: 60 * 1000,
-  blockDurationMs: 60 * 1000,
-}
 
 const RATE_LIMIT_EXEMPT_ROUTES = [
   '/api/scheduler/warmup',
 ]
-
-const rateLimitStore = new Map<string, RateLimitEntry>()
-const STORE_SIZE_SOFT_LIMIT = 50_000
-
-function getClientIp(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for')
-  if (forwarded) return forwarded.split(',')[0].trim()
-  return request.headers.get('x-real-ip') || 'unknown'
-}
-
-let lastCleanup = 0
-const CLEANUP_INTERVAL_MS = 60 * 1000
-
-function maybeCleanup(): void {
-  const now = Date.now()
-  if (now - lastCleanup < CLEANUP_INTERVAL_MS && rateLimitStore.size < STORE_SIZE_SOFT_LIMIT) return
-  lastCleanup = now
-
-  for (const [key, entry] of rateLimitStore.entries()) {
-    if (now >= entry.resetAt && !entry.blocked) {
-      rateLimitStore.delete(key)
-      continue
-    }
-    if (entry.blocked && entry.blockedUntil && now >= entry.blockedUntil) rateLimitStore.delete(key)
-  }
-}
-
-function rateLimit(ip: string, config: RateLimitConfig): RateLimitResult {
-  const now = Date.now()
-  const blockDuration = config.blockDurationMs ?? config.windowMs
-  maybeCleanup()
-
-  let entry = rateLimitStore.get(ip)
-  if (!entry) {
-    entry = { count: 1, resetAt: now + config.windowMs, blocked: false }
-    rateLimitStore.set(ip, entry)
-    return { success: true, remaining: config.maxRequests - 1, resetAt: entry.resetAt }
-  }
-
-  if (entry.blocked && entry.blockedUntil) {
-    if (now < entry.blockedUntil) {
-      const retryAfterSecs = Math.ceil((entry.blockedUntil - now) / 1000)
-      return { success: false, remaining: 0, resetAt: entry.resetAt, retryAfter: retryAfterSecs }
-    }
-    entry.blocked = false
-    entry.blockedUntil = undefined
-    entry.count = 0
-    entry.resetAt = now + config.windowMs
-  }
-
-  if (now >= entry.resetAt) {
-    entry.count = 0
-    entry.resetAt = now + config.windowMs
-  }
-
-  entry.count++
-  if (entry.count > config.maxRequests) {
-    entry.blocked = true
-    entry.blockedUntil = now + blockDuration
-    const retryAfterSecs = Math.ceil(blockDuration / 1000)
-    return { success: false, remaining: 0, resetAt: entry.resetAt, retryAfter: retryAfterSecs }
-  }
-
-  return { success: true, remaining: config.maxRequests - entry.count, resetAt: entry.resetAt }
-}
 
 const SECURITY_HEADERS: Record<string, string> = {
   'X-Content-Type-Options': 'nosniff',
@@ -165,7 +73,7 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith('/api/')) {
     const isExempt = RATE_LIMIT_EXEMPT_ROUTES.some((route) => pathname.startsWith(route))
     if (!isExempt) {
-      const result = rateLimit(clientIp, GLOBAL_RATE_LIMIT)
+      const result = rateLimit(`global:${clientIp}`, RATE_LIMITS.api)
       if (!result.success) {
         const response = NextResponse.json(
           { error: 'Too many requests. Please slow down.', retryAfter: result.retryAfter },
@@ -173,17 +81,16 @@ export async function proxy(request: NextRequest) {
             status: 429,
             headers: {
               'Content-Type': 'application/json',
-              'Retry-After': String(result.retryAfter ?? 60),
-              'X-RateLimit-Remaining': '0',
-              'X-RateLimit-Reset': String(result.resetAt),
+              ...rateLimitHeaders(result, RATE_LIMITS.api),
             },
           },
         )
         return applySecurityHeaders(response)
       }
 
+      request.headers.set('X-RateLimit-Limit', String(RATE_LIMITS.api.maxRequests))
       request.headers.set('X-RateLimit-Remaining', String(result.remaining))
-      request.headers.set('X-RateLimit-Reset', String(result.resetAt))
+      request.headers.set('X-RateLimit-Reset', String(Math.ceil(result.resetAt / 1000)))
     }
   }
 
@@ -239,7 +146,7 @@ export async function proxy(request: NextRequest) {
     return applySecurityHeaders(NextResponse.next())
   }
 
-  if (request.method === 'GET' && PUBLIC_GET_ONLY_ROUTES.some((route) => pathname.startsWith(route))) {
+  if (request.method === 'GET' && isPublicGetRoute(pathname)) {
     return applySecurityHeaders(NextResponse.next())
   }
 
