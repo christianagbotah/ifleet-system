@@ -42,6 +42,16 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('replayed: true')
   })
 
+  it('deduplicates driver evidence uploads and refuses mutation collisions', () => {
+    const route = source('src/app/api/upload/route.ts')
+    expect(route).toContain('driver-evidence-upload:')
+    expect(route).toContain('db.operationalEvent.findUnique')
+    expect(route).toContain('replayed: true')
+    expect(route).toContain("flag: 'wx'")
+    expect(route).toContain('mimeTypes')
+    expect(route).toContain('clientMutationId has already been used for different evidence')
+  })
+
   it('scopes driver inspection access to the linked driver, assigned truck and trip', () => {
     const route = source('src/app/api/inspections/route.ts')
     const summary = source('src/app/api/inspections/summary/route.ts')

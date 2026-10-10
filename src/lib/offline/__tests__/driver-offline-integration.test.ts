@@ -56,6 +56,8 @@ describe('driver offline integration', () => {
     expect(dialog).toContain('photos: evidenceUrls')
     expect(sync).toContain("bodyEncoding === 'multipart'")
     expect(sync).toContain('new FormData()')
+    expect(sync).toContain('for (const dependencyId of item.dependencyIds)')
+    expect(sync).toContain('await store.get(dependencyId)')
     expect(uploadRoute).toContain('clientMutationId')
     expect(uploadRoute).toContain('driver-evidence-upload:')
     expect(uploadRoute).toContain('replayed: true')

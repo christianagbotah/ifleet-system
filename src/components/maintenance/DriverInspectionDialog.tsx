@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { AlertTriangle, CheckCircle2, ClipboardCheck, Loader2, XCircle } from 'lucide-react'
+import { AlertTriangle, Camera, CheckCircle2, ClipboardCheck, Loader2, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,9 +9,13 @@ import { Dialog, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogTi
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { submitDriverMutation } from '@/lib/offline/driver-sync'
+import { DRIVER_EVIDENCE_ALLOWED_MIME_TYPES, driverEvidenceUrl } from '@/lib/offline/driver-evidence'
 import type { CheckItem } from '@/lib/api'
 
 type InspectionType = 'pre_trip' | 'post_trip'
+
+const MAX_EVIDENCE_FILES = 5
+const MAX_EVIDENCE_FILE_SIZE = 5 * 1024 * 1024
 
 const CHECK_GROUPS = [
   { category: 'Safety', items: ['Fire extinguisher', 'First aid kit', 'Warning triangles', 'Seat belts', 'Mirror condition'] },
@@ -70,8 +74,10 @@ export function DriverInspectionDialog({
   const [odometerReading, setOdometerReading] = React.useState('')
   const [overallNotes, setOverallNotes] = React.useState('')
   const [checkItems, setCheckItems] = React.useState<CheckItem[]>(() => buildCheckItems('pre_trip'))
+  const [evidenceFiles, setEvidenceFiles] = React.useState<File[]>([])
   const [saving, setSaving] = React.useState(false)
-  const mutationIdRef = React.useRef(crypto.randomUUID())
+  const inspectionMutationIdRef = React.useRef(crypto.randomUUID())
+  const evidenceMutationIdRef = React.useRef(crypto.randomUUID())
 
   React.useEffect(() => {
     if (!open) return
@@ -79,7 +85,9 @@ export function DriverInspectionDialog({
     setOdometerReading('')
     setOverallNotes('')
     setCheckItems(buildCheckItems('pre_trip'))
-    mutationIdRef.current = crypto.randomUUID()
+    setEvidenceFiles([])
+    inspectionMutationIdRef.current = crypto.randomUUID()
+    evidenceMutationIdRef.current = crypto.randomUUID()
   }, [open])
 
   const changeType = (value: InspectionType) => {
@@ -103,12 +111,55 @@ export function DriverInspectionDialog({
   const warningCount = checkItems.filter((item) => item.status === 'warning').length
   const failCount = checkItems.filter((item) => item.status === 'fail').length
 
+  const handleEvidenceSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(event.target.files ?? [])
+    event.target.value = ''
+    if (selected.length === 0) return
+    if (selected.length > MAX_EVIDENCE_FILES) {
+      toast.error(`Choose up to ${MAX_EVIDENCE_FILES} inspection photos`)
+      return
+    }
+    for (const file of selected) {
+      if (!DRIVER_EVIDENCE_ALLOWED_MIME_TYPES.includes(file.type as (typeof DRIVER_EVIDENCE_ALLOWED_MIME_TYPES)[number])) {
+        toast.error(`${file.name}: only JPG, PNG and WebP photos are supported`)
+        return
+      }
+      if (file.size > MAX_EVIDENCE_FILE_SIZE) {
+        toast.error(`${file.name}: maximum file size is 5MB`)
+        return
+      }
+    }
+    setEvidenceFiles(selected)
+  }
+
   const handleSubmit = async () => {
     setSaving(true)
     try {
+      const evidenceDependencyIds: string[] = []
+      const evidenceUrls: string[] = []
+
+      if (evidenceFiles.length > 0) {
+        const evidenceMutationId = evidenceMutationIdRef.current
+        for (const [index, file] of evidenceFiles.entries()) {
+          evidenceUrls.push(driverEvidenceUrl(evidenceMutationId, index, file.type))
+        }
+        await submitDriverMutation({
+          clientMutationId: evidenceMutationId,
+          kind: 'upload',
+          request: {
+            method: 'POST',
+            url: '/api/upload',
+            bodyEncoding: 'multipart',
+            body: { files: evidenceFiles, tripId },
+          },
+        })
+        evidenceDependencyIds.push(evidenceMutationId)
+      }
+
       const result = await submitDriverMutation({
-        clientMutationId: mutationIdRef.current,
+        clientMutationId: inspectionMutationIdRef.current,
         kind: 'inspection',
+        dependencyIds: evidenceDependencyIds,
         request: {
           method: 'POST',
           url: '/api/inspections',
@@ -121,15 +172,16 @@ export function DriverInspectionDialog({
             overallNotes,
             inspectorName,
             checkItems,
+            photos: evidenceUrls,
           },
         },
       })
 
-      mutationIdRef.current = crypto.randomUUID()
+      inspectionMutationIdRef.current = crypto.randomUUID()
+      evidenceMutationIdRef.current = crypto.randomUUID()
       toast.success(result.queued ? 'Inspection saved offline and queued for sync' : result.replayed ? 'Inspection already synced' : 'Inspection submitted')
       onOpenChange(false)
     } catch (error) {
-      mutationIdRef.current = crypto.randomUUID()
       toast.error(error instanceof Error ? error.message : 'Failed to submit inspection')
     } finally {
       setSaving(false)
@@ -168,6 +220,39 @@ export function DriverInspectionDialog({
                 <span className="text-red-600 font-semibold">{failCount} Fail</span>
               </div>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Camera className="h-4 w-4 text-amber-600" />
+                Inspection evidence
+              </label>
+              {evidenceFiles.length > 0 && (
+                <Button type="button" variant="ghost" size="sm" onClick={() => setEvidenceFiles([])} disabled={saving}>
+                  Clear
+                </Button>
+              )}
+            </div>
+            <Input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              capture="environment"
+              onChange={handleEvidenceSelection}
+              disabled={saving}
+            />
+            {evidenceFiles.length > 0 ? (
+              <div className="rounded-lg border bg-muted/30 p-2 space-y-1">
+                {evidenceFiles.map((file) => (
+                  <p key={`${file.name}-${file.lastModified}`} className="truncate text-xs text-muted-foreground">
+                    {file.name} · {(file.size / 1024 / 1024).toFixed(1)}MB
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">Optional: attach up to 5 JPG, PNG or WebP photos. They remain queued with the inspection when offline.</p>
+            )}
           </div>
 
           <Separator />

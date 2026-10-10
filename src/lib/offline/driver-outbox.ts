@@ -5,6 +5,7 @@ export interface DriverMutationRequest {
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   url: string
   body?: unknown
+  bodyEncoding?: 'json' | 'multipart'
   headers?: Record<string, string>
 }
 

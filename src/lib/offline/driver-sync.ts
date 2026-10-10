@@ -42,6 +42,28 @@ async function parseResponse(response: Response): Promise<unknown> {
   return response.json().catch(() => null)
 }
 
+function isBlobValue(value: unknown): value is Blob {
+  return typeof Blob !== 'undefined' && value instanceof Blob
+}
+
+function appendMultipartValue(formData: FormData, key: string, value: unknown) {
+  if (value === undefined || value === null) return
+  if (Array.isArray(value)) {
+    for (const item of value) appendMultipartValue(formData, key, item)
+    return
+  }
+  if (isBlobValue(value)) {
+    if (typeof File !== 'undefined' && value instanceof File) formData.append(key, value, value.name)
+    else formData.append(key, value)
+    return
+  }
+  if (typeof value === 'object') {
+    formData.append(key, JSON.stringify(value))
+    return
+  }
+  formData.append(key, String(value))
+}
+
 async function sendDriverMutation(item: DriverOutboxItem): Promise<DriverMutationSendResult & { data?: unknown }> {
   const token = useAuthStore.getState().getToken()
   if (!token) return { ok: false, status: 401, error: 'Authentication required' }
@@ -49,17 +71,32 @@ async function sendDriverMutation(item: DriverOutboxItem): Promise<DriverMutatio
   const headers: Record<string, string> = {
     ...(item.request.headers ?? {}),
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
   }
 
-  const body = item.request.body && typeof item.request.body === 'object' && !Array.isArray(item.request.body)
-    ? { ...(item.request.body as Record<string, unknown>), clientMutationId: item.clientMutationId }
-    : item.request.body
+  let requestBody: BodyInit | undefined
+  if (item.request.bodyEncoding === 'multipart') {
+    delete headers['Content-Type']
+    delete headers['content-type']
+    const formData = new FormData()
+    if (item.request.body && typeof item.request.body === 'object' && !Array.isArray(item.request.body)) {
+      for (const [key, value] of Object.entries(item.request.body as Record<string, unknown>)) {
+        appendMultipartValue(formData, key, value)
+      }
+    }
+    formData.append('clientMutationId', item.clientMutationId)
+    requestBody = formData
+  } else {
+    headers['Content-Type'] = 'application/json'
+    const body = item.request.body && typeof item.request.body === 'object' && !Array.isArray(item.request.body)
+      ? { ...(item.request.body as Record<string, unknown>), clientMutationId: item.clientMutationId }
+      : item.request.body
+    requestBody = body === undefined ? undefined : JSON.stringify(body)
+  }
 
   const response = await fetch(item.request.url, {
     method: item.request.method,
     headers,
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: requestBody,
   })
   const data = await parseResponse(response)
   const record = data && typeof data === 'object' ? data as Record<string, unknown> : null
@@ -81,6 +118,12 @@ export async function submitDriverMutation<T = unknown>(
 
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
     return { queued: true, replayed: false }
+  }
+
+  for (const dependencyId of item.dependencyIds) {
+    if (await store.get(dependencyId)) {
+      return { queued: true, replayed: false }
+    }
   }
 
   try {
