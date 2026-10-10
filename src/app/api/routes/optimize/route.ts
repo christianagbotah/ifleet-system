@@ -1,243 +1,207 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/auth-server'
-import { db } from '@/lib/db'
-import { getRoute, estimateRouteCost, calculateMultiStopRoute, findAlternativeRoutes, GHANA_CITIES } from '@/lib/ghana-routes'
+
+import { requirePermission, ROLES } from '@/lib/auth-server'
+import {
+  buildRouteAdvisory,
+  rankRouteCandidates,
+  ROUTE_ADVISORY_VERSION,
+  validateRouteAdvisoryInput,
+} from '@/lib/domain/route-intelligence/advisory'
+import { PrismaRouteAdvisoryRepository } from '@/lib/domain/route-intelligence/prisma-route-advisory-repository'
+import { GHANA_CITIES } from '@/lib/ghana-routes'
+
+const VALID_CITIES = new Set(GHANA_CITIES.map((city) => city.name))
+const MAX_RECOMMENDATIONS = 5
+
+function parseOptionalNumber(raw: string | null): number | undefined {
+  if (raw === null || raw.trim() === '') return undefined
+  return Number(raw)
+}
+
+function round(value: number, digits = 2): number {
+  const multiplier = 10 ** digits
+  return Math.round(value * multiplier) / multiplier
+}
+
+function canViewFleetRecommendations(auth: {
+  roleName: string
+  permissions: string[]
+}): boolean {
+  if (auth.roleName === ROLES.DRIVER) return false
+  if (auth.roleName === ROLES.ADMIN) return true
+  return auth.permissions.includes('trips.create')
+}
 
 export async function GET(request: NextRequest) {
-  // Auth check
-  const auth = requireAuth(request)
+  const auth = requirePermission(request, 'trips.view')
   if (auth instanceof NextResponse) return auth
 
   const { searchParams } = new URL(request.url)
-  const from = searchParams.get('from')
-  const to = searchParams.get('to')
-  const stopsParam = searchParams.get('stops')
-  const weightParam = searchParams.get('weight')
-  const fuelPriceParam = searchParams.get('fuelPrice')
+  const from = searchParams.get('from')?.trim() ?? ''
+  const to = searchParams.get('to')?.trim() ?? ''
+  const stops = (searchParams.get('stops') ?? '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+  const weightTonnes = parseOptionalNumber(searchParams.get('weight'))
+  const fuelPricePerLiter = parseOptionalNumber(searchParams.get('fuelPrice'))
 
-  // Validate required params
   if (!from || !to) {
     return NextResponse.json(
       { error: 'Missing required parameters: from and to are required' },
-      { status: 400 }
+      { status: 400 },
     )
   }
 
-  // Validate city names
-  const validCities = GHANA_CITIES.map(c => c.name)
-  if (!validCities.includes(from)) {
+  if (!VALID_CITIES.has(from)) {
+    return NextResponse.json({ error: `Invalid origin city: "${from}"` }, { status: 400 })
+  }
+  if (!VALID_CITIES.has(to)) {
+    return NextResponse.json({ error: `Invalid destination city: "${to}"` }, { status: 400 })
+  }
+  if (from === to) {
+    return NextResponse.json({ error: 'Origin and destination must be different' }, { status: 400 })
+  }
+  if (stops.some((stop) => !VALID_CITIES.has(stop))) {
+    const invalid = stops.find((stop) => !VALID_CITIES.has(stop))
+    return NextResponse.json({ error: `Invalid stop city: "${invalid}"` }, { status: 400 })
+  }
+
+  const validationErrors = validateRouteAdvisoryInput({
+    stops,
+    weightTonnes,
+    fuelPricePerLiter,
+  })
+  if (validationErrors.length > 0) {
     return NextResponse.json(
-      { error: `Invalid origin city: "${from}". Valid cities: ${validCities.join(', ')}` },
-      { status: 400 }
-    )
-  }
-  if (!validCities.includes(to)) {
-    return NextResponse.json(
-      { error: `Invalid destination city: "${to}". Valid cities: ${validCities.join(', ')}` },
-      { status: 400 }
+      { error: 'Invalid route advisory input', validationErrors },
+      { status: 400 },
     )
   }
 
-  const fuelPrice = fuelPriceParam ? parseFloat(fuelPriceParam) : 15
-  const weight = weightParam ? parseFloat(weightParam) : 0 // tonnes
+  const recommendationsAvailable = canViewFleetRecommendations(auth)
+  const repository = recommendationsAvailable ? new PrismaRouteAdvisoryRepository() : null
+  const evidence = repository
+    ? await repository.loadFleetEvidence({ origin: from, now: new Date() })
+    : { candidates: [], fleetFuelSamples: [] }
 
-  // Parse stops
-  let stops: string[] = []
-  if (stopsParam) {
-    stops = stopsParam.split(',').map(s => s.trim()).filter(Boolean)
-    for (const stop of stops) {
-      if (!validCities.includes(stop)) {
-        return NextResponse.json(
-          { error: `Invalid stop city: "${stop}". Valid cities: ${validCities.join(', ')}` },
-          { status: 400 }
-        )
-      }
-    }
-  }
+  const advisory = buildRouteAdvisory({
+    from,
+    to,
+    stops,
+    weightTonnes,
+    fuelPricePerLiter,
+    fleetFuelSamples: evidence.fleetFuelSamples,
+  })
 
-  // Calculate route
-  const allStops = [from, ...stops, to]
-  const routeResult = calculateMultiStopRoute(allStops, fuelPrice)
-
-  if (stops.length === 0) {
-    // Direct route — check if exists
-    const directRoute = getRoute(from, to)
-    if (!directRoute) {
+  if (!advisory.ok) {
+    if (advisory.error === 'invalid_input') {
       return NextResponse.json(
-        { error: `No direct route found from ${from} to ${to}` },
-        { status: 404 }
+        { error: 'Invalid route advisory input', validationErrors: advisory.validationErrors ?? [] },
+        { status: 400 },
       )
     }
-  } else if (!routeResult.valid) {
+
     return NextResponse.json(
-      { error: `No route data for legs: ${routeResult.missingRoutes.join(', ')}` },
-      { status: 404 }
+      {
+        error: 'Route data unavailable for one or more legs',
+        missingRoutes: advisory.missingRoutes,
+      },
+      { status: 422 },
     )
   }
 
-  // Find alternative routes (only for direct A→B)
-  let alternatives: Array<{ from: string; via: string; to: string; totalDistance: number; totalCost: number }> = []
-  if (stops.length === 0) {
-    const alts = findAlternativeRoutes(from, to, fuelPrice)
-    alternatives = alts.map(a => ({
-      from,
-      via: a.via,
-      to,
-      totalDistance: a.totalDistance,
-      totalCost: a.totalCost,
-    }))
-  }
+  const recommendations = recommendationsAvailable
+    ? rankRouteCandidates(evidence.candidates, evidence.fleetFuelSamples).slice(0, MAX_RECOMMENDATIONS)
+    : []
 
-  // Fetch available trucks (status = 'active') with driver info
-  const activeTrucks = await db.truck.findMany({
-    where: { status: 'active' },
-    include: {
-      driver: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          phone: true,
-        },
-      },
-    },
-    orderBy: { currentMileage: 'desc' },
-    take: 20,
+  const routeFuelCost = advisory.fuelEstimate.cost
+  const routeDistance = advisory.route.totalDistance
+  const fuelPer100km = routeDistance > 0
+    ? (advisory.fuelEstimate.liters / routeDistance) * 100
+    : 0
+  const unadjustedFuelPer100km = advisory.fuelEstimate.cargoAdjustmentFactor > 0
+    ? fuelPer100km / advisory.fuelEstimate.cargoAdjustmentFactor
+    : fuelPer100km
+  const weightAdjustment = Math.max(0, fuelPer100km - unadjustedFuelPer100km)
+
+  const legs = advisory.route.legs.map((leg) => {
+    const distanceShare = routeDistance > 0 ? leg.distanceKm / routeDistance : 0
+    const fuelCost = routeFuelCost * distanceShare
+    return {
+      ...leg,
+      fuelCost: round(fuelCost),
+      totalCost: round(fuelCost + leg.tollCost),
+    }
   })
-
-  // Get fuel logs for each truck to determine current location and fuel level
-  const truckData: Array<{
-    truckId: string
-    plateNumber: string
-    make: string
-    model: string
-    tankCapacity: number | null
-    driver: { id: string; firstName: string; lastName: string; phone: string } | null
-    currentLocation: string | null
-    distanceToPickup: number | null
-    estimatedFuelLevel: number | null
-    lastFuelDate: string | null
-  }> = []
-
-  for (const truck of activeTrucks) {
-    // Determine truck location from latest trip or fuel log
-    let currentLocation: string | null = null
-    let estimatedFuelLevel: number | null = null
-    let lastFuelDate: string | null = null
-
-    // Try to get location from latest trip
-    const latestTrip = await db.trip.findFirst({
-      where: { truckId: truck.id },
-      orderBy: { departureTime: 'desc' },
-      select: {
-        destination: true,
-        loadingLocation: true,
-        status: true,
-      },
-    })
-
-    if (latestTrip) {
-      // If trip is in transit or earlier, truck might be at destination or en route
-      if (latestTrip.status === 'completed' || latestTrip.status === 'arrived_depot') {
-        currentLocation = latestTrip.loadingLocation // returned to depot
-      } else {
-        currentLocation = latestTrip.destination
-      }
-    }
-
-    // Get latest fuel log for fuel level estimation
-    const latestFuelLog = await db.fuelLog.findFirst({
-      where: { truckId: truck.id },
-      orderBy: { date: 'desc' },
-      select: {
-        fuelLevelAfter: true,
-        date: true,
-      },
-    })
-
-    if (latestFuelLog) {
-      estimatedFuelLevel = latestFuelLog.fuelLevelAfter
-      lastFuelDate = latestFuelLog.date.toISOString()
-    }
-
-    // Calculate distance to pickup (from origin city)
-    let distanceToPickup: number | null = null
-    if (currentLocation && validCities.includes(currentLocation) && currentLocation !== from) {
-      const pickupRoute = getRoute(currentLocation, from)
-      if (pickupRoute) {
-        distanceToPickup = pickupRoute.distanceKm
-      }
-    } else if (currentLocation === from) {
-      distanceToPickup = 0
-    }
-
-    truckData.push({
-      truckId: truck.id,
-      plateNumber: truck.plateNumber,
-      make: truck.make,
-      model: truck.model,
-      tankCapacity: truck.tankCapacity,
-      driver: truck.driver,
-      currentLocation,
-      distanceToPickup,
-      estimatedFuelLevel,
-      lastFuelDate,
-    })
-  }
-
-  // Sort trucks: nearest first, then by fuel level
-  truckData.sort((a, b) => {
-    // Trucks with known location near the origin come first
-    const aDist = a.distanceToPickup ?? 9999
-    const bDist = b.distanceToPickup ?? 9999
-    if (aDist !== bDist) return aDist - bDist
-    // Then by fuel level (higher is better)
-    const aFuel = a.estimatedFuelLevel ?? 0
-    const bFuel = b.estimatedFuelLevel ?? 0
-    return bFuel - aFuel
-  })
-
-  // Build recommended trucks list
-  const recommendedTrucks = truckData.slice(0, 5).map(t => ({
-    truckId: t.truckId,
-    plateNumber: t.plateNumber,
-    make: t.make,
-    model: t.model,
-    driver: t.driver ? `${t.driver.firstName} ${t.driver.lastName}` : 'Unassigned',
-    currentLocation: t.currentLocation || 'Unknown',
-    distanceToPickup: t.distanceToPickup,
-    fuelLevel: t.estimatedFuelLevel,
-    tankCapacity: t.tankCapacity,
-  }))
-
-  // Calculate fuel estimate adjusted for weight
-  // Base: 32L/100km empty. Add 2L per tonne for loaded trucks
-  const baseFuelPer100km = 32
-  const weightPenalty = weight * 2 // extra L/100km per tonne
-  const adjustedFuelPer100km = baseFuelPer100km + weightPenalty
-  const totalFuelLiters = (routeResult.totalDistance * adjustedFuelPer100km) / 100
-  const fuelCostAtCurrentPrice = totalFuelLiters * fuelPrice
 
   return NextResponse.json({
+    advisoryVersion: ROUTE_ADVISORY_VERSION,
+    generatedAt: new Date().toISOString(),
+    recommendationsAvailable,
     route: {
       from,
       to,
       stops,
-      totalDistance: routeResult.totalDistance,
-      totalHours: routeResult.totalHours,
-      fuelCost: Math.round(routeResult.totalFuelCost * 100) / 100,
-      tollCost: routeResult.totalTolls,
-      totalCost: routeResult.totalCost,
-      legs: routeResult.legs.length > 1 ? routeResult.legs : undefined,
+      totalDistance: advisory.route.totalDistance,
+      totalHours: advisory.route.totalHours,
+      fuelCost: routeFuelCost,
+      tollCost: advisory.route.tollCost,
+      totalCost: round(routeFuelCost + advisory.route.tollCost),
+      legs: legs.length > 1 ? legs : undefined,
+      source: advisory.route.source,
+      dataQuality: advisory.route.dataQuality,
+      dataQualityGrade: advisory.route.dataQualityGrade,
     },
-    alternatives,
-    recommendedTrucks,
+    // Alternative-route costing remains disabled until it can use the same evidence
+    // hierarchy. Returning a static legacy comparison would overstate precision.
+    alternatives: [],
+    recommendedTrucks: recommendations.map((recommendation) => {
+      const { location } = recommendation
+      const hasCoordinates = location.latitude != null && location.longitude != null
+      return {
+        truckId: recommendation.tractorId,
+        plateNumber: recommendation.plateNumber,
+        make: recommendation.make,
+        model: recommendation.model,
+        driver: recommendation.driverName ?? 'Unassigned',
+        currentLocation: hasCoordinates
+          ? `${location.latitude!.toFixed(4)}, ${location.longitude!.toFixed(4)}`
+          : 'Location unavailable',
+        distanceToPickup: recommendation.deadheadKm,
+        // The old endpoint treated a last fuel fill as current tank level. That is
+        // not safe after subsequent travel, so these legacy fields remain unknown.
+        fuelLevel: null,
+        tankCapacity: null,
+        locationSource: location.source,
+        locationFreshness: location.freshness,
+        locationReceivedAt: location.receivedAt?.toISOString() ?? null,
+        confidence: recommendation.confidence,
+        dataQuality: recommendation.dataQuality,
+        dataQualityGrade: recommendation.dataQualityGrade,
+        reasons: recommendation.reasons,
+        warnings: recommendation.warnings,
+        fuelEvidenceSource: recommendation.fuelEvidence.source,
+      }
+    }),
     fuelEstimate: {
-      liters: Math.round(totalFuelLiters * 10) / 10,
-      costAtCurrentPrice: Math.round(fuelCostAtCurrentPrice * 100) / 100,
-      recommendedPricePerLiter: 15,
-      fuelPer100km: adjustedFuelPer100km,
-      weightAdjustment: weightPenalty,
+      liters: advisory.fuelEstimate.liters,
+      costAtCurrentPrice: advisory.fuelEstimate.cost,
+      // Kept temporarily for backwards-compatible UI parsing. The UI must label
+      // this as the supplied/default assumption, never a live market recommendation.
+      recommendedPricePerLiter: advisory.fuelEstimate.pricePerLiter,
+      pricePerLiter: advisory.fuelEstimate.pricePerLiter,
+      priceSource: advisory.fuelEstimate.priceSource,
+      source: advisory.fuelEstimate.source,
+      fuelPer100km: round(fuelPer100km, 1),
+      weightAdjustment: round(weightAdjustment, 1),
+      cargoAdjustmentFactor: advisory.fuelEstimate.cargoAdjustmentFactor,
+      dataQuality: advisory.fuelEstimate.dataQuality,
+      assumptions: advisory.fuelEstimate.assumptions,
     },
+    dataQuality: advisory.dataQuality,
+    dataQualityGrade: advisory.dataQualityGrade,
+    confidence: advisory.confidence,
+    notices: advisory.notices,
   })
 }
