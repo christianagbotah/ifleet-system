@@ -1,15 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { comparePassword } from '@/lib/auth-utils'
 import jwt from 'jsonwebtoken'
-import { createAuditLog, getClientIp } from '@/lib/audit'
-import { rateLimit, RATE_LIMITS, getClientIp as getClientIpFromRateLimit } from '@/lib/rate-limit'
+
+import { comparePassword } from '@/lib/auth-utils'
+import { createAuditLog } from '@/lib/audit'
+import { db } from '@/lib/db'
 import { JWT_SECRET } from '@/lib/jwt-secret'
+import {
+  getClientIp as getClientIpFromRateLimit,
+  getRateLimitStatus,
+  rateLimit,
+  rateLimitHeaders,
+  RATE_LIMITS,
+  resetRateLimit,
+} from '@/lib/rate-limit'
 import { loginSchema, parseBody } from '@/lib/schemas'
 
 const ENDPOINT_KEY = 'auth/login'
 
-// ── Login handler ────────────────────────────────────────────────────────
+function limitedResponse(
+  result: ReturnType<typeof rateLimit>,
+  config: (typeof RATE_LIMITS)[keyof typeof RATE_LIMITS],
+  message: string,
+) {
+  const retryAfterSecs = result.retryAfter ?? Math.ceil((config.blockDurationMs ?? config.windowMs) / 1000)
+  const retryAfterMin = Math.max(1, Math.ceil(retryAfterSecs / 60))
+
+  return NextResponse.json(
+    {
+      error: `${message} Please try again in ${retryAfterMin} minute${retryAfterMin !== 1 ? 's' : ''}.`,
+      retryAfter: retryAfterSecs,
+    },
+    {
+      status: 429,
+      headers: rateLimitHeaders({ ...result, retryAfter: retryAfterSecs }, config),
+    },
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,31 +44,38 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.errors.join(', ') }, { status: 400 })
     }
-    const { email, password } = parsed.data
 
-    // Rate limiting by client IP using shared utility
+    const { password } = parsed.data
+    const email = parsed.data.email
+    const normalizedEmail = email.trim().toLowerCase()
     const clientIp = getClientIpFromRateLimit(request)
-    const rateResult = rateLimit(`${clientIp}:${ENDPOINT_KEY}`, RATE_LIMITS.login)
 
-    if (!rateResult.success) {
-      const retryAfterSecs = rateResult.retryAfter ?? Math.ceil(RATE_LIMITS.login.blockDurationMs! / 1000)
-      const retryAfterMin = Math.ceil(retryAfterSecs / 60)
-
-      return NextResponse.json(
-        {
-          error: `Too many login attempts. Please try again in ${retryAfterMin} minute${retryAfterMin !== 1 ? 's' : ''}.`,
-          retryAfter: retryAfterSecs,
-        },
-        {
-          status: 429,
-          headers: { 'Retry-After': String(retryAfterSecs) },
-        }
-      )
+    // Coarse resource protection. This intentionally counts every login POST,
+    // while the stricter bucket below counts only failed credentials.
+    const requestKey = `${clientIp}:${ENDPOINT_KEY}:request`
+    const requestResult = rateLimit(requestKey, RATE_LIMITS.loginRequest)
+    if (!requestResult.success) {
+      return limitedResponse(requestResult, RATE_LIMITS.loginRequest, 'Too many login requests.')
     }
 
-    // Find user with role and optional driver
+    // Check a credential-failure bucket without consuming an attempt. Failed
+    // credentials increment this bucket later; successful auth clears it.
+    const failureKey = `${clientIp}:${ENDPOINT_KEY}:failure:${normalizedEmail}`
+    const failureStatus = getRateLimitStatus(failureKey, RATE_LIMITS.loginFailure)
+    if (!failureStatus.success) {
+      return limitedResponse(failureStatus, RATE_LIMITS.loginFailure, 'Too many login attempts.')
+    }
+
+    const recordCredentialFailure = () => {
+      const failed = rateLimit(failureKey, RATE_LIMITS.loginFailure)
+      if (!failed.success) {
+        return limitedResponse(failed, RATE_LIMITS.loginFailure, 'Too many login attempts.')
+      }
+      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
+    }
+
     const user = await db.user.findUnique({
-      where: { email },
+      where: { email: normalizedEmail },
       include: {
         role: { select: { name: true, permissions: true } },
         driver: { select: { id: true } },
@@ -50,7 +83,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (!user) {
-      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
+      return recordCredentialFailure()
     }
 
     if (!user.isActive) {
@@ -58,17 +91,16 @@ export async function POST(request: NextRequest) {
     }
 
     if (!user.password) {
-      return NextResponse.json({ error: 'No password set for this account' }, { status: 401 })
+      return recordCredentialFailure()
     }
 
-    // Compare password using bcrypt only
     const isPasswordValid = await comparePassword(password, user.password)
-
     if (!isPasswordValid) {
-      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
+      return recordCredentialFailure()
     }
 
-    // Parse permissions from JSON string
+    resetRateLimit(failureKey)
+
     let permissions: string[] = []
     try {
       permissions = JSON.parse(user.role.permissions)
@@ -76,13 +108,11 @@ export async function POST(request: NextRequest) {
       permissions = []
     }
 
-    // Update last login
     await db.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
     })
 
-    // Generate a JWT token for the client
     const tokenPayload = {
       userId: user.id,
       email: user.email,
@@ -107,7 +137,6 @@ export async function POST(request: NextRequest) {
       isActive: user.isActive,
     }
 
-    // Audit log: successful login (fire-and-forget)
     createAuditLog({
       userId: user.id,
       action: 'login',
