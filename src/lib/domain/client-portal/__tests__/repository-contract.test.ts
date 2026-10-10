@@ -17,6 +17,12 @@ describe('client portal repository contract', () => {
     expect(source).toContain('tripId: { in: activeTripIds }')
   })
 
+  it('keeps the newest bounded shipment history and restores chronological rendering order', () => {
+    expect(source).toContain('const [recentLocationHistory, liveStateRows]')
+    expect(source).toContain("orderBy: { timestamp: 'desc' }")
+    expect(source).toContain('const locationHistory = [...recentLocationHistory].reverse()')
+  })
+
   it('exposes only driver display names and omits driver PII/internal trip notes', () => {
     expect(source).toContain("driver: { select: { firstName: true, lastName: true } }")
     expect(source).not.toMatch(/driver:\s*\{\s*select:\s*\{[^}]*phone:\s*true/s)
