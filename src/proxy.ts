@@ -32,20 +32,21 @@ function isMachineAuthRoute(pathname: string): boolean {
   return /^\/api\/integrations\/load-orders\/[^/]+\/webhook$/.test(pathname)
 }
 
-const PUBLIC_GET_EXACT_ROUTES = [
-  '/api/settings',
-  '/api/settings/channels',
-  '/api/portal/public/client',
-]
-
-const PUBLIC_GET_PREFIX_ROUTES = [
-  '/api/public/waybills/',
-  '/api/portal/public/shipment/',
-]
+const PUBLIC_GET_ONLY_ROUTES = {
+  exact: [
+    '/api/settings',
+    '/api/settings/channels',
+    '/api/portal/public/client',
+  ],
+  prefixes: [
+    '/api/public/waybills/',
+    '/api/portal/public/shipment/',
+  ],
+}
 
 function isPublicGetRoute(pathname: string): boolean {
-  return PUBLIC_GET_EXACT_ROUTES.includes(pathname)
-    || PUBLIC_GET_PREFIX_ROUTES.some((prefix) => pathname.startsWith(prefix))
+  return PUBLIC_GET_ONLY_ROUTES.exact.includes(pathname)
+    || PUBLIC_GET_ONLY_ROUTES.prefixes.some((prefix) => pathname.startsWith(prefix))
 }
 
 const NEXTAUTH_ROUTE = '/api/auth/'
