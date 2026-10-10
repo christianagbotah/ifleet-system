@@ -15,6 +15,8 @@ const ACTIVE_STATUSES = [
   'arrived_depot',
 ] as const
 
+const PENDING_STATUSES = ['scheduled', 'loading', 'loaded'] as const
+
 const STATUS_ORDER: Record<string, number> = {
   scheduled: 0,
   loading: 1,
@@ -139,7 +141,7 @@ export async function loadClientPortalDashboard(clientId: string, now = new Date
     }),
     db.trip.count({ where: { clientId } }),
     db.trip.count({ where: { clientId, status: 'completed' } }),
-    db.trip.count({ where: { clientId, status: { in: [...ACTIVE_STATUSES] } } }),
+    db.trip.count({ where: { clientId, status: { in: [...PENDING_STATUSES] } } }),
     db.trip.aggregate({ where: { clientId }, _sum: { totalRevenue: true } }),
   ])
 
@@ -148,6 +150,7 @@ export async function loadClientPortalDashboard(clientId: string, now = new Date
     ? await db.truckLocation.findMany({
         where: { tripId: { in: activeTripIds } },
         orderBy: { timestamp: 'desc' },
+        distinct: ['tripId'],
         select: {
           tripId: true,
           latitude: true,
@@ -158,11 +161,7 @@ export async function loadClientPortalDashboard(clientId: string, now = new Date
       })
     : []
 
-  const latestLocationByTrip = new Map<string, (typeof locationRows)[number]>()
-  for (const row of locationRows) {
-    if (!latestLocationByTrip.has(row.tripId)) latestLocationByTrip.set(row.tripId, row)
-  }
-
+  const latestLocationByTrip = new Map(locationRows.map((row) => [row.tripId, row]))
   const totalRevenue = money(revenue._sum.totalRevenue)
 
   return {
