@@ -34,6 +34,29 @@ describe('driver offline integration', () => {
     expect(form).toContain("kind: 'fuel'")
   })
 
+  it('queues status evidence before the dependent driver status update', () => {
+    const dialogPath = 'src/components/trips/DriverStatusUpdateDialog.tsx'
+    expect(fs.existsSync(path.join(root, dialogPath))).toBe(true)
+    if (!fs.existsSync(path.join(root, dialogPath))) return
+
+    const dialog = source(dialogPath)
+    expect(dialog).toContain("kind: 'upload'")
+    expect(dialog).toContain("bodyEncoding: 'multipart'")
+    expect(dialog).toContain('driverEvidenceUrl')
+    expect(dialog).toContain("kind: 'status'")
+    expect(dialog).toContain('dependencyIds: evidenceDependencyIds')
+    expect(dialog).toContain('photos: evidenceUrls')
+  })
+
+  it('queues an expense receipt before the dependent expense mutation', () => {
+    const controller = source('src/components/trips/DriverTripController.tsx')
+    expect(controller).toContain('expReceiptFile')
+    expect(controller).toContain("kind: 'upload'")
+    expect(controller).toContain("bodyEncoding: 'multipart'")
+    expect(controller).toContain('receiptUrl')
+    expect(controller).toContain('dependencyIds: receiptDependencyIds')
+  })
+
   it('routes driver-created inspections through an offline-safe trip dialog', () => {
     const dialog = source('src/components/maintenance/DriverInspectionDialog.tsx')
     const controller = source('src/components/trips/DriverTripController.tsx')

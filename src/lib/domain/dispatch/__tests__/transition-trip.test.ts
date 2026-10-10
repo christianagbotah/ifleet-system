@@ -75,6 +75,41 @@ describe('transitionTrip', () => {
     expect(calls).toHaveLength(0)
   })
 
+  it('rejects a replay mutation id when the driver status payload fingerprint changes', async () => {
+    let reads = 0
+    let commits = 0
+    const repo: TransitionRepository = {
+      async findEventByClientMutationId() {
+        return {
+          trip: { id: 'trip-1', status: 'assigned' },
+          event: {
+            id: 'event-1',
+            fromStatus: 'scheduled',
+            toStatus: 'assigned',
+            metadata: JSON.stringify({ driverReplay: { payloadHash: 'original-hash' } }),
+          },
+        }
+      },
+      async getTrip() { reads += 1; return { id: 'trip-1', status: 'scheduled', driverId: 'driver-1' } },
+      async commitTransition(input) { commits += 1; throw new Error(`must not commit ${input.tripId}`) },
+    }
+
+    await expect(
+      transitionTrip({
+        tripId: 'trip-1',
+        to: 'assigned',
+        actorId: 'driver-user-1',
+        clientMutationId: 'transition-1',
+        metadata: { driverReplay: { payloadHash: 'changed-hash' } },
+      }, repo),
+    ).rejects.toMatchObject({
+      code: 'CONFLICT',
+      message: 'clientMutationId has already been used for a different status update',
+    })
+    expect(reads).toBe(0)
+    expect(commits).toBe(0)
+  })
+
   it('replays a prior client mutation without reading or changing the current trip again', async () => {
     let reads = 0
     let commits = 0
