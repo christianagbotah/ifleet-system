@@ -1,4 +1,4 @@
-export type DriverMutationKind = 'pod' | 'expense' | 'fuel' | 'status' | 'upload'
+export type DriverMutationKind = 'pod' | 'expense' | 'fuel' | 'status' | 'inspection' | 'upload'
 export type DriverMutationStatus = 'pending' | 'failed_permanent'
 
 export interface DriverMutationRequest {
