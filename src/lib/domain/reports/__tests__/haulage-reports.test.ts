@@ -58,6 +58,25 @@ describe('Ghana haulage report domain', () => {
     expect(result.totals).not.toHaveProperty('revenue')
   })
 
+  it('redacts settlement-specific money fields for non-financial roles', () => {
+    const settlementFacts: HaulageReportFact[] = [
+      {
+        id: 'haulier-1', family: 'haulier_settlement', occurredAt: '2026-10-05T10:00:00Z',
+        values: { payee: 'Owner A', baseFreight: 12000, detentionAmount: 400, extrasAmount: 250, shortageDeduction: 100, netPayable: 12550 },
+      },
+      {
+        id: 'driver-settlement-1', family: 'driver_settlement', occurredAt: '2026-10-05T11:00:00Z',
+        values: { driver: 'Driver A', grossEarnings: 3000, fuelDeductions: 200, expenseDeductions: 150, bonusAmount: 300, netPay: 2950 },
+      },
+    ]
+
+    const haulier = buildHaulageReport({ family: 'haulier_settlement', facts: settlementFacts, filters: {}, canViewFinancials: false })
+    const driver = buildHaulageReport({ family: 'driver_settlement', facts: settlementFacts, filters: {}, canViewFinancials: false })
+
+    expect(haulier.rows[0]).toEqual({ payee: 'Owner A' })
+    expect(driver.rows[0]).toEqual({ driver: 'Driver A' })
+  })
+
   it('keeps screen rows and export rows/totals identical', () => {
     const result = buildHaulageReport({ family: 'trip_operations', facts, filters: {}, canViewFinancials: true })
     const exported = toHaulageExportTable(result)

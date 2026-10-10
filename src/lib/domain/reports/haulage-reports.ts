@@ -55,6 +55,8 @@ const FINANCIAL_FIELDS = new Set([
   'revenue', 'cost', 'margin', 'profit', 'netProfit', 'totalRevenue', 'totalCost',
   'fuelCost', 'maintenanceCost', 'expenseAmount', 'settlementAmount', 'netPay',
   'grossEarnings', 'deductions', 'rateAmount', 'offeredRate', 'amount',
+  'baseFreight', 'detentionAmount', 'extrasAmount', 'shortageDeduction', 'netPayable',
+  'fuelDeductions', 'expenseDeductions', 'bonusAmount',
 ])
 
 function normalized(value: string | null | undefined) {
