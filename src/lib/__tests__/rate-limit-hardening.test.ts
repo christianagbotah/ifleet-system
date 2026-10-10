@@ -38,6 +38,22 @@ describe('rate limit hardening', () => {
     expect(getRateLimitStatus(key, config)).toMatchObject({ success: true, remaining: 2 })
   })
 
+  it('arms the block when the final allowed attempt is consumed so the next request is rejected before work', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-10-10T18:00:00.000Z'))
+    const key = `test-threshold-${crypto.randomUUID()}`
+    const config = { maxRequests: 2, windowMs: 60_000, blockDurationMs: 120_000 }
+
+    expect(rateLimit(key, config)).toMatchObject({ success: true, remaining: 1 })
+    expect(rateLimit(key, config)).toMatchObject({ success: true, remaining: 0 })
+
+    expect(getRateLimitStatus(key, config)).toMatchObject({
+      success: false,
+      remaining: 0,
+      retryAfter: 120,
+    })
+  })
+
   it('unblocks after block expiry', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-10-10T18:00:00.000Z'))
