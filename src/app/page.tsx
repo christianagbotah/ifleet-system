@@ -222,6 +222,10 @@ const FuelAnomalyDashboard = dynamic(
   () => import('@/components/fuel/FuelAnomalyDashboard').then(m => ({ default: m.FuelAnomalyDashboard })),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const ModelHealthView = dynamic(
+  () => import('@/components/ai/ModelHealthView').then(m => ({ default: m.ModelHealthView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const RouteOptimizerView = dynamic(
   () => import('@/components/operations/RouteOptimizerView').then(m => ({ default: m.RouteOptimizerView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -397,6 +401,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <FuelAnalyticsView />
     case 'fuel-anomaly':
       return <FuelAnomalyDashboard />
+    case 'model-health':
+      return <ModelHealthView />
     case 'fuel-budgets':
       return <FuelBudgetView />
     case 'tracking':
