@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import type { LoadOrderDraft } from '@/lib/domain/orders/load-order'
 
 function dateOrNull(value: Date | string | null | undefined): Date | null {
@@ -20,7 +21,7 @@ export async function persistImportedLoadOrder(
   if (!shipper?.isActive) throw new Error('active_shipper_profile_not_found')
   if (!loadingPoint?.isActive) throw new Error('active_loading_point_not_found')
 
-  return db.$transaction(async (tx) => {
+  const createdOrder = await db.$transaction(async (tx) => {
     const created = await tx.loadOrder.create({
       data: {
         orderNumber: `LDO-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`,
@@ -84,6 +85,21 @@ export async function persistImportedLoadOrder(
       })),
     })
 
-    return { id: created.id }
+    return { id: created.id, createdAt: created.createdAt }
   }, { isolationLevel: 'Serializable' })
+
+  await appendOperationalEvent({
+    idempotencyKey: `load-order-created:${createdOrder.id}`,
+    eventKey: 'load-order.created',
+    type: 'load-order.created',
+    entityType: 'LoadOrder',
+    entityId: createdOrder.id,
+    actorType: 'user',
+    actorId: context.createdBy,
+    occurredAt: createdOrder.createdAt,
+    source: context.sourceType,
+    metadata: { externalReference: draft.externalReference ?? null, shipperProfileId: draft.shipperProfileId, loadingPointId: draft.loadingPointId },
+  })
+
+  return { id: createdOrder.id }
 }

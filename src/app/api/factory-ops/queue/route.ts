@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import {
   createQueueService,
   FactoryOpsError,
@@ -165,6 +166,19 @@ export async function POST(request: NextRequest) {
       details: { siteId, truckId, tripId, legacyQueueId: created.legacyQueueId, position: created.position },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `factory-queue:${created.id}:joined`,
+      eventKey: 'factory.queue_joined',
+      type: 'factory.queue',
+      entityType: 'FactoryQueueEntry',
+      entityId: created.id,
+      tripId,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: created.joinedAt,
+      source: 'factory-ops',
+      metadata: { siteId, truckId, queueType, position: created.position },
+    })
 
     return NextResponse.json(created, { status: 201 })
   } catch (error) {
@@ -205,6 +219,19 @@ export async function PUT(request: NextRequest) {
       details: { action, status: result.status },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `factory-queue:${queueId}:${action}:${result.updatedAt instanceof Date ? result.updatedAt.toISOString() : String(result.updatedAt ?? result.status)}`,
+      eventKey: `factory.queue_${action}`,
+      type: 'factory.queue',
+      entityType: 'FactoryQueueEntry',
+      entityId: queueId,
+      tripId: result.tripId,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: result.updatedAt instanceof Date ? result.updatedAt : new Date(),
+      source: 'factory-ops',
+      metadata: { action, status: result.status, bayId: result.bayId ?? null, actualWait: result.actualWait ?? null, detentionMinutes: result.detentionMinutes ?? null },
+    })
 
     return NextResponse.json(result)
   } catch (error) {

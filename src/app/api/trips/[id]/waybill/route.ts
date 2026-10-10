@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import {
   finalizeWaybill,
   supersedeWaybill,
@@ -290,6 +291,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       details: { tripId: id, waybillNumber: finalized.domain.waybillNumber, version: finalized.domain.version },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `waybill-version:${finalized.root.id}:${finalized.domain.version}`,
+      eventKey: 'waybill.finalized',
+      type: 'waybill.finalized',
+      entityType: 'ElectronicWaybill',
+      entityId: finalized.root.id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: finalized.domain.finalizedAt,
+      source: 'electronic-waybill',
+      metadata: { waybillNumber: finalized.domain.waybillNumber, version: finalized.domain.version, contentHash: finalized.domain.contentHash },
+    })
 
     return NextResponse.json({ electronicWaybill: finalized.root, version: finalized.domain }, { status: 201 })
   } catch (error) {
@@ -378,6 +392,19 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       details: { tripId: id, version: corrected.domain.version, correctionReason },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `waybill-version:${corrected.root.id}:${corrected.domain.version}`,
+      eventKey: 'waybill.corrected',
+      type: 'waybill.corrected',
+      entityType: 'ElectronicWaybill',
+      entityId: corrected.root.id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: corrected.domain.finalizedAt,
+      source: 'electronic-waybill',
+      metadata: { version: corrected.domain.version, correctionReason, contentHash: corrected.domain.contentHash, supersedesVersion: corrected.domain.supersedesVersion },
+    })
 
     return NextResponse.json({ electronicWaybill: corrected.root, version: corrected.version })
   } catch (error) {

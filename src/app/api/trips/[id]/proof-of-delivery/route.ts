@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { isDriverOrAdmin, requireAuth, ROLES } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import { planPodCorrection } from '@/lib/domain/delivery/pod-correction'
 import {
   buildPodFingerprint,
@@ -416,6 +417,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       else throw error
     }
 
+    await appendOperationalEvent({
+      idempotencyKey: `pod:${result.proof.id}`,
+      eventKey: 'delivery.pod_submitted',
+      type: 'delivery.proof_of_delivery',
+      entityType: 'ProofOfDelivery',
+      entityId: result.proof.id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: result.proof.completedAt,
+      latitude: result.proof.latitude,
+      longitude: result.proof.longitude,
+      evidenceRefs: result.proof.evidence.map((item) => item.ref),
+      source: 'proof-of-delivery',
+      metadata: { targetKind: target.kind, targetId: target.id, receivedQty: result.proof.receivedQty, damagedQty: result.proof.damagedQty, rejectedQty: result.proof.rejectedQty, replayed: result.replayed },
+    })
     return NextResponse.json({ proof: driverSafe({ ...result.proof, evidence: result.proof.evidence }), replayed: result.replayed }, { status: result.replayed ? 200 : 201 })
   } catch (error) {
     if (error instanceof PodSubmissionError) {
@@ -610,6 +627,22 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       }
     }, { isolationLevel: 'Serializable' })
 
+    await appendOperationalEvent({
+      idempotencyKey: `pod:${result.proof.id}`,
+      eventKey: 'delivery.pod_corrected',
+      type: 'delivery.proof_of_delivery_corrected',
+      entityType: 'ProofOfDelivery',
+      entityId: result.proof.id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: result.proof.completedAt,
+      latitude: result.proof.latitude,
+      longitude: result.proof.longitude,
+      evidenceRefs: result.proof.evidence.map((item: any) => item.storageRef ?? item.ref).filter(Boolean),
+      source: 'proof-of-delivery',
+      metadata: { supersedesPodId: result.proof.supersedesId, correctionReason: result.proof.correctionReason, financialReviewRequired: result.financialReviewRequired },
+    })
     return NextResponse.json({
       proof: driverSafe(result.proof),
       replayed: result.replayed,

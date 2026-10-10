@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import {
   allocateLoadOrderQuantity,
   validateLoadOrder,
@@ -226,6 +227,18 @@ export async function POST(request: NextRequest) {
     }, { isolationLevel: 'Serializable' })
 
     createAuditLog({ userId: auth.userId, action: 'create', entity: 'LoadOrder', entityId: order.id, details: { orderNumber: order.orderNumber, externalReference: order.externalReference, lines: order.LoadOrderLine.length, destinations: order.LoadOrderDestination.length }, ipAddress: getClientIp(request) }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `load-order-created:${order.id}`,
+      eventKey: 'load-order.created',
+      type: 'load-order.created',
+      entityType: 'LoadOrder',
+      entityId: order.id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: order.createdAt,
+      source: 'manual',
+      metadata: { orderNumber: order.orderNumber, externalReference: order.externalReference, shipperProfileId: order.shipperProfileId, loadingPointId: order.loadingPointId },
+    })
     return NextResponse.json(withAllocation(order), { status: 201 })
   } catch (error) {
     console.error('Load order create error:', error)

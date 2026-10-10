@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { db } from '@/lib/db'
+import { appendOperationalEvent } from '@/lib/domain/events/operational-event'
 import { storedComplianceRuleToDomain } from '@/lib/domain/compliance/rule-set-input'
 import { calculateWeightMetrics, selectEffectiveWeighing, type WeighingSnapshot, type WeighingStage } from '@/lib/domain/weighing/calculations'
 import { evaluateWeightClearance, type AxleReadingInput, type WeightClearanceRule } from '@/lib/domain/weighing/clearance'
@@ -335,6 +336,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
       ipAddress: getClientIp(request),
     }).catch(() => {})
+    await appendOperationalEvent({
+      idempotencyKey: `weighing-event:${created.id}`,
+      eventKey: `weighing.${stage.toLowerCase()}`,
+      type: supersedesEventId ? 'weighing.corrected' : 'weighing.recorded',
+      entityType: 'WeighingEvent',
+      entityId: created.id,
+      tripId: id,
+      actorType: 'user',
+      actorId: auth.userId,
+      occurredAt: created.recordedAt,
+      latitude: created.latitude,
+      longitude: created.longitude,
+      evidenceRefs: created.evidenceUrl ? [created.evidenceUrl] : [],
+      source: `weighing:${source.toLowerCase()}`,
+      metadata: { stage, clearancePassed: clearance?.passed ?? null, grossWeightKg: created.grossWeightKg, tareWeightKg: created.tareWeightKg, netWeightKg: created.netWeightKg, supersedesWeighingEventId: supersedesEventId },
+    })
 
     return NextResponse.json({ data: created, clearance, ruleSets: ruleSetSnapshot }, { status: 201 })
   } catch (error) {
