@@ -6,10 +6,10 @@ const root = process.cwd()
 const source = (relative: string) => fs.readFileSync(path.join(root, relative), 'utf8')
 
 describe('offline driver mutation server idempotency', () => {
-  it('stores client mutation identities on expense, fuel, trip event and inspection records', () => {
-    const schema = source('prisma/schema.prisma')
-    const matches = schema.match(/clientMutationId\s+String\?\s+@unique/g) ?? []
-    expect(matches.length).toBeGreaterThanOrEqual(4)
+  it('provides a durable unique idempotency ledger for cross-cutting mutations', () => {
+    const schema = source('prisma/models/operational-events.prisma')
+    expect(schema).toContain('idempotencyKey    String   @unique')
+    expect(schema).toContain('entityId          String')
   })
 
   it('deduplicates trip expense retries by client mutation id', () => {
@@ -32,11 +32,13 @@ describe('offline driver mutation server idempotency', () => {
     expect(service).toContain('findEventByClientMutationId')
   })
 
-  it('deduplicates inspection retries by client mutation id', () => {
+  it('deduplicates inspection retries atomically through the operational event ledger', () => {
     const route = source('src/app/api/inspections/route.ts')
     expect(route).toContain('clientMutationId')
+    expect(route).toContain('db.operationalEvent.findUnique')
     expect(route).toContain('db.vehicleInspection.findUnique')
-    expect(route).toContain('clientMutationId: mutationId')
+    expect(route).toContain('driver-inspection:${mutationId}')
+    expect(route).toContain('db.$transaction')
     expect(route).toContain('replayed: true')
   })
 })
