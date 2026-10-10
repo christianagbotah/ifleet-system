@@ -12,6 +12,7 @@ import {
 import { createVideoAccessAudit } from '@/lib/domain/video/audit'
 import type { CameraPrivacyClass } from '@/lib/domain/video/capabilities'
 import { resolveVideoProvider } from '@/lib/domain/video/provider-resolver'
+import { parsePolicyList } from '@/lib/domain/video/privacy-policy'
 
 interface RouteContext {
   params: Promise<{ deviceId: string }>
@@ -96,6 +97,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
       clientId: null,
       supportsLive: device.videoRetentionPolicy.supportsLive,
       supportsPlayback: device.videoRetentionPolicy.supportsPlayback,
+      allowedRoles: parsePolicyList(device.videoRetentionPolicy.allowedRoles),
+      allowedChannelKeys: parsePolicyList(device.videoRetentionPolicy.allowedChannels),
     },
     action: 'live',
     provider,

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { preflightVideoRole, type VideoAccessActor } from '@/lib/domain/video/access'
+import { parsePolicyList } from '@/lib/domain/video/privacy-policy'
 
 interface RouteContext {
   params: Promise<{ deviceId: string }>
@@ -52,6 +53,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
           supportsLive: true,
           supportsPlayback: true,
           supportsSnapshot: true,
+          allowedRoles: true,
+          allowedChannels: true,
         },
       },
     },
@@ -61,11 +64,28 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: 'Video is unavailable.' }, { status: 404 })
   }
 
+  const allowedRoles = parsePolicyList(device.videoRetentionPolicy.allowedRoles)
+  if (allowedRoles != null && !allowedRoles.includes(auth.roleName)) {
+    return NextResponse.json({ error: 'Video access is not permitted.' }, { status: 403 })
+  }
+  const allowedChannels = parsePolicyList(device.videoRetentionPolicy.allowedChannels)
+  const canViewDriver = auth.roleName === 'Admin' || auth.permissions.includes('video.driver.view')
+  const cameraChannels = device.cameraChannels.filter((channel) => {
+    if (allowedChannels != null && !allowedChannels.includes(channel.key)) return false
+    if (channel.privacyClass === 'driver' && !canViewDriver) return false
+    return true
+  })
+
   return NextResponse.json({
     deviceId: device.id,
     name: device.name,
     provider: device.provider,
-    cameraChannels: device.cameraChannels,
-    videoRetentionPolicy: device.videoRetentionPolicy,
+    cameraChannels,
+    videoRetentionPolicy: {
+      videoEnabled: device.videoRetentionPolicy.videoEnabled,
+      supportsLive: device.videoRetentionPolicy.supportsLive,
+      supportsPlayback: device.videoRetentionPolicy.supportsPlayback,
+      supportsSnapshot: device.videoRetentionPolicy.supportsSnapshot,
+    },
   })
 }

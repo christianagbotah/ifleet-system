@@ -19,3 +19,8 @@ CRON_TZ=Africa/Accra
 # Daily at 02:15 Africa/Accra. The compactor is idempotent and writes summaries
 # before deleting only redundant interior location points.
 15 2 * * * cd /home/lightworld/webapps/ifleetpro && NODE_ENV=production /root/.bun/bin/bun .next/standalone/scripts/compact-location-history.ts >> /home/lightworld/logs/ifleetpro-telematics-compaction.log 2>&1
+
+# ── iFleetPro video retention cleanup ────────────────────────
+# Daily at 02:45 Africa/Accra. The script defaults to dry-run; this scheduled
+# production invocation explicitly applies retention to iFleetPro-managed copies only.
+45 2 * * * cd /home/lightworld/webapps/ifleetpro && NODE_ENV=production /root/.bun/bin/bun scripts/video-retention-cleanup.ts --apply >> /home/lightworld/logs/ifleetpro-video-retention.log 2>&1

@@ -10,6 +10,8 @@ export type VideoAccessReason =
   | 'unavailable'
   | 'provider_session_invalid'
   | 'provider_unavailable'
+  | 'policy_role_restricted'
+  | 'policy_channel_restricted'
 
 export interface VideoAccessActor {
   userId: string
@@ -28,6 +30,8 @@ export interface VideoAccessResource {
   clientId: string | null
   supportsLive: boolean
   supportsPlayback: boolean
+  allowedRoles?: string[] | null
+  allowedChannelKeys?: string[] | null
 }
 
 export type VideoAccessDecision =
@@ -77,6 +81,14 @@ export function authorizeVideoAccess(
 
   if (actor.clientId && resource.clientId && actor.clientId !== resource.clientId) {
     return { allowed: false, reason: 'resource_scope_mismatch' }
+  }
+
+  if (resource.allowedRoles != null && !resource.allowedRoles.includes(actor.roleName)) {
+    return { allowed: false, reason: 'policy_role_restricted' }
+  }
+
+  if (resource.allowedChannelKeys != null && !resource.allowedChannelKeys.includes(resource.channelKey)) {
+    return { allowed: false, reason: 'policy_channel_restricted' }
   }
 
   const capabilityAvailable = action === 'live' ? resource.supportsLive : resource.supportsPlayback

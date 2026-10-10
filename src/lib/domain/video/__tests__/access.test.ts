@@ -90,6 +90,30 @@ describe('video access policy', () => {
     )).toMatchObject({ allowed: false, reason: 'resource_scope_mismatch' })
   })
 
+  it('enforces configured allowed roles before provider access', () => {
+    const restricted = { ...roadCamera, allowedRoles: ['Admin'] } as VideoAccessResource
+    expect(authorizeVideoAccess(manager, restricted, 'live')).toMatchObject({
+      allowed: false,
+      reason: 'policy_role_restricted',
+    })
+  })
+
+  it('enforces configured allowed channels before provider access', () => {
+    const restricted = { ...roadCamera, allowedChannelKeys: ['rear'] } as VideoAccessResource
+    expect(authorizeVideoAccess(manager, restricted, 'live')).toMatchObject({
+      allowed: false,
+      reason: 'policy_channel_restricted',
+    })
+  })
+
+  it('treats an explicitly empty allowed-channel policy as deny-all', () => {
+    const restricted = { ...roadCamera, allowedChannelKeys: [] } as VideoAccessResource
+    expect(authorizeVideoAccess(manager, restricted, 'live')).toMatchObject({
+      allowed: false,
+      reason: 'policy_channel_restricted',
+    })
+  })
+
   it('returns unavailable when the requested capability is disabled', () => {
     expect(authorizeVideoAccess(manager, { ...roadCamera, supportsLive: false }, 'live')).toMatchObject({
       allowed: false,

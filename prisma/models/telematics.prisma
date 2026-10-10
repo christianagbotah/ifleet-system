@@ -17,6 +17,7 @@ model TelematicsDevice {
   cameraChannels       CameraChannel[]
   videoRetentionPolicy VideoRetentionPolicy?
   videoAlarmEvents     VideoAlarmEvent[]
+  videoMediaRecords    VideoMediaRecord[]
 
   @@index([provider, status])
   @@index([deviceType, status])

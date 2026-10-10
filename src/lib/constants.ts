@@ -204,6 +204,7 @@ export const navigationGroups: NavGroup[] = [
       { id: "audit-log", label: "Audit Log", icon: ScrollText },
       { id: "notifications", label: "Notifications", icon: Bell },
       { id: "settings", label: "Settings", icon: Settings },
+      { id: "video-privacy", label: "Video Privacy", icon: ShieldCheck },
     ],
   },
 ]
