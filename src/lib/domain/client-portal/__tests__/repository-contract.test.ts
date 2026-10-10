@@ -8,7 +8,10 @@ const source = readFileSync(
 )
 
 describe('client portal repository contract', () => {
-  it('batches shipment location loading rather than querying per trip', () => {
+  it('batches live and fallback shipment location evidence rather than querying per trip', () => {
+    expect(source).toContain('db.vehicleLiveState.findMany')
+    expect(source).toContain("assetType: 'tractor'")
+    expect(source).toContain('receivedAt: true')
     expect(source).toContain('db.truckLocation.findMany')
     expect(source).not.toContain('db.truckLocation.findFirst')
     expect(source).toContain('tripId: { in: activeTripIds }')
