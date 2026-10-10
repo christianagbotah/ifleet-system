@@ -46,6 +46,15 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain('event.actorId !== auth.userId')
   })
 
+  it('binds inspection replay identity to the submitted inspection payload', () => {
+    const route = source('src/app/api/inspections/route.ts')
+    expect(route).toContain("createHash('sha256')")
+    expect(route).toContain('payloadHash?: string')
+    expect(route).toContain('payloadHash: string')
+    expect(route).toContain('metadata.payloadHash === input.payloadHash')
+    expect(route).toContain('clientMutationId has already been used for a different inspection')
+  })
+
   it('deduplicates driver evidence uploads and refuses mutation collisions', () => {
     const route = source('src/app/api/upload/route.ts')
     expect(route).toContain('driver-evidence-upload:')
