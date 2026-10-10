@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { NextRequest, NextResponse } from 'next/server'
@@ -21,6 +21,7 @@ type DriverUploadMetadata = {
   tripId?: string | null
   driverId?: string | null
   mimeTypes?: string[]
+  contentHashes?: string[]
 }
 
 function parseMetadata(value: string | null): DriverUploadMetadata {
@@ -67,7 +68,7 @@ function sameStrings(left: string[] | undefined, right: string[]): boolean {
 async function findDriverUploadReplay(
   mutationId: string,
   actor: { userId: string; driverId: string | null },
-  expected: { tripId: string | null; mimeTypes: string[] },
+  expected: { tripId: string | null; mimeTypes: string[]; contentHashes: string[] },
 ) {
   const event = await db.operationalEvent.findUnique({
     where: { idempotencyKey: `driver-evidence-upload:${mutationId}` },
@@ -80,6 +81,7 @@ async function findDriverUploadReplay(
     || metadata.driverId !== actor.driverId
     || (metadata.tripId ?? null) !== expected.tripId
     || !sameStrings(metadata.mimeTypes, expected.mimeTypes)
+    || !sameStrings(metadata.contentHashes, expected.contentHashes)
     || !Array.isArray(metadata.urls)
   ) {
     return NextResponse.json(
@@ -125,7 +127,10 @@ async function handleDriverEvidenceUpload(
     }
   }
 
-  const replayIdentity = { tripId, mimeTypes: files.map((file) => file.type) }
+  const fileBuffers = await Promise.all(files.map(async (file) => Buffer.from(await file.arrayBuffer())))
+  const contentHashes = fileBuffers.map((buffer) => createHash('sha256').update(buffer).digest('hex'))
+  const mimeTypes = files.map((file) => file.type)
+  const replayIdentity = { tripId, mimeTypes, contentHashes }
   const existing = await findDriverUploadReplay(mutationId, auth, replayIdentity)
   if (existing) return existing
 
@@ -133,8 +138,7 @@ async function handleDriverEvidenceUpload(
   const urls: string[] = []
   for (const [index, file] of files.entries()) {
     const filename = driverEvidenceFilename(mutationId, index, file.type)
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const result = await writeEvidenceFile(path.join(UPLOAD_DIR, filename), buffer)
+    const result = await writeEvidenceFile(path.join(UPLOAD_DIR, filename), fileBuffers[index])
     if (result === 'conflict') {
       return NextResponse.json({ error: 'Evidence mutation id conflicts with an existing file' }, { status: 409 })
     }
@@ -158,7 +162,8 @@ async function handleDriverEvidenceUpload(
           urls,
           tripId,
           driverId: auth.driverId,
-          mimeTypes: files.map((file) => file.type),
+          mimeTypes,
+          contentHashes,
         }),
         source: 'api.upload',
       },
