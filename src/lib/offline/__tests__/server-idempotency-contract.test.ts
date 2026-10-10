@@ -49,7 +49,7 @@ describe('offline driver mutation server idempotency', () => {
     expect(route).toContain("import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'")
     expect(route).toContain("auth.roleName === ROLES.DRIVER")
     expect(route).toContain('where.driverId = auth.driverId')
-    expect(route).toContain('truck.driverId !== auth.driverId')
+    expect(route).toContain('if (!tripId && truck.driverId !== auth.driverId)')
     expect(route).toContain('trip.driverId !== auth.driverId')
     expect(route).toContain("You can only inspect trucks assigned to you")
     expect(summary).toContain("auth.roleName === ROLES.DRIVER")
