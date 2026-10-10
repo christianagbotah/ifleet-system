@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
       if (!auth.driverId) {
         return NextResponse.json({ error: 'Driver profile is not linked' }, { status: 403 })
       }
-      if (truck.driverId !== auth.driverId) {
+      if (!tripId && truck.driverId !== auth.driverId) {
         return NextResponse.json({ error: 'You can only inspect trucks assigned to you' }, { status: 403 })
       }
       effectiveDriverId = auth.driverId
