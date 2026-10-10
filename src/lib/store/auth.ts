@@ -269,6 +269,7 @@ export const NAV_PERMISSIONS: Record<string, string[]> = {
   users: ['users.view'],
   notifications: ['notifications.view'],
   reports: ['reports.view'],
+  'haulage-reports': ['reports.view'],
   'fuel-logs': ['expenses.view'],
   'client-portal': ['trips.view'],
   'vehicle-inspections': ['maintenance.view'],

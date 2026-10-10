@@ -555,3 +555,5 @@ const REPORT_TITLES: Record<string, string> = {
 export function getReportTitle(type: string): string {
   return REPORT_TITLES[type] || `${type.replace(/_/g, ' ')} Report`
 }
+
+export { fetchHaulageReportFacts } from './haulage-report-data'

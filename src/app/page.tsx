@@ -170,6 +170,10 @@ const ReportsView = dynamic(
   () => import('@/components/pages/ReportsPage'),
   { ssr: false, loading: () => <ViewLoader /> }
 )
+const HaulageReportsView = dynamic(
+  () => import('@/components/reports/HaulageReportsView').then(m => ({ default: m.HaulageReportsView })),
+  { ssr: false, loading: () => <ViewLoader /> }
+)
 const CostAnalyticsView = dynamic(
   () => import('@/components/analytics/CostAnalyticsView').then(m => ({ default: m.CostAnalyticsView })),
   { ssr: false, loading: () => <ViewLoader /> }
@@ -401,6 +405,8 @@ function PageContent({ page, onNavigate }: { page: string; onNavigate: (page: st
       return <DocumentsView />
     case 'reports':
       return <ReportsView />
+    case 'haulage-reports':
+      return <HaulageReportsView />
     case 'cost-analytics':
       return <CostAnalyticsView />
     case 'invoices':
