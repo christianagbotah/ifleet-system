@@ -50,26 +50,37 @@ export async function POST(request: NextRequest) {
     const normalizedEmail = email.trim().toLowerCase()
     const clientIp = getClientIpFromRateLimit(request)
 
-    // Coarse resource protection. This intentionally counts every login POST,
-    // while the stricter bucket below counts only failed credentials.
+    // Coarse resource protection counts every login POST from one source.
     const requestKey = `${clientIp}:${ENDPOINT_KEY}:request`
     const requestResult = rateLimit(requestKey, RATE_LIMITS.loginRequest)
     if (!requestResult.success) {
       return limitedResponse(requestResult, RATE_LIMITS.loginRequest, 'Too many login requests.')
     }
 
-    // Check a credential-failure bucket without consuming an attempt. Failed
-    // credentials increment this bucket later; successful auth clears it.
+    // The source/account bucket stops repeated guessing from one source. The
+    // account-wide bucket additionally prevents rotating IPs from bypassing it.
     const failureKey = `${clientIp}:${ENDPOINT_KEY}:failure:${normalizedEmail}`
+    const accountFailureKey = `${ENDPOINT_KEY}:account-failure:${normalizedEmail}`
+
     const failureStatus = getRateLimitStatus(failureKey, RATE_LIMITS.loginFailure)
     if (!failureStatus.success) {
       return limitedResponse(failureStatus, RATE_LIMITS.loginFailure, 'Too many login attempts.')
     }
 
+    const accountFailureStatus = getRateLimitStatus(accountFailureKey, RATE_LIMITS.loginAccountFailure)
+    if (!accountFailureStatus.success) {
+      return limitedResponse(accountFailureStatus, RATE_LIMITS.loginAccountFailure, 'Too many login attempts.')
+    }
+
     const recordCredentialFailure = () => {
       const failed = rateLimit(failureKey, RATE_LIMITS.loginFailure)
+      const accountFailed = rateLimit(accountFailureKey, RATE_LIMITS.loginAccountFailure)
+
       if (!failed.success) {
         return limitedResponse(failed, RATE_LIMITS.loginFailure, 'Too many login attempts.')
+      }
+      if (!accountFailed.success) {
+        return limitedResponse(accountFailed, RATE_LIMITS.loginAccountFailure, 'Too many login attempts.')
       }
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
@@ -100,6 +111,7 @@ export async function POST(request: NextRequest) {
     }
 
     resetRateLimit(failureKey)
+    resetRateLimit(accountFailureKey)
 
     let permissions: string[] = []
     try {
