@@ -87,4 +87,28 @@ describe('driver offline outbox', () => {
     expect(order).toEqual(['upload-1', 'pod-2'])
     await expect(store.list()).resolves.toHaveLength(0)
   })
+
+  it('does not send a dependent inspection before its evidence upload has synced', async () => {
+    const store = new MemoryDriverOutboxStore()
+    await enqueueDriverMutation(store, {
+      clientMutationId: 'inspection-photo-1',
+      kind: 'upload',
+      request: { method: 'POST', url: '/upload', body: { ref: 'inspection-photo' } },
+    })
+    await enqueueDriverMutation(store, {
+      clientMutationId: 'inspection-1',
+      kind: 'inspection',
+      dependencyIds: ['inspection-photo-1'],
+      request: { method: 'POST', url: '/api/inspections', body: { truckId: 'truck-1', type: 'pre_trip' } },
+    })
+
+    const order: string[] = []
+    await flushDriverOutbox(store, async (item) => {
+      order.push(item.clientMutationId)
+      return { ok: true, status: 201 }
+    })
+
+    expect(order).toEqual(['inspection-photo-1', 'inspection-1'])
+    await expect(store.list()).resolves.toHaveLength(0)
+  })
 })
