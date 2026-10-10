@@ -4,6 +4,7 @@ export const ROUTE_ADVISORY_VERSION = 'route-advisory-v1'
 
 export type RouteDataQualityGrade = 'trusted' | 'usable' | 'limited'
 export type FuelEvidenceSource = 'truck_history' | 'fleet_history' | 'configured_default'
+export type RouteLocationFreshness = 'fresh' | 'stale' | 'unknown'
 
 export interface FuelEfficiencySample {
   distanceKm: number
@@ -16,6 +17,47 @@ export interface FuelEfficiencyEvidence {
   sampleCount: number
   dataQuality: number
   assumptions: string[]
+}
+
+export interface RouteCandidateInput {
+  tractorId: string
+  plateNumber: string
+  make: string
+  model: string
+  driverId: string | null
+  driverName: string | null
+  eligible: boolean
+  blocking: string[]
+  warnings: string[]
+  deadheadKm: number | null
+  location: {
+    latitude: number | null
+    longitude: number | null
+    source: string
+    trust: string | null
+    receivedAt: Date | null
+    freshness: RouteLocationFreshness
+  }
+  fuelSamples: FuelEfficiencySample[]
+  dataQualityScore: number
+}
+
+export interface RouteCandidateRecommendation {
+  tractorId: string
+  plateNumber: string
+  make: string
+  model: string
+  driverId: string | null
+  driverName: string | null
+  score: number
+  deadheadKm: number | null
+  location: RouteCandidateInput['location']
+  confidence: number
+  dataQuality: number
+  dataQualityGrade: RouteDataQualityGrade
+  reasons: string[]
+  warnings: string[]
+  fuelEvidence: FuelEfficiencyEvidence
 }
 
 export interface RouteAdvisoryInput {
@@ -173,6 +215,64 @@ export function selectFuelEfficiencyEvidence(
     dataQuality: 0.55,
     assumptions: ['truck_efficiency_history_insufficient', 'fleet_efficiency_history_insufficient', 'configured_efficiency_default_used'],
   }
+}
+
+function freshnessScore(value: RouteLocationFreshness): number {
+  if (value === 'fresh') return 1
+  if (value === 'stale') return 0.55
+  return 0.35
+}
+
+function candidateReasons(
+  deadheadKm: number | null,
+  freshness: RouteLocationFreshness,
+  quality: number,
+  fuel: FuelEfficiencyEvidence,
+): string[] {
+  const reasons: string[] = []
+  if (deadheadKm != null && deadheadKm <= 50) reasons.push('near_origin')
+  if (freshness === 'fresh') reasons.push('fresh_telematics')
+  if (quality >= 0.85) reasons.push('high_quality_evidence')
+  if (fuel.source === 'truck_history') reasons.push('truck_fuel_history')
+  if (reasons.length === 0) reasons.push('eligible_candidate')
+  return reasons
+}
+
+export function rankRouteCandidates(
+  candidates: RouteCandidateInput[],
+  fleetFuelSamples: FuelEfficiencySample[] = [],
+): RouteCandidateRecommendation[] {
+  return candidates
+    .filter((candidate) => candidate.eligible && candidate.blocking.length === 0)
+    .map((candidate) => {
+      const fuelEvidence = selectFuelEfficiencyEvidence(candidate.fuelSamples, fleetFuelSamples)
+      const evidenceQuality = clamp(Math.min(candidate.dataQualityScore, fuelEvidence.dataQuality))
+      const deadheadScore = candidate.deadheadKm == null
+        ? 0.35
+        : clamp(1 - candidate.deadheadKm / 300)
+      const liveScore = freshnessScore(candidate.location.freshness)
+      const score = deadheadScore * 55 + liveScore * 20 + evidenceQuality * 25
+      const confidence = clamp(Math.min(evidenceQuality, evidenceQuality * (0.82 + 0.18 * liveScore)))
+
+      return {
+        tractorId: candidate.tractorId,
+        plateNumber: candidate.plateNumber,
+        make: candidate.make,
+        model: candidate.model,
+        driverId: candidate.driverId,
+        driverName: candidate.driverName,
+        score: round(score),
+        deadheadKm: candidate.deadheadKm == null ? null : round(candidate.deadheadKm, 1),
+        location: candidate.location,
+        confidence,
+        dataQuality: evidenceQuality,
+        dataQualityGrade: routeDataQualityGrade(evidenceQuality),
+        reasons: candidateReasons(candidate.deadheadKm, candidate.location.freshness, evidenceQuality, fuelEvidence),
+        warnings: [...candidate.warnings, ...fuelEvidence.assumptions],
+        fuelEvidence,
+      }
+    })
+    .sort((a, b) => b.score - a.score || b.confidence - a.confidence || a.tractorId.localeCompare(b.tractorId))
 }
 
 function cargoAdjustmentFactor(weightTonnes: number | undefined): number {
