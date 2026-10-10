@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireWriteAccess, ROLES } from '@/lib/auth-server'
@@ -14,6 +14,7 @@ type InspectionReplayMetadata = {
   driverId?: string | null
   tripId?: string | null
   type?: string
+  payloadHash?: string
 }
 
 function parseReplayMetadata(value: string | null): InspectionReplayMetadata {
@@ -30,12 +31,25 @@ function parseReplayMetadata(value: string | null): InspectionReplayMetadata {
 
 function replayMatches(
   metadata: InspectionReplayMetadata,
-  input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string },
+  input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string; payloadHash: string },
 ) {
   return metadata.truckId === input.truckId
     && (metadata.driverId ?? null) === (input.driverId ?? null)
     && (metadata.tripId ?? null) === (input.tripId ?? null)
     && metadata.type === input.type
+    && metadata.payloadHash === input.payloadHash
+}
+
+function stableJson(value: unknown): string {
+  if (value === undefined) return 'null'
+  if (value === null || typeof value !== 'object') return JSON.stringify(value)
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`
+  const record = value as Record<string, unknown>
+  return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${stableJson(record[key])}`).join(',')}}`
+}
+
+function inspectionPayloadHash(input: Record<string, unknown>): string {
+  return createHash('sha256').update(stableJson(input)).digest('hex')
 }
 
 const DRIVER_EVIDENCE_REF_PATTERN = /^\/uploads\/images\/driver-evidence-([A-Za-z0-9-]{8,128})-\d+\.(?:jpg|png|webp)$/
@@ -80,7 +94,7 @@ async function validateDriverEvidenceRefs(
 
 async function findInspectionReplay(
   mutationId: string,
-  input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string },
+  input: { truckId: string; driverId?: string | null; tripId?: string | null; type: string; payloadHash: string },
 ) {
   const idempotencyKey = `driver-inspection:${mutationId}`
   const event = await db.operationalEvent.findUnique({ where: { idempotencyKey } })
@@ -251,11 +265,36 @@ export async function POST(request: NextRequest) {
       effectiveDriverId = effectiveDriverId || trip.driverId || null
     }
 
+    const normalizedTripId = tripId ? String(tripId) : null
+    const parsedOdometerReading = odometerReading ? parseFloat(odometerReading) : null
+    const parsedLatitude = latitude ? parseFloat(latitude) : null
+    const parsedLongitude = longitude ? parseFloat(longitude) : null
+    const photoRefs = Array.isArray(photos)
+      ? photos.filter((photo): photo is string => typeof photo === 'string' && photo.trim().length > 0)
+      : []
+    const payloadHash = inspectionPayloadHash({
+      truckId: String(truckId),
+      driverId: effectiveDriverId,
+      tripId: normalizedTripId,
+      type: String(type),
+      odometerReading: parsedOdometerReading,
+      overallNotes: overallNotes || null,
+      checkItems: Array.isArray(checkItems) ? checkItems : [],
+      photos: photoRefs,
+      inspectorName: inspectorName || null,
+      signature: signature || null,
+      location: location || null,
+      latitude: parsedLatitude,
+      longitude: parsedLongitude,
+      requiresFollowUp: Boolean(requiresFollowUp),
+      followUpNotes: followUpNotes || null,
+    })
     const replayIdentity = {
       truckId: String(truckId),
       driverId: effectiveDriverId,
-      tripId: tripId ? String(tripId) : null,
+      tripId: normalizedTripId,
       type: String(type),
+      payloadHash,
     }
 
     if (mutationId) {
@@ -296,9 +335,6 @@ export async function POST(request: NextRequest) {
 
     const inspectionId = randomUUID()
     const occurredAt = new Date()
-    const parsedLatitude = latitude ? parseFloat(latitude) : null
-    const parsedLongitude = longitude ? parseFloat(longitude) : null
-    const photoRefs = Array.isArray(photos) ? photos.filter((photo): photo is string => typeof photo === 'string' && photo.trim().length > 0) : []
     if (auth.roleName === ROLES.DRIVER && photoRefs.length > 0) {
       if (photoRefs.length > 5 || !auth.driverId || !(await validateDriverEvidenceRefs(
         { userId: auth.userId, driverId: auth.driverId },
@@ -317,9 +353,9 @@ export async function POST(request: NextRequest) {
             id: inspectionId,
             truckId,
             driverId: effectiveDriverId,
-            tripId: tripId || null,
+            tripId: normalizedTripId,
             type,
-            odometerReading: odometerReading ? parseFloat(odometerReading) : null,
+            odometerReading: parsedOdometerReading,
             result,
             overallNotes: overallNotes || null,
             checkItems: JSON.stringify(parsedItems),
@@ -349,7 +385,7 @@ export async function POST(request: NextRequest) {
             type: 'inspection.created',
             entityType: 'vehicle_inspection',
             entityId: inspectionId,
-            tripId: tripId || null,
+            tripId: normalizedTripId,
             actorType: auth.roleName,
             actorId: auth.userId,
             occurredAt,
