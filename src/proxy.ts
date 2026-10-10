@@ -6,17 +6,13 @@ import { canDemoAccessApi } from '@/lib/auth/demo-access'
 
 // ${APP_NAME} — API Authentication Proxy
 //
-// Protects all /api/* routes except login and register.
-// Validates JWT token from Authorization header using `jose`
-// (Edge Runtime compatible — unlike `jsonwebtoken` which requires Node.js crypto).
-// Injects userId/role into request headers for downstream route handlers.
+// Protects all /api/* routes except explicitly public or machine-auth routes.
+// Validates JWT tokens from Authorization headers using `jose` and injects
+// authenticated user context for downstream route handlers.
 //
-// Also provides:
-//   - Global rate limiting (Edge-compatible in-memory fixed-window)
-//   - Security headers on all API responses
-//
-// Note: JWT signing happens in /api/auth/login using `jsonwebtoken` (Node.js runtime).
-// Verification here uses `jose` (Edge Runtime). Both use the same NEXTAUTH_SECRET.
+// Public client-portal GET routes are exempt from session auth at this layer,
+// but the route handlers independently verify the signed X-Portal-Token before
+// reading any customer data.
 
 let secretKey: Uint8Array | null = null
 function getSecretKey(): Uint8Array {
@@ -49,6 +45,8 @@ const PUBLIC_GET_ONLY_ROUTES = [
   '/api/settings',
   '/api/settings/channels',
   '/api/public/waybills/',
+  '/api/portal/public/client',
+  '/api/portal/public/shipment/',
 ]
 
 const NEXTAUTH_ROUTE = '/api/auth/'

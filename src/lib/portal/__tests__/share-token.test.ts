@@ -1,0 +1,96 @@
+// @vitest-environment node
+import { SignJWT } from 'jose'
+import { describe, expect, it } from 'vitest'
+
+import {
+  createPortalShareToken,
+  verifyPortalShareToken,
+  validatePortalShareTtlDays,
+} from '../share-token'
+
+const secret = new TextEncoder().encode('phase-8-test-secret-at-least-32-characters-long')
+const issuedAt = new Date('2026-10-10T17:30:00.000Z')
+const issuedAtSeconds = Math.floor(issuedAt.getTime() / 1000)
+
+async function customToken(options: { audience?: string; purpose?: string }) {
+  return new SignJWT({
+    clientId: 'client-a',
+    issuedBy: 'user-1',
+    purpose: options.purpose ?? 'client_portal',
+  })
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .setIssuer('ifleetpro')
+    .setAudience(options.audience ?? 'ifleetpro-client-portal')
+    .setSubject('client-a')
+    .setIssuedAt(issuedAtSeconds)
+    .setExpirationTime(issuedAtSeconds + 7 * 24 * 60 * 60)
+    .sign(secret)
+}
+
+describe('portal share token', () => {
+  it('round-trips a client-scoped token with bounded expiry', async () => {
+    const result = await createPortalShareToken({
+      clientId: 'client-a',
+      issuedBy: 'user-1',
+      ttlDays: 7,
+      secret,
+      now: issuedAt,
+    })
+
+    expect(result.expiresAt.toISOString()).toBe('2026-10-17T17:30:00.000Z')
+
+    const claims = await verifyPortalShareToken(result.token, {
+      secret,
+      now: new Date('2026-10-11T17:30:00.000Z'),
+    })
+    expect(claims.clientId).toBe('client-a')
+    expect(claims.issuedBy).toBe('user-1')
+    expect(claims.purpose).toBe('client_portal')
+  })
+
+  it('rejects an expired token', async () => {
+    const result = await createPortalShareToken({
+      clientId: 'client-a',
+      issuedBy: 'user-1',
+      ttlDays: 1,
+      secret,
+      now: issuedAt,
+    })
+
+    await expect(verifyPortalShareToken(result.token, {
+      secret,
+      now: new Date('2026-10-12T17:30:01.000Z'),
+    })).rejects.toThrow()
+  })
+
+  it('rejects tampered tokens', async () => {
+    const result = await createPortalShareToken({
+      clientId: 'client-a',
+      issuedBy: 'user-1',
+      ttlDays: 7,
+      secret,
+      now: issuedAt,
+    })
+    const tampered = `${result.token.slice(0, -2)}xx`
+    await expect(verifyPortalShareToken(tampered, { secret, now: issuedAt })).rejects.toThrow()
+  })
+
+  it('rejects tokens minted for another audience', async () => {
+    const token = await customToken({ audience: 'ifleetpro-other-purpose' })
+    await expect(verifyPortalShareToken(token, { secret, now: issuedAt })).rejects.toThrow()
+  })
+
+  it('rejects tokens with the wrong portal purpose claim', async () => {
+    const token = await customToken({ purpose: 'driver_portal' })
+    await expect(verifyPortalShareToken(token, { secret, now: issuedAt })).rejects.toThrow('portal_share_token_purpose_invalid')
+  })
+
+  it('validates requested lifetime between one and thirty whole days', () => {
+    expect(validatePortalShareTtlDays(1)).toBe(true)
+    expect(validatePortalShareTtlDays(30)).toBe(true)
+    expect(validatePortalShareTtlDays(0)).toBe(false)
+    expect(validatePortalShareTtlDays(31)).toBe(false)
+    expect(validatePortalShareTtlDays(1.5)).toBe(false)
+    expect(validatePortalShareTtlDays(Number.NaN)).toBe(false)
+  })
+})
