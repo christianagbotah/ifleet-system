@@ -36,14 +36,14 @@ function ghs(amount: number): string {
  * Build a professional invoice PDF for a given invoice.
  * Portrait A4 format with branded styling.
  */
-export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
+export async function buildInvoicePdf(invoiceId: string, expectedClientId?: string): Promise<jsPDF> {
   const company = await loadCompanyProfile()
   const companyAddress = companyAddressLine(company)
   const companyContact = companyContactLine(company)
   const invoice = await db.invoice.findUnique({
     where: { id: invoiceId },
     include: {
-      client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true, city: true, region: true } },
+      client: { select: { id: true, companyName: true, contactPerson: true, phone: true, email: true, address: true, city: true, region: true, isActive: true } },
       trip: { select: { id: true, tripNumber: true } },
       InvoiceItem: { orderBy: { order: 'asc' } },
     },
@@ -51,6 +51,10 @@ export async function buildInvoicePdf(invoiceId: string): Promise<jsPDF> {
 
   if (!invoice) {
     throw new Error(`Invoice not found: ${invoiceId}`)
+  }
+
+  if (expectedClientId && (invoice.clientId !== expectedClientId || !invoice.client.isActive)) {
+    throw new Error(`Invoice not available for client: ${invoiceId}`)
   }
 
   const doc = new jsPDF({ orientation: 'portrait', format: 'a4', unit: 'mm' })
