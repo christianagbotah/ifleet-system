@@ -11,8 +11,10 @@ function maskSecret(value: string): string {
 }
 
 // GET /api/settings/channels — Return channel config (secrets masked)
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireRole(request, [ROLES.ADMIN, ROLES.MANAGER])
+    if (auth instanceof NextResponse) return auth
     let settings = await db.systemSettings.findFirst()
 
     if (!settings) {

@@ -20,7 +20,10 @@ export async function GET(request: NextRequest) {
 
     // Drivers can only see their own settlements
     if (isDriver) {
-      driverId = auth.driverId || undefined
+      if (!auth.driverId) {
+        return NextResponse.json({ error: 'Driver profile is not linked.' }, { status: 403 })
+      }
+      driverId = auth.driverId
     }
 
     const where: Record<string, unknown> = {}

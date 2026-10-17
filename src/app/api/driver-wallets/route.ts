@@ -16,7 +16,10 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {}
 
     // Drivers can only see their own wallet
-    if (isDriver && auth.driverId) {
+    if (isDriver) {
+      if (!auth.driverId) {
+        return NextResponse.json({ error: 'Driver profile is not linked.' }, { status: 403 })
+      }
       where.driverId = auth.driverId
     }
 
