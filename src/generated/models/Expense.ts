@@ -36,6 +36,7 @@ export type ExpenseSumAggregateOutputType = {
 
 export type ExpenseMinAggregateOutputType = {
   id: string | null
+  clientMutationId: string | null
   truckId: string | null
   category: string | null
   description: string | null
@@ -53,6 +54,7 @@ export type ExpenseMinAggregateOutputType = {
 
 export type ExpenseMaxAggregateOutputType = {
   id: string | null
+  clientMutationId: string | null
   truckId: string | null
   category: string | null
   description: string | null
@@ -70,6 +72,7 @@ export type ExpenseMaxAggregateOutputType = {
 
 export type ExpenseCountAggregateOutputType = {
   id: number
+  clientMutationId: number
   truckId: number
   category: number
   description: number
@@ -97,6 +100,7 @@ export type ExpenseSumAggregateInputType = {
 
 export type ExpenseMinAggregateInputType = {
   id?: true
+  clientMutationId?: true
   truckId?: true
   category?: true
   description?: true
@@ -114,6 +118,7 @@ export type ExpenseMinAggregateInputType = {
 
 export type ExpenseMaxAggregateInputType = {
   id?: true
+  clientMutationId?: true
   truckId?: true
   category?: true
   description?: true
@@ -131,6 +136,7 @@ export type ExpenseMaxAggregateInputType = {
 
 export type ExpenseCountAggregateInputType = {
   id?: true
+  clientMutationId?: true
   truckId?: true
   category?: true
   description?: true
@@ -235,6 +241,7 @@ export type ExpenseGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type ExpenseGroupByOutputType = {
   id: string
+  clientMutationId: string | null
   truckId: string
   category: string
   description: string
@@ -275,6 +282,7 @@ export type ExpenseWhereInput = {
   OR?: Prisma.ExpenseWhereInput[]
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   id?: Prisma.StringFilter<"Expense"> | string
+  clientMutationId?: Prisma.StringNullableFilter<"Expense"> | string | null
   truckId?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
@@ -295,6 +303,7 @@ export type ExpenseWhereInput = {
 
 export type ExpenseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrderInput | Prisma.SortOrder
   truckId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -316,6 +325,7 @@ export type ExpenseOrderByWithRelationInput = {
 
 export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  clientMutationId?: string
   AND?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   OR?: Prisma.ExpenseWhereInput[]
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
@@ -335,10 +345,11 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
   ExpenseApproval?: Prisma.XOR<Prisma.ExpenseApprovalNullableScalarRelationFilter, Prisma.ExpenseApprovalWhereInput> | null
-}, "id">
+}, "id" | "clientMutationId">
 
 export type ExpenseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrderInput | Prisma.SortOrder
   truckId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -364,6 +375,7 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   OR?: Prisma.ExpenseScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ExpenseScalarWhereWithAggregatesInput | Prisma.ExpenseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Expense"> | string
+  clientMutationId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   truckId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   category?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   description?: Prisma.StringWithAggregatesFilter<"Expense"> | string
@@ -381,6 +393,7 @@ export type ExpenseScalarWhereWithAggregatesInput = {
 
 export type ExpenseCreateInput = {
   id?: string
+  clientMutationId?: string | null
   category: string
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -399,6 +412,7 @@ export type ExpenseCreateInput = {
 
 export type ExpenseUncheckedCreateInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   category: string
   description: string
@@ -417,6 +431,7 @@ export type ExpenseUncheckedCreateInput = {
 
 export type ExpenseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -435,6 +450,7 @@ export type ExpenseUpdateInput = {
 
 export type ExpenseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -453,6 +469,7 @@ export type ExpenseUncheckedUpdateInput = {
 
 export type ExpenseCreateManyInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   category: string
   description: string
@@ -470,6 +487,7 @@ export type ExpenseCreateManyInput = {
 
 export type ExpenseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -485,6 +503,7 @@ export type ExpenseUpdateManyMutationInput = {
 
 export type ExpenseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -508,6 +527,7 @@ export type ExpenseOrderByRelevanceInput = {
 
 export type ExpenseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -529,6 +549,7 @@ export type ExpenseAvgOrderByAggregateInput = {
 
 export type ExpenseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -546,6 +567,7 @@ export type ExpenseMaxOrderByAggregateInput = {
 
 export type ExpenseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -684,6 +706,7 @@ export type ExpenseUncheckedUpdateManyWithoutTruckNestedInput = {
 
 export type ExpenseCreateWithoutExpenseApprovalInput = {
   id?: string
+  clientMutationId?: string | null
   category: string
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -701,6 +724,7 @@ export type ExpenseCreateWithoutExpenseApprovalInput = {
 
 export type ExpenseUncheckedCreateWithoutExpenseApprovalInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   category: string
   description: string
@@ -734,6 +758,7 @@ export type ExpenseUpdateToOneWithWhereWithoutExpenseApprovalInput = {
 
 export type ExpenseUpdateWithoutExpenseApprovalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -751,6 +776,7 @@ export type ExpenseUpdateWithoutExpenseApprovalInput = {
 
 export type ExpenseUncheckedUpdateWithoutExpenseApprovalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -768,6 +794,7 @@ export type ExpenseUncheckedUpdateWithoutExpenseApprovalInput = {
 
 export type ExpenseCreateWithoutTripInput = {
   id?: string
+  clientMutationId?: string | null
   category: string
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -785,6 +812,7 @@ export type ExpenseCreateWithoutTripInput = {
 
 export type ExpenseUncheckedCreateWithoutTripInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   category: string
   description: string
@@ -831,6 +859,7 @@ export type ExpenseScalarWhereInput = {
   OR?: Prisma.ExpenseScalarWhereInput[]
   NOT?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
   id?: Prisma.StringFilter<"Expense"> | string
+  clientMutationId?: Prisma.StringNullableFilter<"Expense"> | string | null
   truckId?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
@@ -848,6 +877,7 @@ export type ExpenseScalarWhereInput = {
 
 export type ExpenseCreateWithoutTruckInput = {
   id?: string
+  clientMutationId?: string | null
   category: string
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -865,6 +895,7 @@ export type ExpenseCreateWithoutTruckInput = {
 
 export type ExpenseUncheckedCreateWithoutTruckInput = {
   id?: string
+  clientMutationId?: string | null
   category: string
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -908,6 +939,7 @@ export type ExpenseUpdateManyWithWhereWithoutTruckInput = {
 
 export type ExpenseCreateManyTripInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   category: string
   description: string
@@ -924,6 +956,7 @@ export type ExpenseCreateManyTripInput = {
 
 export type ExpenseUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -941,6 +974,7 @@ export type ExpenseUpdateWithoutTripInput = {
 
 export type ExpenseUncheckedUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -958,6 +992,7 @@ export type ExpenseUncheckedUpdateWithoutTripInput = {
 
 export type ExpenseUncheckedUpdateManyWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -974,6 +1009,7 @@ export type ExpenseUncheckedUpdateManyWithoutTripInput = {
 
 export type ExpenseCreateManyTruckInput = {
   id?: string
+  clientMutationId?: string | null
   category: string
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -990,6 +1026,7 @@ export type ExpenseCreateManyTruckInput = {
 
 export type ExpenseUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1007,6 +1044,7 @@ export type ExpenseUpdateWithoutTruckInput = {
 
 export type ExpenseUncheckedUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1024,6 +1062,7 @@ export type ExpenseUncheckedUpdateWithoutTruckInput = {
 
 export type ExpenseUncheckedUpdateManyWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1042,6 +1081,7 @@ export type ExpenseUncheckedUpdateManyWithoutTruckInput = {
 
 export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientMutationId?: boolean
   truckId?: boolean
   category?: boolean
   description?: boolean
@@ -1064,6 +1104,7 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type ExpenseSelectScalar = {
   id?: boolean
+  clientMutationId?: boolean
   truckId?: boolean
   category?: boolean
   description?: boolean
@@ -1079,7 +1120,7 @@ export type ExpenseSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "truckId" | "category" | "description" | "amount" | "date" | "paymentMethod" | "reference" | "approvedBy" | "status" | "receiptUrl" | "tripId" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientMutationId" | "truckId" | "category" | "description" | "amount" | "date" | "paymentMethod" | "reference" | "approvedBy" | "status" | "receiptUrl" | "tripId" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
@@ -1095,6 +1136,7 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    clientMutationId: string | null
     truckId: string
     category: string
     description: string
@@ -1481,6 +1523,7 @@ export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface ExpenseFieldRefs {
   readonly id: Prisma.FieldRef<"Expense", 'String'>
+  readonly clientMutationId: Prisma.FieldRef<"Expense", 'String'>
   readonly truckId: Prisma.FieldRef<"Expense", 'String'>
   readonly category: Prisma.FieldRef<"Expense", 'String'>
   readonly description: Prisma.FieldRef<"Expense", 'String'>

@@ -51,6 +51,44 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  AiRecommendation: 'AiRecommendation',
+  AiPrediction: 'AiPrediction',
+  AiReviewCase: 'AiReviewCase',
+  ComplianceRuleSet: 'ComplianceRuleSet',
+  ComplianceRule: 'ComplianceRule',
+  ProofOfDelivery: 'ProofOfDelivery',
+  ProofOfDeliveryEvidence: 'ProofOfDeliveryEvidence',
+  DeliveryException: 'DeliveryException',
+  GateEvent: 'GateEvent',
+  FactoryQueueEntry: 'FactoryQueueEntry',
+  HaulierSettlement: 'HaulierSettlement',
+  HaulierSettlementLine: 'HaulierSettlementLine',
+  IntegrationConnection: 'IntegrationConnection',
+  IntegrationImportReceipt: 'IntegrationImportReceipt',
+  OperationalEvent: 'OperationalEvent',
+  TripReconciliation: 'TripReconciliation',
+  ReconciliationLine: 'ReconciliationLine',
+  ReconciliationAdjustment: 'ReconciliationAdjustment',
+  ReconciliationException: 'ReconciliationException',
+  PlannedRoute: 'PlannedRoute',
+  GeofenceAssetState: 'GeofenceAssetState',
+  GeofenceTransitionEvent: 'GeofenceTransitionEvent',
+  RouteDeviationEvent: 'RouteDeviationEvent',
+  TelematicsDevice: 'TelematicsDevice',
+  DeviceInstallationHistory: 'DeviceInstallationHistory',
+  TelematicsEvent: 'TelematicsEvent',
+  RawTelematicsPacket: 'RawTelematicsPacket',
+  VehicleLiveState: 'VehicleLiveState',
+  TelematicsHistorySummary: 'TelematicsHistorySummary',
+  CameraChannel: 'CameraChannel',
+  VideoRetentionPolicy: 'VideoRetentionPolicy',
+  VideoMediaRecord: 'VideoMediaRecord',
+  VideoPrivacyAcknowledgement: 'VideoPrivacyAcknowledgement',
+  VideoAlarmEvent: 'VideoAlarmEvent',
+  VideoIncident: 'VideoIncident',
+  ElectronicWaybill: 'ElectronicWaybill',
+  ElectronicWaybillVersion: 'ElectronicWaybillVersion',
+  WaybillSeal: 'WaybillSeal',
   User: 'User',
   AuditLog: 'AuditLog',
   BorderCrossing: 'BorderCrossing',
@@ -124,7 +162,9 @@ export const ModelName = {
   WeightVerification: 'WeightVerification',
   ZoneRate: 'ZoneRate',
   DvlaRenewalHistory: 'DvlaRenewalHistory',
-  InsuranceRenewalHistory: 'InsuranceRenewalHistory'
+  InsuranceRenewalHistory: 'InsuranceRenewalHistory',
+  WeighingEvent: 'WeighingEvent',
+  AxleReading: 'AxleReading'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -141,6 +181,782 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AiRecommendationScalarFieldEnum = {
+  id: 'id',
+  recommendationType: 'recommendationType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  confidence: 'confidence',
+  dataQualityScore: 'dataQualityScore',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  payload: 'payload',
+  status: 'status',
+  createdBy: 'createdBy',
+  acceptedAt: 'acceptedAt',
+  dismissedAt: 'dismissedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AiRecommendationScalarFieldEnum = (typeof AiRecommendationScalarFieldEnum)[keyof typeof AiRecommendationScalarFieldEnum]
+
+
+export const AiPredictionScalarFieldEnum = {
+  id: 'id',
+  predictionType: 'predictionType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  confidence: 'confidence',
+  dataQualityScore: 'dataQualityScore',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  predictionPayload: 'predictionPayload',
+  predictionFor: 'predictionFor',
+  createdAt: 'createdAt'
+} as const
+
+export type AiPredictionScalarFieldEnum = (typeof AiPredictionScalarFieldEnum)[keyof typeof AiPredictionScalarFieldEnum]
+
+
+export const AiReviewCaseScalarFieldEnum = {
+  id: 'id',
+  caseType: 'caseType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  severity: 'severity',
+  status: 'status',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  confidence: 'confidence',
+  dataQualityScore: 'dataQualityScore',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  evidence: 'evidence',
+  assignedTo: 'assignedTo',
+  resolution: 'resolution',
+  resolvedBy: 'resolvedBy',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiReviewCaseScalarFieldEnum = (typeof AiReviewCaseScalarFieldEnum)[keyof typeof AiReviewCaseScalarFieldEnum]
+
+
+export const ComplianceRuleSetScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  version: 'version',
+  country: 'country',
+  description: 'description',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  isCurrent: 'isCurrent',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceRuleSetScalarFieldEnum = (typeof ComplianceRuleSetScalarFieldEnum)[keyof typeof ComplianceRuleSetScalarFieldEnum]
+
+
+export const ComplianceRuleScalarFieldEnum = {
+  id: 'id',
+  ruleSetId: 'ruleSetId',
+  type: 'type',
+  metric: 'metric',
+  scope: 'scope',
+  operator: 'operator',
+  value: 'value',
+  unit: 'unit',
+  severity: 'severity',
+  priority: 'priority',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  isActive: 'isActive',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceRuleScalarFieldEnum = (typeof ComplianceRuleScalarFieldEnum)[keyof typeof ComplianceRuleScalarFieldEnum]
+
+
+export const ProofOfDeliveryScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  idempotencyKey: 'idempotencyKey',
+  payloadFingerprint: 'payloadFingerprint',
+  activeTargetKey: 'activeTargetKey',
+  actorId: 'actorId',
+  receiverName: 'receiverName',
+  receiverPhone: 'receiverPhone',
+  expectedQty: 'expectedQty',
+  receivedQty: 'receivedQty',
+  damagedQty: 'damagedQty',
+  rejectedQty: 'rejectedQty',
+  acceptedQty: 'acceptedQty',
+  unit: 'unit',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  completedAt: 'completedAt',
+  signatureRef: 'signatureRef',
+  pinVerified: 'pinVerified',
+  discrepancyType: 'discrepancyType',
+  discrepancyQuantity: 'discrepancyQuantity',
+  discrepancyNotes: 'discrepancyNotes',
+  supersedesId: 'supersedesId',
+  correctionReason: 'correctionReason',
+  createdAt: 'createdAt'
+} as const
+
+export type ProofOfDeliveryScalarFieldEnum = (typeof ProofOfDeliveryScalarFieldEnum)[keyof typeof ProofOfDeliveryScalarFieldEnum]
+
+
+export const ProofOfDeliveryEvidenceScalarFieldEnum = {
+  id: 'id',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  type: 'type',
+  storageRef: 'storageRef',
+  capturedAt: 'capturedAt',
+  metadata: 'metadata'
+} as const
+
+export type ProofOfDeliveryEvidenceScalarFieldEnum = (typeof ProofOfDeliveryEvidenceScalarFieldEnum)[keyof typeof ProofOfDeliveryEvidenceScalarFieldEnum]
+
+
+export const DeliveryExceptionScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  type: 'type',
+  status: 'status',
+  quantity: 'quantity',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliveryExceptionScalarFieldEnum = (typeof DeliveryExceptionScalarFieldEnum)[keyof typeof DeliveryExceptionScalarFieldEnum]
+
+
+export const GateEventScalarFieldEnum = {
+  id: 'id',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  direction: 'direction',
+  occurredAt: 'occurredAt',
+  actorId: 'actorId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  evidence: 'evidence',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type GateEventScalarFieldEnum = (typeof GateEventScalarFieldEnum)[keyof typeof GateEventScalarFieldEnum]
+
+
+export const FactoryQueueEntryScalarFieldEnum = {
+  id: 'id',
+  legacyQueueId: 'legacyQueueId',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  queueType: 'queueType',
+  status: 'status',
+  position: 'position',
+  bayId: 'bayId',
+  joinedAt: 'joinedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  estimatedWait: 'estimatedWait',
+  actualWait: 'actualWait',
+  detentionFreeMinutes: 'detentionFreeMinutes',
+  detentionMinutes: 'detentionMinutes',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FactoryQueueEntryScalarFieldEnum = (typeof FactoryQueueEntryScalarFieldEnum)[keyof typeof FactoryQueueEntryScalarFieldEnum]
+
+
+export const HaulierSettlementScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  rateCardId: 'rateCardId',
+  contractId: 'contractId',
+  payeeType: 'payeeType',
+  payeeId: 'payeeId',
+  payeeName: 'payeeName',
+  currency: 'currency',
+  baseFreight: 'baseFreight',
+  detentionAmount: 'detentionAmount',
+  extrasAmount: 'extrasAmount',
+  shortageDeduction: 'shortageDeduction',
+  fuelAdjustment: 'fuelAdjustment',
+  taxAmount: 'taxAmount',
+  withholdingAmount: 'withholdingAmount',
+  advanceDeduction: 'advanceDeduction',
+  netPayable: 'netPayable',
+  status: 'status',
+  snapshotVersion: 'snapshotVersion',
+  snapshotJson: 'snapshotJson',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  paidAt: 'paidAt',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HaulierSettlementScalarFieldEnum = (typeof HaulierSettlementScalarFieldEnum)[keyof typeof HaulierSettlementScalarFieldEnum]
+
+
+export const HaulierSettlementLineScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  tripId: 'tripId',
+  type: 'type',
+  sourceId: 'sourceId',
+  description: 'description',
+  amount: 'amount',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type HaulierSettlementLineScalarFieldEnum = (typeof HaulierSettlementLineScalarFieldEnum)[keyof typeof HaulierSettlementLineScalarFieldEnum]
+
+
+export const IntegrationConnectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  type: 'type',
+  config: 'config',
+  secretRef: 'secretRef',
+  status: 'status',
+  lastSuccessAt: 'lastSuccessAt',
+  lastErrorAt: 'lastErrorAt',
+  lastError: 'lastError',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IntegrationConnectionScalarFieldEnum = (typeof IntegrationConnectionScalarFieldEnum)[keyof typeof IntegrationConnectionScalarFieldEnum]
+
+
+export const IntegrationImportReceiptScalarFieldEnum = {
+  id: 'id',
+  connectionId: 'connectionId',
+  idempotencyKey: 'idempotencyKey',
+  batchId: 'batchId',
+  payloadHash: 'payloadHash',
+  status: 'status',
+  acceptedCount: 'acceptedCount',
+  rejectedCount: 'rejectedCount',
+  resultJson: 'resultJson',
+  createdAt: 'createdAt'
+} as const
+
+export type IntegrationImportReceiptScalarFieldEnum = (typeof IntegrationImportReceiptScalarFieldEnum)[keyof typeof IntegrationImportReceiptScalarFieldEnum]
+
+
+export const OperationalEventScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  eventKey: 'eventKey',
+  type: 'type',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  tripId: 'tripId',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  occurredAt: 'occurredAt',
+  receivedAt: 'receivedAt',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  evidenceRefs: 'evidenceRefs',
+  metadata: 'metadata',
+  source: 'source',
+  supersedesEventId: 'supersedesEventId',
+  createdAt: 'createdAt'
+} as const
+
+export type OperationalEventScalarFieldEnum = (typeof OperationalEventScalarFieldEnum)[keyof typeof OperationalEventScalarFieldEnum]
+
+
+export const TripReconciliationScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  version: 'version',
+  status: 'status',
+  fuelTotal: 'fuelTotal',
+  tollTotal: 'tollTotal',
+  expenseTotal: 'expenseTotal',
+  adjustmentTotal: 'adjustmentTotal',
+  operationalCost: 'operationalCost',
+  advanceTotal: 'advanceTotal',
+  snapshotJson: 'snapshotJson',
+  blockersJson: 'blockersJson',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TripReconciliationScalarFieldEnum = (typeof TripReconciliationScalarFieldEnum)[keyof typeof TripReconciliationScalarFieldEnum]
+
+
+export const ReconciliationLineScalarFieldEnum = {
+  id: 'id',
+  reconciliationId: 'reconciliationId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  category: 'category',
+  reference: 'reference',
+  amount: 'amount',
+  includedInCost: 'includedInCost',
+  duplicateOf: 'duplicateOf',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type ReconciliationLineScalarFieldEnum = (typeof ReconciliationLineScalarFieldEnum)[keyof typeof ReconciliationLineScalarFieldEnum]
+
+
+export const ReconciliationAdjustmentScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  amount: 'amount',
+  reason: 'reason',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReconciliationAdjustmentScalarFieldEnum = (typeof ReconciliationAdjustmentScalarFieldEnum)[keyof typeof ReconciliationAdjustmentScalarFieldEnum]
+
+
+export const ReconciliationExceptionScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  type: 'type',
+  status: 'status',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  amount: 'amount',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedBy: 'resolvedBy',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReconciliationExceptionScalarFieldEnum = (typeof ReconciliationExceptionScalarFieldEnum)[keyof typeof ReconciliationExceptionScalarFieldEnum]
+
+
+export const PlannedRouteScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  pointsJson: 'pointsJson',
+  toleranceMeters: 'toleranceMeters',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlannedRouteScalarFieldEnum = (typeof PlannedRouteScalarFieldEnum)[keyof typeof PlannedRouteScalarFieldEnum]
+
+
+export const GeofenceAssetStateScalarFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  geofenceZoneId: 'geofenceZoneId',
+  inside: 'inside',
+  enteredAt: 'enteredAt',
+  dwellEmitted: 'dwellEmitted',
+  lastEventId: 'lastEventId',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GeofenceAssetStateScalarFieldEnum = (typeof GeofenceAssetStateScalarFieldEnum)[keyof typeof GeofenceAssetStateScalarFieldEnum]
+
+
+export const GeofenceTransitionEventScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  geofenceZoneId: 'geofenceZoneId',
+  transition: 'transition',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GeofenceTransitionEventScalarFieldEnum = (typeof GeofenceTransitionEventScalarFieldEnum)[keyof typeof GeofenceTransitionEventScalarFieldEnum]
+
+
+export const RouteDeviationEventScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  plannedRouteId: 'plannedRouteId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  eventType: 'eventType',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  distanceMeters: 'distanceMeters',
+  toleranceMeters: 'toleranceMeters',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RouteDeviationEventScalarFieldEnum = (typeof RouteDeviationEventScalarFieldEnum)[keyof typeof RouteDeviationEventScalarFieldEnum]
+
+
+export const TelematicsDeviceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  deviceType: 'deviceType',
+  imei: 'imei',
+  serialNumber: 'serialNumber',
+  credentialRef: 'credentialRef',
+  status: 'status',
+  metadata: 'metadata',
+  lastSeenAt: 'lastSeenAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TelematicsDeviceScalarFieldEnum = (typeof TelematicsDeviceScalarFieldEnum)[keyof typeof TelematicsDeviceScalarFieldEnum]
+
+
+export const DeviceInstallationHistoryScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  installedAt: 'installedAt',
+  uninstalledAt: 'uninstalledAt',
+  installedById: 'installedById',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type DeviceInstallationHistoryScalarFieldEnum = (typeof DeviceInstallationHistoryScalarFieldEnum)[keyof typeof DeviceInstallationHistoryScalarFieldEnum]
+
+
+export const TelematicsEventScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  deviceId: 'deviceId',
+  provider: 'provider',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  deviceTimestamp: 'deviceTimestamp',
+  receivedAt: 'receivedAt',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  speedKph: 'speedKph',
+  headingDeg: 'headingDeg',
+  accuracyMeters: 'accuracyMeters',
+  ignitionOn: 'ignitionOn',
+  sensorType: 'sensorType',
+  sensorValue: 'sensorValue',
+  sensorUnit: 'sensorUnit',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  source: 'source',
+  trust: 'trust',
+  rawEventRef: 'rawEventRef',
+  normalizedPayload: 'normalizedPayload',
+  createdAt: 'createdAt'
+} as const
+
+export type TelematicsEventScalarFieldEnum = (typeof TelematicsEventScalarFieldEnum)[keyof typeof TelematicsEventScalarFieldEnum]
+
+
+export const RawTelematicsPacketScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  payloadHash: 'payloadHash',
+  payload: 'payload',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RawTelematicsPacketScalarFieldEnum = (typeof RawTelematicsPacketScalarFieldEnum)[keyof typeof RawTelematicsPacketScalarFieldEnum]
+
+
+export const VehicleLiveStateScalarFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  latestEventId: 'latestEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  provider: 'provider',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  speedKph: 'speedKph',
+  headingDeg: 'headingDeg',
+  accuracyMeters: 'accuracyMeters',
+  ignitionOn: 'ignitionOn',
+  source: 'source',
+  trust: 'trust',
+  deviceTimestamp: 'deviceTimestamp',
+  receivedAt: 'receivedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VehicleLiveStateScalarFieldEnum = (typeof VehicleLiveStateScalarFieldEnum)[keyof typeof VehicleLiveStateScalarFieldEnum]
+
+
+export const TelematicsHistorySummaryScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  bucketStart: 'bucketStart',
+  bucketEnd: 'bucketEnd',
+  bucketMinutes: 'bucketMinutes',
+  pointCount: 'pointCount',
+  minSpeedKph: 'minSpeedKph',
+  maxSpeedKph: 'maxSpeedKph',
+  startLatitude: 'startLatitude',
+  startLongitude: 'startLongitude',
+  endLatitude: 'endLatitude',
+  endLongitude: 'endLongitude',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TelematicsHistorySummaryScalarFieldEnum = (typeof TelematicsHistorySummaryScalarFieldEnum)[keyof typeof TelematicsHistorySummaryScalarFieldEnum]
+
+
+export const CameraChannelScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  key: 'key',
+  label: 'label',
+  orientation: 'orientation',
+  privacyClass: 'privacyClass',
+  enabled: 'enabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CameraChannelScalarFieldEnum = (typeof CameraChannelScalarFieldEnum)[keyof typeof CameraChannelScalarFieldEnum]
+
+
+export const VideoRetentionPolicyScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  videoEnabled: 'videoEnabled',
+  supportsLive: 'supportsLive',
+  supportsPlayback: 'supportsPlayback',
+  supportsSnapshot: 'supportsSnapshot',
+  policyVersion: 'policyVersion',
+  effectiveAt: 'effectiveAt',
+  routineRetentionDays: 'routineRetentionDays',
+  incidentRetentionDays: 'incidentRetentionDays',
+  applyToExisting: 'applyToExisting',
+  cloudUploadEnabled: 'cloudUploadEnabled',
+  allowedRoles: 'allowedRoles',
+  allowedChannels: 'allowedChannels',
+  privacyNoticeVersion: 'privacyNoticeVersion',
+  privacyNoticeText: 'privacyNoticeText',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VideoRetentionPolicyScalarFieldEnum = (typeof VideoRetentionPolicyScalarFieldEnum)[keyof typeof VideoRetentionPolicyScalarFieldEnum]
+
+
+export const VideoMediaRecordScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  incidentId: 'incidentId',
+  kind: 'kind',
+  storageKind: 'storageKind',
+  storageBackend: 'storageBackend',
+  storageKey: 'storageKey',
+  recordedAt: 'recordedAt',
+  retentionPolicyVersion: 'retentionPolicyVersion',
+  retainUntil: 'retainUntil',
+  legalHoldUntil: 'legalHoldUntil',
+  auditHoldUntil: 'auditHoldUntil',
+  deletedAt: 'deletedAt',
+  deletionReason: 'deletionReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VideoMediaRecordScalarFieldEnum = (typeof VideoMediaRecordScalarFieldEnum)[keyof typeof VideoMediaRecordScalarFieldEnum]
+
+
+export const VideoPrivacyAcknowledgementScalarFieldEnum = {
+  id: 'id',
+  policyId: 'policyId',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  policyVersion: 'policyVersion',
+  noticeVersion: 'noticeVersion',
+  acknowledgedAt: 'acknowledgedAt',
+  metadata: 'metadata'
+} as const
+
+export type VideoPrivacyAcknowledgementScalarFieldEnum = (typeof VideoPrivacyAcknowledgementScalarFieldEnum)[keyof typeof VideoPrivacyAcknowledgementScalarFieldEnum]
+
+
+export const VideoAlarmEventScalarFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  providerAlarmCode: 'providerAlarmCode',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  channelKey: 'channelKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  occurredAt: 'occurredAt',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type VideoAlarmEventScalarFieldEnum = (typeof VideoAlarmEventScalarFieldEnum)[keyof typeof VideoAlarmEventScalarFieldEnum]
+
+
+export const VideoIncidentScalarFieldEnum = {
+  id: 'id',
+  alarmEventId: 'alarmEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  incidentType: 'incidentType',
+  severity: 'severity',
+  status: 'status',
+  title: 'title',
+  message: 'message',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VideoIncidentScalarFieldEnum = (typeof VideoIncidentScalarFieldEnum)[keyof typeof VideoIncidentScalarFieldEnum]
+
+
+export const ElectronicWaybillScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  waybillNumber: 'waybillNumber',
+  verificationToken: 'verificationToken',
+  currentVersion: 'currentVersion',
+  status: 'status',
+  finalizedAt: 'finalizedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ElectronicWaybillScalarFieldEnum = (typeof ElectronicWaybillScalarFieldEnum)[keyof typeof ElectronicWaybillScalarFieldEnum]
+
+
+export const ElectronicWaybillVersionScalarFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  version: 'version',
+  snapshot: 'snapshot',
+  contentHash: 'contentHash',
+  supersedesVersion: 'supersedesVersion',
+  correctionReason: 'correctionReason',
+  finalizedBy: 'finalizedBy',
+  finalizedAt: 'finalizedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ElectronicWaybillVersionScalarFieldEnum = (typeof ElectronicWaybillVersionScalarFieldEnum)[keyof typeof ElectronicWaybillVersionScalarFieldEnum]
+
+
+export const WaybillSealScalarFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  version: 'version',
+  sealNumber: 'sealNumber',
+  sealType: 'sealType',
+  appliedAt: 'appliedAt',
+  appliedBy: 'appliedBy',
+  status: 'status',
+  removedAt: 'removedAt',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type WaybillSealScalarFieldEnum = (typeof WaybillSealScalarFieldEnum)[keyof typeof WaybillSealScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -439,8 +1255,11 @@ export const DriverSettlementScalarFieldEnum = {
   grossEarnings: 'grossEarnings',
   fuelDeductions: 'fuelDeductions',
   expenseDeductions: 'expenseDeductions',
+  advanceDeductions: 'advanceDeductions',
   bonusAmount: 'bonusAmount',
   netPay: 'netPay',
+  snapshotVersion: 'snapshotVersion',
+  snapshotJson: 'snapshotJson',
   status: 'status',
   approvedBy: 'approvedBy',
   approvedAt: 'approvedAt',
@@ -511,6 +1330,7 @@ export type DvlaRegistrationScalarFieldEnum = (typeof DvlaRegistrationScalarFiel
 
 export const ExpenseScalarFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   truckId: 'truckId',
   category: 'category',
   description: 'description',
@@ -568,6 +1388,7 @@ export type FuelBudgetScalarFieldEnum = (typeof FuelBudgetScalarFieldEnum)[keyof
 
 export const FuelLogScalarFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   truckId: 'truckId',
   date: 'date',
@@ -645,6 +1466,9 @@ export const GeofenceZoneScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   radius: 'radius',
+  geometryType: 'geometryType',
+  geometryJson: 'geometryJson',
+  dwellThresholdMinutes: 'dwellThresholdMinutes',
   type: 'type',
   address: 'address',
   createdAt: 'createdAt',
@@ -1024,6 +1848,7 @@ export const SettlementLineScalarFieldEnum = {
   tripId: 'tripId',
   description: 'description',
   type: 'type',
+  sourceId: 'sourceId',
   amount: 'amount'
 } as const
 
@@ -1091,6 +1916,8 @@ export const SystemSettingsScalarFieldEnum = {
   currency: 'currency',
   distanceUnit: 'distanceUnit',
   fuelUnit: 'fuelUnit',
+  profitabilityMaintenanceAllocationEnabled: 'profitabilityMaintenanceAllocationEnabled',
+  profitabilityMaintenanceCostPerKm: 'profitabilityMaintenanceCostPerKm',
   dateFormat: 'dateFormat',
   timezone: 'timezone',
   language: 'language',
@@ -1261,6 +2088,7 @@ export type TripDeliveryDestinationScalarFieldEnum = (typeof TripDeliveryDestina
 
 export const TripEventScalarFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   fromStatus: 'fromStatus',
   toStatus: 'toStatus',
@@ -1389,6 +2217,7 @@ export const TransportRateCardScalarFieldEnum = {
   isActive: 'isActive',
   sourceType: 'sourceType',
   sourceId: 'sourceId',
+  settlementTerms: 'settlementTerms',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1761,6 +2590,61 @@ export const InsuranceRenewalHistoryScalarFieldEnum = {
 export type InsuranceRenewalHistoryScalarFieldEnum = (typeof InsuranceRenewalHistoryScalarFieldEnum)[keyof typeof InsuranceRenewalHistoryScalarFieldEnum]
 
 
+export const WeighingEventScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  tractorId: 'tractorId',
+  trailerId: 'trailerId',
+  driverId: 'driverId',
+  legacyWeightVerificationId: 'legacyWeightVerificationId',
+  stage: 'stage',
+  source: 'source',
+  status: 'status',
+  grossWeightKg: 'grossWeightKg',
+  tareWeightKg: 'tareWeightKg',
+  netWeightKg: 'netWeightKg',
+  varianceKg: 'varianceKg',
+  variancePercent: 'variancePercent',
+  requiredAxleCount: 'requiredAxleCount',
+  tolerancePercent: 'tolerancePercent',
+  ruleSetSnapshot: 'ruleSetSnapshot',
+  clearancePassed: 'clearancePassed',
+  clearanceDetails: 'clearanceDetails',
+  weighbridgeName: 'weighbridgeName',
+  location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  ticketNumber: 'ticketNumber',
+  certificateNumber: 'certificateNumber',
+  evidenceUrl: 'evidenceUrl',
+  operatorId: 'operatorId',
+  operatorName: 'operatorName',
+  recordedAt: 'recordedAt',
+  supersedesEventId: 'supersedesEventId',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WeighingEventScalarFieldEnum = (typeof WeighingEventScalarFieldEnum)[keyof typeof WeighingEventScalarFieldEnum]
+
+
+export const AxleReadingScalarFieldEnum = {
+  id: 'id',
+  weighingEventId: 'weighingEventId',
+  axleNumber: 'axleNumber',
+  axleGroup: 'axleGroup',
+  weightKg: 'weightKg',
+  legalLimitKg: 'legalLimitKg',
+  toleranceKg: 'toleranceKg',
+  exceeded: 'exceeded',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AxleReadingScalarFieldEnum = (typeof AxleReadingScalarFieldEnum)[keyof typeof AxleReadingScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1775,6 +2659,574 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const AiRecommendationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  recommendationType: 'recommendationType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  payload: 'payload',
+  status: 'status',
+  createdBy: 'createdBy'
+} as const
+
+export type AiRecommendationOrderByRelevanceFieldEnum = (typeof AiRecommendationOrderByRelevanceFieldEnum)[keyof typeof AiRecommendationOrderByRelevanceFieldEnum]
+
+
+export const AiPredictionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  predictionType: 'predictionType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  predictionPayload: 'predictionPayload'
+} as const
+
+export type AiPredictionOrderByRelevanceFieldEnum = (typeof AiPredictionOrderByRelevanceFieldEnum)[keyof typeof AiPredictionOrderByRelevanceFieldEnum]
+
+
+export const AiReviewCaseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  caseType: 'caseType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  severity: 'severity',
+  status: 'status',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  evidence: 'evidence',
+  assignedTo: 'assignedTo',
+  resolution: 'resolution',
+  resolvedBy: 'resolvedBy'
+} as const
+
+export type AiReviewCaseOrderByRelevanceFieldEnum = (typeof AiReviewCaseOrderByRelevanceFieldEnum)[keyof typeof AiReviewCaseOrderByRelevanceFieldEnum]
+
+
+export const ComplianceRuleSetOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  country: 'country',
+  description: 'description',
+  createdBy: 'createdBy'
+} as const
+
+export type ComplianceRuleSetOrderByRelevanceFieldEnum = (typeof ComplianceRuleSetOrderByRelevanceFieldEnum)[keyof typeof ComplianceRuleSetOrderByRelevanceFieldEnum]
+
+
+export const ComplianceRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  ruleSetId: 'ruleSetId',
+  type: 'type',
+  metric: 'metric',
+  scope: 'scope',
+  operator: 'operator',
+  value: 'value',
+  unit: 'unit',
+  severity: 'severity',
+  description: 'description'
+} as const
+
+export type ComplianceRuleOrderByRelevanceFieldEnum = (typeof ComplianceRuleOrderByRelevanceFieldEnum)[keyof typeof ComplianceRuleOrderByRelevanceFieldEnum]
+
+
+export const ProofOfDeliveryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  idempotencyKey: 'idempotencyKey',
+  payloadFingerprint: 'payloadFingerprint',
+  activeTargetKey: 'activeTargetKey',
+  actorId: 'actorId',
+  receiverName: 'receiverName',
+  receiverPhone: 'receiverPhone',
+  unit: 'unit',
+  signatureRef: 'signatureRef',
+  discrepancyType: 'discrepancyType',
+  discrepancyNotes: 'discrepancyNotes',
+  supersedesId: 'supersedesId',
+  correctionReason: 'correctionReason'
+} as const
+
+export type ProofOfDeliveryOrderByRelevanceFieldEnum = (typeof ProofOfDeliveryOrderByRelevanceFieldEnum)[keyof typeof ProofOfDeliveryOrderByRelevanceFieldEnum]
+
+
+export const ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  type: 'type',
+  storageRef: 'storageRef',
+  metadata: 'metadata'
+} as const
+
+export type ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum = (typeof ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum)[keyof typeof ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum]
+
+
+export const DeliveryExceptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  type: 'type',
+  status: 'status',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedBy: 'resolvedBy'
+} as const
+
+export type DeliveryExceptionOrderByRelevanceFieldEnum = (typeof DeliveryExceptionOrderByRelevanceFieldEnum)[keyof typeof DeliveryExceptionOrderByRelevanceFieldEnum]
+
+
+export const GateEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  direction: 'direction',
+  actorId: 'actorId',
+  evidence: 'evidence',
+  source: 'source'
+} as const
+
+export type GateEventOrderByRelevanceFieldEnum = (typeof GateEventOrderByRelevanceFieldEnum)[keyof typeof GateEventOrderByRelevanceFieldEnum]
+
+
+export const FactoryQueueEntryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  legacyQueueId: 'legacyQueueId',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  queueType: 'queueType',
+  status: 'status',
+  bayId: 'bayId',
+  notes: 'notes',
+  createdBy: 'createdBy'
+} as const
+
+export type FactoryQueueEntryOrderByRelevanceFieldEnum = (typeof FactoryQueueEntryOrderByRelevanceFieldEnum)[keyof typeof FactoryQueueEntryOrderByRelevanceFieldEnum]
+
+
+export const HaulierSettlementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  rateCardId: 'rateCardId',
+  contractId: 'contractId',
+  payeeType: 'payeeType',
+  payeeId: 'payeeId',
+  payeeName: 'payeeName',
+  currency: 'currency',
+  status: 'status',
+  snapshotJson: 'snapshotJson',
+  approvedBy: 'approvedBy',
+  notes: 'notes',
+  createdBy: 'createdBy'
+} as const
+
+export type HaulierSettlementOrderByRelevanceFieldEnum = (typeof HaulierSettlementOrderByRelevanceFieldEnum)[keyof typeof HaulierSettlementOrderByRelevanceFieldEnum]
+
+
+export const HaulierSettlementLineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  tripId: 'tripId',
+  type: 'type',
+  sourceId: 'sourceId',
+  description: 'description',
+  metadata: 'metadata'
+} as const
+
+export type HaulierSettlementLineOrderByRelevanceFieldEnum = (typeof HaulierSettlementLineOrderByRelevanceFieldEnum)[keyof typeof HaulierSettlementLineOrderByRelevanceFieldEnum]
+
+
+export const IntegrationConnectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  type: 'type',
+  config: 'config',
+  secretRef: 'secretRef',
+  status: 'status',
+  lastError: 'lastError',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy'
+} as const
+
+export type IntegrationConnectionOrderByRelevanceFieldEnum = (typeof IntegrationConnectionOrderByRelevanceFieldEnum)[keyof typeof IntegrationConnectionOrderByRelevanceFieldEnum]
+
+
+export const IntegrationImportReceiptOrderByRelevanceFieldEnum = {
+  id: 'id',
+  connectionId: 'connectionId',
+  idempotencyKey: 'idempotencyKey',
+  batchId: 'batchId',
+  payloadHash: 'payloadHash',
+  status: 'status',
+  resultJson: 'resultJson'
+} as const
+
+export type IntegrationImportReceiptOrderByRelevanceFieldEnum = (typeof IntegrationImportReceiptOrderByRelevanceFieldEnum)[keyof typeof IntegrationImportReceiptOrderByRelevanceFieldEnum]
+
+
+export const OperationalEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  eventKey: 'eventKey',
+  type: 'type',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  tripId: 'tripId',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  evidenceRefs: 'evidenceRefs',
+  metadata: 'metadata',
+  source: 'source',
+  supersedesEventId: 'supersedesEventId'
+} as const
+
+export type OperationalEventOrderByRelevanceFieldEnum = (typeof OperationalEventOrderByRelevanceFieldEnum)[keyof typeof OperationalEventOrderByRelevanceFieldEnum]
+
+
+export const TripReconciliationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  status: 'status',
+  snapshotJson: 'snapshotJson',
+  blockersJson: 'blockersJson',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy'
+} as const
+
+export type TripReconciliationOrderByRelevanceFieldEnum = (typeof TripReconciliationOrderByRelevanceFieldEnum)[keyof typeof TripReconciliationOrderByRelevanceFieldEnum]
+
+
+export const ReconciliationLineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reconciliationId: 'reconciliationId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  category: 'category',
+  reference: 'reference',
+  duplicateOf: 'duplicateOf',
+  metadata: 'metadata'
+} as const
+
+export type ReconciliationLineOrderByRelevanceFieldEnum = (typeof ReconciliationLineOrderByRelevanceFieldEnum)[keyof typeof ReconciliationLineOrderByRelevanceFieldEnum]
+
+
+export const ReconciliationAdjustmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reason: 'reason',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy'
+} as const
+
+export type ReconciliationAdjustmentOrderByRelevanceFieldEnum = (typeof ReconciliationAdjustmentOrderByRelevanceFieldEnum)[keyof typeof ReconciliationAdjustmentOrderByRelevanceFieldEnum]
+
+
+export const ReconciliationExceptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  type: 'type',
+  status: 'status',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedBy: 'resolvedBy'
+} as const
+
+export type ReconciliationExceptionOrderByRelevanceFieldEnum = (typeof ReconciliationExceptionOrderByRelevanceFieldEnum)[keyof typeof ReconciliationExceptionOrderByRelevanceFieldEnum]
+
+
+export const PlannedRouteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  pointsJson: 'pointsJson',
+  status: 'status',
+  createdById: 'createdById'
+} as const
+
+export type PlannedRouteOrderByRelevanceFieldEnum = (typeof PlannedRouteOrderByRelevanceFieldEnum)[keyof typeof PlannedRouteOrderByRelevanceFieldEnum]
+
+
+export const GeofenceAssetStateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  geofenceZoneId: 'geofenceZoneId',
+  lastEventId: 'lastEventId'
+} as const
+
+export type GeofenceAssetStateOrderByRelevanceFieldEnum = (typeof GeofenceAssetStateOrderByRelevanceFieldEnum)[keyof typeof GeofenceAssetStateOrderByRelevanceFieldEnum]
+
+
+export const GeofenceTransitionEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  geofenceZoneId: 'geofenceZoneId',
+  transition: 'transition'
+} as const
+
+export type GeofenceTransitionEventOrderByRelevanceFieldEnum = (typeof GeofenceTransitionEventOrderByRelevanceFieldEnum)[keyof typeof GeofenceTransitionEventOrderByRelevanceFieldEnum]
+
+
+export const RouteDeviationEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  plannedRouteId: 'plannedRouteId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  eventType: 'eventType'
+} as const
+
+export type RouteDeviationEventOrderByRelevanceFieldEnum = (typeof RouteDeviationEventOrderByRelevanceFieldEnum)[keyof typeof RouteDeviationEventOrderByRelevanceFieldEnum]
+
+
+export const TelematicsDeviceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  deviceType: 'deviceType',
+  imei: 'imei',
+  serialNumber: 'serialNumber',
+  credentialRef: 'credentialRef',
+  status: 'status',
+  metadata: 'metadata'
+} as const
+
+export type TelematicsDeviceOrderByRelevanceFieldEnum = (typeof TelematicsDeviceOrderByRelevanceFieldEnum)[keyof typeof TelematicsDeviceOrderByRelevanceFieldEnum]
+
+
+export const DeviceInstallationHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  installedById: 'installedById',
+  notes: 'notes'
+} as const
+
+export type DeviceInstallationHistoryOrderByRelevanceFieldEnum = (typeof DeviceInstallationHistoryOrderByRelevanceFieldEnum)[keyof typeof DeviceInstallationHistoryOrderByRelevanceFieldEnum]
+
+
+export const TelematicsEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  deviceId: 'deviceId',
+  provider: 'provider',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  sensorType: 'sensorType',
+  sensorValue: 'sensorValue',
+  sensorUnit: 'sensorUnit',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  source: 'source',
+  trust: 'trust',
+  rawEventRef: 'rawEventRef',
+  normalizedPayload: 'normalizedPayload'
+} as const
+
+export type TelematicsEventOrderByRelevanceFieldEnum = (typeof TelematicsEventOrderByRelevanceFieldEnum)[keyof typeof TelematicsEventOrderByRelevanceFieldEnum]
+
+
+export const RawTelematicsPacketOrderByRelevanceFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  payloadHash: 'payloadHash',
+  payload: 'payload'
+} as const
+
+export type RawTelematicsPacketOrderByRelevanceFieldEnum = (typeof RawTelematicsPacketOrderByRelevanceFieldEnum)[keyof typeof RawTelematicsPacketOrderByRelevanceFieldEnum]
+
+
+export const VehicleLiveStateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  latestEventId: 'latestEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  provider: 'provider',
+  source: 'source',
+  trust: 'trust'
+} as const
+
+export type VehicleLiveStateOrderByRelevanceFieldEnum = (typeof VehicleLiveStateOrderByRelevanceFieldEnum)[keyof typeof VehicleLiveStateOrderByRelevanceFieldEnum]
+
+
+export const TelematicsHistorySummaryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId'
+} as const
+
+export type TelematicsHistorySummaryOrderByRelevanceFieldEnum = (typeof TelematicsHistorySummaryOrderByRelevanceFieldEnum)[keyof typeof TelematicsHistorySummaryOrderByRelevanceFieldEnum]
+
+
+export const CameraChannelOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  key: 'key',
+  label: 'label',
+  orientation: 'orientation',
+  privacyClass: 'privacyClass'
+} as const
+
+export type CameraChannelOrderByRelevanceFieldEnum = (typeof CameraChannelOrderByRelevanceFieldEnum)[keyof typeof CameraChannelOrderByRelevanceFieldEnum]
+
+
+export const VideoRetentionPolicyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  allowedRoles: 'allowedRoles',
+  allowedChannels: 'allowedChannels',
+  privacyNoticeVersion: 'privacyNoticeVersion',
+  privacyNoticeText: 'privacyNoticeText'
+} as const
+
+export type VideoRetentionPolicyOrderByRelevanceFieldEnum = (typeof VideoRetentionPolicyOrderByRelevanceFieldEnum)[keyof typeof VideoRetentionPolicyOrderByRelevanceFieldEnum]
+
+
+export const VideoMediaRecordOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  incidentId: 'incidentId',
+  kind: 'kind',
+  storageKind: 'storageKind',
+  storageBackend: 'storageBackend',
+  storageKey: 'storageKey',
+  deletionReason: 'deletionReason'
+} as const
+
+export type VideoMediaRecordOrderByRelevanceFieldEnum = (typeof VideoMediaRecordOrderByRelevanceFieldEnum)[keyof typeof VideoMediaRecordOrderByRelevanceFieldEnum]
+
+
+export const VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  policyId: 'policyId',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  noticeVersion: 'noticeVersion',
+  metadata: 'metadata'
+} as const
+
+export type VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum = (typeof VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum)[keyof typeof VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum]
+
+
+export const VideoAlarmEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  providerAlarmCode: 'providerAlarmCode',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  channelKey: 'channelKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId'
+} as const
+
+export type VideoAlarmEventOrderByRelevanceFieldEnum = (typeof VideoAlarmEventOrderByRelevanceFieldEnum)[keyof typeof VideoAlarmEventOrderByRelevanceFieldEnum]
+
+
+export const VideoIncidentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  alarmEventId: 'alarmEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  incidentType: 'incidentType',
+  severity: 'severity',
+  status: 'status',
+  title: 'title',
+  message: 'message'
+} as const
+
+export type VideoIncidentOrderByRelevanceFieldEnum = (typeof VideoIncidentOrderByRelevanceFieldEnum)[keyof typeof VideoIncidentOrderByRelevanceFieldEnum]
+
+
+export const ElectronicWaybillOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  waybillNumber: 'waybillNumber',
+  verificationToken: 'verificationToken',
+  status: 'status'
+} as const
+
+export type ElectronicWaybillOrderByRelevanceFieldEnum = (typeof ElectronicWaybillOrderByRelevanceFieldEnum)[keyof typeof ElectronicWaybillOrderByRelevanceFieldEnum]
+
+
+export const ElectronicWaybillVersionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  snapshot: 'snapshot',
+  contentHash: 'contentHash',
+  correctionReason: 'correctionReason',
+  finalizedBy: 'finalizedBy'
+} as const
+
+export type ElectronicWaybillVersionOrderByRelevanceFieldEnum = (typeof ElectronicWaybillVersionOrderByRelevanceFieldEnum)[keyof typeof ElectronicWaybillVersionOrderByRelevanceFieldEnum]
+
+
+export const WaybillSealOrderByRelevanceFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  sealNumber: 'sealNumber',
+  sealType: 'sealType',
+  appliedBy: 'appliedBy',
+  status: 'status',
+  notes: 'notes'
+} as const
+
+export type WaybillSealOrderByRelevanceFieldEnum = (typeof WaybillSealOrderByRelevanceFieldEnum)[keyof typeof WaybillSealOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -1983,6 +3435,7 @@ export const DriverSettlementOrderByRelevanceFieldEnum = {
   id: 'id',
   driverId: 'driverId',
   period: 'period',
+  snapshotJson: 'snapshotJson',
   approvedBy: 'approvedBy',
   notes: 'notes'
 } as const
@@ -2025,6 +3478,7 @@ export type DvlaRegistrationOrderByRelevanceFieldEnum = (typeof DvlaRegistration
 
 export const ExpenseOrderByRelevanceFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   truckId: 'truckId',
   category: 'category',
   description: 'description',
@@ -2062,6 +3516,7 @@ export type FuelBudgetOrderByRelevanceFieldEnum = (typeof FuelBudgetOrderByRelev
 
 export const FuelLogOrderByRelevanceFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   truckId: 'truckId',
   stationName: 'stationName',
@@ -2107,6 +3562,8 @@ export type FuelStationOrderByRelevanceFieldEnum = (typeof FuelStationOrderByRel
 export const GeofenceZoneOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
+  geometryType: 'geometryType',
+  geometryJson: 'geometryJson',
   type: 'type',
   address: 'address'
 } as const
@@ -2360,7 +3817,8 @@ export const SettlementLineOrderByRelevanceFieldEnum = {
   settlementId: 'settlementId',
   tripId: 'tripId',
   description: 'description',
-  type: 'type'
+  type: 'type',
+  sourceId: 'sourceId'
 } as const
 
 export type SettlementLineOrderByRelevanceFieldEnum = (typeof SettlementLineOrderByRelevanceFieldEnum)[keyof typeof SettlementLineOrderByRelevanceFieldEnum]
@@ -2515,6 +3973,7 @@ export type TripDeliveryDestinationOrderByRelevanceFieldEnum = (typeof TripDeliv
 
 export const TripEventOrderByRelevanceFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   fromStatus: 'fromStatus',
   toStatus: 'toStatus',
@@ -2614,7 +4073,8 @@ export const TransportRateCardOrderByRelevanceFieldEnum = {
   rateType: 'rateType',
   currency: 'currency',
   sourceType: 'sourceType',
-  sourceId: 'sourceId'
+  sourceId: 'sourceId',
+  settlementTerms: 'settlementTerms'
 } as const
 
 export type TransportRateCardOrderByRelevanceFieldEnum = (typeof TransportRateCardOrderByRelevanceFieldEnum)[keyof typeof TransportRateCardOrderByRelevanceFieldEnum]
@@ -2869,4 +4329,39 @@ export const InsuranceRenewalHistoryOrderByRelevanceFieldEnum = {
 } as const
 
 export type InsuranceRenewalHistoryOrderByRelevanceFieldEnum = (typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum)[keyof typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum]
+
+
+export const WeighingEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  tractorId: 'tractorId',
+  trailerId: 'trailerId',
+  driverId: 'driverId',
+  legacyWeightVerificationId: 'legacyWeightVerificationId',
+  stage: 'stage',
+  source: 'source',
+  status: 'status',
+  ruleSetSnapshot: 'ruleSetSnapshot',
+  clearanceDetails: 'clearanceDetails',
+  weighbridgeName: 'weighbridgeName',
+  location: 'location',
+  ticketNumber: 'ticketNumber',
+  certificateNumber: 'certificateNumber',
+  evidenceUrl: 'evidenceUrl',
+  operatorId: 'operatorId',
+  operatorName: 'operatorName',
+  supersedesEventId: 'supersedesEventId',
+  notes: 'notes'
+} as const
+
+export type WeighingEventOrderByRelevanceFieldEnum = (typeof WeighingEventOrderByRelevanceFieldEnum)[keyof typeof WeighingEventOrderByRelevanceFieldEnum]
+
+
+export const AxleReadingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  weighingEventId: 'weighingEventId',
+  axleGroup: 'axleGroup'
+} as const
+
+export type AxleReadingOrderByRelevanceFieldEnum = (typeof AxleReadingOrderByRelevanceFieldEnum)[keyof typeof AxleReadingOrderByRelevanceFieldEnum]
 

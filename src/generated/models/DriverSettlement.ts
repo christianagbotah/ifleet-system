@@ -30,16 +30,20 @@ export type DriverSettlementAvgAggregateOutputType = {
   grossEarnings: runtime.Decimal | null
   fuelDeductions: runtime.Decimal | null
   expenseDeductions: runtime.Decimal | null
+  advanceDeductions: runtime.Decimal | null
   bonusAmount: runtime.Decimal | null
   netPay: runtime.Decimal | null
+  snapshotVersion: number | null
 }
 
 export type DriverSettlementSumAggregateOutputType = {
   grossEarnings: runtime.Decimal | null
   fuelDeductions: runtime.Decimal | null
   expenseDeductions: runtime.Decimal | null
+  advanceDeductions: runtime.Decimal | null
   bonusAmount: runtime.Decimal | null
   netPay: runtime.Decimal | null
+  snapshotVersion: number | null
 }
 
 export type DriverSettlementMinAggregateOutputType = {
@@ -51,8 +55,11 @@ export type DriverSettlementMinAggregateOutputType = {
   grossEarnings: runtime.Decimal | null
   fuelDeductions: runtime.Decimal | null
   expenseDeductions: runtime.Decimal | null
+  advanceDeductions: runtime.Decimal | null
   bonusAmount: runtime.Decimal | null
   netPay: runtime.Decimal | null
+  snapshotVersion: number | null
+  snapshotJson: string | null
   status: $Enums.SettlementStatus | null
   approvedBy: string | null
   approvedAt: Date | null
@@ -71,8 +78,11 @@ export type DriverSettlementMaxAggregateOutputType = {
   grossEarnings: runtime.Decimal | null
   fuelDeductions: runtime.Decimal | null
   expenseDeductions: runtime.Decimal | null
+  advanceDeductions: runtime.Decimal | null
   bonusAmount: runtime.Decimal | null
   netPay: runtime.Decimal | null
+  snapshotVersion: number | null
+  snapshotJson: string | null
   status: $Enums.SettlementStatus | null
   approvedBy: string | null
   approvedAt: Date | null
@@ -91,8 +101,11 @@ export type DriverSettlementCountAggregateOutputType = {
   grossEarnings: number
   fuelDeductions: number
   expenseDeductions: number
+  advanceDeductions: number
   bonusAmount: number
   netPay: number
+  snapshotVersion: number
+  snapshotJson: number
   status: number
   approvedBy: number
   approvedAt: number
@@ -108,16 +121,20 @@ export type DriverSettlementAvgAggregateInputType = {
   grossEarnings?: true
   fuelDeductions?: true
   expenseDeductions?: true
+  advanceDeductions?: true
   bonusAmount?: true
   netPay?: true
+  snapshotVersion?: true
 }
 
 export type DriverSettlementSumAggregateInputType = {
   grossEarnings?: true
   fuelDeductions?: true
   expenseDeductions?: true
+  advanceDeductions?: true
   bonusAmount?: true
   netPay?: true
+  snapshotVersion?: true
 }
 
 export type DriverSettlementMinAggregateInputType = {
@@ -129,8 +146,11 @@ export type DriverSettlementMinAggregateInputType = {
   grossEarnings?: true
   fuelDeductions?: true
   expenseDeductions?: true
+  advanceDeductions?: true
   bonusAmount?: true
   netPay?: true
+  snapshotVersion?: true
+  snapshotJson?: true
   status?: true
   approvedBy?: true
   approvedAt?: true
@@ -149,8 +169,11 @@ export type DriverSettlementMaxAggregateInputType = {
   grossEarnings?: true
   fuelDeductions?: true
   expenseDeductions?: true
+  advanceDeductions?: true
   bonusAmount?: true
   netPay?: true
+  snapshotVersion?: true
+  snapshotJson?: true
   status?: true
   approvedBy?: true
   approvedAt?: true
@@ -169,8 +192,11 @@ export type DriverSettlementCountAggregateInputType = {
   grossEarnings?: true
   fuelDeductions?: true
   expenseDeductions?: true
+  advanceDeductions?: true
   bonusAmount?: true
   netPay?: true
+  snapshotVersion?: true
+  snapshotJson?: true
   status?: true
   approvedBy?: true
   approvedAt?: true
@@ -276,8 +302,11 @@ export type DriverSettlementGroupByOutputType = {
   grossEarnings: runtime.Decimal
   fuelDeductions: runtime.Decimal
   expenseDeductions: runtime.Decimal
+  advanceDeductions: runtime.Decimal
   bonusAmount: runtime.Decimal
   netPay: runtime.Decimal
+  snapshotVersion: number | null
+  snapshotJson: string | null
   status: $Enums.SettlementStatus
   approvedBy: string | null
   approvedAt: Date | null
@@ -319,8 +348,11 @@ export type DriverSettlementWhereInput = {
   grossEarnings?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.IntNullableFilter<"DriverSettlement"> | number | null
+  snapshotJson?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   status?: Prisma.EnumSettlementStatusFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
@@ -341,8 +373,11 @@ export type DriverSettlementOrderByWithRelationInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrderInput | Prisma.SortOrder
+  snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -367,8 +402,11 @@ export type DriverSettlementWhereUniqueInput = Prisma.AtLeast<{
   grossEarnings?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.IntNullableFilter<"DriverSettlement"> | number | null
+  snapshotJson?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   status?: Prisma.EnumSettlementStatusFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
@@ -389,8 +427,11 @@ export type DriverSettlementOrderByWithAggregationInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrderInput | Prisma.SortOrder
+  snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -417,8 +458,11 @@ export type DriverSettlementScalarWhereWithAggregatesInput = {
   grossEarnings?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalWithAggregatesFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.IntNullableWithAggregatesFilter<"DriverSettlement"> | number | null
+  snapshotJson?: Prisma.StringNullableWithAggregatesFilter<"DriverSettlement"> | string | null
   status?: Prisma.EnumSettlementStatusWithAggregatesFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverSettlement"> | Date | string | null
@@ -436,8 +480,11 @@ export type DriverSettlementCreateInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -458,8 +505,11 @@ export type DriverSettlementUncheckedCreateInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -478,8 +528,11 @@ export type DriverSettlementUpdateInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -500,8 +553,11 @@ export type DriverSettlementUncheckedUpdateInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -521,8 +577,11 @@ export type DriverSettlementCreateManyInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -540,8 +599,11 @@ export type DriverSettlementUpdateManyMutationInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -560,8 +622,11 @@ export type DriverSettlementUncheckedUpdateManyInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -596,8 +661,11 @@ export type DriverSettlementCountOrderByAggregateInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrder
+  snapshotJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
@@ -611,8 +679,10 @@ export type DriverSettlementAvgOrderByAggregateInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrder
 }
 
 export type DriverSettlementMaxOrderByAggregateInput = {
@@ -624,8 +694,11 @@ export type DriverSettlementMaxOrderByAggregateInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrder
+  snapshotJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
@@ -644,8 +717,11 @@ export type DriverSettlementMinOrderByAggregateInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrder
+  snapshotJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
@@ -659,8 +735,10 @@ export type DriverSettlementSumOrderByAggregateInput = {
   grossEarnings?: Prisma.SortOrder
   fuelDeductions?: Prisma.SortOrder
   expenseDeductions?: Prisma.SortOrder
+  advanceDeductions?: Prisma.SortOrder
   bonusAmount?: Prisma.SortOrder
   netPay?: Prisma.SortOrder
+  snapshotVersion?: Prisma.SortOrder
 }
 
 export type DriverSettlementScalarRelationFilter = {
@@ -736,8 +814,11 @@ export type DriverSettlementCreateWithoutDriverInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -756,8 +837,11 @@ export type DriverSettlementUncheckedCreateWithoutDriverInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -806,8 +890,11 @@ export type DriverSettlementScalarWhereInput = {
   grossEarnings?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFilter<"DriverSettlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.IntNullableFilter<"DriverSettlement"> | number | null
+  snapshotJson?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   status?: Prisma.EnumSettlementStatusFilter<"DriverSettlement"> | $Enums.SettlementStatus
   approvedBy?: Prisma.StringNullableFilter<"DriverSettlement"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"DriverSettlement"> | Date | string | null
@@ -825,8 +912,11 @@ export type DriverSettlementCreateWithoutSettlementLineInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -846,8 +936,11 @@ export type DriverSettlementUncheckedCreateWithoutSettlementLineInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -881,8 +974,11 @@ export type DriverSettlementUpdateWithoutSettlementLineInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -902,8 +998,11 @@ export type DriverSettlementUncheckedUpdateWithoutSettlementLineInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -921,8 +1020,11 @@ export type DriverSettlementCreateManyDriverInput = {
   grossEarnings: runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions: runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay: runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: number | null
+  snapshotJson?: string | null
   status?: $Enums.SettlementStatus
   approvedBy?: string | null
   approvedAt?: Date | string | null
@@ -940,8 +1042,11 @@ export type DriverSettlementUpdateWithoutDriverInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -960,8 +1065,11 @@ export type DriverSettlementUncheckedUpdateWithoutDriverInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -980,8 +1088,11 @@ export type DriverSettlementUncheckedUpdateManyWithoutDriverInput = {
   grossEarnings?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fuelDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   expenseDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  advanceDeductions?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bonusAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   netPay?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  snapshotVersion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  snapshotJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1031,8 +1142,11 @@ export type DriverSettlementSelect<ExtArgs extends runtime.Types.Extensions.Inte
   grossEarnings?: boolean
   fuelDeductions?: boolean
   expenseDeductions?: boolean
+  advanceDeductions?: boolean
   bonusAmount?: boolean
   netPay?: boolean
+  snapshotVersion?: boolean
+  snapshotJson?: boolean
   status?: boolean
   approvedBy?: boolean
   approvedAt?: boolean
@@ -1056,8 +1170,11 @@ export type DriverSettlementSelectScalar = {
   grossEarnings?: boolean
   fuelDeductions?: boolean
   expenseDeductions?: boolean
+  advanceDeductions?: boolean
   bonusAmount?: boolean
   netPay?: boolean
+  snapshotVersion?: boolean
+  snapshotJson?: boolean
   status?: boolean
   approvedBy?: boolean
   approvedAt?: boolean
@@ -1067,7 +1184,7 @@ export type DriverSettlementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DriverSettlementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "driverId" | "period" | "periodStart" | "periodEnd" | "grossEarnings" | "fuelDeductions" | "expenseDeductions" | "bonusAmount" | "netPay" | "status" | "approvedBy" | "approvedAt" | "paidAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["driverSettlement"]>
+export type DriverSettlementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "driverId" | "period" | "periodStart" | "periodEnd" | "grossEarnings" | "fuelDeductions" | "expenseDeductions" | "advanceDeductions" | "bonusAmount" | "netPay" | "snapshotVersion" | "snapshotJson" | "status" | "approvedBy" | "approvedAt" | "paidAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["driverSettlement"]>
 export type DriverSettlementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   driver?: boolean | Prisma.DriverDefaultArgs<ExtArgs>
   SettlementLine?: boolean | Prisma.DriverSettlement$SettlementLineArgs<ExtArgs>
@@ -1089,8 +1206,11 @@ export type $DriverSettlementPayload<ExtArgs extends runtime.Types.Extensions.In
     grossEarnings: runtime.Decimal
     fuelDeductions: runtime.Decimal
     expenseDeductions: runtime.Decimal
+    advanceDeductions: runtime.Decimal
     bonusAmount: runtime.Decimal
     netPay: runtime.Decimal
+    snapshotVersion: number | null
+    snapshotJson: string | null
     status: $Enums.SettlementStatus
     approvedBy: string | null
     approvedAt: Date | null
@@ -1477,8 +1597,11 @@ export interface DriverSettlementFieldRefs {
   readonly grossEarnings: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
   readonly fuelDeductions: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
   readonly expenseDeductions: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly advanceDeductions: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
   readonly bonusAmount: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
   readonly netPay: Prisma.FieldRef<"DriverSettlement", 'Decimal'>
+  readonly snapshotVersion: Prisma.FieldRef<"DriverSettlement", 'Int'>
+  readonly snapshotJson: Prisma.FieldRef<"DriverSettlement", 'String'>
   readonly status: Prisma.FieldRef<"DriverSettlement", 'SettlementStatus'>
   readonly approvedBy: Prisma.FieldRef<"DriverSettlement", 'String'>
   readonly approvedAt: Prisma.FieldRef<"DriverSettlement", 'DateTime'>

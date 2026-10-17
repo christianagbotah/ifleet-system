@@ -796,10 +796,6 @@ export type ShipperSiteRuleUncheckedUpdateManyWithoutShipperProfileNestedInput =
   deleteMany?: Prisma.ShipperSiteRuleScalarWhereInput | Prisma.ShipperSiteRuleScalarWhereInput[]
 }
 
-export type NullableBoolFieldUpdateOperationsInput = {
-  set?: boolean | null
-}
-
 export type ShipperSiteRuleCreateWithoutLoadingPointInput = {
   id?: string
   requiredDocuments?: string | null

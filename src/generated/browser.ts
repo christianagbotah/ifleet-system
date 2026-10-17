@@ -18,6 +18,196 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model AiRecommendation
+ * 
+ */
+export type AiRecommendation = Prisma.AiRecommendationModel
+/**
+ * Model AiPrediction
+ * 
+ */
+export type AiPrediction = Prisma.AiPredictionModel
+/**
+ * Model AiReviewCase
+ * 
+ */
+export type AiReviewCase = Prisma.AiReviewCaseModel
+/**
+ * Model ComplianceRuleSet
+ * 
+ */
+export type ComplianceRuleSet = Prisma.ComplianceRuleSetModel
+/**
+ * Model ComplianceRule
+ * 
+ */
+export type ComplianceRule = Prisma.ComplianceRuleModel
+/**
+ * Model ProofOfDelivery
+ * 
+ */
+export type ProofOfDelivery = Prisma.ProofOfDeliveryModel
+/**
+ * Model ProofOfDeliveryEvidence
+ * 
+ */
+export type ProofOfDeliveryEvidence = Prisma.ProofOfDeliveryEvidenceModel
+/**
+ * Model DeliveryException
+ * 
+ */
+export type DeliveryException = Prisma.DeliveryExceptionModel
+/**
+ * Model GateEvent
+ * 
+ */
+export type GateEvent = Prisma.GateEventModel
+/**
+ * Model FactoryQueueEntry
+ * 
+ */
+export type FactoryQueueEntry = Prisma.FactoryQueueEntryModel
+/**
+ * Model HaulierSettlement
+ * 
+ */
+export type HaulierSettlement = Prisma.HaulierSettlementModel
+/**
+ * Model HaulierSettlementLine
+ * 
+ */
+export type HaulierSettlementLine = Prisma.HaulierSettlementLineModel
+/**
+ * Model IntegrationConnection
+ * 
+ */
+export type IntegrationConnection = Prisma.IntegrationConnectionModel
+/**
+ * Model IntegrationImportReceipt
+ * 
+ */
+export type IntegrationImportReceipt = Prisma.IntegrationImportReceiptModel
+/**
+ * Model OperationalEvent
+ * 
+ */
+export type OperationalEvent = Prisma.OperationalEventModel
+/**
+ * Model TripReconciliation
+ * 
+ */
+export type TripReconciliation = Prisma.TripReconciliationModel
+/**
+ * Model ReconciliationLine
+ * 
+ */
+export type ReconciliationLine = Prisma.ReconciliationLineModel
+/**
+ * Model ReconciliationAdjustment
+ * 
+ */
+export type ReconciliationAdjustment = Prisma.ReconciliationAdjustmentModel
+/**
+ * Model ReconciliationException
+ * 
+ */
+export type ReconciliationException = Prisma.ReconciliationExceptionModel
+/**
+ * Model PlannedRoute
+ * 
+ */
+export type PlannedRoute = Prisma.PlannedRouteModel
+/**
+ * Model GeofenceAssetState
+ * 
+ */
+export type GeofenceAssetState = Prisma.GeofenceAssetStateModel
+/**
+ * Model GeofenceTransitionEvent
+ * 
+ */
+export type GeofenceTransitionEvent = Prisma.GeofenceTransitionEventModel
+/**
+ * Model RouteDeviationEvent
+ * 
+ */
+export type RouteDeviationEvent = Prisma.RouteDeviationEventModel
+/**
+ * Model TelematicsDevice
+ * 
+ */
+export type TelematicsDevice = Prisma.TelematicsDeviceModel
+/**
+ * Model DeviceInstallationHistory
+ * 
+ */
+export type DeviceInstallationHistory = Prisma.DeviceInstallationHistoryModel
+/**
+ * Model TelematicsEvent
+ * 
+ */
+export type TelematicsEvent = Prisma.TelematicsEventModel
+/**
+ * Model RawTelematicsPacket
+ * 
+ */
+export type RawTelematicsPacket = Prisma.RawTelematicsPacketModel
+/**
+ * Model VehicleLiveState
+ * 
+ */
+export type VehicleLiveState = Prisma.VehicleLiveStateModel
+/**
+ * Model TelematicsHistorySummary
+ * 
+ */
+export type TelematicsHistorySummary = Prisma.TelematicsHistorySummaryModel
+/**
+ * Model CameraChannel
+ * 
+ */
+export type CameraChannel = Prisma.CameraChannelModel
+/**
+ * Model VideoRetentionPolicy
+ * 
+ */
+export type VideoRetentionPolicy = Prisma.VideoRetentionPolicyModel
+/**
+ * Model VideoMediaRecord
+ * 
+ */
+export type VideoMediaRecord = Prisma.VideoMediaRecordModel
+/**
+ * Model VideoPrivacyAcknowledgement
+ * 
+ */
+export type VideoPrivacyAcknowledgement = Prisma.VideoPrivacyAcknowledgementModel
+/**
+ * Model VideoAlarmEvent
+ * 
+ */
+export type VideoAlarmEvent = Prisma.VideoAlarmEventModel
+/**
+ * Model VideoIncident
+ * 
+ */
+export type VideoIncident = Prisma.VideoIncidentModel
+/**
+ * Model ElectronicWaybill
+ * 
+ */
+export type ElectronicWaybill = Prisma.ElectronicWaybillModel
+/**
+ * Model ElectronicWaybillVersion
+ * 
+ */
+export type ElectronicWaybillVersion = Prisma.ElectronicWaybillVersionModel
+/**
+ * Model WaybillSeal
+ * 
+ */
+export type WaybillSeal = Prisma.WaybillSealModel
+/**
  * Model User
  * 
  */
@@ -387,3 +577,13 @@ export type DvlaRenewalHistory = Prisma.DvlaRenewalHistoryModel
  * 
  */
 export type InsuranceRenewalHistory = Prisma.InsuranceRenewalHistoryModel
+/**
+ * Model WeighingEvent
+ * 
+ */
+export type WeighingEvent = Prisma.WeighingEventModel
+/**
+ * Model AxleReading
+ * 
+ */
+export type AxleReading = Prisma.AxleReadingModel
