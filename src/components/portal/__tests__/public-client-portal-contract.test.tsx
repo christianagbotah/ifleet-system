@@ -21,4 +21,11 @@ describe('public client portal contract', () => {
     expect(source).not.toContain('localStorage')
     expect(source).not.toContain('sessionStorage')
   })
+
+  it('downloads invoice PDFs only through the token-bound public invoice endpoint', () => {
+    expect(source).toContain('/api/portal/public/invoices/')
+    expect(source).toContain("'x-portal-token'")
+    expect(source).not.toContain('/api/invoices/${')
+    expect(source).not.toContain('access=')
+  })
 })
