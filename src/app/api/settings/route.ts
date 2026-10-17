@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { requireRole, ROLES } from '@/lib/auth-server'
+import { requireAuth, requireRole, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
 import { APP_COMPANY } from '@/lib/constants'
 
 // GET /api/settings — Return current system settings (create defaults if none exist)
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request)
+    if (auth instanceof NextResponse) return auth
+
     let settings = await db.systemSettings.findFirst()
 
     if (!settings) {

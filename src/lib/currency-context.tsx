@@ -341,11 +341,11 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     }
     notifyAll()
 
-    // Also fetch currency from /api/settings for backward compatibility
-    fetch('/api/settings')
+    // Fetch only the public currency setting; full system settings require authentication.
+    fetch('/api/settings/public')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        const currencyCode: string = data?.display?.currency ?? base
+        const currencyCode: string = data?.currency ?? base
         if (currencyCode !== storeState.currencyCode) {
           storeState = {
             ...storeState,
