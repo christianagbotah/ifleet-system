@@ -34,7 +34,7 @@ function isMachineAuthRoute(pathname: string): boolean {
 
 const PUBLIC_GET_ONLY_ROUTES = {
   exact: [
-    '/api/settings',
+    '/api/settings/public',
     '/api/portal/public/client',
   ],
   prefixes: [
