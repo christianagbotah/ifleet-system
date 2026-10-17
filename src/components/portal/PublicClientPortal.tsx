@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   CircleDot,
   Clock,
+  Download,
   FileText,
   Loader2,
   MapPin,
@@ -215,6 +216,7 @@ export function PublicClientPortal() {
   const [detailId, setDetailId] = useState<string | null>(null)
   const [detail, setDetail] = useState<ShipmentDetail | null>(null)
   const [detailLoading, setDetailLoading] = useState(false)
+  const [downloadingInvoiceId, setDownloadingInvoiceId] = useState<string | null>(null)
 
   const captureToken = useCallback(() => {
     const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''))
@@ -263,6 +265,45 @@ export function PublicClientPortal() {
       setDetailId(null)
     } finally {
       setDetailLoading(false)
+    }
+  }, [token])
+
+  const downloadInvoice = useCallback(async (invoiceId: string, invoiceNumber: string) => {
+    if (!token) return
+    setDownloadingInvoiceId(invoiceId)
+    setError(null)
+
+    try {
+      const response = await fetch(
+        `/api/portal/public/invoices/${encodeURIComponent(invoiceId)}/pdf`,
+        {
+          method: 'GET',
+          headers: { 'x-portal-token': token },
+          cache: 'no-store',
+        },
+      )
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({})) as { error?: string }
+        throw new Error(body.error || 'Invoice PDF could not be downloaded.')
+      }
+
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const disposition = response.headers.get('content-disposition')
+      const filenameMatch = disposition?.match(/filename="([^"]+)"/i)
+      const fallbackNumber = invoiceNumber.replace(/[^A-Za-z0-9._-]+/g, '_') || 'invoice'
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = filenameMatch?.[1] ?? `invoice_${fallbackNumber}.pdf`
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 0)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Invoice PDF could not be downloaded.')
+    } finally {
+      setDownloadingInvoiceId(null)
     }
   }, [token])
 
@@ -442,8 +483,9 @@ export function PublicClientPortal() {
                   <p className="py-8 text-center text-sm text-muted-foreground">No invoices available.</p>
                 ) : dashboard.invoices.map((invoice) => {
                   const invoiceOutstanding = Math.max(0, invoice.totalAmount - invoice.paidAmount)
+                  const isDownloading = downloadingInvoiceId === invoice.id
                   return (
-                    <div key={invoice.id} className="grid gap-3 rounded-xl border p-3 sm:grid-cols-[1fr_0.8fr_0.8fr_0.7fr] sm:items-center">
+                    <div key={invoice.id} className="grid gap-3 rounded-xl border p-3 sm:grid-cols-[1fr_0.8fr_0.8fr_0.7fr_auto] sm:items-center">
                       <div>
                         <div className="flex items-center gap-2">
                           <FileText className="h-4 w-4 text-muted-foreground" />
@@ -454,10 +496,23 @@ export function PublicClientPortal() {
                       <Fact label="Total" value={money(invoice.totalAmount)} />
                       <Fact label="Outstanding" value={money(invoiceOutstanding)} />
                       <Badge variant="outline" className="w-fit capitalize">{invoice.status}</Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isDownloading}
+                        onClick={() => void downloadInvoice(invoice.id, invoice.invoiceNumber)}
+                      >
+                        {isDownloading ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Download className="mr-2 h-4 w-4" />
+                        )}
+                        PDF
+                      </Button>
                     </div>
                   )
                 })}
-                <p className="pt-2 text-xs text-muted-foreground">Invoice PDF downloads remain disabled on public share links until a token-bound document endpoint is enabled.</p>
+                <p className="pt-2 text-xs text-muted-foreground">Invoice PDFs are delivered only through this signed portal session.</p>
               </CardContent>
             </Card>
           </TabsContent>

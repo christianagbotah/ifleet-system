@@ -457,3 +457,17 @@ export async function loadClientShipmentDetail(clientId: string, tripId: string,
     routeCoordinates,
   }
 }
+
+export async function loadClientPortalInvoice(clientId: string, invoiceId: string) {
+  return db.invoice.findFirst({
+    where: {
+      id: invoiceId,
+      clientId,
+      client: { is: { isActive: true } },
+    },
+    select: {
+      id: true,
+      invoiceNumber: true,
+    },
+  })
+}
