@@ -40,6 +40,7 @@ const PUBLIC_GET_ONLY_ROUTES = {
   prefixes: [
     '/api/public/waybills/',
     '/api/portal/public/shipment/',
+    '/api/portal/public/invoices/',
   ],
 }
 
