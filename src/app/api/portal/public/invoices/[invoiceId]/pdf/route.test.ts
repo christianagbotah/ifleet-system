@@ -75,7 +75,7 @@ describe('GET /api/portal/public/invoices/[invoiceId]/pdf', () => {
     expect(response.headers.get('cache-control')).toBe('private, no-store')
     expect(response.headers.get('referrer-policy')).toBe('no-referrer')
     expect(response.headers.get('content-disposition')).toMatch(/^attachment; filename="invoice_INV_2026_001_\d{4}-\d{2}-\d{2}\.pdf"$/)
-    expect(mocks.buildInvoicePdf).toHaveBeenCalledWith('invoice-b')
+    expect(mocks.buildInvoicePdf).toHaveBeenCalledWith('invoice-b', 'client-a')
     expect(mocks.loadInvoice.mock.invocationCallOrder[0]).toBeLessThan(mocks.buildInvoicePdf.mock.invocationCallOrder[0])
   })
 })
