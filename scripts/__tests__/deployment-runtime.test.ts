@@ -48,6 +48,27 @@ describe('production deployment runtime configuration', () => {
     }
   })
 
+  it('blocks deployment if Prisma generation changes committed generated sources', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const generateIndex = content.indexOf('bunx prisma generate')
+    const driftIndex = content.indexOf('scripts/verify-prisma-generated.sh')
+    const dbPushIndex = content.indexOf('bunx prisma db push')
+
+    expect(generateIndex).toBeGreaterThanOrEqual(0)
+    expect(driftIndex).toBeGreaterThan(generateIndex)
+    expect(dbPushIndex).toBeGreaterThan(driftIndex)
+  })
+
+  it('checks Prisma generated-source drift in CI after the build generates the client', () => {
+    const content = read('.github/workflows/ci.yml')
+    const buildIndex = content.indexOf('- name: Build')
+    const driftIndex = content.indexOf('- name: Prisma generated-source drift')
+
+    expect(buildIndex).toBeGreaterThanOrEqual(0)
+    expect(driftIndex).toBeGreaterThan(buildIndex)
+    expect(content).toContain('bash scripts/verify-prisma-generated.sh')
+  })
+
   it('keeps deployment shell scripts syntactically valid', () => {
     for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
       expect(() => execFileSync('bash', ['-n', resolve(ROOT, file)])).not.toThrow()

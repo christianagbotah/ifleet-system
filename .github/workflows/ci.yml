@@ -38,3 +38,6 @@ jobs:
         env:
           NODE_ENV: production
         run: bun run build
+
+      - name: Prisma generated-source drift
+        run: bash scripts/verify-prisma-generated.sh

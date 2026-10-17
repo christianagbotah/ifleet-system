@@ -30,12 +30,14 @@ export type GeofenceZoneAvgAggregateOutputType = {
   latitude: number | null
   longitude: number | null
   radius: number | null
+  dwellThresholdMinutes: number | null
 }
 
 export type GeofenceZoneSumAggregateOutputType = {
   latitude: number | null
   longitude: number | null
   radius: number | null
+  dwellThresholdMinutes: number | null
 }
 
 export type GeofenceZoneMinAggregateOutputType = {
@@ -44,6 +46,9 @@ export type GeofenceZoneMinAggregateOutputType = {
   latitude: number | null
   longitude: number | null
   radius: number | null
+  geometryType: string | null
+  geometryJson: string | null
+  dwellThresholdMinutes: number | null
   type: string | null
   address: string | null
   createdAt: Date | null
@@ -56,6 +61,9 @@ export type GeofenceZoneMaxAggregateOutputType = {
   latitude: number | null
   longitude: number | null
   radius: number | null
+  geometryType: string | null
+  geometryJson: string | null
+  dwellThresholdMinutes: number | null
   type: string | null
   address: string | null
   createdAt: Date | null
@@ -68,6 +76,9 @@ export type GeofenceZoneCountAggregateOutputType = {
   latitude: number
   longitude: number
   radius: number
+  geometryType: number
+  geometryJson: number
+  dwellThresholdMinutes: number
   type: number
   address: number
   createdAt: number
@@ -80,12 +91,14 @@ export type GeofenceZoneAvgAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  dwellThresholdMinutes?: true
 }
 
 export type GeofenceZoneSumAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  dwellThresholdMinutes?: true
 }
 
 export type GeofenceZoneMinAggregateInputType = {
@@ -94,6 +107,9 @@ export type GeofenceZoneMinAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  geometryType?: true
+  geometryJson?: true
+  dwellThresholdMinutes?: true
   type?: true
   address?: true
   createdAt?: true
@@ -106,6 +122,9 @@ export type GeofenceZoneMaxAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  geometryType?: true
+  geometryJson?: true
+  dwellThresholdMinutes?: true
   type?: true
   address?: true
   createdAt?: true
@@ -118,6 +137,9 @@ export type GeofenceZoneCountAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  geometryType?: true
+  geometryJson?: true
+  dwellThresholdMinutes?: true
   type?: true
   address?: true
   createdAt?: true
@@ -217,6 +239,9 @@ export type GeofenceZoneGroupByOutputType = {
   latitude: number
   longitude: number
   radius: number
+  geometryType: string
+  geometryJson: string | null
+  dwellThresholdMinutes: number
   type: string
   address: string | null
   createdAt: Date
@@ -252,6 +277,9 @@ export type GeofenceZoneWhereInput = {
   latitude?: Prisma.FloatFilter<"GeofenceZone"> | number
   longitude?: Prisma.FloatFilter<"GeofenceZone"> | number
   radius?: Prisma.IntFilter<"GeofenceZone"> | number
+  geometryType?: Prisma.StringFilter<"GeofenceZone"> | string
+  geometryJson?: Prisma.StringNullableFilter<"GeofenceZone"> | string | null
+  dwellThresholdMinutes?: Prisma.IntFilter<"GeofenceZone"> | number
   type?: Prisma.StringFilter<"GeofenceZone"> | string
   address?: Prisma.StringNullableFilter<"GeofenceZone"> | string | null
   createdAt?: Prisma.DateTimeFilter<"GeofenceZone"> | Date | string
@@ -265,6 +293,9 @@ export type GeofenceZoneOrderByWithRelationInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  geometryType?: Prisma.SortOrder
+  geometryJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
   type?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -282,6 +313,9 @@ export type GeofenceZoneWhereUniqueInput = Prisma.AtLeast<{
   latitude?: Prisma.FloatFilter<"GeofenceZone"> | number
   longitude?: Prisma.FloatFilter<"GeofenceZone"> | number
   radius?: Prisma.IntFilter<"GeofenceZone"> | number
+  geometryType?: Prisma.StringFilter<"GeofenceZone"> | string
+  geometryJson?: Prisma.StringNullableFilter<"GeofenceZone"> | string | null
+  dwellThresholdMinutes?: Prisma.IntFilter<"GeofenceZone"> | number
   type?: Prisma.StringFilter<"GeofenceZone"> | string
   address?: Prisma.StringNullableFilter<"GeofenceZone"> | string | null
   createdAt?: Prisma.DateTimeFilter<"GeofenceZone"> | Date | string
@@ -295,6 +329,9 @@ export type GeofenceZoneOrderByWithAggregationInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  geometryType?: Prisma.SortOrder
+  geometryJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
   type?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -315,6 +352,9 @@ export type GeofenceZoneScalarWhereWithAggregatesInput = {
   latitude?: Prisma.FloatWithAggregatesFilter<"GeofenceZone"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"GeofenceZone"> | number
   radius?: Prisma.IntWithAggregatesFilter<"GeofenceZone"> | number
+  geometryType?: Prisma.StringWithAggregatesFilter<"GeofenceZone"> | string
+  geometryJson?: Prisma.StringNullableWithAggregatesFilter<"GeofenceZone"> | string | null
+  dwellThresholdMinutes?: Prisma.IntWithAggregatesFilter<"GeofenceZone"> | number
   type?: Prisma.StringWithAggregatesFilter<"GeofenceZone"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"GeofenceZone"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"GeofenceZone"> | Date | string
@@ -327,6 +367,9 @@ export type GeofenceZoneCreateInput = {
   latitude: number
   longitude: number
   radius?: number
+  geometryType?: string
+  geometryJson?: string | null
+  dwellThresholdMinutes?: number
   type?: string
   address?: string | null
   createdAt?: Date | string
@@ -340,6 +383,9 @@ export type GeofenceZoneUncheckedCreateInput = {
   latitude: number
   longitude: number
   radius?: number
+  geometryType?: string
+  geometryJson?: string | null
+  dwellThresholdMinutes?: number
   type?: string
   address?: string | null
   createdAt?: Date | string
@@ -353,6 +399,9 @@ export type GeofenceZoneUpdateInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  geometryType?: Prisma.StringFieldUpdateOperationsInput | string
+  geometryJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dwellThresholdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,6 +415,9 @@ export type GeofenceZoneUncheckedUpdateInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  geometryType?: Prisma.StringFieldUpdateOperationsInput | string
+  geometryJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dwellThresholdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,6 +431,9 @@ export type GeofenceZoneCreateManyInput = {
   latitude: number
   longitude: number
   radius?: number
+  geometryType?: string
+  geometryJson?: string | null
+  dwellThresholdMinutes?: number
   type?: string
   address?: string | null
   createdAt?: Date | string
@@ -391,6 +446,9 @@ export type GeofenceZoneUpdateManyMutationInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  geometryType?: Prisma.StringFieldUpdateOperationsInput | string
+  geometryJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dwellThresholdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -403,6 +461,9 @@ export type GeofenceZoneUncheckedUpdateManyInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  geometryType?: Prisma.StringFieldUpdateOperationsInput | string
+  geometryJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dwellThresholdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -421,6 +482,9 @@ export type GeofenceZoneCountOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  geometryType?: Prisma.SortOrder
+  geometryJson?: Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
   type?: Prisma.SortOrder
   address?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -431,6 +495,7 @@ export type GeofenceZoneAvgOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
 }
 
 export type GeofenceZoneMaxOrderByAggregateInput = {
@@ -439,6 +504,9 @@ export type GeofenceZoneMaxOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  geometryType?: Prisma.SortOrder
+  geometryJson?: Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
   type?: Prisma.SortOrder
   address?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -451,6 +519,9 @@ export type GeofenceZoneMinOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  geometryType?: Prisma.SortOrder
+  geometryJson?: Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
   type?: Prisma.SortOrder
   address?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -461,6 +532,7 @@ export type GeofenceZoneSumOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  dwellThresholdMinutes?: Prisma.SortOrder
 }
 
 export type GeofenceZoneNullableScalarRelationFilter = {
@@ -490,6 +562,9 @@ export type GeofenceZoneCreateWithoutTrackingAlertInput = {
   latitude: number
   longitude: number
   radius?: number
+  geometryType?: string
+  geometryJson?: string | null
+  dwellThresholdMinutes?: number
   type?: string
   address?: string | null
   createdAt?: Date | string
@@ -502,6 +577,9 @@ export type GeofenceZoneUncheckedCreateWithoutTrackingAlertInput = {
   latitude: number
   longitude: number
   radius?: number
+  geometryType?: string
+  geometryJson?: string | null
+  dwellThresholdMinutes?: number
   type?: string
   address?: string | null
   createdAt?: Date | string
@@ -530,6 +608,9 @@ export type GeofenceZoneUpdateWithoutTrackingAlertInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  geometryType?: Prisma.StringFieldUpdateOperationsInput | string
+  geometryJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dwellThresholdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -542,6 +623,9 @@ export type GeofenceZoneUncheckedUpdateWithoutTrackingAlertInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  geometryType?: Prisma.StringFieldUpdateOperationsInput | string
+  geometryJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dwellThresholdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -585,6 +669,9 @@ export type GeofenceZoneSelect<ExtArgs extends runtime.Types.Extensions.Internal
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
+  geometryType?: boolean
+  geometryJson?: boolean
+  dwellThresholdMinutes?: boolean
   type?: boolean
   address?: boolean
   createdAt?: boolean
@@ -601,13 +688,16 @@ export type GeofenceZoneSelectScalar = {
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
+  geometryType?: boolean
+  geometryJson?: boolean
+  dwellThresholdMinutes?: boolean
   type?: boolean
   address?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GeofenceZoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "latitude" | "longitude" | "radius" | "type" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["geofenceZone"]>
+export type GeofenceZoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "latitude" | "longitude" | "radius" | "geometryType" | "geometryJson" | "dwellThresholdMinutes" | "type" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["geofenceZone"]>
 export type GeofenceZoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TrackingAlert?: boolean | Prisma.GeofenceZone$TrackingAlertArgs<ExtArgs>
   _count?: boolean | Prisma.GeofenceZoneCountOutputTypeDefaultArgs<ExtArgs>
@@ -624,6 +714,9 @@ export type $GeofenceZonePayload<ExtArgs extends runtime.Types.Extensions.Intern
     latitude: number
     longitude: number
     radius: number
+    geometryType: string
+    geometryJson: string | null
+    dwellThresholdMinutes: number
     type: string
     address: string | null
     createdAt: Date
@@ -1003,6 +1096,9 @@ export interface GeofenceZoneFieldRefs {
   readonly latitude: Prisma.FieldRef<"GeofenceZone", 'Float'>
   readonly longitude: Prisma.FieldRef<"GeofenceZone", 'Float'>
   readonly radius: Prisma.FieldRef<"GeofenceZone", 'Int'>
+  readonly geometryType: Prisma.FieldRef<"GeofenceZone", 'String'>
+  readonly geometryJson: Prisma.FieldRef<"GeofenceZone", 'String'>
+  readonly dwellThresholdMinutes: Prisma.FieldRef<"GeofenceZone", 'Int'>
   readonly type: Prisma.FieldRef<"GeofenceZone", 'String'>
   readonly address: Prisma.FieldRef<"GeofenceZone", 'String'>
   readonly createdAt: Prisma.FieldRef<"GeofenceZone", 'DateTime'>

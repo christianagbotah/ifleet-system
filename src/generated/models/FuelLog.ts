@@ -50,6 +50,7 @@ export type FuelLogSumAggregateOutputType = {
 
 export type FuelLogMinAggregateOutputType = {
   id: string | null
+  clientMutationId: string | null
   tripId: string | null
   truckId: string | null
   date: Date | null
@@ -73,6 +74,7 @@ export type FuelLogMinAggregateOutputType = {
 
 export type FuelLogMaxAggregateOutputType = {
   id: string | null
+  clientMutationId: string | null
   tripId: string | null
   truckId: string | null
   date: Date | null
@@ -96,6 +98,7 @@ export type FuelLogMaxAggregateOutputType = {
 
 export type FuelLogCountAggregateOutputType = {
   id: number
+  clientMutationId: number
   tripId: number
   truckId: number
   date: number
@@ -143,6 +146,7 @@ export type FuelLogSumAggregateInputType = {
 
 export type FuelLogMinAggregateInputType = {
   id?: true
+  clientMutationId?: true
   tripId?: true
   truckId?: true
   date?: true
@@ -166,6 +170,7 @@ export type FuelLogMinAggregateInputType = {
 
 export type FuelLogMaxAggregateInputType = {
   id?: true
+  clientMutationId?: true
   tripId?: true
   truckId?: true
   date?: true
@@ -189,6 +194,7 @@ export type FuelLogMaxAggregateInputType = {
 
 export type FuelLogCountAggregateInputType = {
   id?: true
+  clientMutationId?: true
   tripId?: true
   truckId?: true
   date?: true
@@ -299,6 +305,7 @@ export type FuelLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type FuelLogGroupByOutputType = {
   id: string
+  clientMutationId: string | null
   tripId: string
   truckId: string
   date: Date
@@ -345,6 +352,7 @@ export type FuelLogWhereInput = {
   OR?: Prisma.FuelLogWhereInput[]
   NOT?: Prisma.FuelLogWhereInput | Prisma.FuelLogWhereInput[]
   id?: Prisma.StringFilter<"FuelLog"> | string
+  clientMutationId?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   tripId?: Prisma.StringFilter<"FuelLog"> | string
   truckId?: Prisma.StringFilter<"FuelLog"> | string
   date?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
@@ -370,6 +378,7 @@ export type FuelLogWhereInput = {
 
 export type FuelLogOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -396,6 +405,7 @@ export type FuelLogOrderByWithRelationInput = {
 
 export type FuelLogWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  clientMutationId?: string
   AND?: Prisma.FuelLogWhereInput | Prisma.FuelLogWhereInput[]
   OR?: Prisma.FuelLogWhereInput[]
   NOT?: Prisma.FuelLogWhereInput | Prisma.FuelLogWhereInput[]
@@ -420,10 +430,11 @@ export type FuelLogWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
   truck?: Prisma.XOR<Prisma.TruckScalarRelationFilter, Prisma.TruckWhereInput>
-}, "id">
+}, "id" | "clientMutationId">
 
 export type FuelLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -455,6 +466,7 @@ export type FuelLogScalarWhereWithAggregatesInput = {
   OR?: Prisma.FuelLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FuelLogScalarWhereWithAggregatesInput | Prisma.FuelLogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"FuelLog"> | string
+  clientMutationId?: Prisma.StringNullableWithAggregatesFilter<"FuelLog"> | string | null
   tripId?: Prisma.StringWithAggregatesFilter<"FuelLog"> | string
   truckId?: Prisma.StringWithAggregatesFilter<"FuelLog"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"FuelLog"> | Date | string
@@ -478,6 +490,7 @@ export type FuelLogScalarWhereWithAggregatesInput = {
 
 export type FuelLogCreateInput = {
   id?: string
+  clientMutationId?: string | null
   date?: Date | string
   odometer?: number | null
   fuelLevelBefore?: number | null
@@ -501,6 +514,7 @@ export type FuelLogCreateInput = {
 
 export type FuelLogUncheckedCreateInput = {
   id?: string
+  clientMutationId?: string | null
   tripId: string
   truckId: string
   date?: Date | string
@@ -524,6 +538,7 @@ export type FuelLogUncheckedCreateInput = {
 
 export type FuelLogUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -547,6 +562,7 @@ export type FuelLogUpdateInput = {
 
 export type FuelLogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -570,6 +586,7 @@ export type FuelLogUncheckedUpdateInput = {
 
 export type FuelLogCreateManyInput = {
   id?: string
+  clientMutationId?: string | null
   tripId: string
   truckId: string
   date?: Date | string
@@ -593,6 +610,7 @@ export type FuelLogCreateManyInput = {
 
 export type FuelLogUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -614,6 +632,7 @@ export type FuelLogUpdateManyMutationInput = {
 
 export type FuelLogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -643,6 +662,7 @@ export type FuelLogOrderByRelevanceInput = {
 
 export type FuelLogCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -677,6 +697,7 @@ export type FuelLogAvgOrderByAggregateInput = {
 
 export type FuelLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -700,6 +721,7 @@ export type FuelLogMaxOrderByAggregateInput = {
 
 export type FuelLogMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   truckId?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -828,6 +850,7 @@ export type FuelLogUncheckedUpdateManyWithoutTruckNestedInput = {
 
 export type FuelLogCreateWithoutTripInput = {
   id?: string
+  clientMutationId?: string | null
   date?: Date | string
   odometer?: number | null
   fuelLevelBefore?: number | null
@@ -850,6 +873,7 @@ export type FuelLogCreateWithoutTripInput = {
 
 export type FuelLogUncheckedCreateWithoutTripInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   date?: Date | string
   odometer?: number | null
@@ -901,6 +925,7 @@ export type FuelLogScalarWhereInput = {
   OR?: Prisma.FuelLogScalarWhereInput[]
   NOT?: Prisma.FuelLogScalarWhereInput | Prisma.FuelLogScalarWhereInput[]
   id?: Prisma.StringFilter<"FuelLog"> | string
+  clientMutationId?: Prisma.StringNullableFilter<"FuelLog"> | string | null
   tripId?: Prisma.StringFilter<"FuelLog"> | string
   truckId?: Prisma.StringFilter<"FuelLog"> | string
   date?: Prisma.DateTimeFilter<"FuelLog"> | Date | string
@@ -924,6 +949,7 @@ export type FuelLogScalarWhereInput = {
 
 export type FuelLogCreateWithoutTruckInput = {
   id?: string
+  clientMutationId?: string | null
   date?: Date | string
   odometer?: number | null
   fuelLevelBefore?: number | null
@@ -946,6 +972,7 @@ export type FuelLogCreateWithoutTruckInput = {
 
 export type FuelLogUncheckedCreateWithoutTruckInput = {
   id?: string
+  clientMutationId?: string | null
   tripId: string
   date?: Date | string
   odometer?: number | null
@@ -994,6 +1021,7 @@ export type FuelLogUpdateManyWithWhereWithoutTruckInput = {
 
 export type FuelLogCreateManyTripInput = {
   id?: string
+  clientMutationId?: string | null
   truckId: string
   date?: Date | string
   odometer?: number | null
@@ -1016,6 +1044,7 @@ export type FuelLogCreateManyTripInput = {
 
 export type FuelLogUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1038,6 +1067,7 @@ export type FuelLogUpdateWithoutTripInput = {
 
 export type FuelLogUncheckedUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1060,6 +1090,7 @@ export type FuelLogUncheckedUpdateWithoutTripInput = {
 
 export type FuelLogUncheckedUpdateManyWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   truckId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1082,6 +1113,7 @@ export type FuelLogUncheckedUpdateManyWithoutTripInput = {
 
 export type FuelLogCreateManyTruckInput = {
   id?: string
+  clientMutationId?: string | null
   tripId: string
   date?: Date | string
   odometer?: number | null
@@ -1104,6 +1136,7 @@ export type FuelLogCreateManyTruckInput = {
 
 export type FuelLogUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fuelLevelBefore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1126,6 +1159,7 @@ export type FuelLogUpdateWithoutTruckInput = {
 
 export type FuelLogUncheckedUpdateWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1148,6 +1182,7 @@ export type FuelLogUncheckedUpdateWithoutTruckInput = {
 
 export type FuelLogUncheckedUpdateManyWithoutTruckInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   odometer?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1172,6 +1207,7 @@ export type FuelLogUncheckedUpdateManyWithoutTruckInput = {
 
 export type FuelLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientMutationId?: boolean
   tripId?: boolean
   truckId?: boolean
   date?: boolean
@@ -1199,6 +1235,7 @@ export type FuelLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type FuelLogSelectScalar = {
   id?: boolean
+  clientMutationId?: boolean
   tripId?: boolean
   truckId?: boolean
   date?: boolean
@@ -1220,7 +1257,7 @@ export type FuelLogSelectScalar = {
   updatedAt?: boolean
 }
 
-export type FuelLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "truckId" | "date" | "odometer" | "fuelLevelBefore" | "fuelLevelAfter" | "litersFilled" | "costPerLiter" | "totalCost" | "stationName" | "fuelType" | "receiptNumber" | "endMileage" | "endMileageImage" | "images" | "distanceCovered" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelLog"]>
+export type FuelLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientMutationId" | "tripId" | "truckId" | "date" | "odometer" | "fuelLevelBefore" | "fuelLevelAfter" | "litersFilled" | "costPerLiter" | "totalCost" | "stationName" | "fuelType" | "receiptNumber" | "endMileage" | "endMileageImage" | "images" | "distanceCovered" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelLog"]>
 export type FuelLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   truck?: boolean | Prisma.TruckDefaultArgs<ExtArgs>
@@ -1234,6 +1271,7 @@ export type $FuelLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    clientMutationId: string | null
     tripId: string
     truckId: string
     date: Date
@@ -1625,6 +1663,7 @@ export interface Prisma__FuelLogClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface FuelLogFieldRefs {
   readonly id: Prisma.FieldRef<"FuelLog", 'String'>
+  readonly clientMutationId: Prisma.FieldRef<"FuelLog", 'String'>
   readonly tripId: Prisma.FieldRef<"FuelLog", 'String'>
   readonly truckId: Prisma.FieldRef<"FuelLog", 'String'>
   readonly date: Prisma.FieldRef<"FuelLog", 'DateTime'>

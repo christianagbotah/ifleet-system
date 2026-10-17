@@ -120,6 +120,12 @@ cd "$APP_DIR"
 log "Generating Prisma client..."
 bunx prisma generate
 
+if ! bash scripts/verify-prisma-generated.sh >> "$LOG_FILE" 2>&1; then
+    log "DEPLOY BLOCKED: Prisma generated client differs from committed src/generated"
+    exit 1
+fi
+log "Prisma generated client matches committed source"
+
 log "Pushing database schema changes..."
 bunx prisma db push
 

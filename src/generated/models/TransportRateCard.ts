@@ -54,6 +54,7 @@ export type TransportRateCardMinAggregateOutputType = {
   isActive: boolean | null
   sourceType: string | null
   sourceId: string | null
+  settlementTerms: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -76,6 +77,7 @@ export type TransportRateCardMaxAggregateOutputType = {
   isActive: boolean | null
   sourceType: string | null
   sourceId: string | null
+  settlementTerms: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -98,6 +100,7 @@ export type TransportRateCardCountAggregateOutputType = {
   isActive: number
   sourceType: number
   sourceId: number
+  settlementTerms: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -132,6 +135,7 @@ export type TransportRateCardMinAggregateInputType = {
   isActive?: true
   sourceType?: true
   sourceId?: true
+  settlementTerms?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +158,7 @@ export type TransportRateCardMaxAggregateInputType = {
   isActive?: true
   sourceType?: true
   sourceId?: true
+  settlementTerms?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -176,6 +181,7 @@ export type TransportRateCardCountAggregateInputType = {
   isActive?: true
   sourceType?: true
   sourceId?: true
+  settlementTerms?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -285,6 +291,7 @@ export type TransportRateCardGroupByOutputType = {
   isActive: boolean
   sourceType: string | null
   sourceId: string | null
+  settlementTerms: string | null
   createdAt: Date
   updatedAt: Date
   _count: TransportRateCardCountAggregateOutputType | null
@@ -330,6 +337,7 @@ export type TransportRateCardWhereInput = {
   isActive?: Prisma.BoolFilter<"TransportRateCard"> | boolean
   sourceType?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
   sourceId?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
+  settlementTerms?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   contract?: Prisma.XOR<Prisma.TransportContractNullableScalarRelationFilter, Prisma.TransportContractWhereInput> | null
@@ -358,6 +366,7 @@ export type TransportRateCardOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   sourceType?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  settlementTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contract?: Prisma.TransportContractOrderByWithRelationInput
@@ -391,6 +400,7 @@ export type TransportRateCardWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"TransportRateCard"> | boolean
   sourceType?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
   sourceId?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
+  settlementTerms?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   contract?: Prisma.XOR<Prisma.TransportContractNullableScalarRelationFilter, Prisma.TransportContractWhereInput> | null
@@ -419,6 +429,7 @@ export type TransportRateCardOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   sourceType?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  settlementTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TransportRateCardCountOrderByAggregateInput
@@ -449,6 +460,7 @@ export type TransportRateCardScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"TransportRateCard"> | boolean
   sourceType?: Prisma.StringNullableWithAggregatesFilter<"TransportRateCard"> | string | null
   sourceId?: Prisma.StringNullableWithAggregatesFilter<"TransportRateCard"> | string | null
+  settlementTerms?: Prisma.StringNullableWithAggregatesFilter<"TransportRateCard"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TransportRateCard"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TransportRateCard"> | Date | string
 }
@@ -465,6 +477,7 @@ export type TransportRateCardCreateInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
@@ -493,6 +506,7 @@ export type TransportRateCardUncheckedCreateInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -509,6 +523,7 @@ export type TransportRateCardUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
@@ -537,6 +552,7 @@ export type TransportRateCardUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -559,6 +575,7 @@ export type TransportRateCardCreateManyInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -575,6 +592,7 @@ export type TransportRateCardUpdateManyMutationInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -597,6 +615,7 @@ export type TransportRateCardUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -640,6 +659,7 @@ export type TransportRateCardCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  settlementTerms?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -667,6 +687,7 @@ export type TransportRateCardMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  settlementTerms?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -689,6 +710,7 @@ export type TransportRateCardMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  settlementTerms?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -962,6 +984,7 @@ export type TransportRateCardCreateWithoutDestinationZoneInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
@@ -988,6 +1011,7 @@ export type TransportRateCardUncheckedCreateWithoutDestinationZoneInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1039,6 +1063,7 @@ export type TransportRateCardScalarWhereInput = {
   isActive?: Prisma.BoolFilter<"TransportRateCard"> | boolean
   sourceType?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
   sourceId?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
+  settlementTerms?: Prisma.StringNullableFilter<"TransportRateCard"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TransportRateCard"> | Date | string
 }
@@ -1055,6 +1080,7 @@ export type TransportRateCardCreateWithoutItemInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
@@ -1081,6 +1107,7 @@ export type TransportRateCardUncheckedCreateWithoutItemInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1123,6 +1150,7 @@ export type TransportRateCardCreateWithoutLoadingPointInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
@@ -1149,6 +1177,7 @@ export type TransportRateCardUncheckedCreateWithoutLoadingPointInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1191,6 +1220,7 @@ export type TransportRateCardCreateWithoutTransporterInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
@@ -1217,6 +1247,7 @@ export type TransportRateCardUncheckedCreateWithoutTransporterInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1259,6 +1290,7 @@ export type TransportRateCardCreateWithoutContractInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transporter?: Prisma.TransporterCreateNestedOneWithoutTransportRateCardInput
@@ -1285,6 +1317,7 @@ export type TransportRateCardUncheckedCreateWithoutContractInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1327,6 +1360,7 @@ export type TransportRateCardCreateWithoutShipperProfileInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contract?: Prisma.TransportContractCreateNestedOneWithoutTransportRateCardInput
@@ -1353,6 +1387,7 @@ export type TransportRateCardUncheckedCreateWithoutShipperProfileInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1400,6 +1435,7 @@ export type TransportRateCardCreateManyDestinationZoneInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1416,6 +1452,7 @@ export type TransportRateCardUpdateWithoutDestinationZoneInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
@@ -1442,6 +1479,7 @@ export type TransportRateCardUncheckedUpdateWithoutDestinationZoneInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1463,6 +1501,7 @@ export type TransportRateCardUncheckedUpdateManyWithoutDestinationZoneInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1484,6 +1523,7 @@ export type TransportRateCardCreateManyItemInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1500,6 +1540,7 @@ export type TransportRateCardUpdateWithoutItemInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
@@ -1526,6 +1567,7 @@ export type TransportRateCardUncheckedUpdateWithoutItemInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1547,6 +1589,7 @@ export type TransportRateCardUncheckedUpdateManyWithoutItemInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1568,6 +1611,7 @@ export type TransportRateCardCreateManyLoadingPointInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1584,6 +1628,7 @@ export type TransportRateCardUpdateWithoutLoadingPointInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
@@ -1610,6 +1655,7 @@ export type TransportRateCardUncheckedUpdateWithoutLoadingPointInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1631,6 +1677,7 @@ export type TransportRateCardUncheckedUpdateManyWithoutLoadingPointInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1652,6 +1699,7 @@ export type TransportRateCardCreateManyTransporterInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1668,6 +1716,7 @@ export type TransportRateCardUpdateWithoutTransporterInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
@@ -1694,6 +1743,7 @@ export type TransportRateCardUncheckedUpdateWithoutTransporterInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1715,6 +1765,7 @@ export type TransportRateCardUncheckedUpdateManyWithoutTransporterInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1736,6 +1787,7 @@ export type TransportRateCardCreateManyContractInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1752,6 +1804,7 @@ export type TransportRateCardUpdateWithoutContractInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transporter?: Prisma.TransporterUpdateOneWithoutTransportRateCardNestedInput
@@ -1778,6 +1831,7 @@ export type TransportRateCardUncheckedUpdateWithoutContractInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1799,6 +1853,7 @@ export type TransportRateCardUncheckedUpdateManyWithoutContractInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1820,6 +1875,7 @@ export type TransportRateCardCreateManyShipperProfileInput = {
   isActive?: boolean
   sourceType?: string | null
   sourceId?: string | null
+  settlementTerms?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1836,6 +1892,7 @@ export type TransportRateCardUpdateWithoutShipperProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contract?: Prisma.TransportContractUpdateOneWithoutTransportRateCardNestedInput
@@ -1862,6 +1919,7 @@ export type TransportRateCardUncheckedUpdateWithoutShipperProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1883,6 +1941,7 @@ export type TransportRateCardUncheckedUpdateManyWithoutShipperProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1907,6 +1966,7 @@ export type TransportRateCardSelect<ExtArgs extends runtime.Types.Extensions.Int
   isActive?: boolean
   sourceType?: boolean
   sourceId?: boolean
+  settlementTerms?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contract?: boolean | Prisma.TransportRateCard$contractArgs<ExtArgs>
@@ -1937,11 +1997,12 @@ export type TransportRateCardSelectScalar = {
   isActive?: boolean
   sourceType?: boolean
   sourceId?: boolean
+  settlementTerms?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TransportRateCardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contractId" | "transporterId" | "shipperProfileId" | "loadingPointId" | "destinationZoneId" | "itemId" | "unit" | "rateAmount" | "rateType" | "currency" | "effectiveFrom" | "effectiveTo" | "priority" | "isActive" | "sourceType" | "sourceId" | "createdAt" | "updatedAt", ExtArgs["result"]["transportRateCard"]>
+export type TransportRateCardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contractId" | "transporterId" | "shipperProfileId" | "loadingPointId" | "destinationZoneId" | "itemId" | "unit" | "rateAmount" | "rateType" | "currency" | "effectiveFrom" | "effectiveTo" | "priority" | "isActive" | "sourceType" | "sourceId" | "settlementTerms" | "createdAt" | "updatedAt", ExtArgs["result"]["transportRateCard"]>
 export type TransportRateCardInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contract?: boolean | Prisma.TransportRateCard$contractArgs<ExtArgs>
   transporter?: boolean | Prisma.TransportRateCard$transporterArgs<ExtArgs>
@@ -1979,6 +2040,7 @@ export type $TransportRateCardPayload<ExtArgs extends runtime.Types.Extensions.I
     isActive: boolean
     sourceType: string | null
     sourceId: string | null
+    settlementTerms: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["transportRateCard"]>
@@ -2373,6 +2435,7 @@ export interface TransportRateCardFieldRefs {
   readonly isActive: Prisma.FieldRef<"TransportRateCard", 'Boolean'>
   readonly sourceType: Prisma.FieldRef<"TransportRateCard", 'String'>
   readonly sourceId: Prisma.FieldRef<"TransportRateCard", 'String'>
+  readonly settlementTerms: Prisma.FieldRef<"TransportRateCard", 'String'>
   readonly createdAt: Prisma.FieldRef<"TransportRateCard", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TransportRateCard", 'DateTime'>
 }

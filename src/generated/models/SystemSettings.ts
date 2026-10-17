@@ -31,6 +31,7 @@ export type SystemSettingsAvgAggregateOutputType = {
   defaultUpdateInterval: number | null
   speedThreshold: number | null
   idleTimeout: number | null
+  profitabilityMaintenanceCostPerKm: runtime.Decimal | null
   driverIdCounter: number | null
   driverIdPadding: number | null
 }
@@ -40,6 +41,7 @@ export type SystemSettingsSumAggregateOutputType = {
   defaultUpdateInterval: number | null
   speedThreshold: number | null
   idleTimeout: number | null
+  profitabilityMaintenanceCostPerKm: runtime.Decimal | null
   driverIdCounter: number | null
   driverIdPadding: number | null
 }
@@ -89,6 +91,8 @@ export type SystemSettingsMinAggregateOutputType = {
   currency: string | null
   distanceUnit: string | null
   fuelUnit: string | null
+  profitabilityMaintenanceAllocationEnabled: boolean | null
+  profitabilityMaintenanceCostPerKm: runtime.Decimal | null
   dateFormat: string | null
   timezone: string | null
   language: string | null
@@ -144,6 +148,8 @@ export type SystemSettingsMaxAggregateOutputType = {
   currency: string | null
   distanceUnit: string | null
   fuelUnit: string | null
+  profitabilityMaintenanceAllocationEnabled: boolean | null
+  profitabilityMaintenanceCostPerKm: runtime.Decimal | null
   dateFormat: string | null
   timezone: string | null
   language: string | null
@@ -199,6 +205,8 @@ export type SystemSettingsCountAggregateOutputType = {
   currency: number
   distanceUnit: number
   fuelUnit: number
+  profitabilityMaintenanceAllocationEnabled: number
+  profitabilityMaintenanceCostPerKm: number
   dateFormat: number
   timezone: number
   language: number
@@ -216,6 +224,7 @@ export type SystemSettingsAvgAggregateInputType = {
   defaultUpdateInterval?: true
   speedThreshold?: true
   idleTimeout?: true
+  profitabilityMaintenanceCostPerKm?: true
   driverIdCounter?: true
   driverIdPadding?: true
 }
@@ -225,6 +234,7 @@ export type SystemSettingsSumAggregateInputType = {
   defaultUpdateInterval?: true
   speedThreshold?: true
   idleTimeout?: true
+  profitabilityMaintenanceCostPerKm?: true
   driverIdCounter?: true
   driverIdPadding?: true
 }
@@ -274,6 +284,8 @@ export type SystemSettingsMinAggregateInputType = {
   currency?: true
   distanceUnit?: true
   fuelUnit?: true
+  profitabilityMaintenanceAllocationEnabled?: true
+  profitabilityMaintenanceCostPerKm?: true
   dateFormat?: true
   timezone?: true
   language?: true
@@ -329,6 +341,8 @@ export type SystemSettingsMaxAggregateInputType = {
   currency?: true
   distanceUnit?: true
   fuelUnit?: true
+  profitabilityMaintenanceAllocationEnabled?: true
+  profitabilityMaintenanceCostPerKm?: true
   dateFormat?: true
   timezone?: true
   language?: true
@@ -384,6 +398,8 @@ export type SystemSettingsCountAggregateInputType = {
   currency?: true
   distanceUnit?: true
   fuelUnit?: true
+  profitabilityMaintenanceAllocationEnabled?: true
+  profitabilityMaintenanceCostPerKm?: true
   dateFormat?: true
   timezone?: true
   language?: true
@@ -526,6 +542,8 @@ export type SystemSettingsGroupByOutputType = {
   currency: string
   distanceUnit: string
   fuelUnit: string
+  profitabilityMaintenanceAllocationEnabled: boolean
+  profitabilityMaintenanceCostPerKm: runtime.Decimal
   dateFormat: string
   timezone: string
   language: string
@@ -604,6 +622,8 @@ export type SystemSettingsWhereInput = {
   currency?: Prisma.StringFilter<"SystemSettings"> | string
   distanceUnit?: Prisma.StringFilter<"SystemSettings"> | string
   fuelUnit?: Prisma.StringFilter<"SystemSettings"> | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolFilter<"SystemSettings"> | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalFilter<"SystemSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringFilter<"SystemSettings"> | string
   timezone?: Prisma.StringFilter<"SystemSettings"> | string
   language?: Prisma.StringFilter<"SystemSettings"> | string
@@ -659,6 +679,8 @@ export type SystemSettingsOrderByWithRelationInput = {
   currency?: Prisma.SortOrder
   distanceUnit?: Prisma.SortOrder
   fuelUnit?: Prisma.SortOrder
+  profitabilityMaintenanceAllocationEnabled?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
@@ -718,6 +740,8 @@ export type SystemSettingsWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"SystemSettings"> | string
   distanceUnit?: Prisma.StringFilter<"SystemSettings"> | string
   fuelUnit?: Prisma.StringFilter<"SystemSettings"> | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolFilter<"SystemSettings"> | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalFilter<"SystemSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringFilter<"SystemSettings"> | string
   timezone?: Prisma.StringFilter<"SystemSettings"> | string
   language?: Prisma.StringFilter<"SystemSettings"> | string
@@ -773,6 +797,8 @@ export type SystemSettingsOrderByWithAggregationInput = {
   currency?: Prisma.SortOrder
   distanceUnit?: Prisma.SortOrder
   fuelUnit?: Prisma.SortOrder
+  profitabilityMaintenanceAllocationEnabled?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
@@ -836,6 +862,8 @@ export type SystemSettingsScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
   distanceUnit?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
   fuelUnit?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolWithAggregatesFilter<"SystemSettings"> | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalWithAggregatesFilter<"SystemSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
   timezone?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
   language?: Prisma.StringWithAggregatesFilter<"SystemSettings"> | string
@@ -891,6 +919,8 @@ export type SystemSettingsCreateInput = {
   currency?: string
   distanceUnit?: string
   fuelUnit?: string
+  profitabilityMaintenanceAllocationEnabled?: boolean
+  profitabilityMaintenanceCostPerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: string
   timezone?: string
   language?: string
@@ -946,6 +976,8 @@ export type SystemSettingsUncheckedCreateInput = {
   currency?: string
   distanceUnit?: string
   fuelUnit?: string
+  profitabilityMaintenanceAllocationEnabled?: boolean
+  profitabilityMaintenanceCostPerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: string
   timezone?: string
   language?: string
@@ -1001,6 +1033,8 @@ export type SystemSettingsUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   distanceUnit?: Prisma.StringFieldUpdateOperationsInput | string
   fuelUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1056,6 +1090,8 @@ export type SystemSettingsUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   distanceUnit?: Prisma.StringFieldUpdateOperationsInput | string
   fuelUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1111,6 +1147,8 @@ export type SystemSettingsCreateManyInput = {
   currency?: string
   distanceUnit?: string
   fuelUnit?: string
+  profitabilityMaintenanceAllocationEnabled?: boolean
+  profitabilityMaintenanceCostPerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: string
   timezone?: string
   language?: string
@@ -1166,6 +1204,8 @@ export type SystemSettingsUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   distanceUnit?: Prisma.StringFieldUpdateOperationsInput | string
   fuelUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1221,6 +1261,8 @@ export type SystemSettingsUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   distanceUnit?: Prisma.StringFieldUpdateOperationsInput | string
   fuelUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  profitabilityMaintenanceAllocationEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profitabilityMaintenanceCostPerKm?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dateFormat?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1282,6 +1324,8 @@ export type SystemSettingsCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   distanceUnit?: Prisma.SortOrder
   fuelUnit?: Prisma.SortOrder
+  profitabilityMaintenanceAllocationEnabled?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
@@ -1297,6 +1341,7 @@ export type SystemSettingsAvgOrderByAggregateInput = {
   defaultUpdateInterval?: Prisma.SortOrder
   speedThreshold?: Prisma.SortOrder
   idleTimeout?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   driverIdCounter?: Prisma.SortOrder
   driverIdPadding?: Prisma.SortOrder
 }
@@ -1346,6 +1391,8 @@ export type SystemSettingsMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   distanceUnit?: Prisma.SortOrder
   fuelUnit?: Prisma.SortOrder
+  profitabilityMaintenanceAllocationEnabled?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
@@ -1401,6 +1448,8 @@ export type SystemSettingsMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   distanceUnit?: Prisma.SortOrder
   fuelUnit?: Prisma.SortOrder
+  profitabilityMaintenanceAllocationEnabled?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   language?: Prisma.SortOrder
@@ -1416,6 +1465,7 @@ export type SystemSettingsSumOrderByAggregateInput = {
   defaultUpdateInterval?: Prisma.SortOrder
   speedThreshold?: Prisma.SortOrder
   idleTimeout?: Prisma.SortOrder
+  profitabilityMaintenanceCostPerKm?: Prisma.SortOrder
   driverIdCounter?: Prisma.SortOrder
   driverIdPadding?: Prisma.SortOrder
 }
@@ -1467,6 +1517,8 @@ export type SystemSettingsSelect<ExtArgs extends runtime.Types.Extensions.Intern
   currency?: boolean
   distanceUnit?: boolean
   fuelUnit?: boolean
+  profitabilityMaintenanceAllocationEnabled?: boolean
+  profitabilityMaintenanceCostPerKm?: boolean
   dateFormat?: boolean
   timezone?: boolean
   language?: boolean
@@ -1524,6 +1576,8 @@ export type SystemSettingsSelectScalar = {
   currency?: boolean
   distanceUnit?: boolean
   fuelUnit?: boolean
+  profitabilityMaintenanceAllocationEnabled?: boolean
+  profitabilityMaintenanceCostPerKm?: boolean
   dateFormat?: boolean
   timezone?: boolean
   language?: boolean
@@ -1534,7 +1588,7 @@ export type SystemSettingsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SystemSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isDefault" | "companyName" | "companyEmail" | "companyPhone" | "companyAddress" | "companyCity" | "companyCountry" | "companyWebsite" | "registrationNumber" | "notifyTripStarted" | "notifyTripCompleted" | "notifyMaintenanceDue" | "notifyInsuranceExpiring" | "notifySpeedingAlert" | "notifyGeofenceAlert" | "notifyDriverOffline" | "notifyDailyReport" | "smsProvider" | "smsEnabled" | "hubtelClientId" | "hubtelApiSecret" | "arkeselApiKey" | "arkeselSenderId" | "paystackEnabled" | "paystackSecretKey" | "paystackPublicKey" | "paystackMode" | "mobileMoneyProvider" | "paystackWebhookSecret" | "emailEnabled" | "smtpHost" | "smtpPort" | "smtpUser" | "smtpPass" | "smtpFrom" | "smtpSecure" | "defaultUpdateInterval" | "speedThreshold" | "enableGeofence" | "idleTimeout" | "currency" | "distanceUnit" | "fuelUnit" | "dateFormat" | "timezone" | "language" | "driverIdPrefix" | "driverIdCounter" | "driverIdPadding" | "createdAt" | "updatedAt", ExtArgs["result"]["systemSettings"]>
+export type SystemSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isDefault" | "companyName" | "companyEmail" | "companyPhone" | "companyAddress" | "companyCity" | "companyCountry" | "companyWebsite" | "registrationNumber" | "notifyTripStarted" | "notifyTripCompleted" | "notifyMaintenanceDue" | "notifyInsuranceExpiring" | "notifySpeedingAlert" | "notifyGeofenceAlert" | "notifyDriverOffline" | "notifyDailyReport" | "smsProvider" | "smsEnabled" | "hubtelClientId" | "hubtelApiSecret" | "arkeselApiKey" | "arkeselSenderId" | "paystackEnabled" | "paystackSecretKey" | "paystackPublicKey" | "paystackMode" | "mobileMoneyProvider" | "paystackWebhookSecret" | "emailEnabled" | "smtpHost" | "smtpPort" | "smtpUser" | "smtpPass" | "smtpFrom" | "smtpSecure" | "defaultUpdateInterval" | "speedThreshold" | "enableGeofence" | "idleTimeout" | "currency" | "distanceUnit" | "fuelUnit" | "profitabilityMaintenanceAllocationEnabled" | "profitabilityMaintenanceCostPerKm" | "dateFormat" | "timezone" | "language" | "driverIdPrefix" | "driverIdCounter" | "driverIdPadding" | "createdAt" | "updatedAt", ExtArgs["result"]["systemSettings"]>
 
 export type $SystemSettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SystemSettings"
@@ -1584,6 +1638,8 @@ export type $SystemSettingsPayload<ExtArgs extends runtime.Types.Extensions.Inte
     currency: string
     distanceUnit: string
     fuelUnit: string
+    profitabilityMaintenanceAllocationEnabled: boolean
+    profitabilityMaintenanceCostPerKm: runtime.Decimal
     dateFormat: string
     timezone: string
     language: string
@@ -2005,6 +2061,8 @@ export interface SystemSettingsFieldRefs {
   readonly currency: Prisma.FieldRef<"SystemSettings", 'String'>
   readonly distanceUnit: Prisma.FieldRef<"SystemSettings", 'String'>
   readonly fuelUnit: Prisma.FieldRef<"SystemSettings", 'String'>
+  readonly profitabilityMaintenanceAllocationEnabled: Prisma.FieldRef<"SystemSettings", 'Boolean'>
+  readonly profitabilityMaintenanceCostPerKm: Prisma.FieldRef<"SystemSettings", 'Decimal'>
   readonly dateFormat: Prisma.FieldRef<"SystemSettings", 'String'>
   readonly timezone: Prisma.FieldRef<"SystemSettings", 'String'>
   readonly language: Prisma.FieldRef<"SystemSettings", 'String'>

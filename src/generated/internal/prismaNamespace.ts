@@ -384,6 +384,44 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  AiRecommendation: 'AiRecommendation',
+  AiPrediction: 'AiPrediction',
+  AiReviewCase: 'AiReviewCase',
+  ComplianceRuleSet: 'ComplianceRuleSet',
+  ComplianceRule: 'ComplianceRule',
+  ProofOfDelivery: 'ProofOfDelivery',
+  ProofOfDeliveryEvidence: 'ProofOfDeliveryEvidence',
+  DeliveryException: 'DeliveryException',
+  GateEvent: 'GateEvent',
+  FactoryQueueEntry: 'FactoryQueueEntry',
+  HaulierSettlement: 'HaulierSettlement',
+  HaulierSettlementLine: 'HaulierSettlementLine',
+  IntegrationConnection: 'IntegrationConnection',
+  IntegrationImportReceipt: 'IntegrationImportReceipt',
+  OperationalEvent: 'OperationalEvent',
+  TripReconciliation: 'TripReconciliation',
+  ReconciliationLine: 'ReconciliationLine',
+  ReconciliationAdjustment: 'ReconciliationAdjustment',
+  ReconciliationException: 'ReconciliationException',
+  PlannedRoute: 'PlannedRoute',
+  GeofenceAssetState: 'GeofenceAssetState',
+  GeofenceTransitionEvent: 'GeofenceTransitionEvent',
+  RouteDeviationEvent: 'RouteDeviationEvent',
+  TelematicsDevice: 'TelematicsDevice',
+  DeviceInstallationHistory: 'DeviceInstallationHistory',
+  TelematicsEvent: 'TelematicsEvent',
+  RawTelematicsPacket: 'RawTelematicsPacket',
+  VehicleLiveState: 'VehicleLiveState',
+  TelematicsHistorySummary: 'TelematicsHistorySummary',
+  CameraChannel: 'CameraChannel',
+  VideoRetentionPolicy: 'VideoRetentionPolicy',
+  VideoMediaRecord: 'VideoMediaRecord',
+  VideoPrivacyAcknowledgement: 'VideoPrivacyAcknowledgement',
+  VideoAlarmEvent: 'VideoAlarmEvent',
+  VideoIncident: 'VideoIncident',
+  ElectronicWaybill: 'ElectronicWaybill',
+  ElectronicWaybillVersion: 'ElectronicWaybillVersion',
+  WaybillSeal: 'WaybillSeal',
   User: 'User',
   AuditLog: 'AuditLog',
   BorderCrossing: 'BorderCrossing',
@@ -457,7 +495,9 @@ export const ModelName = {
   WeightVerification: 'WeightVerification',
   ZoneRate: 'ZoneRate',
   DvlaRenewalHistory: 'DvlaRenewalHistory',
-  InsuranceRenewalHistory: 'InsuranceRenewalHistory'
+  InsuranceRenewalHistory: 'InsuranceRenewalHistory',
+  WeighingEvent: 'WeighingEvent',
+  AxleReading: 'AxleReading'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -473,10 +513,2518 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "organization" | "transporter" | "vehicleOwner" | "transportContract" | "transportRateCard" | "shipperProfile" | "shipperSiteRule" | "loadOrder" | "loadOrderDestination" | "loadOrderLine" | "truck" | "trailer" | "trailerCoupling" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory"
+    modelProps: "aiRecommendation" | "aiPrediction" | "aiReviewCase" | "complianceRuleSet" | "complianceRule" | "proofOfDelivery" | "proofOfDeliveryEvidence" | "deliveryException" | "gateEvent" | "factoryQueueEntry" | "haulierSettlement" | "haulierSettlementLine" | "integrationConnection" | "integrationImportReceipt" | "operationalEvent" | "tripReconciliation" | "reconciliationLine" | "reconciliationAdjustment" | "reconciliationException" | "plannedRoute" | "geofenceAssetState" | "geofenceTransitionEvent" | "routeDeviationEvent" | "telematicsDevice" | "deviceInstallationHistory" | "telematicsEvent" | "rawTelematicsPacket" | "vehicleLiveState" | "telematicsHistorySummary" | "cameraChannel" | "videoRetentionPolicy" | "videoMediaRecord" | "videoPrivacyAcknowledgement" | "videoAlarmEvent" | "videoIncident" | "electronicWaybill" | "electronicWaybillVersion" | "waybillSeal" | "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "organization" | "transporter" | "vehicleOwner" | "transportContract" | "transportRateCard" | "shipperProfile" | "shipperSiteRule" | "loadOrder" | "loadOrderDestination" | "loadOrderLine" | "truck" | "trailer" | "trailerCoupling" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory" | "weighingEvent" | "axleReading"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    AiRecommendation: {
+      payload: Prisma.$AiRecommendationPayload<ExtArgs>
+      fields: Prisma.AiRecommendationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiRecommendationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiRecommendationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>
+        }
+        findFirst: {
+          args: Prisma.AiRecommendationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiRecommendationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>
+        }
+        findMany: {
+          args: Prisma.AiRecommendationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>[]
+        }
+        create: {
+          args: Prisma.AiRecommendationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>
+        }
+        createMany: {
+          args: Prisma.AiRecommendationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AiRecommendationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>
+        }
+        update: {
+          args: Prisma.AiRecommendationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiRecommendationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiRecommendationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AiRecommendationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiRecommendationPayload>
+        }
+        aggregate: {
+          args: Prisma.AiRecommendationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiRecommendation>
+        }
+        groupBy: {
+          args: Prisma.AiRecommendationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiRecommendationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiRecommendationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiRecommendationCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiPrediction: {
+      payload: Prisma.$AiPredictionPayload<ExtArgs>
+      fields: Prisma.AiPredictionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiPredictionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiPredictionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>
+        }
+        findFirst: {
+          args: Prisma.AiPredictionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiPredictionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>
+        }
+        findMany: {
+          args: Prisma.AiPredictionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>[]
+        }
+        create: {
+          args: Prisma.AiPredictionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>
+        }
+        createMany: {
+          args: Prisma.AiPredictionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AiPredictionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>
+        }
+        update: {
+          args: Prisma.AiPredictionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiPredictionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiPredictionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AiPredictionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiPredictionPayload>
+        }
+        aggregate: {
+          args: Prisma.AiPredictionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiPrediction>
+        }
+        groupBy: {
+          args: Prisma.AiPredictionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiPredictionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiPredictionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiPredictionCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiReviewCase: {
+      payload: Prisma.$AiReviewCasePayload<ExtArgs>
+      fields: Prisma.AiReviewCaseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiReviewCaseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiReviewCaseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>
+        }
+        findFirst: {
+          args: Prisma.AiReviewCaseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiReviewCaseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>
+        }
+        findMany: {
+          args: Prisma.AiReviewCaseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>[]
+        }
+        create: {
+          args: Prisma.AiReviewCaseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>
+        }
+        createMany: {
+          args: Prisma.AiReviewCaseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AiReviewCaseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>
+        }
+        update: {
+          args: Prisma.AiReviewCaseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>
+        }
+        deleteMany: {
+          args: Prisma.AiReviewCaseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiReviewCaseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AiReviewCaseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReviewCasePayload>
+        }
+        aggregate: {
+          args: Prisma.AiReviewCaseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiReviewCase>
+        }
+        groupBy: {
+          args: Prisma.AiReviewCaseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiReviewCaseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiReviewCaseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiReviewCaseCountAggregateOutputType> | number
+        }
+      }
+    }
+    ComplianceRuleSet: {
+      payload: Prisma.$ComplianceRuleSetPayload<ExtArgs>
+      fields: Prisma.ComplianceRuleSetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ComplianceRuleSetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ComplianceRuleSetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>
+        }
+        findFirst: {
+          args: Prisma.ComplianceRuleSetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ComplianceRuleSetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>
+        }
+        findMany: {
+          args: Prisma.ComplianceRuleSetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>[]
+        }
+        create: {
+          args: Prisma.ComplianceRuleSetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>
+        }
+        createMany: {
+          args: Prisma.ComplianceRuleSetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ComplianceRuleSetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>
+        }
+        update: {
+          args: Prisma.ComplianceRuleSetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>
+        }
+        deleteMany: {
+          args: Prisma.ComplianceRuleSetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ComplianceRuleSetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ComplianceRuleSetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRuleSetPayload>
+        }
+        aggregate: {
+          args: Prisma.ComplianceRuleSetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateComplianceRuleSet>
+        }
+        groupBy: {
+          args: Prisma.ComplianceRuleSetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceRuleSetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ComplianceRuleSetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceRuleSetCountAggregateOutputType> | number
+        }
+      }
+    }
+    ComplianceRule: {
+      payload: Prisma.$ComplianceRulePayload<ExtArgs>
+      fields: Prisma.ComplianceRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ComplianceRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ComplianceRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>
+        }
+        findFirst: {
+          args: Prisma.ComplianceRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ComplianceRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>
+        }
+        findMany: {
+          args: Prisma.ComplianceRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>[]
+        }
+        create: {
+          args: Prisma.ComplianceRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>
+        }
+        createMany: {
+          args: Prisma.ComplianceRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ComplianceRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>
+        }
+        update: {
+          args: Prisma.ComplianceRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.ComplianceRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ComplianceRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ComplianceRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ComplianceRulePayload>
+        }
+        aggregate: {
+          args: Prisma.ComplianceRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateComplianceRule>
+        }
+        groupBy: {
+          args: Prisma.ComplianceRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ComplianceRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ComplianceRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProofOfDelivery: {
+      payload: Prisma.$ProofOfDeliveryPayload<ExtArgs>
+      fields: Prisma.ProofOfDeliveryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProofOfDeliveryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProofOfDeliveryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>
+        }
+        findFirst: {
+          args: Prisma.ProofOfDeliveryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProofOfDeliveryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>
+        }
+        findMany: {
+          args: Prisma.ProofOfDeliveryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>[]
+        }
+        create: {
+          args: Prisma.ProofOfDeliveryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>
+        }
+        createMany: {
+          args: Prisma.ProofOfDeliveryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ProofOfDeliveryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>
+        }
+        update: {
+          args: Prisma.ProofOfDeliveryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProofOfDeliveryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProofOfDeliveryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ProofOfDeliveryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryPayload>
+        }
+        aggregate: {
+          args: Prisma.ProofOfDeliveryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProofOfDelivery>
+        }
+        groupBy: {
+          args: Prisma.ProofOfDeliveryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProofOfDeliveryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProofOfDeliveryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProofOfDeliveryCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProofOfDeliveryEvidence: {
+      payload: Prisma.$ProofOfDeliveryEvidencePayload<ExtArgs>
+      fields: Prisma.ProofOfDeliveryEvidenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProofOfDeliveryEvidenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProofOfDeliveryEvidenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>
+        }
+        findFirst: {
+          args: Prisma.ProofOfDeliveryEvidenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProofOfDeliveryEvidenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>
+        }
+        findMany: {
+          args: Prisma.ProofOfDeliveryEvidenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>[]
+        }
+        create: {
+          args: Prisma.ProofOfDeliveryEvidenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>
+        }
+        createMany: {
+          args: Prisma.ProofOfDeliveryEvidenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ProofOfDeliveryEvidenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>
+        }
+        update: {
+          args: Prisma.ProofOfDeliveryEvidenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProofOfDeliveryEvidenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProofOfDeliveryEvidenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ProofOfDeliveryEvidenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProofOfDeliveryEvidencePayload>
+        }
+        aggregate: {
+          args: Prisma.ProofOfDeliveryEvidenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProofOfDeliveryEvidence>
+        }
+        groupBy: {
+          args: Prisma.ProofOfDeliveryEvidenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProofOfDeliveryEvidenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProofOfDeliveryEvidenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProofOfDeliveryEvidenceCountAggregateOutputType> | number
+        }
+      }
+    }
+    DeliveryException: {
+      payload: Prisma.$DeliveryExceptionPayload<ExtArgs>
+      fields: Prisma.DeliveryExceptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeliveryExceptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeliveryExceptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>
+        }
+        findFirst: {
+          args: Prisma.DeliveryExceptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeliveryExceptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>
+        }
+        findMany: {
+          args: Prisma.DeliveryExceptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>[]
+        }
+        create: {
+          args: Prisma.DeliveryExceptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>
+        }
+        createMany: {
+          args: Prisma.DeliveryExceptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DeliveryExceptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>
+        }
+        update: {
+          args: Prisma.DeliveryExceptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeliveryExceptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeliveryExceptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DeliveryExceptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryExceptionPayload>
+        }
+        aggregate: {
+          args: Prisma.DeliveryExceptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeliveryException>
+        }
+        groupBy: {
+          args: Prisma.DeliveryExceptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryExceptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeliveryExceptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryExceptionCountAggregateOutputType> | number
+        }
+      }
+    }
+    GateEvent: {
+      payload: Prisma.$GateEventPayload<ExtArgs>
+      fields: Prisma.GateEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GateEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GateEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>
+        }
+        findFirst: {
+          args: Prisma.GateEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GateEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>
+        }
+        findMany: {
+          args: Prisma.GateEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>[]
+        }
+        create: {
+          args: Prisma.GateEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>
+        }
+        createMany: {
+          args: Prisma.GateEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.GateEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>
+        }
+        update: {
+          args: Prisma.GateEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.GateEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GateEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.GateEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GateEventPayload>
+        }
+        aggregate: {
+          args: Prisma.GateEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGateEvent>
+        }
+        groupBy: {
+          args: Prisma.GateEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GateEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GateEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GateEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    FactoryQueueEntry: {
+      payload: Prisma.$FactoryQueueEntryPayload<ExtArgs>
+      fields: Prisma.FactoryQueueEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FactoryQueueEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FactoryQueueEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.FactoryQueueEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FactoryQueueEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>
+        }
+        findMany: {
+          args: Prisma.FactoryQueueEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>[]
+        }
+        create: {
+          args: Prisma.FactoryQueueEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>
+        }
+        createMany: {
+          args: Prisma.FactoryQueueEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.FactoryQueueEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>
+        }
+        update: {
+          args: Prisma.FactoryQueueEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.FactoryQueueEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FactoryQueueEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.FactoryQueueEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryQueueEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.FactoryQueueEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFactoryQueueEntry>
+        }
+        groupBy: {
+          args: Prisma.FactoryQueueEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FactoryQueueEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FactoryQueueEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FactoryQueueEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    HaulierSettlement: {
+      payload: Prisma.$HaulierSettlementPayload<ExtArgs>
+      fields: Prisma.HaulierSettlementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HaulierSettlementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HaulierSettlementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>
+        }
+        findFirst: {
+          args: Prisma.HaulierSettlementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HaulierSettlementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>
+        }
+        findMany: {
+          args: Prisma.HaulierSettlementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>[]
+        }
+        create: {
+          args: Prisma.HaulierSettlementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>
+        }
+        createMany: {
+          args: Prisma.HaulierSettlementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.HaulierSettlementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>
+        }
+        update: {
+          args: Prisma.HaulierSettlementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>
+        }
+        deleteMany: {
+          args: Prisma.HaulierSettlementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HaulierSettlementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.HaulierSettlementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementPayload>
+        }
+        aggregate: {
+          args: Prisma.HaulierSettlementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHaulierSettlement>
+        }
+        groupBy: {
+          args: Prisma.HaulierSettlementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaulierSettlementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HaulierSettlementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaulierSettlementCountAggregateOutputType> | number
+        }
+      }
+    }
+    HaulierSettlementLine: {
+      payload: Prisma.$HaulierSettlementLinePayload<ExtArgs>
+      fields: Prisma.HaulierSettlementLineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HaulierSettlementLineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HaulierSettlementLineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>
+        }
+        findFirst: {
+          args: Prisma.HaulierSettlementLineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HaulierSettlementLineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>
+        }
+        findMany: {
+          args: Prisma.HaulierSettlementLineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>[]
+        }
+        create: {
+          args: Prisma.HaulierSettlementLineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>
+        }
+        createMany: {
+          args: Prisma.HaulierSettlementLineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.HaulierSettlementLineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>
+        }
+        update: {
+          args: Prisma.HaulierSettlementLineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>
+        }
+        deleteMany: {
+          args: Prisma.HaulierSettlementLineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HaulierSettlementLineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.HaulierSettlementLineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaulierSettlementLinePayload>
+        }
+        aggregate: {
+          args: Prisma.HaulierSettlementLineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHaulierSettlementLine>
+        }
+        groupBy: {
+          args: Prisma.HaulierSettlementLineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaulierSettlementLineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HaulierSettlementLineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaulierSettlementLineCountAggregateOutputType> | number
+        }
+      }
+    }
+    IntegrationConnection: {
+      payload: Prisma.$IntegrationConnectionPayload<ExtArgs>
+      fields: Prisma.IntegrationConnectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IntegrationConnectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IntegrationConnectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>
+        }
+        findFirst: {
+          args: Prisma.IntegrationConnectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IntegrationConnectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>
+        }
+        findMany: {
+          args: Prisma.IntegrationConnectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>[]
+        }
+        create: {
+          args: Prisma.IntegrationConnectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>
+        }
+        createMany: {
+          args: Prisma.IntegrationConnectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.IntegrationConnectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>
+        }
+        update: {
+          args: Prisma.IntegrationConnectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.IntegrationConnectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IntegrationConnectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.IntegrationConnectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationConnectionPayload>
+        }
+        aggregate: {
+          args: Prisma.IntegrationConnectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIntegrationConnection>
+        }
+        groupBy: {
+          args: Prisma.IntegrationConnectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IntegrationConnectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IntegrationConnectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IntegrationConnectionCountAggregateOutputType> | number
+        }
+      }
+    }
+    IntegrationImportReceipt: {
+      payload: Prisma.$IntegrationImportReceiptPayload<ExtArgs>
+      fields: Prisma.IntegrationImportReceiptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IntegrationImportReceiptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IntegrationImportReceiptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>
+        }
+        findFirst: {
+          args: Prisma.IntegrationImportReceiptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IntegrationImportReceiptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>
+        }
+        findMany: {
+          args: Prisma.IntegrationImportReceiptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>[]
+        }
+        create: {
+          args: Prisma.IntegrationImportReceiptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>
+        }
+        createMany: {
+          args: Prisma.IntegrationImportReceiptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.IntegrationImportReceiptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>
+        }
+        update: {
+          args: Prisma.IntegrationImportReceiptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>
+        }
+        deleteMany: {
+          args: Prisma.IntegrationImportReceiptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IntegrationImportReceiptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.IntegrationImportReceiptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationImportReceiptPayload>
+        }
+        aggregate: {
+          args: Prisma.IntegrationImportReceiptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIntegrationImportReceipt>
+        }
+        groupBy: {
+          args: Prisma.IntegrationImportReceiptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IntegrationImportReceiptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IntegrationImportReceiptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IntegrationImportReceiptCountAggregateOutputType> | number
+        }
+      }
+    }
+    OperationalEvent: {
+      payload: Prisma.$OperationalEventPayload<ExtArgs>
+      fields: Prisma.OperationalEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OperationalEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OperationalEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>
+        }
+        findFirst: {
+          args: Prisma.OperationalEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OperationalEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>
+        }
+        findMany: {
+          args: Prisma.OperationalEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>[]
+        }
+        create: {
+          args: Prisma.OperationalEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>
+        }
+        createMany: {
+          args: Prisma.OperationalEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.OperationalEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>
+        }
+        update: {
+          args: Prisma.OperationalEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.OperationalEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OperationalEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.OperationalEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperationalEventPayload>
+        }
+        aggregate: {
+          args: Prisma.OperationalEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOperationalEvent>
+        }
+        groupBy: {
+          args: Prisma.OperationalEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OperationalEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OperationalEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OperationalEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    TripReconciliation: {
+      payload: Prisma.$TripReconciliationPayload<ExtArgs>
+      fields: Prisma.TripReconciliationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripReconciliationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripReconciliationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        findFirst: {
+          args: Prisma.TripReconciliationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripReconciliationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        findMany: {
+          args: Prisma.TripReconciliationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>[]
+        }
+        create: {
+          args: Prisma.TripReconciliationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        createMany: {
+          args: Prisma.TripReconciliationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TripReconciliationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        update: {
+          args: Prisma.TripReconciliationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TripReconciliationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripReconciliationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TripReconciliationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReconciliationPayload>
+        }
+        aggregate: {
+          args: Prisma.TripReconciliationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripReconciliation>
+        }
+        groupBy: {
+          args: Prisma.TripReconciliationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripReconciliationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripReconciliationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripReconciliationCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReconciliationLine: {
+      payload: Prisma.$ReconciliationLinePayload<ExtArgs>
+      fields: Prisma.ReconciliationLineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReconciliationLineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReconciliationLineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>
+        }
+        findFirst: {
+          args: Prisma.ReconciliationLineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReconciliationLineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>
+        }
+        findMany: {
+          args: Prisma.ReconciliationLineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>[]
+        }
+        create: {
+          args: Prisma.ReconciliationLineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>
+        }
+        createMany: {
+          args: Prisma.ReconciliationLineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ReconciliationLineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>
+        }
+        update: {
+          args: Prisma.ReconciliationLineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>
+        }
+        deleteMany: {
+          args: Prisma.ReconciliationLineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReconciliationLineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ReconciliationLineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationLinePayload>
+        }
+        aggregate: {
+          args: Prisma.ReconciliationLineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReconciliationLine>
+        }
+        groupBy: {
+          args: Prisma.ReconciliationLineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReconciliationLineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReconciliationLineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReconciliationLineCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReconciliationAdjustment: {
+      payload: Prisma.$ReconciliationAdjustmentPayload<ExtArgs>
+      fields: Prisma.ReconciliationAdjustmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReconciliationAdjustmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReconciliationAdjustmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>
+        }
+        findFirst: {
+          args: Prisma.ReconciliationAdjustmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReconciliationAdjustmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>
+        }
+        findMany: {
+          args: Prisma.ReconciliationAdjustmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>[]
+        }
+        create: {
+          args: Prisma.ReconciliationAdjustmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>
+        }
+        createMany: {
+          args: Prisma.ReconciliationAdjustmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ReconciliationAdjustmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>
+        }
+        update: {
+          args: Prisma.ReconciliationAdjustmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReconciliationAdjustmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReconciliationAdjustmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ReconciliationAdjustmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationAdjustmentPayload>
+        }
+        aggregate: {
+          args: Prisma.ReconciliationAdjustmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReconciliationAdjustment>
+        }
+        groupBy: {
+          args: Prisma.ReconciliationAdjustmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReconciliationAdjustmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReconciliationAdjustmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReconciliationAdjustmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReconciliationException: {
+      payload: Prisma.$ReconciliationExceptionPayload<ExtArgs>
+      fields: Prisma.ReconciliationExceptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReconciliationExceptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReconciliationExceptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>
+        }
+        findFirst: {
+          args: Prisma.ReconciliationExceptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReconciliationExceptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>
+        }
+        findMany: {
+          args: Prisma.ReconciliationExceptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>[]
+        }
+        create: {
+          args: Prisma.ReconciliationExceptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>
+        }
+        createMany: {
+          args: Prisma.ReconciliationExceptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ReconciliationExceptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>
+        }
+        update: {
+          args: Prisma.ReconciliationExceptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReconciliationExceptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReconciliationExceptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ReconciliationExceptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReconciliationExceptionPayload>
+        }
+        aggregate: {
+          args: Prisma.ReconciliationExceptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReconciliationException>
+        }
+        groupBy: {
+          args: Prisma.ReconciliationExceptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReconciliationExceptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReconciliationExceptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReconciliationExceptionCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlannedRoute: {
+      payload: Prisma.$PlannedRoutePayload<ExtArgs>
+      fields: Prisma.PlannedRouteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlannedRouteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlannedRouteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>
+        }
+        findFirst: {
+          args: Prisma.PlannedRouteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlannedRouteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>
+        }
+        findMany: {
+          args: Prisma.PlannedRouteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>[]
+        }
+        create: {
+          args: Prisma.PlannedRouteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>
+        }
+        createMany: {
+          args: Prisma.PlannedRouteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.PlannedRouteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>
+        }
+        update: {
+          args: Prisma.PlannedRouteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlannedRouteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlannedRouteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.PlannedRouteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlannedRoutePayload>
+        }
+        aggregate: {
+          args: Prisma.PlannedRouteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlannedRoute>
+        }
+        groupBy: {
+          args: Prisma.PlannedRouteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlannedRouteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlannedRouteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlannedRouteCountAggregateOutputType> | number
+        }
+      }
+    }
+    GeofenceAssetState: {
+      payload: Prisma.$GeofenceAssetStatePayload<ExtArgs>
+      fields: Prisma.GeofenceAssetStateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GeofenceAssetStateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GeofenceAssetStateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>
+        }
+        findFirst: {
+          args: Prisma.GeofenceAssetStateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GeofenceAssetStateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>
+        }
+        findMany: {
+          args: Prisma.GeofenceAssetStateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>[]
+        }
+        create: {
+          args: Prisma.GeofenceAssetStateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>
+        }
+        createMany: {
+          args: Prisma.GeofenceAssetStateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.GeofenceAssetStateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>
+        }
+        update: {
+          args: Prisma.GeofenceAssetStateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>
+        }
+        deleteMany: {
+          args: Prisma.GeofenceAssetStateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GeofenceAssetStateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.GeofenceAssetStateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceAssetStatePayload>
+        }
+        aggregate: {
+          args: Prisma.GeofenceAssetStateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGeofenceAssetState>
+        }
+        groupBy: {
+          args: Prisma.GeofenceAssetStateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeofenceAssetStateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GeofenceAssetStateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeofenceAssetStateCountAggregateOutputType> | number
+        }
+      }
+    }
+    GeofenceTransitionEvent: {
+      payload: Prisma.$GeofenceTransitionEventPayload<ExtArgs>
+      fields: Prisma.GeofenceTransitionEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GeofenceTransitionEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GeofenceTransitionEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>
+        }
+        findFirst: {
+          args: Prisma.GeofenceTransitionEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GeofenceTransitionEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>
+        }
+        findMany: {
+          args: Prisma.GeofenceTransitionEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>[]
+        }
+        create: {
+          args: Prisma.GeofenceTransitionEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>
+        }
+        createMany: {
+          args: Prisma.GeofenceTransitionEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.GeofenceTransitionEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>
+        }
+        update: {
+          args: Prisma.GeofenceTransitionEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.GeofenceTransitionEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GeofenceTransitionEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.GeofenceTransitionEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeofenceTransitionEventPayload>
+        }
+        aggregate: {
+          args: Prisma.GeofenceTransitionEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGeofenceTransitionEvent>
+        }
+        groupBy: {
+          args: Prisma.GeofenceTransitionEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeofenceTransitionEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GeofenceTransitionEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeofenceTransitionEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    RouteDeviationEvent: {
+      payload: Prisma.$RouteDeviationEventPayload<ExtArgs>
+      fields: Prisma.RouteDeviationEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RouteDeviationEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RouteDeviationEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>
+        }
+        findFirst: {
+          args: Prisma.RouteDeviationEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RouteDeviationEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>
+        }
+        findMany: {
+          args: Prisma.RouteDeviationEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>[]
+        }
+        create: {
+          args: Prisma.RouteDeviationEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>
+        }
+        createMany: {
+          args: Prisma.RouteDeviationEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.RouteDeviationEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>
+        }
+        update: {
+          args: Prisma.RouteDeviationEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.RouteDeviationEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RouteDeviationEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.RouteDeviationEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RouteDeviationEventPayload>
+        }
+        aggregate: {
+          args: Prisma.RouteDeviationEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRouteDeviationEvent>
+        }
+        groupBy: {
+          args: Prisma.RouteDeviationEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RouteDeviationEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RouteDeviationEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RouteDeviationEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    TelematicsDevice: {
+      payload: Prisma.$TelematicsDevicePayload<ExtArgs>
+      fields: Prisma.TelematicsDeviceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TelematicsDeviceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TelematicsDeviceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>
+        }
+        findFirst: {
+          args: Prisma.TelematicsDeviceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TelematicsDeviceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>
+        }
+        findMany: {
+          args: Prisma.TelematicsDeviceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>[]
+        }
+        create: {
+          args: Prisma.TelematicsDeviceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>
+        }
+        createMany: {
+          args: Prisma.TelematicsDeviceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TelematicsDeviceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>
+        }
+        update: {
+          args: Prisma.TelematicsDeviceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>
+        }
+        deleteMany: {
+          args: Prisma.TelematicsDeviceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TelematicsDeviceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TelematicsDeviceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsDevicePayload>
+        }
+        aggregate: {
+          args: Prisma.TelematicsDeviceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTelematicsDevice>
+        }
+        groupBy: {
+          args: Prisma.TelematicsDeviceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelematicsDeviceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TelematicsDeviceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelematicsDeviceCountAggregateOutputType> | number
+        }
+      }
+    }
+    DeviceInstallationHistory: {
+      payload: Prisma.$DeviceInstallationHistoryPayload<ExtArgs>
+      fields: Prisma.DeviceInstallationHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeviceInstallationHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeviceInstallationHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.DeviceInstallationHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeviceInstallationHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.DeviceInstallationHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.DeviceInstallationHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.DeviceInstallationHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DeviceInstallationHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>
+        }
+        update: {
+          args: Prisma.DeviceInstallationHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeviceInstallationHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeviceInstallationHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DeviceInstallationHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceInstallationHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.DeviceInstallationHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeviceInstallationHistory>
+        }
+        groupBy: {
+          args: Prisma.DeviceInstallationHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeviceInstallationHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeviceInstallationHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeviceInstallationHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    TelematicsEvent: {
+      payload: Prisma.$TelematicsEventPayload<ExtArgs>
+      fields: Prisma.TelematicsEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TelematicsEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TelematicsEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>
+        }
+        findFirst: {
+          args: Prisma.TelematicsEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TelematicsEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>
+        }
+        findMany: {
+          args: Prisma.TelematicsEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>[]
+        }
+        create: {
+          args: Prisma.TelematicsEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>
+        }
+        createMany: {
+          args: Prisma.TelematicsEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TelematicsEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>
+        }
+        update: {
+          args: Prisma.TelematicsEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.TelematicsEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TelematicsEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TelematicsEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsEventPayload>
+        }
+        aggregate: {
+          args: Prisma.TelematicsEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTelematicsEvent>
+        }
+        groupBy: {
+          args: Prisma.TelematicsEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelematicsEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TelematicsEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelematicsEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    RawTelematicsPacket: {
+      payload: Prisma.$RawTelematicsPacketPayload<ExtArgs>
+      fields: Prisma.RawTelematicsPacketFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RawTelematicsPacketFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RawTelematicsPacketFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>
+        }
+        findFirst: {
+          args: Prisma.RawTelematicsPacketFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RawTelematicsPacketFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>
+        }
+        findMany: {
+          args: Prisma.RawTelematicsPacketFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>[]
+        }
+        create: {
+          args: Prisma.RawTelematicsPacketCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>
+        }
+        createMany: {
+          args: Prisma.RawTelematicsPacketCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.RawTelematicsPacketDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>
+        }
+        update: {
+          args: Prisma.RawTelematicsPacketUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>
+        }
+        deleteMany: {
+          args: Prisma.RawTelematicsPacketDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RawTelematicsPacketUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.RawTelematicsPacketUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawTelematicsPacketPayload>
+        }
+        aggregate: {
+          args: Prisma.RawTelematicsPacketAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRawTelematicsPacket>
+        }
+        groupBy: {
+          args: Prisma.RawTelematicsPacketGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RawTelematicsPacketGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RawTelematicsPacketCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RawTelematicsPacketCountAggregateOutputType> | number
+        }
+      }
+    }
+    VehicleLiveState: {
+      payload: Prisma.$VehicleLiveStatePayload<ExtArgs>
+      fields: Prisma.VehicleLiveStateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VehicleLiveStateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VehicleLiveStateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>
+        }
+        findFirst: {
+          args: Prisma.VehicleLiveStateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VehicleLiveStateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>
+        }
+        findMany: {
+          args: Prisma.VehicleLiveStateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>[]
+        }
+        create: {
+          args: Prisma.VehicleLiveStateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>
+        }
+        createMany: {
+          args: Prisma.VehicleLiveStateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VehicleLiveStateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>
+        }
+        update: {
+          args: Prisma.VehicleLiveStateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>
+        }
+        deleteMany: {
+          args: Prisma.VehicleLiveStateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VehicleLiveStateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VehicleLiveStateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VehicleLiveStatePayload>
+        }
+        aggregate: {
+          args: Prisma.VehicleLiveStateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVehicleLiveState>
+        }
+        groupBy: {
+          args: Prisma.VehicleLiveStateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VehicleLiveStateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VehicleLiveStateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VehicleLiveStateCountAggregateOutputType> | number
+        }
+      }
+    }
+    TelematicsHistorySummary: {
+      payload: Prisma.$TelematicsHistorySummaryPayload<ExtArgs>
+      fields: Prisma.TelematicsHistorySummaryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TelematicsHistorySummaryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TelematicsHistorySummaryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>
+        }
+        findFirst: {
+          args: Prisma.TelematicsHistorySummaryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TelematicsHistorySummaryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>
+        }
+        findMany: {
+          args: Prisma.TelematicsHistorySummaryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>[]
+        }
+        create: {
+          args: Prisma.TelematicsHistorySummaryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>
+        }
+        createMany: {
+          args: Prisma.TelematicsHistorySummaryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TelematicsHistorySummaryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>
+        }
+        update: {
+          args: Prisma.TelematicsHistorySummaryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>
+        }
+        deleteMany: {
+          args: Prisma.TelematicsHistorySummaryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TelematicsHistorySummaryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TelematicsHistorySummaryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelematicsHistorySummaryPayload>
+        }
+        aggregate: {
+          args: Prisma.TelematicsHistorySummaryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTelematicsHistorySummary>
+        }
+        groupBy: {
+          args: Prisma.TelematicsHistorySummaryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelematicsHistorySummaryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TelematicsHistorySummaryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelematicsHistorySummaryCountAggregateOutputType> | number
+        }
+      }
+    }
+    CameraChannel: {
+      payload: Prisma.$CameraChannelPayload<ExtArgs>
+      fields: Prisma.CameraChannelFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CameraChannelFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CameraChannelFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>
+        }
+        findFirst: {
+          args: Prisma.CameraChannelFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CameraChannelFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>
+        }
+        findMany: {
+          args: Prisma.CameraChannelFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>[]
+        }
+        create: {
+          args: Prisma.CameraChannelCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>
+        }
+        createMany: {
+          args: Prisma.CameraChannelCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CameraChannelDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>
+        }
+        update: {
+          args: Prisma.CameraChannelUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>
+        }
+        deleteMany: {
+          args: Prisma.CameraChannelDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CameraChannelUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CameraChannelUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CameraChannelPayload>
+        }
+        aggregate: {
+          args: Prisma.CameraChannelAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCameraChannel>
+        }
+        groupBy: {
+          args: Prisma.CameraChannelGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CameraChannelGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CameraChannelCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CameraChannelCountAggregateOutputType> | number
+        }
+      }
+    }
+    VideoRetentionPolicy: {
+      payload: Prisma.$VideoRetentionPolicyPayload<ExtArgs>
+      fields: Prisma.VideoRetentionPolicyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VideoRetentionPolicyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VideoRetentionPolicyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>
+        }
+        findFirst: {
+          args: Prisma.VideoRetentionPolicyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VideoRetentionPolicyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>
+        }
+        findMany: {
+          args: Prisma.VideoRetentionPolicyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>[]
+        }
+        create: {
+          args: Prisma.VideoRetentionPolicyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>
+        }
+        createMany: {
+          args: Prisma.VideoRetentionPolicyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VideoRetentionPolicyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>
+        }
+        update: {
+          args: Prisma.VideoRetentionPolicyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>
+        }
+        deleteMany: {
+          args: Prisma.VideoRetentionPolicyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VideoRetentionPolicyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VideoRetentionPolicyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoRetentionPolicyPayload>
+        }
+        aggregate: {
+          args: Prisma.VideoRetentionPolicyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVideoRetentionPolicy>
+        }
+        groupBy: {
+          args: Prisma.VideoRetentionPolicyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoRetentionPolicyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VideoRetentionPolicyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoRetentionPolicyCountAggregateOutputType> | number
+        }
+      }
+    }
+    VideoMediaRecord: {
+      payload: Prisma.$VideoMediaRecordPayload<ExtArgs>
+      fields: Prisma.VideoMediaRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VideoMediaRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VideoMediaRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.VideoMediaRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VideoMediaRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>
+        }
+        findMany: {
+          args: Prisma.VideoMediaRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>[]
+        }
+        create: {
+          args: Prisma.VideoMediaRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>
+        }
+        createMany: {
+          args: Prisma.VideoMediaRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VideoMediaRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>
+        }
+        update: {
+          args: Prisma.VideoMediaRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.VideoMediaRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VideoMediaRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VideoMediaRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoMediaRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.VideoMediaRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVideoMediaRecord>
+        }
+        groupBy: {
+          args: Prisma.VideoMediaRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoMediaRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VideoMediaRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoMediaRecordCountAggregateOutputType> | number
+        }
+      }
+    }
+    VideoPrivacyAcknowledgement: {
+      payload: Prisma.$VideoPrivacyAcknowledgementPayload<ExtArgs>
+      fields: Prisma.VideoPrivacyAcknowledgementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VideoPrivacyAcknowledgementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VideoPrivacyAcknowledgementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>
+        }
+        findFirst: {
+          args: Prisma.VideoPrivacyAcknowledgementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VideoPrivacyAcknowledgementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>
+        }
+        findMany: {
+          args: Prisma.VideoPrivacyAcknowledgementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>[]
+        }
+        create: {
+          args: Prisma.VideoPrivacyAcknowledgementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>
+        }
+        createMany: {
+          args: Prisma.VideoPrivacyAcknowledgementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VideoPrivacyAcknowledgementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>
+        }
+        update: {
+          args: Prisma.VideoPrivacyAcknowledgementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>
+        }
+        deleteMany: {
+          args: Prisma.VideoPrivacyAcknowledgementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VideoPrivacyAcknowledgementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VideoPrivacyAcknowledgementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPrivacyAcknowledgementPayload>
+        }
+        aggregate: {
+          args: Prisma.VideoPrivacyAcknowledgementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVideoPrivacyAcknowledgement>
+        }
+        groupBy: {
+          args: Prisma.VideoPrivacyAcknowledgementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoPrivacyAcknowledgementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VideoPrivacyAcknowledgementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoPrivacyAcknowledgementCountAggregateOutputType> | number
+        }
+      }
+    }
+    VideoAlarmEvent: {
+      payload: Prisma.$VideoAlarmEventPayload<ExtArgs>
+      fields: Prisma.VideoAlarmEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VideoAlarmEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VideoAlarmEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>
+        }
+        findFirst: {
+          args: Prisma.VideoAlarmEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VideoAlarmEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>
+        }
+        findMany: {
+          args: Prisma.VideoAlarmEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>[]
+        }
+        create: {
+          args: Prisma.VideoAlarmEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>
+        }
+        createMany: {
+          args: Prisma.VideoAlarmEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VideoAlarmEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>
+        }
+        update: {
+          args: Prisma.VideoAlarmEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.VideoAlarmEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VideoAlarmEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VideoAlarmEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoAlarmEventPayload>
+        }
+        aggregate: {
+          args: Prisma.VideoAlarmEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVideoAlarmEvent>
+        }
+        groupBy: {
+          args: Prisma.VideoAlarmEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoAlarmEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VideoAlarmEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoAlarmEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    VideoIncident: {
+      payload: Prisma.$VideoIncidentPayload<ExtArgs>
+      fields: Prisma.VideoIncidentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VideoIncidentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VideoIncidentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>
+        }
+        findFirst: {
+          args: Prisma.VideoIncidentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VideoIncidentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>
+        }
+        findMany: {
+          args: Prisma.VideoIncidentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>[]
+        }
+        create: {
+          args: Prisma.VideoIncidentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>
+        }
+        createMany: {
+          args: Prisma.VideoIncidentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VideoIncidentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>
+        }
+        update: {
+          args: Prisma.VideoIncidentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>
+        }
+        deleteMany: {
+          args: Prisma.VideoIncidentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VideoIncidentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VideoIncidentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoIncidentPayload>
+        }
+        aggregate: {
+          args: Prisma.VideoIncidentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVideoIncident>
+        }
+        groupBy: {
+          args: Prisma.VideoIncidentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoIncidentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VideoIncidentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoIncidentCountAggregateOutputType> | number
+        }
+      }
+    }
+    ElectronicWaybill: {
+      payload: Prisma.$ElectronicWaybillPayload<ExtArgs>
+      fields: Prisma.ElectronicWaybillFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ElectronicWaybillFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ElectronicWaybillFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>
+        }
+        findFirst: {
+          args: Prisma.ElectronicWaybillFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ElectronicWaybillFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>
+        }
+        findMany: {
+          args: Prisma.ElectronicWaybillFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>[]
+        }
+        create: {
+          args: Prisma.ElectronicWaybillCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>
+        }
+        createMany: {
+          args: Prisma.ElectronicWaybillCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ElectronicWaybillDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>
+        }
+        update: {
+          args: Prisma.ElectronicWaybillUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>
+        }
+        deleteMany: {
+          args: Prisma.ElectronicWaybillDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ElectronicWaybillUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ElectronicWaybillUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillPayload>
+        }
+        aggregate: {
+          args: Prisma.ElectronicWaybillAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateElectronicWaybill>
+        }
+        groupBy: {
+          args: Prisma.ElectronicWaybillGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ElectronicWaybillGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ElectronicWaybillCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ElectronicWaybillCountAggregateOutputType> | number
+        }
+      }
+    }
+    ElectronicWaybillVersion: {
+      payload: Prisma.$ElectronicWaybillVersionPayload<ExtArgs>
+      fields: Prisma.ElectronicWaybillVersionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ElectronicWaybillVersionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ElectronicWaybillVersionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>
+        }
+        findFirst: {
+          args: Prisma.ElectronicWaybillVersionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ElectronicWaybillVersionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>
+        }
+        findMany: {
+          args: Prisma.ElectronicWaybillVersionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>[]
+        }
+        create: {
+          args: Prisma.ElectronicWaybillVersionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>
+        }
+        createMany: {
+          args: Prisma.ElectronicWaybillVersionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ElectronicWaybillVersionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>
+        }
+        update: {
+          args: Prisma.ElectronicWaybillVersionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ElectronicWaybillVersionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ElectronicWaybillVersionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ElectronicWaybillVersionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectronicWaybillVersionPayload>
+        }
+        aggregate: {
+          args: Prisma.ElectronicWaybillVersionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateElectronicWaybillVersion>
+        }
+        groupBy: {
+          args: Prisma.ElectronicWaybillVersionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ElectronicWaybillVersionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ElectronicWaybillVersionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ElectronicWaybillVersionCountAggregateOutputType> | number
+        }
+      }
+    }
+    WaybillSeal: {
+      payload: Prisma.$WaybillSealPayload<ExtArgs>
+      fields: Prisma.WaybillSealFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WaybillSealFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WaybillSealFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>
+        }
+        findFirst: {
+          args: Prisma.WaybillSealFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WaybillSealFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>
+        }
+        findMany: {
+          args: Prisma.WaybillSealFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>[]
+        }
+        create: {
+          args: Prisma.WaybillSealCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>
+        }
+        createMany: {
+          args: Prisma.WaybillSealCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WaybillSealDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>
+        }
+        update: {
+          args: Prisma.WaybillSealUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>
+        }
+        deleteMany: {
+          args: Prisma.WaybillSealDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WaybillSealUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WaybillSealUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaybillSealPayload>
+        }
+        aggregate: {
+          args: Prisma.WaybillSealAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWaybillSeal>
+        }
+        groupBy: {
+          args: Prisma.WaybillSealGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaybillSealGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WaybillSealCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaybillSealCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -5361,6 +7909,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WeighingEvent: {
+      payload: Prisma.$WeighingEventPayload<ExtArgs>
+      fields: Prisma.WeighingEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WeighingEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WeighingEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>
+        }
+        findFirst: {
+          args: Prisma.WeighingEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WeighingEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>
+        }
+        findMany: {
+          args: Prisma.WeighingEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>[]
+        }
+        create: {
+          args: Prisma.WeighingEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>
+        }
+        createMany: {
+          args: Prisma.WeighingEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WeighingEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>
+        }
+        update: {
+          args: Prisma.WeighingEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.WeighingEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WeighingEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WeighingEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeighingEventPayload>
+        }
+        aggregate: {
+          args: Prisma.WeighingEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWeighingEvent>
+        }
+        groupBy: {
+          args: Prisma.WeighingEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WeighingEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WeighingEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WeighingEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    AxleReading: {
+      payload: Prisma.$AxleReadingPayload<ExtArgs>
+      fields: Prisma.AxleReadingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AxleReadingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AxleReadingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>
+        }
+        findFirst: {
+          args: Prisma.AxleReadingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AxleReadingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>
+        }
+        findMany: {
+          args: Prisma.AxleReadingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>[]
+        }
+        create: {
+          args: Prisma.AxleReadingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>
+        }
+        createMany: {
+          args: Prisma.AxleReadingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AxleReadingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>
+        }
+        update: {
+          args: Prisma.AxleReadingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>
+        }
+        deleteMany: {
+          args: Prisma.AxleReadingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AxleReadingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AxleReadingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AxleReadingPayload>
+        }
+        aggregate: {
+          args: Prisma.AxleReadingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAxleReading>
+        }
+        groupBy: {
+          args: Prisma.AxleReadingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AxleReadingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AxleReadingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AxleReadingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -5398,6 +8078,782 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AiRecommendationScalarFieldEnum = {
+  id: 'id',
+  recommendationType: 'recommendationType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  confidence: 'confidence',
+  dataQualityScore: 'dataQualityScore',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  payload: 'payload',
+  status: 'status',
+  createdBy: 'createdBy',
+  acceptedAt: 'acceptedAt',
+  dismissedAt: 'dismissedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AiRecommendationScalarFieldEnum = (typeof AiRecommendationScalarFieldEnum)[keyof typeof AiRecommendationScalarFieldEnum]
+
+
+export const AiPredictionScalarFieldEnum = {
+  id: 'id',
+  predictionType: 'predictionType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  confidence: 'confidence',
+  dataQualityScore: 'dataQualityScore',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  predictionPayload: 'predictionPayload',
+  predictionFor: 'predictionFor',
+  createdAt: 'createdAt'
+} as const
+
+export type AiPredictionScalarFieldEnum = (typeof AiPredictionScalarFieldEnum)[keyof typeof AiPredictionScalarFieldEnum]
+
+
+export const AiReviewCaseScalarFieldEnum = {
+  id: 'id',
+  caseType: 'caseType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  severity: 'severity',
+  status: 'status',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  confidence: 'confidence',
+  dataQualityScore: 'dataQualityScore',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  evidence: 'evidence',
+  assignedTo: 'assignedTo',
+  resolution: 'resolution',
+  resolvedBy: 'resolvedBy',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiReviewCaseScalarFieldEnum = (typeof AiReviewCaseScalarFieldEnum)[keyof typeof AiReviewCaseScalarFieldEnum]
+
+
+export const ComplianceRuleSetScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  version: 'version',
+  country: 'country',
+  description: 'description',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  isCurrent: 'isCurrent',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceRuleSetScalarFieldEnum = (typeof ComplianceRuleSetScalarFieldEnum)[keyof typeof ComplianceRuleSetScalarFieldEnum]
+
+
+export const ComplianceRuleScalarFieldEnum = {
+  id: 'id',
+  ruleSetId: 'ruleSetId',
+  type: 'type',
+  metric: 'metric',
+  scope: 'scope',
+  operator: 'operator',
+  value: 'value',
+  unit: 'unit',
+  severity: 'severity',
+  priority: 'priority',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  isActive: 'isActive',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceRuleScalarFieldEnum = (typeof ComplianceRuleScalarFieldEnum)[keyof typeof ComplianceRuleScalarFieldEnum]
+
+
+export const ProofOfDeliveryScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  idempotencyKey: 'idempotencyKey',
+  payloadFingerprint: 'payloadFingerprint',
+  activeTargetKey: 'activeTargetKey',
+  actorId: 'actorId',
+  receiverName: 'receiverName',
+  receiverPhone: 'receiverPhone',
+  expectedQty: 'expectedQty',
+  receivedQty: 'receivedQty',
+  damagedQty: 'damagedQty',
+  rejectedQty: 'rejectedQty',
+  acceptedQty: 'acceptedQty',
+  unit: 'unit',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  completedAt: 'completedAt',
+  signatureRef: 'signatureRef',
+  pinVerified: 'pinVerified',
+  discrepancyType: 'discrepancyType',
+  discrepancyQuantity: 'discrepancyQuantity',
+  discrepancyNotes: 'discrepancyNotes',
+  supersedesId: 'supersedesId',
+  correctionReason: 'correctionReason',
+  createdAt: 'createdAt'
+} as const
+
+export type ProofOfDeliveryScalarFieldEnum = (typeof ProofOfDeliveryScalarFieldEnum)[keyof typeof ProofOfDeliveryScalarFieldEnum]
+
+
+export const ProofOfDeliveryEvidenceScalarFieldEnum = {
+  id: 'id',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  type: 'type',
+  storageRef: 'storageRef',
+  capturedAt: 'capturedAt',
+  metadata: 'metadata'
+} as const
+
+export type ProofOfDeliveryEvidenceScalarFieldEnum = (typeof ProofOfDeliveryEvidenceScalarFieldEnum)[keyof typeof ProofOfDeliveryEvidenceScalarFieldEnum]
+
+
+export const DeliveryExceptionScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  type: 'type',
+  status: 'status',
+  quantity: 'quantity',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliveryExceptionScalarFieldEnum = (typeof DeliveryExceptionScalarFieldEnum)[keyof typeof DeliveryExceptionScalarFieldEnum]
+
+
+export const GateEventScalarFieldEnum = {
+  id: 'id',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  direction: 'direction',
+  occurredAt: 'occurredAt',
+  actorId: 'actorId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  evidence: 'evidence',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type GateEventScalarFieldEnum = (typeof GateEventScalarFieldEnum)[keyof typeof GateEventScalarFieldEnum]
+
+
+export const FactoryQueueEntryScalarFieldEnum = {
+  id: 'id',
+  legacyQueueId: 'legacyQueueId',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  queueType: 'queueType',
+  status: 'status',
+  position: 'position',
+  bayId: 'bayId',
+  joinedAt: 'joinedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  estimatedWait: 'estimatedWait',
+  actualWait: 'actualWait',
+  detentionFreeMinutes: 'detentionFreeMinutes',
+  detentionMinutes: 'detentionMinutes',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FactoryQueueEntryScalarFieldEnum = (typeof FactoryQueueEntryScalarFieldEnum)[keyof typeof FactoryQueueEntryScalarFieldEnum]
+
+
+export const HaulierSettlementScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  rateCardId: 'rateCardId',
+  contractId: 'contractId',
+  payeeType: 'payeeType',
+  payeeId: 'payeeId',
+  payeeName: 'payeeName',
+  currency: 'currency',
+  baseFreight: 'baseFreight',
+  detentionAmount: 'detentionAmount',
+  extrasAmount: 'extrasAmount',
+  shortageDeduction: 'shortageDeduction',
+  fuelAdjustment: 'fuelAdjustment',
+  taxAmount: 'taxAmount',
+  withholdingAmount: 'withholdingAmount',
+  advanceDeduction: 'advanceDeduction',
+  netPayable: 'netPayable',
+  status: 'status',
+  snapshotVersion: 'snapshotVersion',
+  snapshotJson: 'snapshotJson',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  paidAt: 'paidAt',
+  notes: 'notes',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HaulierSettlementScalarFieldEnum = (typeof HaulierSettlementScalarFieldEnum)[keyof typeof HaulierSettlementScalarFieldEnum]
+
+
+export const HaulierSettlementLineScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  tripId: 'tripId',
+  type: 'type',
+  sourceId: 'sourceId',
+  description: 'description',
+  amount: 'amount',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type HaulierSettlementLineScalarFieldEnum = (typeof HaulierSettlementLineScalarFieldEnum)[keyof typeof HaulierSettlementLineScalarFieldEnum]
+
+
+export const IntegrationConnectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  type: 'type',
+  config: 'config',
+  secretRef: 'secretRef',
+  status: 'status',
+  lastSuccessAt: 'lastSuccessAt',
+  lastErrorAt: 'lastErrorAt',
+  lastError: 'lastError',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IntegrationConnectionScalarFieldEnum = (typeof IntegrationConnectionScalarFieldEnum)[keyof typeof IntegrationConnectionScalarFieldEnum]
+
+
+export const IntegrationImportReceiptScalarFieldEnum = {
+  id: 'id',
+  connectionId: 'connectionId',
+  idempotencyKey: 'idempotencyKey',
+  batchId: 'batchId',
+  payloadHash: 'payloadHash',
+  status: 'status',
+  acceptedCount: 'acceptedCount',
+  rejectedCount: 'rejectedCount',
+  resultJson: 'resultJson',
+  createdAt: 'createdAt'
+} as const
+
+export type IntegrationImportReceiptScalarFieldEnum = (typeof IntegrationImportReceiptScalarFieldEnum)[keyof typeof IntegrationImportReceiptScalarFieldEnum]
+
+
+export const OperationalEventScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  eventKey: 'eventKey',
+  type: 'type',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  tripId: 'tripId',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  occurredAt: 'occurredAt',
+  receivedAt: 'receivedAt',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  evidenceRefs: 'evidenceRefs',
+  metadata: 'metadata',
+  source: 'source',
+  supersedesEventId: 'supersedesEventId',
+  createdAt: 'createdAt'
+} as const
+
+export type OperationalEventScalarFieldEnum = (typeof OperationalEventScalarFieldEnum)[keyof typeof OperationalEventScalarFieldEnum]
+
+
+export const TripReconciliationScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  version: 'version',
+  status: 'status',
+  fuelTotal: 'fuelTotal',
+  tollTotal: 'tollTotal',
+  expenseTotal: 'expenseTotal',
+  adjustmentTotal: 'adjustmentTotal',
+  operationalCost: 'operationalCost',
+  advanceTotal: 'advanceTotal',
+  snapshotJson: 'snapshotJson',
+  blockersJson: 'blockersJson',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TripReconciliationScalarFieldEnum = (typeof TripReconciliationScalarFieldEnum)[keyof typeof TripReconciliationScalarFieldEnum]
+
+
+export const ReconciliationLineScalarFieldEnum = {
+  id: 'id',
+  reconciliationId: 'reconciliationId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  category: 'category',
+  reference: 'reference',
+  amount: 'amount',
+  includedInCost: 'includedInCost',
+  duplicateOf: 'duplicateOf',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type ReconciliationLineScalarFieldEnum = (typeof ReconciliationLineScalarFieldEnum)[keyof typeof ReconciliationLineScalarFieldEnum]
+
+
+export const ReconciliationAdjustmentScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  amount: 'amount',
+  reason: 'reason',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReconciliationAdjustmentScalarFieldEnum = (typeof ReconciliationAdjustmentScalarFieldEnum)[keyof typeof ReconciliationAdjustmentScalarFieldEnum]
+
+
+export const ReconciliationExceptionScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  type: 'type',
+  status: 'status',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  amount: 'amount',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedBy: 'resolvedBy',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReconciliationExceptionScalarFieldEnum = (typeof ReconciliationExceptionScalarFieldEnum)[keyof typeof ReconciliationExceptionScalarFieldEnum]
+
+
+export const PlannedRouteScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  pointsJson: 'pointsJson',
+  toleranceMeters: 'toleranceMeters',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlannedRouteScalarFieldEnum = (typeof PlannedRouteScalarFieldEnum)[keyof typeof PlannedRouteScalarFieldEnum]
+
+
+export const GeofenceAssetStateScalarFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  geofenceZoneId: 'geofenceZoneId',
+  inside: 'inside',
+  enteredAt: 'enteredAt',
+  dwellEmitted: 'dwellEmitted',
+  lastEventId: 'lastEventId',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GeofenceAssetStateScalarFieldEnum = (typeof GeofenceAssetStateScalarFieldEnum)[keyof typeof GeofenceAssetStateScalarFieldEnum]
+
+
+export const GeofenceTransitionEventScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  geofenceZoneId: 'geofenceZoneId',
+  transition: 'transition',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GeofenceTransitionEventScalarFieldEnum = (typeof GeofenceTransitionEventScalarFieldEnum)[keyof typeof GeofenceTransitionEventScalarFieldEnum]
+
+
+export const RouteDeviationEventScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  plannedRouteId: 'plannedRouteId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  eventType: 'eventType',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  distanceMeters: 'distanceMeters',
+  toleranceMeters: 'toleranceMeters',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RouteDeviationEventScalarFieldEnum = (typeof RouteDeviationEventScalarFieldEnum)[keyof typeof RouteDeviationEventScalarFieldEnum]
+
+
+export const TelematicsDeviceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  deviceType: 'deviceType',
+  imei: 'imei',
+  serialNumber: 'serialNumber',
+  credentialRef: 'credentialRef',
+  status: 'status',
+  metadata: 'metadata',
+  lastSeenAt: 'lastSeenAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TelematicsDeviceScalarFieldEnum = (typeof TelematicsDeviceScalarFieldEnum)[keyof typeof TelematicsDeviceScalarFieldEnum]
+
+
+export const DeviceInstallationHistoryScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  installedAt: 'installedAt',
+  uninstalledAt: 'uninstalledAt',
+  installedById: 'installedById',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type DeviceInstallationHistoryScalarFieldEnum = (typeof DeviceInstallationHistoryScalarFieldEnum)[keyof typeof DeviceInstallationHistoryScalarFieldEnum]
+
+
+export const TelematicsEventScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  deviceId: 'deviceId',
+  provider: 'provider',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  deviceTimestamp: 'deviceTimestamp',
+  receivedAt: 'receivedAt',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  speedKph: 'speedKph',
+  headingDeg: 'headingDeg',
+  accuracyMeters: 'accuracyMeters',
+  ignitionOn: 'ignitionOn',
+  sensorType: 'sensorType',
+  sensorValue: 'sensorValue',
+  sensorUnit: 'sensorUnit',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  source: 'source',
+  trust: 'trust',
+  rawEventRef: 'rawEventRef',
+  normalizedPayload: 'normalizedPayload',
+  createdAt: 'createdAt'
+} as const
+
+export type TelematicsEventScalarFieldEnum = (typeof TelematicsEventScalarFieldEnum)[keyof typeof TelematicsEventScalarFieldEnum]
+
+
+export const RawTelematicsPacketScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  payloadHash: 'payloadHash',
+  payload: 'payload',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RawTelematicsPacketScalarFieldEnum = (typeof RawTelematicsPacketScalarFieldEnum)[keyof typeof RawTelematicsPacketScalarFieldEnum]
+
+
+export const VehicleLiveStateScalarFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  latestEventId: 'latestEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  provider: 'provider',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  speedKph: 'speedKph',
+  headingDeg: 'headingDeg',
+  accuracyMeters: 'accuracyMeters',
+  ignitionOn: 'ignitionOn',
+  source: 'source',
+  trust: 'trust',
+  deviceTimestamp: 'deviceTimestamp',
+  receivedAt: 'receivedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VehicleLiveStateScalarFieldEnum = (typeof VehicleLiveStateScalarFieldEnum)[keyof typeof VehicleLiveStateScalarFieldEnum]
+
+
+export const TelematicsHistorySummaryScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  bucketStart: 'bucketStart',
+  bucketEnd: 'bucketEnd',
+  bucketMinutes: 'bucketMinutes',
+  pointCount: 'pointCount',
+  minSpeedKph: 'minSpeedKph',
+  maxSpeedKph: 'maxSpeedKph',
+  startLatitude: 'startLatitude',
+  startLongitude: 'startLongitude',
+  endLatitude: 'endLatitude',
+  endLongitude: 'endLongitude',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TelematicsHistorySummaryScalarFieldEnum = (typeof TelematicsHistorySummaryScalarFieldEnum)[keyof typeof TelematicsHistorySummaryScalarFieldEnum]
+
+
+export const CameraChannelScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  key: 'key',
+  label: 'label',
+  orientation: 'orientation',
+  privacyClass: 'privacyClass',
+  enabled: 'enabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CameraChannelScalarFieldEnum = (typeof CameraChannelScalarFieldEnum)[keyof typeof CameraChannelScalarFieldEnum]
+
+
+export const VideoRetentionPolicyScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  videoEnabled: 'videoEnabled',
+  supportsLive: 'supportsLive',
+  supportsPlayback: 'supportsPlayback',
+  supportsSnapshot: 'supportsSnapshot',
+  policyVersion: 'policyVersion',
+  effectiveAt: 'effectiveAt',
+  routineRetentionDays: 'routineRetentionDays',
+  incidentRetentionDays: 'incidentRetentionDays',
+  applyToExisting: 'applyToExisting',
+  cloudUploadEnabled: 'cloudUploadEnabled',
+  allowedRoles: 'allowedRoles',
+  allowedChannels: 'allowedChannels',
+  privacyNoticeVersion: 'privacyNoticeVersion',
+  privacyNoticeText: 'privacyNoticeText',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VideoRetentionPolicyScalarFieldEnum = (typeof VideoRetentionPolicyScalarFieldEnum)[keyof typeof VideoRetentionPolicyScalarFieldEnum]
+
+
+export const VideoMediaRecordScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  incidentId: 'incidentId',
+  kind: 'kind',
+  storageKind: 'storageKind',
+  storageBackend: 'storageBackend',
+  storageKey: 'storageKey',
+  recordedAt: 'recordedAt',
+  retentionPolicyVersion: 'retentionPolicyVersion',
+  retainUntil: 'retainUntil',
+  legalHoldUntil: 'legalHoldUntil',
+  auditHoldUntil: 'auditHoldUntil',
+  deletedAt: 'deletedAt',
+  deletionReason: 'deletionReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VideoMediaRecordScalarFieldEnum = (typeof VideoMediaRecordScalarFieldEnum)[keyof typeof VideoMediaRecordScalarFieldEnum]
+
+
+export const VideoPrivacyAcknowledgementScalarFieldEnum = {
+  id: 'id',
+  policyId: 'policyId',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  policyVersion: 'policyVersion',
+  noticeVersion: 'noticeVersion',
+  acknowledgedAt: 'acknowledgedAt',
+  metadata: 'metadata'
+} as const
+
+export type VideoPrivacyAcknowledgementScalarFieldEnum = (typeof VideoPrivacyAcknowledgementScalarFieldEnum)[keyof typeof VideoPrivacyAcknowledgementScalarFieldEnum]
+
+
+export const VideoAlarmEventScalarFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  providerAlarmCode: 'providerAlarmCode',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  channelKey: 'channelKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  occurredAt: 'occurredAt',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type VideoAlarmEventScalarFieldEnum = (typeof VideoAlarmEventScalarFieldEnum)[keyof typeof VideoAlarmEventScalarFieldEnum]
+
+
+export const VideoIncidentScalarFieldEnum = {
+  id: 'id',
+  alarmEventId: 'alarmEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  incidentType: 'incidentType',
+  severity: 'severity',
+  status: 'status',
+  title: 'title',
+  message: 'message',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VideoIncidentScalarFieldEnum = (typeof VideoIncidentScalarFieldEnum)[keyof typeof VideoIncidentScalarFieldEnum]
+
+
+export const ElectronicWaybillScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  waybillNumber: 'waybillNumber',
+  verificationToken: 'verificationToken',
+  currentVersion: 'currentVersion',
+  status: 'status',
+  finalizedAt: 'finalizedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ElectronicWaybillScalarFieldEnum = (typeof ElectronicWaybillScalarFieldEnum)[keyof typeof ElectronicWaybillScalarFieldEnum]
+
+
+export const ElectronicWaybillVersionScalarFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  version: 'version',
+  snapshot: 'snapshot',
+  contentHash: 'contentHash',
+  supersedesVersion: 'supersedesVersion',
+  correctionReason: 'correctionReason',
+  finalizedBy: 'finalizedBy',
+  finalizedAt: 'finalizedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ElectronicWaybillVersionScalarFieldEnum = (typeof ElectronicWaybillVersionScalarFieldEnum)[keyof typeof ElectronicWaybillVersionScalarFieldEnum]
+
+
+export const WaybillSealScalarFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  version: 'version',
+  sealNumber: 'sealNumber',
+  sealType: 'sealType',
+  appliedAt: 'appliedAt',
+  appliedBy: 'appliedBy',
+  status: 'status',
+  removedAt: 'removedAt',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type WaybillSealScalarFieldEnum = (typeof WaybillSealScalarFieldEnum)[keyof typeof WaybillSealScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -5696,8 +9152,11 @@ export const DriverSettlementScalarFieldEnum = {
   grossEarnings: 'grossEarnings',
   fuelDeductions: 'fuelDeductions',
   expenseDeductions: 'expenseDeductions',
+  advanceDeductions: 'advanceDeductions',
   bonusAmount: 'bonusAmount',
   netPay: 'netPay',
+  snapshotVersion: 'snapshotVersion',
+  snapshotJson: 'snapshotJson',
   status: 'status',
   approvedBy: 'approvedBy',
   approvedAt: 'approvedAt',
@@ -5768,6 +9227,7 @@ export type DvlaRegistrationScalarFieldEnum = (typeof DvlaRegistrationScalarFiel
 
 export const ExpenseScalarFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   truckId: 'truckId',
   category: 'category',
   description: 'description',
@@ -5825,6 +9285,7 @@ export type FuelBudgetScalarFieldEnum = (typeof FuelBudgetScalarFieldEnum)[keyof
 
 export const FuelLogScalarFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   truckId: 'truckId',
   date: 'date',
@@ -5902,6 +9363,9 @@ export const GeofenceZoneScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   radius: 'radius',
+  geometryType: 'geometryType',
+  geometryJson: 'geometryJson',
+  dwellThresholdMinutes: 'dwellThresholdMinutes',
   type: 'type',
   address: 'address',
   createdAt: 'createdAt',
@@ -6281,6 +9745,7 @@ export const SettlementLineScalarFieldEnum = {
   tripId: 'tripId',
   description: 'description',
   type: 'type',
+  sourceId: 'sourceId',
   amount: 'amount'
 } as const
 
@@ -6348,6 +9813,8 @@ export const SystemSettingsScalarFieldEnum = {
   currency: 'currency',
   distanceUnit: 'distanceUnit',
   fuelUnit: 'fuelUnit',
+  profitabilityMaintenanceAllocationEnabled: 'profitabilityMaintenanceAllocationEnabled',
+  profitabilityMaintenanceCostPerKm: 'profitabilityMaintenanceCostPerKm',
   dateFormat: 'dateFormat',
   timezone: 'timezone',
   language: 'language',
@@ -6518,6 +9985,7 @@ export type TripDeliveryDestinationScalarFieldEnum = (typeof TripDeliveryDestina
 
 export const TripEventScalarFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   fromStatus: 'fromStatus',
   toStatus: 'toStatus',
@@ -6646,6 +10114,7 @@ export const TransportRateCardScalarFieldEnum = {
   isActive: 'isActive',
   sourceType: 'sourceType',
   sourceId: 'sourceId',
+  settlementTerms: 'settlementTerms',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -7018,6 +10487,61 @@ export const InsuranceRenewalHistoryScalarFieldEnum = {
 export type InsuranceRenewalHistoryScalarFieldEnum = (typeof InsuranceRenewalHistoryScalarFieldEnum)[keyof typeof InsuranceRenewalHistoryScalarFieldEnum]
 
 
+export const WeighingEventScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  tractorId: 'tractorId',
+  trailerId: 'trailerId',
+  driverId: 'driverId',
+  legacyWeightVerificationId: 'legacyWeightVerificationId',
+  stage: 'stage',
+  source: 'source',
+  status: 'status',
+  grossWeightKg: 'grossWeightKg',
+  tareWeightKg: 'tareWeightKg',
+  netWeightKg: 'netWeightKg',
+  varianceKg: 'varianceKg',
+  variancePercent: 'variancePercent',
+  requiredAxleCount: 'requiredAxleCount',
+  tolerancePercent: 'tolerancePercent',
+  ruleSetSnapshot: 'ruleSetSnapshot',
+  clearancePassed: 'clearancePassed',
+  clearanceDetails: 'clearanceDetails',
+  weighbridgeName: 'weighbridgeName',
+  location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  ticketNumber: 'ticketNumber',
+  certificateNumber: 'certificateNumber',
+  evidenceUrl: 'evidenceUrl',
+  operatorId: 'operatorId',
+  operatorName: 'operatorName',
+  recordedAt: 'recordedAt',
+  supersedesEventId: 'supersedesEventId',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WeighingEventScalarFieldEnum = (typeof WeighingEventScalarFieldEnum)[keyof typeof WeighingEventScalarFieldEnum]
+
+
+export const AxleReadingScalarFieldEnum = {
+  id: 'id',
+  weighingEventId: 'weighingEventId',
+  axleNumber: 'axleNumber',
+  axleGroup: 'axleGroup',
+  weightKg: 'weightKg',
+  legalLimitKg: 'legalLimitKg',
+  toleranceKg: 'toleranceKg',
+  exceeded: 'exceeded',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AxleReadingScalarFieldEnum = (typeof AxleReadingScalarFieldEnum)[keyof typeof AxleReadingScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -7032,6 +10556,574 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const AiRecommendationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  recommendationType: 'recommendationType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  payload: 'payload',
+  status: 'status',
+  createdBy: 'createdBy'
+} as const
+
+export type AiRecommendationOrderByRelevanceFieldEnum = (typeof AiRecommendationOrderByRelevanceFieldEnum)[keyof typeof AiRecommendationOrderByRelevanceFieldEnum]
+
+
+export const AiPredictionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  predictionType: 'predictionType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  predictionPayload: 'predictionPayload'
+} as const
+
+export type AiPredictionOrderByRelevanceFieldEnum = (typeof AiPredictionOrderByRelevanceFieldEnum)[keyof typeof AiPredictionOrderByRelevanceFieldEnum]
+
+
+export const AiReviewCaseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  caseType: 'caseType',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  severity: 'severity',
+  status: 'status',
+  modelKey: 'modelKey',
+  modelVersion: 'modelVersion',
+  dataQualityGrade: 'dataQualityGrade',
+  inputSnapshotRef: 'inputSnapshotRef',
+  explanation: 'explanation',
+  evidence: 'evidence',
+  assignedTo: 'assignedTo',
+  resolution: 'resolution',
+  resolvedBy: 'resolvedBy'
+} as const
+
+export type AiReviewCaseOrderByRelevanceFieldEnum = (typeof AiReviewCaseOrderByRelevanceFieldEnum)[keyof typeof AiReviewCaseOrderByRelevanceFieldEnum]
+
+
+export const ComplianceRuleSetOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  country: 'country',
+  description: 'description',
+  createdBy: 'createdBy'
+} as const
+
+export type ComplianceRuleSetOrderByRelevanceFieldEnum = (typeof ComplianceRuleSetOrderByRelevanceFieldEnum)[keyof typeof ComplianceRuleSetOrderByRelevanceFieldEnum]
+
+
+export const ComplianceRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  ruleSetId: 'ruleSetId',
+  type: 'type',
+  metric: 'metric',
+  scope: 'scope',
+  operator: 'operator',
+  value: 'value',
+  unit: 'unit',
+  severity: 'severity',
+  description: 'description'
+} as const
+
+export type ComplianceRuleOrderByRelevanceFieldEnum = (typeof ComplianceRuleOrderByRelevanceFieldEnum)[keyof typeof ComplianceRuleOrderByRelevanceFieldEnum]
+
+
+export const ProofOfDeliveryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  idempotencyKey: 'idempotencyKey',
+  payloadFingerprint: 'payloadFingerprint',
+  activeTargetKey: 'activeTargetKey',
+  actorId: 'actorId',
+  receiverName: 'receiverName',
+  receiverPhone: 'receiverPhone',
+  unit: 'unit',
+  signatureRef: 'signatureRef',
+  discrepancyType: 'discrepancyType',
+  discrepancyNotes: 'discrepancyNotes',
+  supersedesId: 'supersedesId',
+  correctionReason: 'correctionReason'
+} as const
+
+export type ProofOfDeliveryOrderByRelevanceFieldEnum = (typeof ProofOfDeliveryOrderByRelevanceFieldEnum)[keyof typeof ProofOfDeliveryOrderByRelevanceFieldEnum]
+
+
+export const ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  type: 'type',
+  storageRef: 'storageRef',
+  metadata: 'metadata'
+} as const
+
+export type ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum = (typeof ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum)[keyof typeof ProofOfDeliveryEvidenceOrderByRelevanceFieldEnum]
+
+
+export const DeliveryExceptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  proofOfDeliveryId: 'proofOfDeliveryId',
+  deliveryStopId: 'deliveryStopId',
+  deliveryDestinationId: 'deliveryDestinationId',
+  type: 'type',
+  status: 'status',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedBy: 'resolvedBy'
+} as const
+
+export type DeliveryExceptionOrderByRelevanceFieldEnum = (typeof DeliveryExceptionOrderByRelevanceFieldEnum)[keyof typeof DeliveryExceptionOrderByRelevanceFieldEnum]
+
+
+export const GateEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  direction: 'direction',
+  actorId: 'actorId',
+  evidence: 'evidence',
+  source: 'source'
+} as const
+
+export type GateEventOrderByRelevanceFieldEnum = (typeof GateEventOrderByRelevanceFieldEnum)[keyof typeof GateEventOrderByRelevanceFieldEnum]
+
+
+export const FactoryQueueEntryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  legacyQueueId: 'legacyQueueId',
+  siteId: 'siteId',
+  siteName: 'siteName',
+  truckId: 'truckId',
+  driverId: 'driverId',
+  tripId: 'tripId',
+  queueType: 'queueType',
+  status: 'status',
+  bayId: 'bayId',
+  notes: 'notes',
+  createdBy: 'createdBy'
+} as const
+
+export type FactoryQueueEntryOrderByRelevanceFieldEnum = (typeof FactoryQueueEntryOrderByRelevanceFieldEnum)[keyof typeof FactoryQueueEntryOrderByRelevanceFieldEnum]
+
+
+export const HaulierSettlementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  rateCardId: 'rateCardId',
+  contractId: 'contractId',
+  payeeType: 'payeeType',
+  payeeId: 'payeeId',
+  payeeName: 'payeeName',
+  currency: 'currency',
+  status: 'status',
+  snapshotJson: 'snapshotJson',
+  approvedBy: 'approvedBy',
+  notes: 'notes',
+  createdBy: 'createdBy'
+} as const
+
+export type HaulierSettlementOrderByRelevanceFieldEnum = (typeof HaulierSettlementOrderByRelevanceFieldEnum)[keyof typeof HaulierSettlementOrderByRelevanceFieldEnum]
+
+
+export const HaulierSettlementLineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  tripId: 'tripId',
+  type: 'type',
+  sourceId: 'sourceId',
+  description: 'description',
+  metadata: 'metadata'
+} as const
+
+export type HaulierSettlementLineOrderByRelevanceFieldEnum = (typeof HaulierSettlementLineOrderByRelevanceFieldEnum)[keyof typeof HaulierSettlementLineOrderByRelevanceFieldEnum]
+
+
+export const IntegrationConnectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  type: 'type',
+  config: 'config',
+  secretRef: 'secretRef',
+  status: 'status',
+  lastError: 'lastError',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy'
+} as const
+
+export type IntegrationConnectionOrderByRelevanceFieldEnum = (typeof IntegrationConnectionOrderByRelevanceFieldEnum)[keyof typeof IntegrationConnectionOrderByRelevanceFieldEnum]
+
+
+export const IntegrationImportReceiptOrderByRelevanceFieldEnum = {
+  id: 'id',
+  connectionId: 'connectionId',
+  idempotencyKey: 'idempotencyKey',
+  batchId: 'batchId',
+  payloadHash: 'payloadHash',
+  status: 'status',
+  resultJson: 'resultJson'
+} as const
+
+export type IntegrationImportReceiptOrderByRelevanceFieldEnum = (typeof IntegrationImportReceiptOrderByRelevanceFieldEnum)[keyof typeof IntegrationImportReceiptOrderByRelevanceFieldEnum]
+
+
+export const OperationalEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  eventKey: 'eventKey',
+  type: 'type',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  tripId: 'tripId',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  evidenceRefs: 'evidenceRefs',
+  metadata: 'metadata',
+  source: 'source',
+  supersedesEventId: 'supersedesEventId'
+} as const
+
+export type OperationalEventOrderByRelevanceFieldEnum = (typeof OperationalEventOrderByRelevanceFieldEnum)[keyof typeof OperationalEventOrderByRelevanceFieldEnum]
+
+
+export const TripReconciliationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  status: 'status',
+  snapshotJson: 'snapshotJson',
+  blockersJson: 'blockersJson',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy'
+} as const
+
+export type TripReconciliationOrderByRelevanceFieldEnum = (typeof TripReconciliationOrderByRelevanceFieldEnum)[keyof typeof TripReconciliationOrderByRelevanceFieldEnum]
+
+
+export const ReconciliationLineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reconciliationId: 'reconciliationId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  category: 'category',
+  reference: 'reference',
+  duplicateOf: 'duplicateOf',
+  metadata: 'metadata'
+} as const
+
+export type ReconciliationLineOrderByRelevanceFieldEnum = (typeof ReconciliationLineOrderByRelevanceFieldEnum)[keyof typeof ReconciliationLineOrderByRelevanceFieldEnum]
+
+
+export const ReconciliationAdjustmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reason: 'reason',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy'
+} as const
+
+export type ReconciliationAdjustmentOrderByRelevanceFieldEnum = (typeof ReconciliationAdjustmentOrderByRelevanceFieldEnum)[keyof typeof ReconciliationAdjustmentOrderByRelevanceFieldEnum]
+
+
+export const ReconciliationExceptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  reconciliationId: 'reconciliationId',
+  type: 'type',
+  status: 'status',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  notes: 'notes',
+  resolutionNotes: 'resolutionNotes',
+  resolvedBy: 'resolvedBy'
+} as const
+
+export type ReconciliationExceptionOrderByRelevanceFieldEnum = (typeof ReconciliationExceptionOrderByRelevanceFieldEnum)[keyof typeof ReconciliationExceptionOrderByRelevanceFieldEnum]
+
+
+export const PlannedRouteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  pointsJson: 'pointsJson',
+  status: 'status',
+  createdById: 'createdById'
+} as const
+
+export type PlannedRouteOrderByRelevanceFieldEnum = (typeof PlannedRouteOrderByRelevanceFieldEnum)[keyof typeof PlannedRouteOrderByRelevanceFieldEnum]
+
+
+export const GeofenceAssetStateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  geofenceZoneId: 'geofenceZoneId',
+  lastEventId: 'lastEventId'
+} as const
+
+export type GeofenceAssetStateOrderByRelevanceFieldEnum = (typeof GeofenceAssetStateOrderByRelevanceFieldEnum)[keyof typeof GeofenceAssetStateOrderByRelevanceFieldEnum]
+
+
+export const GeofenceTransitionEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  geofenceZoneId: 'geofenceZoneId',
+  transition: 'transition'
+} as const
+
+export type GeofenceTransitionEventOrderByRelevanceFieldEnum = (typeof GeofenceTransitionEventOrderByRelevanceFieldEnum)[keyof typeof GeofenceTransitionEventOrderByRelevanceFieldEnum]
+
+
+export const RouteDeviationEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  telematicsEventId: 'telematicsEventId',
+  plannedRouteId: 'plannedRouteId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  eventType: 'eventType'
+} as const
+
+export type RouteDeviationEventOrderByRelevanceFieldEnum = (typeof RouteDeviationEventOrderByRelevanceFieldEnum)[keyof typeof RouteDeviationEventOrderByRelevanceFieldEnum]
+
+
+export const TelematicsDeviceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  deviceType: 'deviceType',
+  imei: 'imei',
+  serialNumber: 'serialNumber',
+  credentialRef: 'credentialRef',
+  status: 'status',
+  metadata: 'metadata'
+} as const
+
+export type TelematicsDeviceOrderByRelevanceFieldEnum = (typeof TelematicsDeviceOrderByRelevanceFieldEnum)[keyof typeof TelematicsDeviceOrderByRelevanceFieldEnum]
+
+
+export const DeviceInstallationHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  installedById: 'installedById',
+  notes: 'notes'
+} as const
+
+export type DeviceInstallationHistoryOrderByRelevanceFieldEnum = (typeof DeviceInstallationHistoryOrderByRelevanceFieldEnum)[keyof typeof DeviceInstallationHistoryOrderByRelevanceFieldEnum]
+
+
+export const TelematicsEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  deviceId: 'deviceId',
+  provider: 'provider',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId',
+  sensorType: 'sensorType',
+  sensorValue: 'sensorValue',
+  sensorUnit: 'sensorUnit',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  source: 'source',
+  trust: 'trust',
+  rawEventRef: 'rawEventRef',
+  normalizedPayload: 'normalizedPayload'
+} as const
+
+export type TelematicsEventOrderByRelevanceFieldEnum = (typeof TelematicsEventOrderByRelevanceFieldEnum)[keyof typeof TelematicsEventOrderByRelevanceFieldEnum]
+
+
+export const RawTelematicsPacketOrderByRelevanceFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  idempotencyKey: 'idempotencyKey',
+  payloadHash: 'payloadHash',
+  payload: 'payload'
+} as const
+
+export type RawTelematicsPacketOrderByRelevanceFieldEnum = (typeof RawTelematicsPacketOrderByRelevanceFieldEnum)[keyof typeof RawTelematicsPacketOrderByRelevanceFieldEnum]
+
+
+export const VehicleLiveStateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  latestEventId: 'latestEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  provider: 'provider',
+  source: 'source',
+  trust: 'trust'
+} as const
+
+export type VehicleLiveStateOrderByRelevanceFieldEnum = (typeof VehicleLiveStateOrderByRelevanceFieldEnum)[keyof typeof VehicleLiveStateOrderByRelevanceFieldEnum]
+
+
+export const TelematicsHistorySummaryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId'
+} as const
+
+export type TelematicsHistorySummaryOrderByRelevanceFieldEnum = (typeof TelematicsHistorySummaryOrderByRelevanceFieldEnum)[keyof typeof TelematicsHistorySummaryOrderByRelevanceFieldEnum]
+
+
+export const CameraChannelOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  key: 'key',
+  label: 'label',
+  orientation: 'orientation',
+  privacyClass: 'privacyClass'
+} as const
+
+export type CameraChannelOrderByRelevanceFieldEnum = (typeof CameraChannelOrderByRelevanceFieldEnum)[keyof typeof CameraChannelOrderByRelevanceFieldEnum]
+
+
+export const VideoRetentionPolicyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  allowedRoles: 'allowedRoles',
+  allowedChannels: 'allowedChannels',
+  privacyNoticeVersion: 'privacyNoticeVersion',
+  privacyNoticeText: 'privacyNoticeText'
+} as const
+
+export type VideoRetentionPolicyOrderByRelevanceFieldEnum = (typeof VideoRetentionPolicyOrderByRelevanceFieldEnum)[keyof typeof VideoRetentionPolicyOrderByRelevanceFieldEnum]
+
+
+export const VideoMediaRecordOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  incidentId: 'incidentId',
+  kind: 'kind',
+  storageKind: 'storageKind',
+  storageBackend: 'storageBackend',
+  storageKey: 'storageKey',
+  deletionReason: 'deletionReason'
+} as const
+
+export type VideoMediaRecordOrderByRelevanceFieldEnum = (typeof VideoMediaRecordOrderByRelevanceFieldEnum)[keyof typeof VideoMediaRecordOrderByRelevanceFieldEnum]
+
+
+export const VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  policyId: 'policyId',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  noticeVersion: 'noticeVersion',
+  metadata: 'metadata'
+} as const
+
+export type VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum = (typeof VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum)[keyof typeof VideoPrivacyAcknowledgementOrderByRelevanceFieldEnum]
+
+
+export const VideoAlarmEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  provider: 'provider',
+  deviceId: 'deviceId',
+  providerEventId: 'providerEventId',
+  providerAlarmCode: 'providerAlarmCode',
+  alarmType: 'alarmType',
+  severity: 'severity',
+  message: 'message',
+  channelKey: 'channelKey',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  tripId: 'tripId'
+} as const
+
+export type VideoAlarmEventOrderByRelevanceFieldEnum = (typeof VideoAlarmEventOrderByRelevanceFieldEnum)[keyof typeof VideoAlarmEventOrderByRelevanceFieldEnum]
+
+
+export const VideoIncidentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  alarmEventId: 'alarmEventId',
+  deviceId: 'deviceId',
+  tripId: 'tripId',
+  assetType: 'assetType',
+  assetId: 'assetId',
+  incidentType: 'incidentType',
+  severity: 'severity',
+  status: 'status',
+  title: 'title',
+  message: 'message'
+} as const
+
+export type VideoIncidentOrderByRelevanceFieldEnum = (typeof VideoIncidentOrderByRelevanceFieldEnum)[keyof typeof VideoIncidentOrderByRelevanceFieldEnum]
+
+
+export const ElectronicWaybillOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  waybillNumber: 'waybillNumber',
+  verificationToken: 'verificationToken',
+  status: 'status'
+} as const
+
+export type ElectronicWaybillOrderByRelevanceFieldEnum = (typeof ElectronicWaybillOrderByRelevanceFieldEnum)[keyof typeof ElectronicWaybillOrderByRelevanceFieldEnum]
+
+
+export const ElectronicWaybillVersionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  snapshot: 'snapshot',
+  contentHash: 'contentHash',
+  correctionReason: 'correctionReason',
+  finalizedBy: 'finalizedBy'
+} as const
+
+export type ElectronicWaybillVersionOrderByRelevanceFieldEnum = (typeof ElectronicWaybillVersionOrderByRelevanceFieldEnum)[keyof typeof ElectronicWaybillVersionOrderByRelevanceFieldEnum]
+
+
+export const WaybillSealOrderByRelevanceFieldEnum = {
+  id: 'id',
+  waybillId: 'waybillId',
+  sealNumber: 'sealNumber',
+  sealType: 'sealType',
+  appliedBy: 'appliedBy',
+  status: 'status',
+  notes: 'notes'
+} as const
+
+export type WaybillSealOrderByRelevanceFieldEnum = (typeof WaybillSealOrderByRelevanceFieldEnum)[keyof typeof WaybillSealOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -7240,6 +11332,7 @@ export const DriverSettlementOrderByRelevanceFieldEnum = {
   id: 'id',
   driverId: 'driverId',
   period: 'period',
+  snapshotJson: 'snapshotJson',
   approvedBy: 'approvedBy',
   notes: 'notes'
 } as const
@@ -7282,6 +11375,7 @@ export type DvlaRegistrationOrderByRelevanceFieldEnum = (typeof DvlaRegistration
 
 export const ExpenseOrderByRelevanceFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   truckId: 'truckId',
   category: 'category',
   description: 'description',
@@ -7319,6 +11413,7 @@ export type FuelBudgetOrderByRelevanceFieldEnum = (typeof FuelBudgetOrderByRelev
 
 export const FuelLogOrderByRelevanceFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   truckId: 'truckId',
   stationName: 'stationName',
@@ -7364,6 +11459,8 @@ export type FuelStationOrderByRelevanceFieldEnum = (typeof FuelStationOrderByRel
 export const GeofenceZoneOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
+  geometryType: 'geometryType',
+  geometryJson: 'geometryJson',
   type: 'type',
   address: 'address'
 } as const
@@ -7617,7 +11714,8 @@ export const SettlementLineOrderByRelevanceFieldEnum = {
   settlementId: 'settlementId',
   tripId: 'tripId',
   description: 'description',
-  type: 'type'
+  type: 'type',
+  sourceId: 'sourceId'
 } as const
 
 export type SettlementLineOrderByRelevanceFieldEnum = (typeof SettlementLineOrderByRelevanceFieldEnum)[keyof typeof SettlementLineOrderByRelevanceFieldEnum]
@@ -7772,6 +11870,7 @@ export type TripDeliveryDestinationOrderByRelevanceFieldEnum = (typeof TripDeliv
 
 export const TripEventOrderByRelevanceFieldEnum = {
   id: 'id',
+  clientMutationId: 'clientMutationId',
   tripId: 'tripId',
   fromStatus: 'fromStatus',
   toStatus: 'toStatus',
@@ -7871,7 +11970,8 @@ export const TransportRateCardOrderByRelevanceFieldEnum = {
   rateType: 'rateType',
   currency: 'currency',
   sourceType: 'sourceType',
-  sourceId: 'sourceId'
+  sourceId: 'sourceId',
+  settlementTerms: 'settlementTerms'
 } as const
 
 export type TransportRateCardOrderByRelevanceFieldEnum = (typeof TransportRateCardOrderByRelevanceFieldEnum)[keyof typeof TransportRateCardOrderByRelevanceFieldEnum]
@@ -8128,6 +12228,41 @@ export const InsuranceRenewalHistoryOrderByRelevanceFieldEnum = {
 export type InsuranceRenewalHistoryOrderByRelevanceFieldEnum = (typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum)[keyof typeof InsuranceRenewalHistoryOrderByRelevanceFieldEnum]
 
 
+export const WeighingEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  tractorId: 'tractorId',
+  trailerId: 'trailerId',
+  driverId: 'driverId',
+  legacyWeightVerificationId: 'legacyWeightVerificationId',
+  stage: 'stage',
+  source: 'source',
+  status: 'status',
+  ruleSetSnapshot: 'ruleSetSnapshot',
+  clearanceDetails: 'clearanceDetails',
+  weighbridgeName: 'weighbridgeName',
+  location: 'location',
+  ticketNumber: 'ticketNumber',
+  certificateNumber: 'certificateNumber',
+  evidenceUrl: 'evidenceUrl',
+  operatorId: 'operatorId',
+  operatorName: 'operatorName',
+  supersedesEventId: 'supersedesEventId',
+  notes: 'notes'
+} as const
+
+export type WeighingEventOrderByRelevanceFieldEnum = (typeof WeighingEventOrderByRelevanceFieldEnum)[keyof typeof WeighingEventOrderByRelevanceFieldEnum]
+
+
+export const AxleReadingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  weighingEventId: 'weighingEventId',
+  axleGroup: 'axleGroup'
+} as const
+
+export type AxleReadingOrderByRelevanceFieldEnum = (typeof AxleReadingOrderByRelevanceFieldEnum)[keyof typeof AxleReadingOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -8142,9 +12277,9 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'Float'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
@@ -8156,16 +12291,16 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
- * Reference to a field of type 'BorderCrossingStatus'
+ * Reference to a field of type 'Int'
  */
-export type EnumBorderCrossingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BorderCrossingStatus'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Boolean'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -8177,16 +12312,16 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'CashAdvanceStatus'
+ * Reference to a field of type 'BorderCrossingStatus'
  */
-export type EnumCashAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CashAdvanceStatus'>
+export type EnumBorderCrossingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BorderCrossingStatus'>
     
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'CashAdvanceStatus'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type EnumCashAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CashAdvanceStatus'>
     
 
 
@@ -8495,6 +12630,44 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  aiRecommendation?: Prisma.AiRecommendationOmit
+  aiPrediction?: Prisma.AiPredictionOmit
+  aiReviewCase?: Prisma.AiReviewCaseOmit
+  complianceRuleSet?: Prisma.ComplianceRuleSetOmit
+  complianceRule?: Prisma.ComplianceRuleOmit
+  proofOfDelivery?: Prisma.ProofOfDeliveryOmit
+  proofOfDeliveryEvidence?: Prisma.ProofOfDeliveryEvidenceOmit
+  deliveryException?: Prisma.DeliveryExceptionOmit
+  gateEvent?: Prisma.GateEventOmit
+  factoryQueueEntry?: Prisma.FactoryQueueEntryOmit
+  haulierSettlement?: Prisma.HaulierSettlementOmit
+  haulierSettlementLine?: Prisma.HaulierSettlementLineOmit
+  integrationConnection?: Prisma.IntegrationConnectionOmit
+  integrationImportReceipt?: Prisma.IntegrationImportReceiptOmit
+  operationalEvent?: Prisma.OperationalEventOmit
+  tripReconciliation?: Prisma.TripReconciliationOmit
+  reconciliationLine?: Prisma.ReconciliationLineOmit
+  reconciliationAdjustment?: Prisma.ReconciliationAdjustmentOmit
+  reconciliationException?: Prisma.ReconciliationExceptionOmit
+  plannedRoute?: Prisma.PlannedRouteOmit
+  geofenceAssetState?: Prisma.GeofenceAssetStateOmit
+  geofenceTransitionEvent?: Prisma.GeofenceTransitionEventOmit
+  routeDeviationEvent?: Prisma.RouteDeviationEventOmit
+  telematicsDevice?: Prisma.TelematicsDeviceOmit
+  deviceInstallationHistory?: Prisma.DeviceInstallationHistoryOmit
+  telematicsEvent?: Prisma.TelematicsEventOmit
+  rawTelematicsPacket?: Prisma.RawTelematicsPacketOmit
+  vehicleLiveState?: Prisma.VehicleLiveStateOmit
+  telematicsHistorySummary?: Prisma.TelematicsHistorySummaryOmit
+  cameraChannel?: Prisma.CameraChannelOmit
+  videoRetentionPolicy?: Prisma.VideoRetentionPolicyOmit
+  videoMediaRecord?: Prisma.VideoMediaRecordOmit
+  videoPrivacyAcknowledgement?: Prisma.VideoPrivacyAcknowledgementOmit
+  videoAlarmEvent?: Prisma.VideoAlarmEventOmit
+  videoIncident?: Prisma.VideoIncidentOmit
+  electronicWaybill?: Prisma.ElectronicWaybillOmit
+  electronicWaybillVersion?: Prisma.ElectronicWaybillVersionOmit
+  waybillSeal?: Prisma.WaybillSealOmit
   user?: Prisma.UserOmit
   auditLog?: Prisma.AuditLogOmit
   borderCrossing?: Prisma.BorderCrossingOmit
@@ -8569,6 +12742,8 @@ export type GlobalOmitConfig = {
   zoneRate?: Prisma.ZoneRateOmit
   dvlaRenewalHistory?: Prisma.DvlaRenewalHistoryOmit
   insuranceRenewalHistory?: Prisma.InsuranceRenewalHistoryOmit
+  weighingEvent?: Prisma.WeighingEventOmit
+  axleReading?: Prisma.AxleReadingOmit
 }
 
 /* Types for Logging */

@@ -700,22 +700,6 @@ export type DeliveryStopOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumDeliveryStopStatusFieldUpdateOperationsInput = {
   set?: $Enums.DeliveryStopStatus
 }

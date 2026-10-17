@@ -26,6 +26,7 @@ export type AggregateTripEvent = {
 
 export type TripEventMinAggregateOutputType = {
   id: string | null
+  clientMutationId: string | null
   tripId: string | null
   fromStatus: string | null
   toStatus: string | null
@@ -38,6 +39,7 @@ export type TripEventMinAggregateOutputType = {
 
 export type TripEventMaxAggregateOutputType = {
   id: string | null
+  clientMutationId: string | null
   tripId: string | null
   fromStatus: string | null
   toStatus: string | null
@@ -50,6 +52,7 @@ export type TripEventMaxAggregateOutputType = {
 
 export type TripEventCountAggregateOutputType = {
   id: number
+  clientMutationId: number
   tripId: number
   fromStatus: number
   toStatus: number
@@ -64,6 +67,7 @@ export type TripEventCountAggregateOutputType = {
 
 export type TripEventMinAggregateInputType = {
   id?: true
+  clientMutationId?: true
   tripId?: true
   fromStatus?: true
   toStatus?: true
@@ -76,6 +80,7 @@ export type TripEventMinAggregateInputType = {
 
 export type TripEventMaxAggregateInputType = {
   id?: true
+  clientMutationId?: true
   tripId?: true
   fromStatus?: true
   toStatus?: true
@@ -88,6 +93,7 @@ export type TripEventMaxAggregateInputType = {
 
 export type TripEventCountAggregateInputType = {
   id?: true
+  clientMutationId?: true
   tripId?: true
   fromStatus?: true
   toStatus?: true
@@ -173,6 +179,7 @@ export type TripEventGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type TripEventGroupByOutputType = {
   id: string
+  clientMutationId: string | null
   tripId: string
   fromStatus: string | null
   toStatus: string
@@ -206,6 +213,7 @@ export type TripEventWhereInput = {
   OR?: Prisma.TripEventWhereInput[]
   NOT?: Prisma.TripEventWhereInput | Prisma.TripEventWhereInput[]
   id?: Prisma.StringFilter<"TripEvent"> | string
+  clientMutationId?: Prisma.StringNullableFilter<"TripEvent"> | string | null
   tripId?: Prisma.StringFilter<"TripEvent"> | string
   fromStatus?: Prisma.StringNullableFilter<"TripEvent"> | string | null
   toStatus?: Prisma.StringFilter<"TripEvent"> | string
@@ -219,6 +227,7 @@ export type TripEventWhereInput = {
 
 export type TripEventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
   fromStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   toStatus?: Prisma.SortOrder
@@ -233,6 +242,7 @@ export type TripEventOrderByWithRelationInput = {
 
 export type TripEventWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  clientMutationId?: string
   AND?: Prisma.TripEventWhereInput | Prisma.TripEventWhereInput[]
   OR?: Prisma.TripEventWhereInput[]
   NOT?: Prisma.TripEventWhereInput | Prisma.TripEventWhereInput[]
@@ -245,10 +255,11 @@ export type TripEventWhereUniqueInput = Prisma.AtLeast<{
   metadata?: Prisma.StringNullableFilter<"TripEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TripEvent"> | Date | string
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
-}, "id">
+}, "id" | "clientMutationId">
 
 export type TripEventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
   fromStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   toStatus?: Prisma.SortOrder
@@ -267,6 +278,7 @@ export type TripEventScalarWhereWithAggregatesInput = {
   OR?: Prisma.TripEventScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TripEventScalarWhereWithAggregatesInput | Prisma.TripEventScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"TripEvent"> | string
+  clientMutationId?: Prisma.StringNullableWithAggregatesFilter<"TripEvent"> | string | null
   tripId?: Prisma.StringWithAggregatesFilter<"TripEvent"> | string
   fromStatus?: Prisma.StringNullableWithAggregatesFilter<"TripEvent"> | string | null
   toStatus?: Prisma.StringWithAggregatesFilter<"TripEvent"> | string
@@ -279,6 +291,7 @@ export type TripEventScalarWhereWithAggregatesInput = {
 
 export type TripEventCreateInput = {
   id?: string
+  clientMutationId?: string | null
   fromStatus?: string | null
   toStatus: string
   userId?: string | null
@@ -291,6 +304,7 @@ export type TripEventCreateInput = {
 
 export type TripEventUncheckedCreateInput = {
   id?: string
+  clientMutationId?: string | null
   tripId: string
   fromStatus?: string | null
   toStatus: string
@@ -303,6 +317,7 @@ export type TripEventUncheckedCreateInput = {
 
 export type TripEventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -315,6 +330,7 @@ export type TripEventUpdateInput = {
 
 export type TripEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -327,6 +343,7 @@ export type TripEventUncheckedUpdateInput = {
 
 export type TripEventCreateManyInput = {
   id?: string
+  clientMutationId?: string | null
   tripId: string
   fromStatus?: string | null
   toStatus: string
@@ -339,6 +356,7 @@ export type TripEventCreateManyInput = {
 
 export type TripEventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -350,6 +368,7 @@ export type TripEventUpdateManyMutationInput = {
 
 export type TripEventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
@@ -378,6 +397,7 @@ export type TripEventOrderByRelevanceInput = {
 
 export type TripEventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   fromStatus?: Prisma.SortOrder
   toStatus?: Prisma.SortOrder
@@ -390,6 +410,7 @@ export type TripEventCountOrderByAggregateInput = {
 
 export type TripEventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   fromStatus?: Prisma.SortOrder
   toStatus?: Prisma.SortOrder
@@ -402,6 +423,7 @@ export type TripEventMaxOrderByAggregateInput = {
 
 export type TripEventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  clientMutationId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   fromStatus?: Prisma.SortOrder
   toStatus?: Prisma.SortOrder
@@ -456,6 +478,7 @@ export type TripEventUncheckedUpdateManyWithoutTripNestedInput = {
 
 export type TripEventCreateWithoutTripInput = {
   id?: string
+  clientMutationId?: string | null
   fromStatus?: string | null
   toStatus: string
   userId?: string | null
@@ -467,6 +490,7 @@ export type TripEventCreateWithoutTripInput = {
 
 export type TripEventUncheckedCreateWithoutTripInput = {
   id?: string
+  clientMutationId?: string | null
   fromStatus?: string | null
   toStatus: string
   userId?: string | null
@@ -507,6 +531,7 @@ export type TripEventScalarWhereInput = {
   OR?: Prisma.TripEventScalarWhereInput[]
   NOT?: Prisma.TripEventScalarWhereInput | Prisma.TripEventScalarWhereInput[]
   id?: Prisma.StringFilter<"TripEvent"> | string
+  clientMutationId?: Prisma.StringNullableFilter<"TripEvent"> | string | null
   tripId?: Prisma.StringFilter<"TripEvent"> | string
   fromStatus?: Prisma.StringNullableFilter<"TripEvent"> | string | null
   toStatus?: Prisma.StringFilter<"TripEvent"> | string
@@ -519,6 +544,7 @@ export type TripEventScalarWhereInput = {
 
 export type TripEventCreateManyTripInput = {
   id?: string
+  clientMutationId?: string | null
   fromStatus?: string | null
   toStatus: string
   userId?: string | null
@@ -530,6 +556,7 @@ export type TripEventCreateManyTripInput = {
 
 export type TripEventUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -541,6 +568,7 @@ export type TripEventUpdateWithoutTripInput = {
 
 export type TripEventUncheckedUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -552,6 +580,7 @@ export type TripEventUncheckedUpdateWithoutTripInput = {
 
 export type TripEventUncheckedUpdateManyWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientMutationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toStatus?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -565,6 +594,7 @@ export type TripEventUncheckedUpdateManyWithoutTripInput = {
 
 export type TripEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  clientMutationId?: boolean
   tripId?: boolean
   fromStatus?: boolean
   toStatus?: boolean
@@ -580,6 +610,7 @@ export type TripEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type TripEventSelectScalar = {
   id?: boolean
+  clientMutationId?: boolean
   tripId?: boolean
   fromStatus?: boolean
   toStatus?: boolean
@@ -590,7 +621,7 @@ export type TripEventSelectScalar = {
   createdAt?: boolean
 }
 
-export type TripEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "fromStatus" | "toStatus" | "userId" | "notes" | "location" | "metadata" | "createdAt", ExtArgs["result"]["tripEvent"]>
+export type TripEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientMutationId" | "tripId" | "fromStatus" | "toStatus" | "userId" | "notes" | "location" | "metadata" | "createdAt", ExtArgs["result"]["tripEvent"]>
 export type TripEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }
@@ -602,6 +633,7 @@ export type $TripEventPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    clientMutationId: string | null
     tripId: string
     fromStatus: string | null
     toStatus: string
@@ -981,6 +1013,7 @@ export interface Prisma__TripEventClient<T, Null = never, ExtArgs extends runtim
  */
 export interface TripEventFieldRefs {
   readonly id: Prisma.FieldRef<"TripEvent", 'String'>
+  readonly clientMutationId: Prisma.FieldRef<"TripEvent", 'String'>
   readonly tripId: Prisma.FieldRef<"TripEvent", 'String'>
   readonly fromStatus: Prisma.FieldRef<"TripEvent", 'String'>
   readonly toStatus: Prisma.FieldRef<"TripEvent", 'String'>
