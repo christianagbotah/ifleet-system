@@ -51,17 +51,30 @@ describe('production deployment runtime configuration', () => {
   it('uses a cross-namespace atomic flock before any deploy work starts', () => {
     const content = read('scripts/webhook-deploy.sh')
     const lockPathIndex = content.indexOf('LOCK_FILE="/run/lock/ifleetpro-deploy.lock"')
-    const fdIndex = content.indexOf('exec 9>"$LOCK_FILE"')
-    const flockIndex = content.indexOf('flock -n 9')
+    const wrapperIndex = content.indexOf('flock -n -E 75 -o "$LOCK_FILE" "$0" "$@"')
     const deployStartIndex = content.indexOf('AUTO-DEPLOY TRIGGERED')
 
     expect(lockPathIndex).toBeGreaterThanOrEqual(0)
-    expect(fdIndex).toBeGreaterThan(lockPathIndex)
-    expect(flockIndex).toBeGreaterThan(fdIndex)
-    expect(deployStartIndex).toBeGreaterThan(flockIndex)
+    expect(wrapperIndex).toBeGreaterThan(lockPathIndex)
+    expect(deployStartIndex).toBeGreaterThan(wrapperIndex)
+    expect(content).toContain('IFLEETPRO_DEPLOY_LOCK_HELD')
+    expect(content).not.toContain('exec 9>"$LOCK_FILE"')
     expect(content).not.toContain('if [ -f "$LOCK_FILE" ]')
     expect(content).not.toContain('touch "$LOCK_FILE"')
     expect(content).not.toContain(`trap 'rm -f "$LOCK_FILE"' EXIT`)
+  })
+
+  it('does not leak the flock descriptor into surviving child processes', () => {
+    const result = execFileSync(
+      'bash',
+      [
+        '-c',
+        `dir=$(mktemp -d); lock="$dir/lock"; flock -n -o "$lock" sh -c 'sleep 1 &'; if flock -n "$lock" -c true; then result=free; else result=held; fi; rm -rf "$dir"; printf "%s" "$result"`,
+      ],
+      { encoding: 'utf8' },
+    )
+
+    expect(result).toBe('free')
   })
 
   it('allows only one non-blocking flock holder at a time', () => {

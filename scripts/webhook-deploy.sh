@@ -31,11 +31,19 @@ log() {
 }
 
 # ── Prevent concurrent deploys across webhook PrivateTmp and manual shells ──
-# Keep FD 9 open for the life of the process; the kernel releases the lock on exit.
-exec 9>"$LOCK_FILE"
-if ! flock -n 9; then
-    log "DEPLOY BLOCKED: Another deploy is already running"
-    exit 1
+# Let flock own the descriptor in a wrapper process. -o closes the lock FD in the
+# deployed child so long-lived descendants (for example nginx) cannot inherit it.
+if [ "${IFLEETPRO_DEPLOY_LOCK_HELD:-0}" != "1" ]; then
+    export IFLEETPRO_DEPLOY_LOCK_HELD=1
+    if flock -n -E 75 -o "$LOCK_FILE" "$0" "$@"; then
+        exit 0
+    else
+        rc=$?
+        if [ "$rc" -eq 75 ]; then
+            log "DEPLOY BLOCKED: Another deploy is already running"
+        fi
+        exit "$rc"
+    fi
 fi
 
 log "════════════════════════════════════════"
