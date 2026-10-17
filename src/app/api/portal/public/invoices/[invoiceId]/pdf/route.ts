@@ -41,7 +41,7 @@ export async function GET(
   if (!invoice) return privateJson('Invoice not found.', 404)
 
   try {
-    const doc = await invoicePdf.buildInvoicePdf(invoice.id)
+    const doc = await invoicePdf.buildInvoicePdf(invoice.id, clientId)
     const buffer = Buffer.from(doc.output('arraybuffer'))
     const date = new Date().toISOString().split('T')[0]
     const filename = `invoice_${safeFilenamePart(invoice.invoiceNumber)}_${date}.pdf`
