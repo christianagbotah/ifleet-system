@@ -39,7 +39,10 @@ export async function GET(request: NextRequest) {
 
   // Drivers only see invoices for their assigned trips
   if (auth.roleName === 'Driver') {
-    where.trip = { driverId: auth.driverId || undefined }
+    if (!auth.driverId) {
+      return NextResponse.json({ error: 'Driver profile is not linked.' }, { status: 403 })
+    }
+    where.trip = { driverId: auth.driverId }
   }
 
   try {
@@ -79,6 +82,7 @@ export async function GET(request: NextRequest) {
     const paidThisMonth = await db.invoice.aggregate({
       _sum: { paidAmount: true },
       where: {
+        ...where,
         status: 'paid',
         updatedAt: { gte: thisMonth },
       },
