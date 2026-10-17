@@ -21,7 +21,7 @@ export PATH="/root/.bun/bin:/usr/local/apps/nodejs20/bin:/usr/local/bin:/usr/lib
 # ── Configuration ──
 APP_DIR="/home/lightworld/webapps/ifleetpro"
 LOG_DIR="/var/log/ifleetpro"
-LOCK_FILE="/tmp/ifleetpro-deploy.lock"
+LOCK_FILE="/run/lock/ifleetpro-deploy.lock"
 LOG_FILE="$LOG_DIR/deploy.log"
 
 # ── Logging ──
@@ -30,17 +30,13 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
-# ── Prevent concurrent deploys ──
-if [ -f "$LOCK_FILE" ]; then
-    log "DEPLOY BLOCKED: Another deploy is already running (lock file exists)"
+# ── Prevent concurrent deploys across webhook PrivateTmp and manual shells ──
+# Keep FD 9 open for the life of the process; the kernel releases the lock on exit.
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    log "DEPLOY BLOCKED: Another deploy is already running"
     exit 1
 fi
-
-# Clean up lock on exit (even if script fails)
-trap 'rm -f "$LOCK_FILE"' EXIT
-
-# Create lock
-touch "$LOCK_FILE"
 
 log "════════════════════════════════════════"
 log "  AUTO-DEPLOY TRIGGERED"

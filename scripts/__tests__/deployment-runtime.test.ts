@@ -48,6 +48,35 @@ describe('production deployment runtime configuration', () => {
     }
   })
 
+  it('uses a cross-namespace atomic flock before any deploy work starts', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const lockPathIndex = content.indexOf('LOCK_FILE="/run/lock/ifleetpro-deploy.lock"')
+    const fdIndex = content.indexOf('exec 9>"$LOCK_FILE"')
+    const flockIndex = content.indexOf('flock -n 9')
+    const deployStartIndex = content.indexOf('AUTO-DEPLOY TRIGGERED')
+
+    expect(lockPathIndex).toBeGreaterThanOrEqual(0)
+    expect(fdIndex).toBeGreaterThan(lockPathIndex)
+    expect(flockIndex).toBeGreaterThan(fdIndex)
+    expect(deployStartIndex).toBeGreaterThan(flockIndex)
+    expect(content).not.toContain('if [ -f "$LOCK_FILE" ]')
+    expect(content).not.toContain('touch "$LOCK_FILE"')
+    expect(content).not.toContain(`trap 'rm -f "$LOCK_FILE"' EXIT`)
+  })
+
+  it('allows only one non-blocking flock holder at a time', () => {
+    const result = execFileSync(
+      'bash',
+      [
+        '-c',
+        'dir=$(mktemp -d); lock="$dir/lock"; ready="$dir/ready"; (exec 9>"$lock"; flock -n 9 || exit 91; : >"$ready"; sleep 0.4) & holder=$!; for _ in $(seq 1 100); do [ -e "$ready" ] && break; sleep 0.01; done; [ -e "$ready" ] || exit 92; if (exec 9>"$lock"; flock -n 9); then second=0; else second=$?; fi; wait "$holder"; rm -rf "$dir"; printf "%s" "$second"',
+      ],
+      { encoding: 'utf8' },
+    )
+
+    expect(result).not.toBe('0')
+  })
+
   it('blocks deployment if Prisma generation changes committed generated sources', () => {
     const content = read('scripts/webhook-deploy.sh')
     const generateIndex = content.indexOf('bunx prisma generate')
