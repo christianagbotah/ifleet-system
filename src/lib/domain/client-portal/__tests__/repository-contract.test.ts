@@ -35,4 +35,10 @@ describe('client portal repository contract', () => {
   it('binds shipment detail lookup to both trip and token client id', () => {
     expect(source).toContain('where: { id: tripId, clientId }')
   })
+
+  it('binds invoice document lookup to invoice id, token client id, and an active client', () => {
+    expect(source).toContain('export async function loadClientPortalInvoice')
+    expect(source).toMatch(/db\.invoice\.findFirst\(\{[\s\S]*?id:\s*invoiceId[\s\S]*?clientId[\s\S]*?isActive:\s*true/)
+    expect(source).toContain('invoiceNumber: true')
+  })
 })
