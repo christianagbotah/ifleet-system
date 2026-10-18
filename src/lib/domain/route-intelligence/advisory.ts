@@ -1,4 +1,4 @@
-import { calculateMultiStopRoute } from '@/lib/ghana-routes'
+import { calculateMultiStopRoute, GHANA_CITIES } from '@/lib/ghana-routes'
 
 export const ROUTE_ADVISORY_VERSION = 'route-advisory-v1'
 
@@ -125,6 +125,22 @@ export interface RouteAdvisoryFailure {
 }
 
 export type RouteAdvisoryResult = RouteAdvisorySuccess | RouteAdvisoryFailure
+
+export interface AlternativeRouteAdvisory {
+  from: string
+  via: string
+  to: string
+  totalDistance: number
+  totalHours: number
+  tollCost: number
+  totalCost: number
+  source: 'static_fallback'
+  fuelEstimate: RouteAdvisorySuccess['fuelEstimate']
+  dataQuality: number
+  dataQualityGrade: RouteDataQualityGrade
+  confidence: number
+  notices: string[]
+}
 
 const MAX_WEIGHT_TONNES = 100
 const MAX_FUEL_PRICE_PER_LITER = 100
@@ -348,4 +364,42 @@ export function buildRouteAdvisory(input: RouteAdvisoryInput): RouteAdvisoryResu
     confidence,
     notices,
   }
+}
+
+export function buildAlternativeRouteAdvisories(input: RouteAdvisoryInput): AlternativeRouteAdvisory[] {
+  if ((input.stops ?? []).length > 0) return []
+
+  const direct = buildRouteAdvisory({ ...input, stops: [] })
+  if (!direct.ok || direct.route.totalDistance <= 0) return []
+
+  const maxAlternativeDistance = direct.route.totalDistance * 1.5
+  const alternatives: AlternativeRouteAdvisory[] = []
+
+  for (const city of GHANA_CITIES) {
+    const via = city.name
+    if (via === input.from || via === input.to) continue
+
+    const candidate = buildRouteAdvisory({ ...input, stops: [via] })
+    if (!candidate.ok || candidate.route.totalDistance > maxAlternativeDistance) continue
+
+    alternatives.push({
+      from: input.from,
+      via,
+      to: input.to,
+      totalDistance: candidate.route.totalDistance,
+      totalHours: candidate.route.totalHours,
+      tollCost: candidate.route.tollCost,
+      totalCost: round(candidate.fuelEstimate.cost + candidate.route.tollCost),
+      source: candidate.route.source,
+      fuelEstimate: candidate.fuelEstimate,
+      dataQuality: candidate.dataQuality,
+      dataQualityGrade: candidate.dataQualityGrade,
+      confidence: candidate.confidence,
+      notices: candidate.notices,
+    })
+  }
+
+  return alternatives
+    .sort((a, b) => a.totalCost - b.totalCost || a.totalDistance - b.totalDistance || a.via.localeCompare(b.via))
+    .slice(0, 3)
 }
