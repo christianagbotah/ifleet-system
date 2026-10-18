@@ -8,7 +8,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ clientId: string }> },
 ) {
-  const auth = requirePermission(request, 'trips.view')
+  const auth = requirePermission(request, 'portal.share')
   if (auth instanceof NextResponse) return auth
 
   const { clientId } = await params
@@ -58,7 +58,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ clientId: string }> },
 ) {
-  const auth = requirePermission(request, 'trips.view')
+  const auth = requirePermission(request, 'portal.share')
   if (auth instanceof NextResponse) return auth
 
   const { clientId } = await params

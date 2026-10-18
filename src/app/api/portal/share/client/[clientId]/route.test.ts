@@ -15,13 +15,13 @@ vi.mock('@/lib/jwt-secret', () => ({
 import { DELETE, POST } from './route'
 import { verifyPortalShareToken } from '@/lib/portal/share-token'
 
-function request(body: unknown, permissions = ['trips.view']) {
+function request(body: unknown, permissions = ['portal.share'], roleName = 'Dispatcher') {
   return new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       'x-auth-user-id': 'operator-1',
-      'x-auth-user-role': 'Dispatcher',
+      'x-auth-user-role': roleName,
       'x-auth-user-permissions': JSON.stringify(permissions),
     },
     body: JSON.stringify(body),
@@ -37,10 +37,21 @@ beforeEach(() => {
 })
 
 describe('POST /api/portal/share/client/[clientId]', () => {
-  it('requires trips.view permission', async () => {
-    const response = await POST(request({}, []), context)
+  it('requires portal.share rather than broad trips.view permission', async () => {
+    const response = await POST(request({}, ['trips.view']), context)
     expect(response.status).toBe(403)
     expect(mocks.clientFindUnique).not.toHaveBeenCalled()
+  })
+
+  it('does not let a Driver issue client links merely because they can view trips', async () => {
+    const response = await POST(request({ expiresInDays: 7 }, ['trips.view'], 'Driver'), context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientFindUnique).not.toHaveBeenCalled()
+  })
+
+  it('keeps the Admin role able to manage links without an explicit permission row', async () => {
+    const response = await POST(request({ expiresInDays: 7 }, [], 'Admin'), context)
+    expect(response.status).toBe(200)
   })
 
   it('issues a signed fragment share path for an active client', async () => {
@@ -62,13 +73,27 @@ describe('POST /api/portal/share/client/[clientId]', () => {
     expect(claims.shareVersion).toBe(4)
   })
 
-  it('atomically revokes all previously issued links for the client', async () => {
+  it('does not let trips.view-only users revoke client portal links', async () => {
     const revokeRequest = new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
       method: 'DELETE',
       headers: {
         'x-auth-user-id': 'operator-1',
         'x-auth-user-role': 'Dispatcher',
         'x-auth-user-permissions': JSON.stringify(['trips.view']),
+      },
+    })
+    const response = await DELETE(revokeRequest, context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientUpdate).not.toHaveBeenCalled()
+  })
+
+  it('atomically revokes all previously issued links for the client', async () => {
+    const revokeRequest = new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
+      method: 'DELETE',
+      headers: {
+        'x-auth-user-id': 'operator-1',
+        'x-auth-user-role': 'Dispatcher',
+        'x-auth-user-permissions': JSON.stringify(['portal.share']),
       },
     })
     const response = await DELETE(revokeRequest, context)

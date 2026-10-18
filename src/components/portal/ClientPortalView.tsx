@@ -33,6 +33,7 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { apiFetch, fetchClients, type Client } from '@/lib/api'
 import { CURRENCY_SYMBOL, TRIP_STATUSES } from '@/lib/constants'
+import { useAuthStore } from '@/lib/store/auth'
 
 interface ShareResult {
   clientId: string
@@ -140,6 +141,8 @@ async function portalFetch<T>(path: string, token: string): Promise<T> {
 }
 
 export function ClientPortalView() {
+  const user = useAuthStore((state) => state.user)
+  const canShareLinks = user?.role === 'Admin' || user?.permissions.includes('portal.share') === true
   const [clients, setClients] = useState<Client[]>([])
   const [query, setQuery] = useState('')
   const [selectedClientId, setSelectedClientId] = useState('')
@@ -169,11 +172,12 @@ export function ClientPortalView() {
   }, [clients, query])
 
   const issueShare = useCallback(async (clientId: string, expiresInDays = 7) => {
+    if (!canShareLinks) throw new Error('You do not have permission to manage client portal links')
     return apiFetch<ShareResult>(`/api/portal/share/client/${encodeURIComponent(clientId)}`, {
       method: 'POST',
       body: JSON.stringify({ expiresInDays }),
     })
-  }, [])
+  }, [canShareLinks])
 
   const loadPreview = useCallback(async () => {
     if (!selectedClientId) return
@@ -287,15 +291,15 @@ export function ClientPortalView() {
                 ))}
               </div>
             </div>
-            <Button onClick={() => void loadPreview()} disabled={!selectedClientId || loading}>
+            <Button onClick={() => void loadPreview()} disabled={!selectedClientId || !canShareLinks || loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ExternalLink className="mr-2 h-4 w-4" />}
               View secure preview
             </Button>
-            <Button variant="outline" onClick={() => void copyShareLink()} disabled={!selectedClientId}>
+            <Button variant="outline" onClick={() => void copyShareLink()} disabled={!selectedClientId || !canShareLinks}>
               <ClipboardCopy className="mr-2 h-4 w-4" />
               Copy 7-day link
             </Button>
-            <Button variant="destructive" onClick={() => void revokeShareLinks()} disabled={!selectedClientId || revoking}>
+            <Button variant="destructive" onClick={() => void revokeShareLinks()} disabled={!selectedClientId || !canShareLinks || revoking}>
               {revoking ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldX className="mr-2 h-4 w-4" />}
               Revoke all shared links
             </Button>

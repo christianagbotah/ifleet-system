@@ -488,6 +488,9 @@ export const PERMISSIONS = {
   "trips.edit": "Edit Trips",
   "trips.delete": "Delete Trips",
 
+  // Client portal
+  "portal.share": "Manage Client Portal Links",
+
   // Expenses
   "expenses.view": "View Expenses",
   "expenses.create": "Create Expenses",
