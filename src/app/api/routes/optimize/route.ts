@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { requirePermission, ROLES } from '@/lib/auth-server'
 import {
+  buildAlternativeRouteAdvisories,
   buildRouteAdvisory,
   rankRouteCandidates,
   ROUTE_ADVISORY_VERSION,
@@ -85,14 +86,15 @@ export async function GET(request: NextRequest) {
     ? await repository.loadFleetEvidence({ origin: from, now: new Date() })
     : { candidates: [], fleetFuelSamples: [] }
 
-  const advisory = buildRouteAdvisory({
+  const advisoryInput = {
     from,
     to,
     stops,
     weightTonnes,
     fuelPricePerLiter,
     fleetFuelSamples: evidence.fleetFuelSamples,
-  })
+  }
+  const advisory = buildRouteAdvisory(advisoryInput)
 
   if (!advisory.ok) {
     if (advisory.error === 'invalid_input') {
@@ -111,6 +113,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
+  const alternatives = buildAlternativeRouteAdvisories(advisoryInput)
   const recommendations = recommendationsAvailable
     ? rankRouteCandidates(evidence.candidates, evidence.fleetFuelSamples).slice(0, MAX_RECOMMENDATIONS)
     : []
@@ -153,9 +156,7 @@ export async function GET(request: NextRequest) {
       dataQuality: advisory.route.dataQuality,
       dataQualityGrade: advisory.route.dataQualityGrade,
     },
-    // Alternative-route costing remains disabled until it can use the same evidence
-    // hierarchy. Returning a static legacy comparison would overstate precision.
-    alternatives: [],
+    alternatives,
     recommendedTrucks: recommendations.map((recommendation) => {
       const { location } = recommendation
       const hasCoordinates = location.latitude != null && location.longitude != null
