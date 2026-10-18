@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { loadClientShipmentDetail } from '@/lib/domain/client-portal/repository'
-import { readPortalTokenHeader, verifyPortalShareToken } from '@/lib/portal/share-token'
+import { verifyActivePortalShareToken } from '@/lib/portal/access'
+import { readPortalTokenHeader } from '@/lib/portal/share-token'
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +13,7 @@ export async function GET(
 
   let clientId: string
   try {
-    const claims = await verifyPortalShareToken(token)
+    const claims = await verifyActivePortalShareToken(token)
     clientId = claims.clientId
   } catch {
     return NextResponse.json({ error: 'Portal link is invalid or expired' }, { status: 401 })

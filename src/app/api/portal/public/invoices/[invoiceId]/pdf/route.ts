@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { readPortalTokenHeader, verifyPortalShareToken } from '@/lib/portal/share-token'
+import { verifyActivePortalShareToken } from '@/lib/portal/access'
+import { readPortalTokenHeader } from '@/lib/portal/share-token'
 import { loadClientPortalInvoice } from '@/lib/domain/client-portal/repository'
 import * as invoicePdf from '@/lib/reports/invoice-pdf'
 
@@ -30,7 +31,7 @@ export async function GET(
 
   let clientId: string
   try {
-    const claims = await verifyPortalShareToken(token)
+    const claims = await verifyActivePortalShareToken(token)
     clientId = claims.clientId
   } catch {
     return privateJson('Portal link is invalid or expired.', 401)

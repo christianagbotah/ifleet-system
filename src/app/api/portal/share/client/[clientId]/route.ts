@@ -31,7 +31,7 @@ export async function POST(
 
   const client = await db.client.findUnique({
     where: { id: clientId },
-    select: { id: true, isActive: true },
+    select: { id: true, isActive: true, portalShareVersion: true },
   })
 
   if (!client) return NextResponse.json({ error: 'Client not found' }, { status: 404 })
@@ -43,6 +43,7 @@ export async function POST(
     clientId: client.id,
     issuedBy: auth.userId,
     ttlDays: expiresInDays,
+    shareVersion: client.portalShareVersion,
   })
 
   return NextResponse.json({
@@ -50,5 +51,32 @@ export async function POST(
     token: issued.token,
     expiresAt: issued.expiresAt.toISOString(),
     path: `/portal#access=${encodeURIComponent(issued.token)}`,
+  })
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ clientId: string }> },
+) {
+  const auth = requirePermission(request, 'trips.view')
+  if (auth instanceof NextResponse) return auth
+
+  const { clientId } = await params
+  const client = await db.client.findUnique({
+    where: { id: clientId },
+    select: { id: true },
+  })
+  if (!client) return NextResponse.json({ error: 'Client not found' }, { status: 404 })
+
+  const updated = await db.client.update({
+    where: { id: clientId },
+    data: { portalShareVersion: { increment: 1 } },
+    select: { id: true, portalShareVersion: true },
+  })
+
+  return NextResponse.json({
+    clientId: updated.id,
+    revoked: true,
+    portalShareVersion: updated.portalShareVersion,
   })
 }

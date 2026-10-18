@@ -48,6 +48,24 @@ describe('portal share token', () => {
     expect(claims.purpose).toBe('client_portal')
   })
 
+  it('round-trips a share version and treats legacy tokens as version zero', async () => {
+    const result = await createPortalShareToken({
+      clientId: 'client-a',
+      issuedBy: 'user-1',
+      ttlDays: 7,
+      shareVersion: 3,
+      secret,
+      now: issuedAt,
+    })
+
+    const claims = await verifyPortalShareToken(result.token, { secret, now: issuedAt })
+    expect(claims.shareVersion).toBe(3)
+
+    const legacy = await customToken({})
+    const legacyClaims = await verifyPortalShareToken(legacy, { secret, now: issuedAt })
+    expect(legacyClaims.shareVersion).toBe(0)
+  })
+
   it('rejects an expired token', async () => {
     const result = await createPortalShareToken({
       clientId: 'client-a',
