@@ -15,10 +15,10 @@ describe('public portal invoice PDF route contract', () => {
   })
 
   it('verifies the portal token and client-bound invoice before PDF generation', () => {
-    const readTokenIndex = source.indexOf('readPortalTokenHeader')
-    const verifyTokenIndex = source.indexOf('verifyPortalShareToken')
-    const loadInvoiceIndex = source.indexOf('loadClientPortalInvoice')
-    const buildPdfIndex = source.indexOf('buildInvoicePdf')
+    const readTokenIndex = source.indexOf('readPortalTokenHeader(request.headers)')
+    const verifyTokenIndex = source.indexOf('verifyActivePortalShareToken(token)')
+    const loadInvoiceIndex = source.indexOf('loadClientPortalInvoice(clientId, invoiceId)')
+    const buildPdfIndex = source.indexOf('invoicePdf.buildInvoicePdf(invoice.id, clientId)')
 
     expect(readTokenIndex).toBeGreaterThanOrEqual(0)
     expect(verifyTokenIndex).toBeGreaterThan(readTokenIndex)

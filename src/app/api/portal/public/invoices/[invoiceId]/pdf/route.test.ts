@@ -5,6 +5,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   loadInvoice: vi.fn(),
   buildInvoicePdf: vi.fn(),
+  verifyAccess: vi.fn(),
+}))
+
+vi.mock('@/lib/portal/access', () => ({
+  verifyActivePortalShareToken: mocks.verifyAccess,
 }))
 
 vi.mock('@/lib/jwt-secret', () => ({
@@ -26,6 +31,7 @@ const context = { params: Promise.resolve({ invoiceId: 'invoice-b' }) }
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mocks.verifyAccess.mockResolvedValue({ clientId: 'client-a', issuedBy: 'operator-1', purpose: 'client_portal', shareVersion: 0, expiresAt: new Date('2026-10-25T00:00:00.000Z') })
   mocks.loadInvoice.mockResolvedValue(null)
   mocks.buildInvoicePdf.mockResolvedValue({
     output: vi.fn(() => new Uint8Array([37, 80, 68, 70]).buffer),

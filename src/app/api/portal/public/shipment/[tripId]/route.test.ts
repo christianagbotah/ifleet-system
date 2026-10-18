@@ -2,7 +2,11 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mocks = vi.hoisted(() => ({ loadShipment: vi.fn() }))
+const mocks = vi.hoisted(() => ({ loadShipment: vi.fn(), verifyAccess: vi.fn() }))
+
+vi.mock('@/lib/portal/access', () => ({
+  verifyActivePortalShareToken: mocks.verifyAccess,
+}))
 
 vi.mock('@/lib/jwt-secret', () => ({
   getJwtSecretKey: () => new TextEncoder().encode('phase-8-public-test-secret-at-least-32-characters'),
@@ -19,6 +23,7 @@ const context = { params: Promise.resolve({ tripId: 'trip-b' }) }
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mocks.verifyAccess.mockResolvedValue({ clientId: 'client-a', issuedBy: 'operator-1', purpose: 'client_portal', shareVersion: 0, expiresAt: new Date('2026-10-25T00:00:00.000Z') })
   mocks.loadShipment.mockResolvedValue(null)
 })
 
