@@ -24,6 +24,15 @@ describe('Route Optimizer Phase 7 UI contract', () => {
     expect(source).not.toContain('2L extra per tonne')
   })
 
+  it('compares evidence-based alternatives without claiming live traffic', () => {
+    expect(source).toContain('Evidence-based alternatives')
+    expect(source).toContain('alternative.fuelEstimate.source')
+    expect(source).toContain('alternative.dataQualityGrade')
+    expect(source).toContain('alternative.source')
+    expect(source).toContain('Planning option via')
+    expect(source).not.toContain('Live traffic alternative')
+  })
+
   it('remains advisory and does not dispatch or assign resources', () => {
     expect(source).toContain('/api/routes/optimize')
     expect(source).not.toMatch(/apiFetch[^\n]+\/assign/)

@@ -96,18 +96,39 @@ interface FuelEstimate {
   assumptions: string[]
 }
 
+interface AlternativeRoute {
+  from: string
+  via: string
+  to: string
+  totalDistance: number
+  totalHours: number
+  tollCost: number
+  totalCost: number
+  source: 'static_fallback' | string
+  fuelEstimate: {
+    liters: number
+    cost: number
+    pricePerLiter: number
+    priceSource: 'request' | 'configured_default'
+    source: 'truck_history' | 'fleet_history' | 'configured_default'
+    baseKmPerLiter: number
+    cargoAdjustmentFactor: number
+    sampleCount: number
+    dataQuality: number
+    assumptions: string[]
+  }
+  dataQuality: number
+  dataQualityGrade: 'trusted' | 'usable' | 'limited'
+  confidence: number
+  notices: string[]
+}
+
 interface OptimizeResponse {
   advisoryVersion: string
   generatedAt: string
   recommendationsAvailable: boolean
   route: RouteResult
-  alternatives: Array<{
-    from: string
-    via: string
-    to: string
-    totalDistance: number
-    totalCost: number
-  }>
+  alternatives: AlternativeRoute[]
   recommendedTrucks: RecommendedTruck[]
   fuelEstimate: FuelEstimate
   dataQuality: number
@@ -520,6 +541,62 @@ export function RouteOptimizerView() {
               </CardContent>
             </Card>
           </div>
+
+          {result.alternatives.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <RouteIcon className="h-4 w-4" />
+                  Evidence-based alternatives
+                </CardTitle>
+                <CardDescription>
+                  Planning options use the same fuel evidence and static Ghana route graph as the primary advisory. They are not live-traffic recommendations.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-3 lg:grid-cols-2 2xl:grid-cols-3">
+                {result.alternatives.map((alternative) => (
+                  <div key={`${alternative.from}-${alternative.via}-${alternative.to}`} className="rounded-xl border p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div>
+                        <p className="font-semibold">Planning option via {alternative.via}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {alternative.from} → {alternative.via} → {alternative.to}
+                        </p>
+                      </div>
+                      <Badge variant="outline">{percentage(alternative.confidence)} confidence</Badge>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Distance</p>
+                        <p className="font-medium">{alternative.totalDistance.toLocaleString()} km</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Time</p>
+                        <p className="font-medium">{alternative.totalHours} h</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Estimate</p>
+                        <p className="font-medium">₵{alternative.totalCost.toLocaleString()}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <Badge variant="outline">{routeSourceLabel(alternative.source)}</Badge>
+                      <Badge variant="outline">{qualityLabel(alternative.dataQualityGrade)}</Badge>
+                    </div>
+
+                    <div className="mt-3 rounded-lg bg-muted/40 p-3 text-xs">
+                      <p className="font-medium">Fuel evidence: {fuelSourceLabel(alternative.fuelEstimate.source)}</p>
+                      <p className="mt-1 text-muted-foreground">
+                        {alternative.fuelEstimate.liters} L · ₵{alternative.fuelEstimate.cost.toLocaleString()} fuel · ₵{alternative.tollCost.toLocaleString()} tolls
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
 
           {result.recommendationsAvailable ? (
             <Card>
