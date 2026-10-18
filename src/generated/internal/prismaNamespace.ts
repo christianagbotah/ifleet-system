@@ -8952,6 +8952,7 @@ export const ClientScalarFieldEnum = {
   region: 'region',
   notes: 'notes',
   isActive: 'isActive',
+  portalShareVersion: 'portalShareVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -16,6 +16,13 @@ describe('staff client portal preview contract', () => {
     expect(source).toContain('/portal#access=')
   })
 
+  it('lets staff revoke all existing links and clears the current preview token', () => {
+    expect(source).toContain('Revoke all shared links')
+    expect(source).toContain("method: 'DELETE'")
+    expect(source).toContain('setPreviewToken(null)')
+    expect(source).toContain('setDashboard(null)')
+  })
+
   it('does not use raw ids as public credentials', () => {
     expect(source).not.toContain('?clientId=')
     expect(source).not.toContain('/api/portal/client/')

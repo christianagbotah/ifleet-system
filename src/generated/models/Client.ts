@@ -20,8 +20,18 @@ export type ClientModel = runtime.Types.Result.DefaultSelection<Prisma.$ClientPa
 
 export type AggregateClient = {
   _count: ClientCountAggregateOutputType | null
+  _avg: ClientAvgAggregateOutputType | null
+  _sum: ClientSumAggregateOutputType | null
   _min: ClientMinAggregateOutputType | null
   _max: ClientMaxAggregateOutputType | null
+}
+
+export type ClientAvgAggregateOutputType = {
+  portalShareVersion: number | null
+}
+
+export type ClientSumAggregateOutputType = {
+  portalShareVersion: number | null
 }
 
 export type ClientMinAggregateOutputType = {
@@ -35,6 +45,7 @@ export type ClientMinAggregateOutputType = {
   region: string | null
   notes: string | null
   isActive: boolean | null
+  portalShareVersion: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +61,7 @@ export type ClientMaxAggregateOutputType = {
   region: string | null
   notes: string | null
   isActive: boolean | null
+  portalShareVersion: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,11 +77,20 @@ export type ClientCountAggregateOutputType = {
   region: number
   notes: number
   isActive: number
+  portalShareVersion: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type ClientAvgAggregateInputType = {
+  portalShareVersion?: true
+}
+
+export type ClientSumAggregateInputType = {
+  portalShareVersion?: true
+}
 
 export type ClientMinAggregateInputType = {
   id?: true
@@ -82,6 +103,7 @@ export type ClientMinAggregateInputType = {
   region?: true
   notes?: true
   isActive?: true
+  portalShareVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,6 +119,7 @@ export type ClientMaxAggregateInputType = {
   region?: true
   notes?: true
   isActive?: true
+  portalShareVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +135,7 @@ export type ClientCountAggregateInputType = {
   region?: true
   notes?: true
   isActive?: true
+  portalShareVersion?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -155,6 +179,18 @@ export type ClientAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ClientAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ClientSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ClientMinAggregateInputType
@@ -185,6 +221,8 @@ export type ClientGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: ClientCountAggregateInputType | true
+  _avg?: ClientAvgAggregateInputType
+  _sum?: ClientSumAggregateInputType
   _min?: ClientMinAggregateInputType
   _max?: ClientMaxAggregateInputType
 }
@@ -200,9 +238,12 @@ export type ClientGroupByOutputType = {
   region: string | null
   notes: string | null
   isActive: boolean
+  portalShareVersion: number
   createdAt: Date
   updatedAt: Date
   _count: ClientCountAggregateOutputType | null
+  _avg: ClientAvgAggregateOutputType | null
+  _sum: ClientSumAggregateOutputType | null
   _min: ClientMinAggregateOutputType | null
   _max: ClientMaxAggregateOutputType | null
 }
@@ -236,6 +277,7 @@ export type ClientWhereInput = {
   region?: Prisma.StringNullableFilter<"Client"> | string | null
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
   isActive?: Prisma.BoolFilter<"Client"> | boolean
+  portalShareVersion?: Prisma.IntFilter<"Client"> | number
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   ClientZone?: Prisma.ClientZoneListRelationFilter
@@ -259,6 +301,7 @@ export type ClientOrderByWithRelationInput = {
   region?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  portalShareVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   ClientZone?: Prisma.ClientZoneOrderByRelationAggregateInput
@@ -286,6 +329,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   region?: Prisma.StringNullableFilter<"Client"> | string | null
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
   isActive?: Prisma.BoolFilter<"Client"> | boolean
+  portalShareVersion?: Prisma.IntFilter<"Client"> | number
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   ClientZone?: Prisma.ClientZoneListRelationFilter
@@ -309,11 +353,14 @@ export type ClientOrderByWithAggregationInput = {
   region?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  portalShareVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ClientCountOrderByAggregateInput
+  _avg?: Prisma.ClientAvgOrderByAggregateInput
   _max?: Prisma.ClientMaxOrderByAggregateInput
   _min?: Prisma.ClientMinOrderByAggregateInput
+  _sum?: Prisma.ClientSumOrderByAggregateInput
 }
 
 export type ClientScalarWhereWithAggregatesInput = {
@@ -330,6 +377,7 @@ export type ClientScalarWhereWithAggregatesInput = {
   region?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Client"> | boolean
+  portalShareVersion?: Prisma.IntWithAggregatesFilter<"Client"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
 }
@@ -345,6 +393,7 @@ export type ClientCreateInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -368,6 +417,7 @@ export type ClientUncheckedCreateInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -391,6 +441,7 @@ export type ClientUpdateInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -414,6 +465,7 @@ export type ClientUncheckedUpdateInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -437,6 +489,7 @@ export type ClientCreateManyInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -452,6 +505,7 @@ export type ClientUpdateManyMutationInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -467,6 +521,7 @@ export type ClientUncheckedUpdateManyInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -488,8 +543,13 @@ export type ClientCountOrderByAggregateInput = {
   region?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  portalShareVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ClientAvgOrderByAggregateInput = {
+  portalShareVersion?: Prisma.SortOrder
 }
 
 export type ClientMaxOrderByAggregateInput = {
@@ -503,6 +563,7 @@ export type ClientMaxOrderByAggregateInput = {
   region?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  portalShareVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -518,8 +579,13 @@ export type ClientMinOrderByAggregateInput = {
   region?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  portalShareVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ClientSumOrderByAggregateInput = {
+  portalShareVersion?: Prisma.SortOrder
 }
 
 export type ClientScalarRelationFilter = {
@@ -667,6 +733,7 @@ export type ClientCreateWithoutClientZoneInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   Invoice?: Prisma.InvoiceCreateNestedManyWithoutClientInput
@@ -689,6 +756,7 @@ export type ClientUncheckedCreateWithoutClientZoneInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   Invoice?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
@@ -727,6 +795,7 @@ export type ClientUpdateWithoutClientZoneInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Invoice?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
@@ -749,6 +818,7 @@ export type ClientUncheckedUpdateWithoutClientZoneInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Invoice?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
@@ -771,6 +841,7 @@ export type ClientCreateWithoutInvoiceInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -793,6 +864,7 @@ export type ClientUncheckedCreateWithoutInvoiceInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -831,6 +903,7 @@ export type ClientUpdateWithoutInvoiceInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -853,6 +926,7 @@ export type ClientUncheckedUpdateWithoutInvoiceInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -875,6 +949,7 @@ export type ClientCreateWithoutLoadBoardInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -897,6 +972,7 @@ export type ClientUncheckedCreateWithoutLoadBoardInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -935,6 +1011,7 @@ export type ClientUpdateWithoutLoadBoardInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -957,6 +1034,7 @@ export type ClientUncheckedUpdateWithoutLoadBoardInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -979,6 +1057,7 @@ export type ClientCreateWithoutTripInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -1001,6 +1080,7 @@ export type ClientUncheckedCreateWithoutTripInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -1039,6 +1119,7 @@ export type ClientUpdateWithoutTripInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -1061,6 +1142,7 @@ export type ClientUncheckedUpdateWithoutTripInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -1083,6 +1165,7 @@ export type ClientCreateWithoutTripDeliveryDestinationInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -1105,6 +1188,7 @@ export type ClientUncheckedCreateWithoutTripDeliveryDestinationInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -1143,6 +1227,7 @@ export type ClientUpdateWithoutTripDeliveryDestinationInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -1165,6 +1250,7 @@ export type ClientUncheckedUpdateWithoutTripDeliveryDestinationInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -1187,6 +1273,7 @@ export type ClientCreateWithoutShipperProfileInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -1209,6 +1296,7 @@ export type ClientUncheckedCreateWithoutShipperProfileInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -1247,6 +1335,7 @@ export type ClientUpdateWithoutShipperProfileInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -1269,6 +1358,7 @@ export type ClientUncheckedUpdateWithoutShipperProfileInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -1291,6 +1381,7 @@ export type ClientCreateWithoutLoadOrderInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -1313,6 +1404,7 @@ export type ClientUncheckedCreateWithoutLoadOrderInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -1351,6 +1443,7 @@ export type ClientUpdateWithoutLoadOrderInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -1373,6 +1466,7 @@ export type ClientUncheckedUpdateWithoutLoadOrderInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -1395,6 +1489,7 @@ export type ClientCreateWithoutLoadOrderDestinationInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneCreateNestedManyWithoutClientInput
@@ -1417,6 +1512,7 @@ export type ClientUncheckedCreateWithoutLoadOrderDestinationInput = {
   region?: string | null
   notes?: string | null
   isActive?: boolean
+  portalShareVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   ClientZone?: Prisma.ClientZoneUncheckedCreateNestedManyWithoutClientInput
@@ -1455,6 +1551,7 @@ export type ClientUpdateWithoutLoadOrderDestinationInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUpdateManyWithoutClientNestedInput
@@ -1477,6 +1574,7 @@ export type ClientUncheckedUpdateWithoutLoadOrderDestinationInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portalShareVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ClientZone?: Prisma.ClientZoneUncheckedUpdateManyWithoutClientNestedInput
@@ -1593,6 +1691,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   region?: boolean
   notes?: boolean
   isActive?: boolean
+  portalShareVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   ClientZone?: boolean | Prisma.Client$ClientZoneArgs<ExtArgs>
@@ -1619,11 +1718,12 @@ export type ClientSelectScalar = {
   region?: boolean
   notes?: boolean
   isActive?: boolean
+  portalShareVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactPerson" | "email" | "phone" | "address" | "city" | "region" | "notes" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactPerson" | "email" | "phone" | "address" | "city" | "region" | "notes" | "isActive" | "portalShareVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ClientZone?: boolean | Prisma.Client$ClientZoneArgs<ExtArgs>
   Invoice?: boolean | Prisma.Client$InvoiceArgs<ExtArgs>
@@ -1659,6 +1759,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     region: string | null
     notes: string | null
     isActive: boolean
+    portalShareVersion: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["client"]>
@@ -2048,6 +2149,7 @@ export interface ClientFieldRefs {
   readonly region: Prisma.FieldRef<"Client", 'String'>
   readonly notes: Prisma.FieldRef<"Client", 'String'>
   readonly isActive: Prisma.FieldRef<"Client", 'Boolean'>
+  readonly portalShareVersion: Prisma.FieldRef<"Client", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Client", 'DateTime'>
 }

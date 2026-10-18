@@ -13,6 +13,7 @@ import {
   Navigation,
   Search,
   ShieldCheck,
+  ShieldX,
   Truck,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -150,6 +151,7 @@ export function ClientPortalView() {
   const [detail, setDetail] = useState<ShipmentDetail | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
+  const [revoking, setRevoking] = useState(false)
 
   useEffect(() => {
     fetchClients({ limit: 100 })
@@ -206,6 +208,25 @@ export function ClientPortalView() {
     }
   }, [issueShare, selectedClientId])
 
+  const revokeShareLinks = useCallback(async () => {
+    if (!selectedClientId) return
+    if (!window.confirm('Revoke all currently shared portal links for this client? New links can be generated immediately afterward.')) return
+    setRevoking(true)
+    try {
+      await apiFetch(`/api/portal/share/client/${encodeURIComponent(selectedClientId)}`, { method: 'DELETE' })
+      setPreviewToken(null)
+      setDashboard(null)
+      setShareExpiresAt(null)
+      setDetail(null)
+      setDetailOpen(false)
+      toast.success('All existing client portal links were revoked')
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : 'Could not revoke portal links')
+    } finally {
+      setRevoking(false)
+    }
+  }, [selectedClientId])
+
   const openShipment = useCallback(async (tripId: string) => {
     if (!previewToken) {
       toast.error('Load the portal preview first.')
@@ -241,7 +262,7 @@ export function ClientPortalView() {
 
       <Card>
         <CardContent className="p-4 sm:p-5">
-          <div className="grid gap-3 lg:grid-cols-[1fr_auto_auto] lg:items-end">
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto_auto_auto] lg:items-end">
             <div className="space-y-2">
               <label className="text-sm font-medium">Client</label>
               <div className="relative">
@@ -273,6 +294,10 @@ export function ClientPortalView() {
             <Button variant="outline" onClick={() => void copyShareLink()} disabled={!selectedClientId}>
               <ClipboardCopy className="mr-2 h-4 w-4" />
               Copy 7-day link
+            </Button>
+            <Button variant="destructive" onClick={() => void revokeShareLinks()} disabled={!selectedClientId || revoking}>
+              {revoking ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldX className="mr-2 h-4 w-4" />}
+              Revoke all shared links
             </Button>
           </div>
 
