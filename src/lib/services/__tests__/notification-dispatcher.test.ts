@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   notificationCreate: vi.fn(),
+  notificationUpdate: vi.fn(),
   systemSettingsFindFirst: vi.fn(),
   driverFindUnique: vi.fn(),
   userFindUnique: vi.fn(),
@@ -13,7 +14,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/lib/db', () => ({
   db: {
     systemSettings: { findFirst: mocks.systemSettingsFindFirst },
-    notification: { create: mocks.notificationCreate, update: vi.fn() },
+    notification: { create: mocks.notificationCreate, update: mocks.notificationUpdate },
     driver: { findUnique: mocks.driverFindUnique },
     user: { findUnique: mocks.userFindUnique },
   },
@@ -28,6 +29,7 @@ describe('dispatchNotification driver channel preferences', () => {
     vi.clearAllMocks()
     mocks.systemSettingsFindFirst.mockResolvedValue(null)
     mocks.notificationCreate.mockResolvedValue({ id: 'notification-1' })
+    mocks.notificationUpdate.mockResolvedValue({ id: 'notification-1' })
     mocks.driverFindUnique.mockResolvedValue({
       phone: '0240000000',
       email: 'driver@example.com',
