@@ -7,13 +7,19 @@ function read(path: string): string {
 }
 
 describe('assignment recommendation integration', () => {
-  it('keeps recommendation configuration versioned on the server', () => {
-    const path = 'src/lib/domain/ai-ops/assignment-config.ts'
-    expect(existsSync(join(process.cwd(), path))).toBe(true)
-    const source = read(path)
-    expect(source).toContain('ASSIGNMENT_RECOMMENDATION_CONFIG')
-    expect(source).toContain('configVersion')
-    expect(source).toContain('weights')
+  it('loads the current recommendation policy from persisted AI policy snapshots instead of a compiled active constant', () => {
+    const policyPath = 'src/lib/domain/ai-ops/assignment-policy.ts'
+    expect(existsSync(join(process.cwd(), policyPath))).toBe(true)
+    if (!existsSync(join(process.cwd(), policyPath))) return
+
+    const policy = read(policyPath)
+    const route = read('src/app/api/load-orders/[id]/recommendations/route.ts')
+    expect(policy).toContain("ASSIGNMENT_POLICY_TYPE = 'assignment_policy'")
+    expect(policy).toContain('loadCurrentAssignmentPolicy')
+    expect(policy).toContain('aiRecommendation')
+    expect(policy).toContain("status: 'active'")
+    expect(route).toContain('loadCurrentAssignmentPolicy')
+    expect(route).not.toContain('ASSIGNMENT_RECOMMENDATION_CONFIG')
   })
 
   it('uses authoritative eligibility and persists an advisory snapshot when recommendations are opened', () => {
@@ -28,6 +34,7 @@ describe('assignment recommendation integration', () => {
     expect(source).toContain('hasTrailerCouplingConflict')
     expect(source).toContain('aiRecommendation.create')
     expect(source).toContain('inputSnapshotRef')
+    expect(source).toContain('policyId')
   })
 
   it('shows explanations in the assignment dialog and carries the selected recommendation into final assignment', () => {
