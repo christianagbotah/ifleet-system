@@ -87,13 +87,13 @@ export async function PUT(
 
     const { id } = await params
 
-    // Drivers can only update their own profile (phone, email only)
+    // Drivers can only update their own safe self-service profile fields.
     if (auth.roleName === ROLES.DRIVER) {
       if (auth.driverId !== id) {
         return NextResponse.json({ error: 'Access denied' }, { status: 403 })
       }
       const body = await request.json()
-      const { phone, email } = body
+      const { phone, email, notifySMS, notifyEmail, notifyPush } = body
       const driver = await db.driver.findUnique({ where: { id } })
       if (!driver) return NextResponse.json({ error: 'Driver not found' }, { status: 404 })
 
@@ -102,9 +102,19 @@ export async function PUT(
         if (existing) return NextResponse.json({ error: 'Driver with this phone number already exists' }, { status: 400 })
       }
 
+      const preferenceFields = { notifySMS, notifyEmail, notifyPush }
+      for (const [field, value] of Object.entries(preferenceFields)) {
+        if (value !== undefined && typeof value !== 'boolean') {
+          return NextResponse.json({ error: `${field} must be a boolean` }, { status: 400 })
+        }
+      }
+
       const updateData: Record<string, unknown> = {}
       if (phone !== undefined) updateData.phone = phone
       if (email !== undefined) updateData.email = email || null
+      if (notifySMS !== undefined) updateData.notifySMS = notifySMS
+      if (notifyEmail !== undefined) updateData.notifyEmail = notifyEmail
+      if (notifyPush !== undefined) updateData.notifyPush = notifyPush
 
       const updatedDriver = await db.driver.update({ where: { id }, data: updateData })
       return NextResponse.json(updatedDriver)
@@ -144,6 +154,9 @@ export async function PUT(
       ghanaCardBackImage,
       verificationStatus,
       verificationNotes,
+      notifySMS,
+      notifyEmail,
+      notifyPush,
     } = body
 
     // Check phone uniqueness if changing
@@ -159,6 +172,13 @@ export async function PUT(
       const existing = await db.driver.findUnique({ where: { licenseNumber } })
       if (existing) {
         return NextResponse.json({ error: 'Driver with this license number already exists' }, { status: 400 })
+      }
+    }
+
+    const preferenceFields = { notifySMS, notifyEmail, notifyPush }
+    for (const [field, value] of Object.entries(preferenceFields)) {
+      if (value !== undefined && typeof value !== 'boolean') {
+        return NextResponse.json({ error: `${field} must be a boolean` }, { status: 400 })
       }
     }
 
@@ -185,6 +205,9 @@ export async function PUT(
       ...(ghanaCardFrontImage !== undefined && { ghanaCardFrontImage: ghanaCardFrontImage || null }),
       ...(ghanaCardBackImage !== undefined && { ghanaCardBackImage: ghanaCardBackImage || null }),
       ...(verificationNotes !== undefined && { verificationNotes }),
+      ...(notifySMS !== undefined && { notifySMS }),
+      ...(notifyEmail !== undefined && { notifyEmail }),
+      ...(notifyPush !== undefined && { notifyPush }),
       ...(verificationStatus !== undefined && {
         verificationStatus,
         // Automatically set verifiedAt when status changes to verified or rejected
@@ -204,6 +227,9 @@ export async function PUT(
     if (status !== undefined && status !== driver.status) changes.status = status
     if (verificationStatus !== undefined && verificationStatus !== driver.verificationStatus) changes.verificationStatus = verificationStatus
     if (employeeId !== undefined && employeeId !== driver.employeeId) changes.employeeId = employeeId
+    if (notifySMS !== undefined && notifySMS !== driver.notifySMS) changes.notifySMS = notifySMS
+    if (notifyEmail !== undefined && notifyEmail !== driver.notifyEmail) changes.notifyEmail = notifyEmail
+    if (notifyPush !== undefined && notifyPush !== driver.notifyPush) changes.notifyPush = notifyPush
 
     const updatedDriver = await db.driver.update({
       where: { id },

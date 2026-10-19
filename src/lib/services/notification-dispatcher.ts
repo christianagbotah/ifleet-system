@@ -10,11 +10,12 @@
 //
 // The dispatcher:
 //   1. Respects SystemSettings notification preferences
-//   2. Looks up user/driver contact info from database
-//   3. Saves in_app notification to DB (always)
-//   4. Fan-out to SMS, email, and push channels as requested
-//   5. Returns a summary of what was sent / failed
-//   6. Supports role-based dispatch via dispatchRoleNotification()
+//   2. Respects per-driver SMS/email/push preferences
+//   3. Looks up user/driver contact info from database
+//   4. Saves in_app notification to DB when requested
+//   5. Fans out to SMS, email, and push channels as requested
+//   6. Returns a summary of what was sent / failed
+//   7. Supports role-based dispatch via dispatchRoleNotification()
 // ────────────────────────────────────────────────────────────────────
 
 import { APP_NAME } from '@/lib/constants'
@@ -31,7 +32,7 @@ export type NotificationChannel = 'in_app' | 'sms' | 'email' | 'push'
 interface DispatchParams {
   /** The user to notify (for in_app + push). Optional for SMS-only driver delivery. */
   userId?: string
-  /** The driver to notify (for SMS — driver's phone is used) */
+  /** The driver to notify (for driver channel preferences + contact resolution). */
   driverId?: string
   /** Notification type key (e.g., trip_started, maintenance_due) */
   type: string
@@ -61,6 +62,18 @@ interface DispatchResult {
   email: boolean
   push: boolean
   errors: string[]
+}
+
+interface DriverChannelPreferences {
+  notifySMS: boolean
+  notifyEmail: boolean
+  notifyPush: boolean
+}
+
+const DEFAULT_DRIVER_CHANNEL_PREFERENCES: DriverChannelPreferences = {
+  notifySMS: true,
+  notifyEmail: true,
+  notifyPush: true,
 }
 
 /**
@@ -111,12 +124,39 @@ async function isNotificationEnabled(type: string): Promise<boolean> {
   }
 }
 
+async function resolveDriverChannelPreferences(driverId?: string): Promise<DriverChannelPreferences> {
+  if (!driverId) return DEFAULT_DRIVER_CHANNEL_PREFERENCES
+
+  try {
+    const driver = await db.driver.findUnique({
+      where: { id: driverId },
+      select: {
+        notifySMS: true,
+        notifyEmail: true,
+        notifyPush: true,
+      },
+    })
+
+    if (!driver) return DEFAULT_DRIVER_CHANNEL_PREFERENCES
+    return {
+      notifySMS: driver.notifySMS !== false,
+      notifyEmail: driver.notifyEmail !== false,
+      notifyPush: driver.notifyPush !== false,
+    }
+  } catch (error) {
+    // Preference lookup must not turn a transient DB problem into silent loss of
+    // an operational notification. Preserve the historical enabled behavior.
+    console.warn(`[Notification] Could not resolve channel preferences for driver ${driverId}:`, error)
+    return DEFAULT_DRIVER_CHANNEL_PREFERENCES
+  }
+}
+
 /**
  * Dispatch a notification across multiple channels.
  *
- * This is the main entry point for all notifications in the system.
- * It always saves an in_app notification, and optionally fans out
- * to SMS and email based on the `channels` parameter and SystemSettings.
+ * SystemSettings are the global gate. For a driver-targeted notification,
+ * per-driver preferences then suppress SMS/email/push only. In-app delivery is
+ * intentionally independent so operational notices remain visible in the app.
  */
 export async function dispatchNotification(params: DispatchParams): Promise<DispatchResult> {
   const {
@@ -144,7 +184,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
 
   console.log(`[Notification] Dispatching "${type}" for ${userId ? `user ${userId}` : 'unlinked user'}${driverId ? ` / driver ${driverId}` : ''}`)
 
-  // Check SystemSettings before dispatching
+  // System-wide preference is the highest-level gate.
   const enabled = await isNotificationEnabled(type)
   if (!enabled) {
     console.log(`[Notification] Type "${type}" is disabled in SystemSettings. Skipping.`)
@@ -163,17 +203,47 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     return result
   }
 
-  // Build metadata with trip info
+  const driverPreferences = await resolveDriverChannelPreferences(driverId)
+  const driverPreferenceSuppressedChannels: NotificationChannel[] = []
+  const effectiveChannels = channels.filter((channel) => {
+    if (channel === 'sms' && !driverPreferences.notifySMS) {
+      driverPreferenceSuppressedChannels.push(channel)
+      return false
+    }
+    if (channel === 'email' && !driverPreferences.notifyEmail) {
+      driverPreferenceSuppressedChannels.push(channel)
+      return false
+    }
+    if (channel === 'push' && !driverPreferences.notifyPush) {
+      driverPreferenceSuppressedChannels.push(channel)
+      return false
+    }
+    return true
+  })
+
+  if (driverPreferenceSuppressedChannels.length > 0) {
+    console.log(
+      `[Notification] Driver preferences suppressed channels: ${driverPreferenceSuppressedChannels.join(', ')}`,
+    )
+  }
+
+  // Build metadata with trip info and enough delivery evidence for support/audit.
   const fullMetadata = {
     ...metadata,
     ...(tripId ? { tripId } : {}),
     dispatchedAt: new Date().toISOString(),
-    channels: channels,
+    channels: effectiveChannels,
+    ...(driverPreferenceSuppressedChannels.length > 0
+      ? {
+          requestedChannels: channels,
+          driverPreferenceSuppressedChannels,
+        }
+      : {}),
   }
 
   // ── 1. Save in_app notification only when a real user account exists ──
   let savedNotificationId: string | null = null
-  if (userId && channels.includes('in_app')) {
+  if (userId && effectiveChannels.includes('in_app')) {
     try {
       savedNotificationId = await saveInAppNotification({
         userId,
@@ -192,7 +262,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
   }
 
   // ── 2. SMS channel ──
-  if (channels.includes('sms')) {
+  if (effectiveChannels.includes('sms')) {
     try {
       const phone = await resolvePhone(userId, driverId)
       if (!phone) {
@@ -219,7 +289,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
   }
 
   // ── 3. Email channel ──
-  if (channels.includes('email')) {
+  if (effectiveChannels.includes('email')) {
     try {
       const email = await resolveEmail(userId, driverId)
       if (!email) {
@@ -247,7 +317,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
   }
 
   // ── 4. Push channel (Socket.IO real-time) ──
-  if (channels.includes('push') && userId) {
+  if (effectiveChannels.includes('push') && userId) {
     try {
       const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify`, {
         method: 'POST',
@@ -286,11 +356,11 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     }
   }
 
-  // Log summary
+  // Log summary. Preference-suppressed channels are intentionally not failures.
   const successCount = [result.inApp, result.sms, result.email, result.push].filter(Boolean).length
   console.log(
     `[Notification] Dispatch complete for "${type}": ` +
-    `${successCount}/${channels.length} channels succeeded.` +
+    `${successCount}/${effectiveChannels.length} effective channels succeeded.` +
     (result.errors.length > 0 ? ` Errors: ${result.errors.join('; ')}` : '')
   )
 
