@@ -1,4 +1,4 @@
-import { unlink } from 'node:fs/promises'
+import { readFile, unlink } from 'node:fs/promises'
 import path from 'node:path'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
@@ -121,6 +121,7 @@ export async function GET(
         description: true,
         category: true,
         fileName: true,
+        filePath: true,
         fileSize: true,
         mimeType: true,
         createdAt: true,
@@ -132,7 +133,25 @@ export async function GET(
       return NextResponse.json({ error: 'Document not found' }, { status: 404 })
     }
 
-    return NextResponse.json(documentDto(document, id))
+    const dto = documentDto(document, id)
+    if (auth.roleName === ROLES.DRIVER) {
+      return NextResponse.json(dto)
+    }
+
+    // Backwards-compatible staff response while the management component moves
+    // to the dedicated binary download endpoint. Never expose the storage path.
+    const storedPath = safeStoredPath(document.filePath)
+    if (!storedPath) return NextResponse.json(dto)
+    try {
+      const bytes = await readFile(storedPath)
+      return NextResponse.json({
+        ...dto,
+        fileData: `data:${document.mimeType};base64,${bytes.toString('base64')}`,
+      })
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return NextResponse.json(dto)
+      throw error
+    }
   } catch (error) {
     console.error('Error fetching driver document:', error)
     return NextResponse.json({ error: 'Failed to fetch document' }, { status: 500 })
