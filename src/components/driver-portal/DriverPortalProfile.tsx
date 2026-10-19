@@ -15,8 +15,10 @@ import {
   Loader2,
   LogOut,
   Mail,
+  MessageSquare,
   Phone,
   Shield,
+  Smartphone,
   Star,
   Truck,
   User,
@@ -35,9 +37,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
 
 interface DriverPortalProfileProps {
   driver: Driver | null
+}
+
+type DriverWithNotificationPreferences = Driver & {
+  notifySMS?: boolean
+  notifyEmail?: boolean
+  notifyPush?: boolean
 }
 
 function formatDate(value: string | null | undefined): string {
@@ -128,13 +137,22 @@ export function DriverPortalProfile({ driver }: DriverPortalProfileProps) {
   const [confirmPassword, setConfirmPassword] = React.useState('')
   const [changingPassword, setChangingPassword] = React.useState(false)
   const [passwordError, setPasswordError] = React.useState('')
+  const [showNotificationSettings, setShowNotificationSettings] = React.useState(false)
+  const [notifySMS, setNotifySMS] = React.useState(true)
+  const [notifyEmail, setNotifyEmail] = React.useState(true)
+  const [notifyPush, setNotifyPush] = React.useState(true)
+  const [savingNotifications, setSavingNotifications] = React.useState(false)
   const [truckData, setTruckData] = React.useState<Truck | null>(null)
   const [truckLoading, setTruckLoading] = React.useState(false)
 
   React.useEffect(() => {
     if (!driver) return
+    const driverWithPreferences = driver as DriverWithNotificationPreferences
     setEditPhone(driver.phone ?? '')
     setEditEmail(driver.email ?? '')
+    setNotifySMS(driverWithPreferences.notifySMS ?? true)
+    setNotifyEmail(driverWithPreferences.notifyEmail ?? true)
+    setNotifyPush(driverWithPreferences.notifyPush ?? true)
 
     const truckId = driver.trucks?.[0]?.id
     if (!truckId) {
@@ -148,6 +166,18 @@ export function DriverPortalProfile({ driver }: DriverPortalProfileProps) {
       .catch(() => setTruckData(null))
       .finally(() => setTruckLoading(false))
   }, [driver])
+
+  function startEditing() {
+    setEditPhone(driver?.phone ?? '')
+    setEditEmail(driver?.email ?? '')
+    setIsEditing(true)
+  }
+
+  function cancelEditing() {
+    setEditPhone(driver?.phone ?? '')
+    setEditEmail(driver?.email ?? '')
+    setIsEditing(false)
+  }
 
   async function saveProfile() {
     if (!driver) return
@@ -164,6 +194,23 @@ export function DriverPortalProfile({ driver }: DriverPortalProfileProps) {
       toast.error(err instanceof Error ? err.message : 'Failed to update profile')
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function saveNotificationPreferences() {
+    if (!driver) return
+    setSavingNotifications(true)
+    try {
+      await apiFetch(`/api/drivers/${driver.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ notifySMS, notifyEmail, notifyPush }),
+      })
+      toast.success('Notification preferences updated')
+      setShowNotificationSettings(false)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to update notification preferences')
+    } finally {
+      setSavingNotifications(false)
     }
   }
 
@@ -245,7 +292,7 @@ export function DriverPortalProfile({ driver }: DriverPortalProfileProps) {
           <div className="mt-4 flex justify-end gap-2">
             {isEditing ? (
               <>
-                <Button type="button" variant="outline" size="sm" onClick={() => setIsEditing(false)} disabled={saving}>
+                <Button type="button" variant="outline" size="sm" onClick={cancelEditing} disabled={saving}>
                   <X className="mr-1.5 h-3.5 w-3.5" /> Cancel
                 </Button>
                 <Button type="button" size="sm" className="bg-amber-500 text-white hover:bg-amber-600" onClick={() => void saveProfile()} disabled={saving}>
@@ -254,7 +301,7 @@ export function DriverPortalProfile({ driver }: DriverPortalProfileProps) {
                 </Button>
               </>
             ) : (
-              <Button type="button" variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+              <Button type="button" variant="outline" size="sm" onClick={startEditing}>
                 <Edit className="mr-1.5 h-3.5 w-3.5" /> Edit Profile
               </Button>
             )}
@@ -369,11 +416,66 @@ export function DriverPortalProfile({ driver }: DriverPortalProfileProps) {
 
           <Separator />
 
-          <button type="button" className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-gray-50" onClick={() => toast.info('Notification settings coming soon')}>
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50"><Bell className="h-4 w-4 text-amber-600" /></div>
-            <span className="flex-1 text-sm font-medium text-gray-900">Notification Settings</span>
-            <ChevronRight className="h-4 w-4 text-gray-400" />
-          </button>
+          <div>
+            <button
+              type="button"
+              className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-gray-50"
+              onClick={() => setShowNotificationSettings((value) => !value)}
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50"><Bell className="h-4 w-4 text-amber-600" /></div>
+              <span className="flex-1 text-sm font-medium text-gray-900">Notification Settings</span>
+              <ChevronRight className={`h-4 w-4 text-gray-400 transition-transform ${showNotificationSettings ? 'rotate-90' : ''}`} />
+            </button>
+            {showNotificationSettings && (
+              <div className="space-y-1 border-t border-gray-100 px-5 pb-4 pt-2">
+                <div className="flex items-center gap-3 py-2.5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50"><MessageSquare className="h-4 w-4 text-emerald-600" /></div>
+                  <div className="min-w-0 flex-1">
+                    <Label htmlFor="driver-notify-sms" className="text-sm font-medium text-gray-900">SMS alerts</Label>
+                    <p className="text-xs leading-5 text-gray-500">Text messages to your registered phone.</p>
+                  </div>
+                  <Switch id="driver-notify-sms" checked={notifySMS} onCheckedChange={setNotifySMS} disabled={savingNotifications} />
+                </div>
+
+                <Separator />
+
+                <div className="flex items-center gap-3 py-2.5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50"><Mail className="h-4 w-4 text-sky-600" /></div>
+                  <div className="min-w-0 flex-1">
+                    <Label htmlFor="driver-notify-email" className="text-sm font-medium text-gray-900">Email alerts</Label>
+                    <p className="text-xs leading-5 text-gray-500">Copies to {driver.email || 'your email after you add one'}.</p>
+                  </div>
+                  <Switch id="driver-notify-email" checked={notifyEmail} onCheckedChange={setNotifyEmail} disabled={savingNotifications} />
+                </div>
+
+                <Separator />
+
+                <div className="flex items-center gap-3 py-2.5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50"><Smartphone className="h-4 w-4 text-violet-600" /></div>
+                  <div className="min-w-0 flex-1">
+                    <Label htmlFor="driver-notify-push" className="text-sm font-medium text-gray-900">Push alerts</Label>
+                    <p className="text-xs leading-5 text-gray-500">Real-time alerts while you are signed in.</p>
+                  </div>
+                  <Switch id="driver-notify-push" checked={notifyPush} onCheckedChange={setNotifyPush} disabled={savingNotifications} />
+                </div>
+
+                <div className="rounded-lg bg-gray-50 px-3 py-2.5 text-xs leading-5 text-gray-500">
+                  In-app operational notifications remain available. These settings control the additional SMS, email and push delivery channels.
+                </div>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  className="mt-2 w-full bg-amber-500 text-white hover:bg-amber-600"
+                  onClick={() => void saveNotificationPreferences()}
+                  disabled={savingNotifications}
+                >
+                  {savingNotifications && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
+                  {savingNotifications ? 'Saving...' : 'Save Notification Settings'}
+                </Button>
+              </div>
+            )}
+          </div>
 
           <Separator />
 
