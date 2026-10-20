@@ -142,7 +142,10 @@ async function portalFetch<T>(path: string, token: string): Promise<T> {
 
 export function ClientPortalView() {
   const user = useAuthStore((state) => state.user)
-  const canShareLinks = user?.role === 'Admin' || user?.permissions.includes('portal.share') === true
+  const token = useAuthStore((state) => state.token)
+  const tokenShareAccess = user?.role === 'Admin' || user?.permissions.includes('portal.share') === true
+  const [freshShareAccess, setFreshShareAccess] = useState<boolean | null>(null)
+  const canShareLinks = user?.isDemo !== true && (freshShareAccess ?? tokenShareAccess)
   const [clients, setClients] = useState<Client[]>([])
   const [query, setQuery] = useState('')
   const [selectedClientId, setSelectedClientId] = useState('')
@@ -155,6 +158,36 @@ export function ClientPortalView() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
   const [revoking, setRevoking] = useState(false)
+
+  useEffect(() => {
+    if (!token || user?.isDemo) {
+      setFreshShareAccess(user?.isDemo ? false : null)
+      return
+    }
+
+    const controller = new AbortController()
+    void fetch('/api/auth/me', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Current permissions could not be refreshed')
+        return response.json() as Promise<{ user?: { role: string; permissions: string[] } | null }>
+      })
+      .then((body) => {
+        const currentUser = body.user
+        setFreshShareAccess(
+          currentUser?.role === 'Admin' || currentUser?.permissions.includes('portal.share') === true,
+        )
+      })
+      .catch((cause: unknown) => {
+        if (cause instanceof DOMException && cause.name === 'AbortError') return
+        setFreshShareAccess(null)
+      })
+
+    return () => controller.abort()
+  }, [token, user?.isDemo])
 
   useEffect(() => {
     fetchClients({ limit: 100 })
