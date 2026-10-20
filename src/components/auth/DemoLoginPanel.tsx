@@ -18,6 +18,7 @@ export function DemoLoginPanel() {
   const [profiles, setProfiles] = React.useState<PublicDemoProfile[]>([])
   const [selected, setSelected] = React.useState<string | null>(null)
   const [pending, setPending] = React.useState<string | null>(null)
+  const [demoResolved, setDemoResolved] = React.useState(false)
   const { demoLogin, isLoading } = useAuthStore()
 
   const active = React.useMemo(
@@ -47,6 +48,9 @@ export function DemoLoginPanel() {
           setSelected(null)
         }
       })
+      .finally(() => {
+        if (!cancelled) setDemoResolved(true)
+      })
 
     return () => {
       cancelled = true
@@ -68,7 +72,7 @@ export function DemoLoginPanel() {
 
   return (
     <>
-      <QATestAccountsPanel />
+      {demoResolved && <QATestAccountsPanel />}
 
       {active && profiles.length > 0 && (
         <div className="mt-6 border-t border-slate-200/80 pt-5 dark:border-white/10">
