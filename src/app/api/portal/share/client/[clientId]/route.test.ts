@@ -2,10 +2,13 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mocks = vi.hoisted(() => ({ clientFindUnique: vi.fn(), clientUpdate: vi.fn() }))
+const mocks = vi.hoisted(() => ({ clientFindUnique: vi.fn(), clientUpdate: vi.fn(), userFindUnique: vi.fn() }))
 
 vi.mock('@/lib/db', () => ({
-  db: { client: { findUnique: mocks.clientFindUnique, update: mocks.clientUpdate } },
+  db: {
+    client: { findUnique: mocks.clientFindUnique, update: mocks.clientUpdate },
+    user: { findUnique: mocks.userFindUnique },
+  },
 }))
 
 vi.mock('@/lib/jwt-secret', () => ({
@@ -15,14 +18,15 @@ vi.mock('@/lib/jwt-secret', () => ({
 import { DELETE, POST } from './route'
 import { verifyPortalShareToken } from '@/lib/portal/share-token'
 
-function request(body: unknown, permissions = ['trips.view']) {
+function request(body: unknown, permissions = ['portal.share'], roleName = 'Dispatcher', isDemo = false) {
   return new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       'x-auth-user-id': 'operator-1',
-      'x-auth-user-role': 'Dispatcher',
+      'x-auth-user-role': roleName,
       'x-auth-user-permissions': JSON.stringify(permissions),
+      'x-auth-demo': isDemo ? 'true' : 'false',
     },
     body: JSON.stringify(body),
   })
@@ -34,11 +38,58 @@ beforeEach(() => {
   vi.clearAllMocks()
   mocks.clientFindUnique.mockResolvedValue({ id: 'client-a', isActive: true, portalShareVersion: 4 })
   mocks.clientUpdate.mockResolvedValue({ id: 'client-a', portalShareVersion: 5 })
+  mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Dispatcher', permissions: JSON.stringify(['portal.share']) } })
 })
 
 describe('POST /api/portal/share/client/[clientId]', () => {
-  it('requires trips.view permission', async () => {
-    const response = await POST(request({}, []), context)
+  it('requires portal.share on the user current database role rather than broad trips.view', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Driver', permissions: JSON.stringify(['trips.view']) } })
+    const response = await POST(request({}, ['trips.view']), context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientFindUnique).not.toHaveBeenCalled()
+  })
+
+  it('does not let a Driver issue client links merely because they can view trips', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Driver', permissions: JSON.stringify(['trips.view']) } })
+    const response = await POST(request({ expiresInDays: 7 }, ['trips.view'], 'Driver'), context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientFindUnique).not.toHaveBeenCalled()
+  })
+
+  it('honors a newly granted portal.share permission for an already-issued token', async () => {
+    const response = await POST(request({ expiresInDays: 7 }, ['trips.view'], 'Dispatcher'), context)
+    expect(response.status).toBe(200)
+    expect(mocks.userFindUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { id: 'operator-1' } }))
+  })
+
+  it('honors a current permission revocation even when an older token still carries portal.share', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Driver', permissions: JSON.stringify(['trips.view']) } })
+    const response = await POST(request({ expiresInDays: 7 }, ['portal.share'], 'Dispatcher'), context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientFindUnique).not.toHaveBeenCalled()
+  })
+
+  it('keeps the current database Admin role able to manage links without an explicit permission row', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Admin', permissions: '[]' } })
+    const response = await POST(request({ expiresInDays: 7 }, [], 'Admin'), context)
+    expect(response.status).toBe(200)
+  })
+
+  it('honors a current Admin promotion even when the older token still says Dispatcher', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Admin', permissions: '[]' } })
+    const response = await POST(request({ expiresInDays: 7 }, [], 'Dispatcher'), context)
+    expect(response.status).toBe(200)
+  })
+
+  it('does not trust a stale Admin token after the user has moved to another role', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Driver', permissions: JSON.stringify(['trips.view']) } })
+    const response = await POST(request({ expiresInDays: 7 }, [], 'Admin'), context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientFindUnique).not.toHaveBeenCalled()
+  })
+
+  it('keeps demo sessions read-only even when their profile carries portal.share', async () => {
+    const response = await POST(request({ expiresInDays: 7 }, ['portal.share'], 'Dispatcher', true), context)
     expect(response.status).toBe(403)
     expect(mocks.clientFindUnique).not.toHaveBeenCalled()
   })
@@ -62,13 +113,43 @@ describe('POST /api/portal/share/client/[clientId]', () => {
     expect(claims.shareVersion).toBe(4)
   })
 
-  it('atomically revokes all previously issued links for the client', async () => {
+  it('does not let trips.view-only users revoke client portal links', async () => {
+    mocks.userFindUnique.mockResolvedValue({ isActive: true, role: { name: 'Driver', permissions: JSON.stringify(['trips.view']) } })
     const revokeRequest = new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
       method: 'DELETE',
       headers: {
         'x-auth-user-id': 'operator-1',
         'x-auth-user-role': 'Dispatcher',
         'x-auth-user-permissions': JSON.stringify(['trips.view']),
+      },
+    })
+    const response = await DELETE(revokeRequest, context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientUpdate).not.toHaveBeenCalled()
+  })
+
+  it('does not let demo sessions revoke links even with portal.share', async () => {
+    const revokeRequest = new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
+      method: 'DELETE',
+      headers: {
+        'x-auth-user-id': 'operator-1',
+        'x-auth-user-role': 'Dispatcher',
+        'x-auth-user-permissions': JSON.stringify(['portal.share']),
+        'x-auth-demo': 'true',
+      },
+    })
+    const response = await DELETE(revokeRequest, context)
+    expect(response.status).toBe(403)
+    expect(mocks.clientUpdate).not.toHaveBeenCalled()
+  })
+
+  it('atomically revokes all previously issued links for the client', async () => {
+    const revokeRequest = new NextRequest('https://ifleetpro.example/api/portal/share/client/client-a', {
+      method: 'DELETE',
+      headers: {
+        'x-auth-user-id': 'operator-1',
+        'x-auth-user-role': 'Dispatcher',
+        'x-auth-user-permissions': JSON.stringify(['portal.share']),
       },
     })
     const response = await DELETE(revokeRequest, context)

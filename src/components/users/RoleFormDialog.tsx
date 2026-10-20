@@ -54,6 +54,10 @@ const PERMISSION_CATEGORIES: { name: string; keys: string[] }[] = [
     keys: ['trips.view', 'trips.create', 'trips.edit', 'trips.delete'],
   },
   {
+    name: 'Client Portal',
+    keys: ['portal.share'],
+  },
+  {
     name: 'Expenses',
     keys: ['expenses.view', 'expenses.create', 'expenses.edit', 'expenses.approve'],
   },

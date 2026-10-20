@@ -1,14 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { requirePermission } from '@/lib/auth-server'
+import { requireAuth, ROLES, type AuthContext } from '@/lib/auth-server'
 import { db } from '@/lib/db'
 import { createPortalShareToken, validatePortalShareTtlDays } from '@/lib/portal/share-token'
+
+async function requirePortalShareWriteAccess(request: NextRequest): Promise<AuthContext | NextResponse> {
+  const auth = requireAuth(request)
+  if (auth instanceof NextResponse) return auth
+
+  if (auth.isDemo) {
+    return NextResponse.json(
+      { error: 'Demo mode is read-only. Sign in with a standard account to manage client portal links.' },
+      { status: 403 },
+    )
+  }
+
+  // Resolve the current database role instead of trusting potentially 30-day-old
+  // JWT role/permission claims. This makes promotions and demotions immediate.
+  const user = await db.user.findUnique({
+    where: { id: auth.userId },
+    select: {
+      isActive: true,
+      role: { select: { name: true, permissions: true } },
+    },
+  })
+
+  if (!user?.isActive) {
+    return NextResponse.json({ error: 'Account is inactive or unavailable.' }, { status: 403 })
+  }
+
+  if (user.role.name === ROLES.ADMIN) return auth
+
+  let permissions: string[] = []
+  try {
+    const parsed = JSON.parse(user.role.permissions || '[]')
+    if (Array.isArray(parsed) && parsed.every((permission) => typeof permission === 'string')) {
+      permissions = parsed
+    }
+  } catch {
+    permissions = []
+  }
+
+  if (!permissions.includes('portal.share')) {
+    return NextResponse.json(
+      { error: 'Insufficient permissions. Required: portal.share' },
+      { status: 403 },
+    )
+  }
+
+  return auth
+}
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ clientId: string }> },
 ) {
-  const auth = requirePermission(request, 'trips.view')
+  const auth = await requirePortalShareWriteAccess(request)
   if (auth instanceof NextResponse) return auth
 
   const { clientId } = await params
@@ -58,7 +105,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ clientId: string }> },
 ) {
-  const auth = requirePermission(request, 'trips.view')
+  const auth = await requirePortalShareWriteAccess(request)
   if (auth instanceof NextResponse) return auth
 
   const { clientId } = await params

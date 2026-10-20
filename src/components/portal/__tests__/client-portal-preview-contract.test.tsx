@@ -23,6 +23,16 @@ describe('staff client portal preview contract', () => {
     expect(source).toContain('setDashboard(null)')
   })
 
+  it('gates portal link management on the dedicated portal.share permission', () => {
+    expect(source).toContain("permissions.includes('portal.share')")
+    expect(source).toContain("user?.role === 'Admin'")
+    expect(source).toContain('canShareLinks')
+    expect(source).toContain('!canShareLinks')
+    expect(source).toContain('user?.isDemo !== true')
+    expect(source).toContain('/api/auth/me')
+    expect(source).toContain('freshShareAccess')
+  })
+
   it('does not use raw ids as public credentials', () => {
     expect(source).not.toContain('?clientId=')
     expect(source).not.toContain('/api/portal/client/')
