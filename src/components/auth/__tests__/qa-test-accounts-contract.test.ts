@@ -13,8 +13,9 @@ const bootstrapPath = 'scripts/bootstrap-qa-users.ts'
 describe('QA test-account login contract', () => {
   it('keeps full-access QA login separate from the read-only public demo flow', () => {
     const login = read('src/components/auth/LoginView.tsx')
-    expect(login).toContain('QATestAccountsPanel')
+    const demoPanel = read('src/components/auth/DemoLoginPanel.tsx')
     expect(login).toContain('<DemoLoginPanel')
+    expect(demoPanel).toContain('QATestAccountsPanel')
     expect(existsSync(join(root, panelPath))).toBe(true)
   })
 
@@ -55,7 +56,7 @@ describe('QA test-account login contract', () => {
     expect(route).not.toContain('isDemo: true')
   })
 
-  it('supports one-click QA sessions through the auth store without embedding passwords in client code', () => {
+  it('supports one-click QA sessions through the auth store without embedding credentials in client code', () => {
     const auth = read('src/lib/store/auth.ts')
     expect(auth).toContain('qaLogin: (profile: string) => Promise<void>')
     expect(auth).toContain("fetch('/api/auth/qa-login'")
