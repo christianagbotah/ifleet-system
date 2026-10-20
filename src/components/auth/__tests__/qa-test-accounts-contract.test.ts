@@ -8,6 +8,7 @@ const read = (path: string) => readFileSync(join(root, path), 'utf8')
 const panelPath = 'src/components/auth/QATestAccountsPanel.tsx'
 const routePath = 'src/app/api/auth/qa-login/route.ts'
 const configPath = 'src/lib/auth/qa-runtime-config.ts'
+const bootstrapPath = 'scripts/bootstrap-qa-users.ts'
 
 describe('QA test-account login contract', () => {
   it('keeps full-access QA login separate from the read-only public demo flow', () => {
@@ -68,10 +69,28 @@ describe('QA test-account login contract', () => {
     expect(panel).not.toMatch(/password\s*[:=]/i)
   })
 
+  it('provides an explicit bootstrap command for creating the configured real QA users', () => {
+    expect(existsSync(join(root, bootstrapPath))).toBe(true)
+    if (!existsSync(join(root, bootstrapPath))) return
+
+    const bootstrap = read(bootstrapPath)
+    const pkg = read('package.json')
+    expect(bootstrap).toContain("QA_BOOTSTRAP_ENABLED === 'true'")
+    expect(bootstrap).toContain('QA_BOOTSTRAP_PASSWORD')
+    expect(bootstrap).toContain('hashPassword')
+    expect(bootstrap).toContain('db.user.create')
+    expect(bootstrap).toContain('db.role.findUnique')
+    expect(bootstrap).toContain('driverId')
+    expect(bootstrap).not.toMatch(/console\.log\([^\n]*QA_BOOTSTRAP_PASSWORD/)
+    expect(pkg).toContain('"qa:bootstrap"')
+  })
+
   it('documents the server-only QA runtime configuration and keeps it disabled by default', () => {
     const envExample = read('.env.example')
     expect(envExample).toContain('QA_LOGIN_ENABLED=false')
     expect(envExample).toContain('QA_LOGIN_ALLOW_PRODUCTION=false')
+    expect(envExample).toContain('QA_BOOTSTRAP_ENABLED=false')
+    expect(envExample).toContain('QA_BOOTSTRAP_PASSWORD=')
     expect(envExample).toContain('QA_PROFILES_JSON=')
     expect(envExample).not.toMatch(/QA_.*PASSWORD=.*[^=\s]/)
   })
