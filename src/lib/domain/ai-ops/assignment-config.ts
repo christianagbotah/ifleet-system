@@ -1,6 +1,6 @@
 import type { AssignmentWeights } from './assignment'
 
-export const ASSIGNMENT_RECOMMENDATION_CONFIG: {
+export const ASSIGNMENT_RECOMMENDATION_BOOTSTRAP_POLICY: {
   modelKey: string
   modelVersion: string
   configVersion: string

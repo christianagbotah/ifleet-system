@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { requirePermission } from '@/lib/auth-server'
 import { db } from '@/lib/db'
-import { ASSIGNMENT_RECOMMENDATION_CONFIG } from '@/lib/domain/ai-ops/assignment-config'
+import { loadCurrentAssignmentPolicy } from '@/lib/domain/ai-ops/assignment-policy'
 import { buildTrailerAssignmentOptions, hasTrailerCouplingConflict, rankAssignmentCandidates, type AssignmentCandidate } from '@/lib/domain/ai-ops/assignment'
 import { evaluateAssignmentEligibility } from '@/lib/domain/dispatch/eligibility'
 
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   if (auth instanceof NextResponse) return auth
 
   const { id } = await params
-  const config = ASSIGNMENT_RECOMMENDATION_CONFIG
+  const config = await loadCurrentAssignmentPolicy()
   const order = await db.loadOrder.findUnique({
     where: { id },
     include: {
@@ -257,7 +257,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     weights: config.weights, candidates,
   }).slice(0, config.maxRecommendations)
 
-  const snapshot = JSON.stringify({ orderId: order.id, configVersion: config.configVersion, candidates })
+  const policyId = config.id
+  const snapshot = JSON.stringify({ orderId: order.id, policyId, configVersion: config.configVersion, candidates })
   const inputSnapshotRef = `sha256:${createHash('sha256').update(snapshot).digest('hex')}`
   const averageQuality = candidates.length ? candidates.reduce((sum, candidate) => sum + candidate.dataQualityScore, 0) / candidates.length : 0
   const record = await db.aiRecommendation.create({
@@ -270,13 +271,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       inputSnapshotRef,
       explanation: JSON.stringify({
         summary: recommendations.length ? 'Eligible assignment candidates ranked for dispatcher review.' : 'No eligible assignment candidate is currently available.',
+        policyId,
         configVersion: config.configVersion,
         excludedCandidates: candidates.length - recommendations.length,
       }),
-      payload: JSON.stringify({ recommendations, configVersion: config.configVersion }),
+      payload: JSON.stringify({ recommendations, policyId, configVersion: config.configVersion }),
       createdBy: auth.userId,
     },
   })
 
-  return NextResponse.json({ recommendationId: record.id, recommendations, configVersion: config.configVersion, modelVersion: config.modelVersion })
+  return NextResponse.json({ recommendationId: record.id, recommendations, policyId, configVersion: config.configVersion, modelVersion: config.modelVersion })
 }
