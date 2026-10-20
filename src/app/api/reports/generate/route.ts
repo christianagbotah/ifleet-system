@@ -163,7 +163,7 @@ async function buildFleetProfitLossFromCsv(params: ReportParams): Promise<{ toBu
   const data = await fetchFleetProfitLossData(params)
 
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'iFleet Pro'
+  workbook.creator = 'Fleetivo'
   const sheet = workbook.addWorksheet('Fleet Profit & Loss')
 
   // Style the header row
@@ -235,7 +235,7 @@ async function buildFleetProfitLossPdfFromCsv(params: ReportParams): Promise<{ o
     doc.setFontSize(8)
     doc.setTextColor(150, 150, 150)
     doc.text(
-      `iFleet Pro — Fleet Management System | Page ${i} of ${pageCount}`,
+      `Fleetivo — Fleet Management System | Page ${i} of ${pageCount}`,
       doc.internal.pageSize.getWidth() / 2,
       doc.internal.pageSize.getHeight() - 10,
       { align: 'center' }

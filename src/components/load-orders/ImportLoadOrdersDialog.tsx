@@ -40,7 +40,7 @@ export function ImportLoadOrdersDialog({ open, onOpenChange, shippers, loadingPo
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = 'ifleetpro-load-order-import-template.csv'
+    anchor.download = 'fleetivo-load-order-import-template.csv'
     anchor.click()
     URL.revokeObjectURL(url)
   }

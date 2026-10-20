@@ -428,7 +428,7 @@ export default function ReportsPage() {
 
   // Set document title on mount
   useEffect(() => {
-    document.title = 'Reports Hub — iFleetPro'
+    document.title = 'Reports Hub — Fleetivo'
   }, [])
 
   // ── Build common params from current filters ──
@@ -524,7 +524,7 @@ export default function ReportsPage() {
   const handleBackFromPreview = useCallback(() => {
     setPreviewReport(null)
     setPreviewParams({})
-    document.title = 'Reports Hub — iFleetPro'
+    document.title = 'Reports Hub — Fleetivo'
   }, [])
 
   // ── Filtered categories ──

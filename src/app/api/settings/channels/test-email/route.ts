@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import nodemailer from 'nodemailer'
 import { requireRole, ROLES } from '@/lib/auth-server'
-import { APP_NAME, APP_COMPANY } from '@/lib/constants'
+import { APP_NAME, APP_PRODUCT_BYLINE } from '@/lib/constants'
 
 // POST /api/settings/channels/test-email — Send a test email
 export async function POST(request: NextRequest) {
@@ -112,8 +112,7 @@ export async function POST(request: NextRequest) {
           </tr>
           <tr>
             <td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;text-align:center;">
-              <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#374151;">${APP_COMPANY}</p>
-              <p style="margin:0;font-size:12px;color:#6b7280;">37 Ring Road Central, Accra, Ghana</p>
+              <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#374151;">${APP_PRODUCT_BYLINE}</p>
               <p style="margin:8px 0 0;font-size:11px;color:#9ca3af;">This is an automated test message from ${APP_NAME}.</p>
             </td>
           </tr>
@@ -130,7 +129,7 @@ export async function POST(request: NextRequest) {
         to: toEmail,
         subject: `${APP_NAME} — Email Channel Test`,
         html: htmlEmail,
-        text: `${APP_NAME} — Email Channel Test\n\nThis is a test email. If you received this, your SMTP configuration is working.\n\nSMTP Host: ${settings.smtpHost}\nSMTP Port: ${portNum}\nTLS: ${isSecure ? 'Enabled' : 'Disabled'}\nFrom: ${fromEmail}\nSent At: ${now}\n\n— ${APP_COMPANY}`,
+        text: `${APP_NAME} — Email Channel Test\n\nThis is a test email. If you received this, your SMTP configuration is working.\n\nSMTP Host: ${settings.smtpHost}\nSMTP Port: ${portNum}\nTLS: ${isSecure ? 'Enabled' : 'Disabled'}\nFrom: ${fromEmail}\nSent At: ${now}\n\n— ${APP_PRODUCT_BYLINE}`,
       })
 
       console.log(`[Test Email] Sent successfully. MessageId: ${info.messageId}`)

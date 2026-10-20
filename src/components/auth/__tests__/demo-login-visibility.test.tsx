@@ -23,7 +23,7 @@ describe('DemoLoginPanel visibility', () => {
     render(<DemoLoginPanel />)
 
     await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledWith('/api/auth/demo-login'))
-    expect(screen.queryByText('Explore iFleetPro')).not.toBeInTheDocument()
+    expect(screen.queryByText('Explore Fleetivo')).not.toBeInTheDocument()
   })
 
   it('renders exactly the runtime profiles returned by the server', async () => {
@@ -60,7 +60,7 @@ describe('DemoLoginPanel visibility', () => {
 
     render(<DemoLoginPanel />)
 
-    expect(await screen.findByText('Explore iFleetPro')).toBeInTheDocument()
+    expect(await screen.findByText('Explore Fleetivo')).toBeInTheDocument()
     expect(screen.getAllByText('Operations Preview').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('Finance Preview')).toBeInTheDocument()
     expect(screen.queryByText('Fleet Manager')).not.toBeInTheDocument()

@@ -23,7 +23,7 @@ interface TourStep {
 
 const tourSteps: TourStep[] = [
   {
-    title: 'Welcome to iFleetPro!',
+    title: 'Welcome to Fleetivo!',
     content: (
       <div className="space-y-2">
         <p>Your all-in-one fleet management solution. Let us show you around so you can get the most out of the platform.</p>
@@ -109,7 +109,7 @@ const tourSteps: TourStep[] = [
     title: "You're All Set!",
     content: (
       <div className="space-y-3">
-        <p>You now know the basics of iFleetPro. Here are some tips to get started:</p>
+        <p>You now know the basics of Fleetivo. Here are some tips to get started:</p>
         <ul className="list-disc list-inside text-xs space-y-1 text-muted-foreground">
           <li>Add your drivers and trucks in <strong className="text-foreground">Master Data</strong></li>
           <li>Set up <strong className="text-foreground">Zone Rates</strong> for auto-calculated trip amounts</li>

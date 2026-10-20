@@ -147,7 +147,7 @@ export function HaulageReportsView() {
   }, [loadReport])
 
   React.useEffect(() => {
-    document.title = 'Haulage Reports — iFleetPro'
+    document.title = 'Haulage Reports — Fleetivo'
   }, [])
 
   function updateFilter(key: keyof HaulageReportFilters, value: string) {
@@ -180,7 +180,7 @@ export function HaulageReportsView() {
       const disposition = response.headers.get('Content-Disposition')
       const match = disposition?.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
       const filename = match?.[1]?.replace(/['"]/g, '')
-        ?? `ifleetpro-${family}-${new Date().toISOString().slice(0, 10)}.${format}`
+        ?? `fleetivo-${family}-${new Date().toISOString().slice(0, 10)}.${format}`
       triggerDownload(await response.blob(), filename)
       toast.success(`${selectedFamily.label} ${format.toUpperCase()} downloaded`)
     } catch (err) {

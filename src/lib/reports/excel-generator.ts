@@ -1,6 +1,6 @@
 import ExcelJS from 'exceljs'
 import type { PartialStyle } from 'exceljs'
-import { APP_NAME, APP_COMPANY, APP_TAGLINE } from '@/lib/constants'
+import { APP_NAME, APP_PRODUCT_BYLINE, APP_PUBLISHER, APP_TAGLINE } from '@/lib/constants'
 
 // ──────────────────────────────────────────────────────────────────
 // Professional styling constants — all Excel exports use these
@@ -124,7 +124,7 @@ export class ExcelReport {
   constructor(title: string, subtitle?: string) {
     this.workbook = new ExcelJS.Workbook()
     this.workbook.creator = APP_NAME
-    this.workbook.company = APP_COMPANY
+    this.workbook.company = APP_PUBLISHER
     this.workbook.created = new Date()
 
     this.sheet = this.workbook.addWorksheet('Report', {
@@ -487,7 +487,7 @@ export class ExcelReport {
       margins: { left: 0.4, right: 0.4, top: 0.5, bottom: 0.5, header: 0.3, footer: 0.3 },
     }
     this.sheet.headerFooter = {
-      oddFooter: `&L&8${APP_COMPANY}&C&8Page &P of &N&R&8&D`,
+      oddFooter: `&L&8${APP_PRODUCT_BYLINE}&C&8Page &P of &N&R&8&D`,
       oddHeader: `&L&8${APP_NAME} — ${APP_TAGLINE}`,
     }
   }

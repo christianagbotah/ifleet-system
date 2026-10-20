@@ -2,6 +2,7 @@
 
 import { useAppStore } from '@/lib/store'
 import { Settings, BarChart3 } from 'lucide-react'
+import { APP_NAME, APP_PRODUCT_BYLINE, APP_PUBLISHER } from '@/lib/constants'
 
 export function AppFooter() {
   const { setCurrentView } = useAppStore()
@@ -9,9 +10,9 @@ export function AppFooter() {
   return (
     <footer className="hidden md:flex items-center justify-between border-t backdrop-blur-sm bg-muted/30 px-6 py-3 h-11 text-xs text-muted-foreground shrink-0">
       <div className="flex items-center gap-3">
-        <span>© 2025 LightWorld Tech</span>
+        <span>© {new Date().getFullYear()} {APP_NAME}</span>
         <span className="text-border">·</span>
-        <span className="text-muted-foreground/70">iFleetPro v1.0.0</span>
+        <span className="text-muted-foreground/70">{APP_PRODUCT_BYLINE}</span>
       </div>
       <div className="flex items-center gap-3">
         <button
@@ -30,7 +31,7 @@ export function AppFooter() {
           Settings
         </button>
         <span className="text-border">·</span>
-        <span className="text-muted-foreground/50">LightWorld Tech</span>
+        <span className="text-muted-foreground/50">{APP_PUBLISHER}</span>
       </div>
     </footer>
   )

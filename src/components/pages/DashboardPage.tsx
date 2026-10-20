@@ -326,7 +326,7 @@ export default function DashboardPage() {
                 <span className="relative rounded-full size-2.5 bg-emerald-300" />
               </span>
             </div>
-            <h2 className="text-xl md:text-2xl font-semibold text-white/90 mt-0.5">Welcome to iFleetPro</h2>
+            <h2 className="text-xl md:text-2xl font-semibold text-white/90 mt-0.5">Welcome to Fleetivo</h2>
             <p className="text-emerald-100 mt-1">
               {format(now, 'EEEE, MMMM d, yyyy')} — Here&apos;s your fleet overview
             </p>

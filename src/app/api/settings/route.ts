@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAuth, requireRole, ROLES } from '@/lib/auth-server'
 import { createAuditLog, getClientIp } from '@/lib/audit'
-import { APP_COMPANY } from '@/lib/constants'
 
 // GET /api/settings — Return current system settings (create defaults if none exist)
 export async function GET(request: NextRequest) {

@@ -418,7 +418,7 @@ export function ClientFormDialog({ open, onOpenChange, onCreated, onUpdated, cli
                 <FormItem>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="37 Ring Road Central, North Industrial Area" {...field} />
+                    <Input placeholder="e.g., 12 Independence Avenue, Accra" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Loader2, Car } from 'lucide-react'
-import { APP_COMPANY } from '@/lib/constants'
 import { apiFetch } from '@/lib/api'
 import { DatePicker } from '@/components/ui/date-picker'
 import { toast } from 'sonner'
@@ -426,7 +425,7 @@ export function DvlaFormDialog({ open, onOpenChange, registration, onSuccess }: 
               </Label>
               <Input
                 id="owner"
-                placeholder={`e.g., ${APP_COMPANY}`}
+                placeholder="e.g., Acme Logistics Ltd."
                 value={registeredOwner}
                 onChange={(e) => setRegisteredOwner(e.target.value)}
               />
