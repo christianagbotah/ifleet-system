@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf'
 
-import { APP_COMPANY, APP_NAME } from '@/lib/constants'
+import { APP_NAME, APP_PRODUCT_BYLINE } from '@/lib/constants'
 import { db } from '@/lib/db'
 import { storedElectronicWaybillToDomain } from '@/lib/domain/waybills/storage'
 import { buildWaybillPdf } from '@/lib/reports/waybill-pdf'
@@ -51,7 +51,7 @@ export async function buildElectronicWaybillPdf(tripId: string): Promise<jsPDF> 
   doc.setTextColor(255, 255, 255)
   doc.text(APP_NAME, margin, 10)
   doc.setFontSize(8)
-  doc.text(APP_COMPANY, margin, 16)
+  doc.text(APP_PRODUCT_BYLINE, margin, 16)
   doc.text('Electronic Haulage Waybill', pageWidth - margin, 13, { align: 'right' })
 
   let y = 34

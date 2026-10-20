@@ -64,7 +64,7 @@ export function PwaInstallPrompt() {
                   <Download className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold">Install iFleetPro</p>
+                  <p className="text-sm font-semibold">Install Fleetivo</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     Add to your home screen for quick access and offline support.
                   </p>
@@ -120,7 +120,7 @@ export function PwaInstallPrompt() {
               <Smartphone className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold">Install iFleetPro</p>
+              <p className="text-sm font-semibold">Install Fleetivo</p>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Tap <strong>Share</strong> then <strong>Add to Home Screen</strong> to install the app.
               </p>
@@ -156,7 +156,7 @@ export function SwUpdateNotifier() {
 
     const handler = (event: MessageEvent) => {
       if (event.data?.type === 'SW_UPDATED') {
-        toast('A new version of iFleetPro is available!', {
+        toast('A new version of Fleetivo is available!', {
           description: 'Refresh the page to get the latest updates.',
           action: {
             label: 'Refresh Now',

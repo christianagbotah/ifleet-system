@@ -40,7 +40,7 @@ function rowsWithTotals(headers: string[], rows: ExportCell[][], totals: Record<
 async function buildXlsx(headers: string[], rows: ExportCell[][]) {
   const ExcelJS = (await import('exceljs')).default
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'iFleetPro'
+  workbook.creator = 'Fleetivo'
   const sheet = workbook.addWorksheet('Haulage Report')
   sheet.addRow(headers)
   for (const row of rows) sheet.addRow(row.map((value) => value ?? ''))
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(content, {
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="ifleetpro-${family}-${new Date().toISOString().slice(0, 10)}.${format}"`,
+        'Content-Disposition': `attachment; filename="fleetivo-${family}-${new Date().toISOString().slice(0, 10)}.${format}"`,
         'Content-Length': String(fileSize),
       },
     })

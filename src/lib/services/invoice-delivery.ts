@@ -15,6 +15,7 @@
 
 import { db } from '@/lib/db'
 import { APP_NAME } from '@/lib/constants'
+import { loadCompanyProfile } from '@/lib/config/company-profile'
 import { sendEmail } from './email'
 import { sendSMS, formatGhanaPhone } from './sms'
 import { generateInvoiceShareLink } from './invoice-generator'
@@ -78,12 +79,12 @@ export async function sendInvoiceNotification(
     }
 
     // ── 2. Fetch company settings ──
-    let companyName = APP_NAME
+    let companyName = 'Fleet operator'
     try {
-      const settings = await db.systemSettings.findFirst()
-      if (settings?.companyName) companyName = settings.companyName
+      const company = await loadCompanyProfile()
+      if (company.name) companyName = company.name
     } catch {
-      // Use default
+      // Keep the neutral operator fallback when tenant identity is unavailable.
     }
 
     // ── 3. Build message content ──
@@ -447,12 +448,6 @@ function buildInvoiceEmailHtml(params: {
                   <td style="text-align: center;">
                     <p style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #374151;">
                       ${companyName}
-                    </p>
-                    <p style="margin: 0 0 2px 0; font-size: 12px; color: #6b7280;">
-                      37 Ring Road Central, Accra, Ghana
-                    </p>
-                    <p style="margin: 0 0 2px 0; font-size: 12px; color: #6b7280;">
-                      +233 30 277 8899 &nbsp;|&nbsp; info@fleetpro.com.gh
                     </p>
                     <p style="margin: 8px 0 0 0; font-size: 11px; color: #9ca3af;">
                       This is an automated invoice notification from ${APP_NAME}. Please do not reply directly to this email.

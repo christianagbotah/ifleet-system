@@ -80,7 +80,7 @@ export function DemoLoginPanel() {
             <div>
               <div className="flex items-center gap-2 text-sm font-semibold text-slate-950 dark:text-white">
                 <ShieldCheck className="h-4 w-4 text-amber-500" />
-                Explore iFleetPro
+                Explore Fleetivo
               </div>
               <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
                 Choose an available preview role and enter an isolated read-only demo session.

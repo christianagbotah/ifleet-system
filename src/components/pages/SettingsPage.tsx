@@ -73,20 +73,20 @@ export default function SettingsPage() {
 
   // Company Profile State - load from localStorage
   const [companyName, setCompanyName] = useState(() => {
-    if (typeof window === 'undefined') return 'iFleetPro Logistics Ltd.'
-    return localStorage.getItem('ifleetpro-company-name') || 'iFleetPro Logistics Ltd.'
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('ifleetpro-company-name') || ''
   })
   const [companyEmail, setCompanyEmail] = useState(() => {
-    if (typeof window === 'undefined') return 'admin@ifleetpro.com'
-    return localStorage.getItem('ifleetpro-company-email') || 'admin@ifleetpro.com'
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('ifleetpro-company-email') || ''
   })
   const [companyPhone, setCompanyPhone] = useState(() => {
-    if (typeof window === 'undefined') return '+233 30 000 0000'
-    return localStorage.getItem('ifleetpro-company-phone') || '+233 30 000 0000'
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('ifleetpro-company-phone') || ''
   })
   const [companyAddress, setCompanyAddress] = useState(() => {
-    if (typeof window === 'undefined') return 'Accra, Greater Accra Region, Ghana'
-    return localStorage.getItem('ifleetpro-company-address') || 'Accra, Greater Accra Region, Ghana'
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('ifleetpro-company-address') || ''
   })
 
   // User Preferences State - load from localStorage
@@ -95,8 +95,8 @@ export default function SettingsPage() {
     return localStorage.getItem('ifleetpro-display-name') || 'Fleet Admin'
   })
   const [userEmail, setUserEmail] = useState(() => {
-    if (typeof window === 'undefined') return 'admin@ifleetpro.com'
-    return localStorage.getItem('ifleetpro-user-email') || 'admin@ifleetpro.com'
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('ifleetpro-user-email') || ''
   })
   const [emailReadOnly, setEmailReadOnly] = useState(true)
   const [notifyTripCreated, setNotifyTripCreated] = useState(() => {
@@ -214,7 +214,7 @@ export default function SettingsPage() {
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `ifleetpro-export-${new Date().toISOString().split('T')[0]}.json`
+        a.download = `fleetivo-export-${new Date().toISOString().split('T')[0]}.json`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
@@ -577,7 +577,7 @@ export default function SettingsPage() {
                     <Info className="size-4 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">System Version</p>
-                      <p className="text-xs text-muted-foreground">iFleetPro application version</p>
+                      <p className="text-xs text-muted-foreground">Fleetivo application version</p>
                     </div>
                   </div>
                   <Badge variant="outline" className="font-mono text-sm">

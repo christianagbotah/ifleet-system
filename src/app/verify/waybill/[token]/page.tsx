@@ -62,7 +62,7 @@ export default function WaybillVerificationPage() {
             <div className="rounded-xl bg-primary/10 p-2 text-primary"><ShieldCheck className="size-6" /></div>
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">Waybill Verification</h1>
-              <p className="text-sm text-muted-foreground">Verify an iFleetPro electronic haulage waybill without exposing private driver or commercial data.</p>
+              <p className="text-sm text-muted-foreground">Verify a Fleetivo electronic haulage waybill without exposing private driver or commercial data.</p>
             </div>
           </div>
         </header>

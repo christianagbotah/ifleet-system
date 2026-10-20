@@ -1,6 +1,6 @@
 {
-  "name": "iFleetPro",
-  "short_name": "iFleetPro",
+  "name": "Fleetivo",
+  "short_name": "Fleetivo",
   "description": "Fleet Management System for Ghana logistics operations",
   "start_url": "/",
   "display": "standalone",

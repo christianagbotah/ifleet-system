@@ -24,6 +24,15 @@ describe('company profile runtime configuration contract', () => {
     expect(email).not.toContain('info@fleetpro.com.gh')
   })
 
+  it('does not compile tenant contact placeholders or product identity into invoice delivery', () => {
+    const delivery = source('src/lib/services/invoice-delivery.ts')
+    expect(delivery).toContain('loadCompanyProfile')
+    expect(delivery).not.toContain('37 Ring Road Central')
+    expect(delivery).not.toContain('+233 30 277 8899')
+    expect(delivery).not.toContain('info@yourcompany.com')
+    expect(delivery).not.toContain('let companyName = APP_NAME')
+  })
+
   it('uses configured company profile data in generated business documents', () => {
     for (const path of [
       'src/lib/reports/invoice-pdf.ts',

@@ -51,11 +51,12 @@ import {
 // ============ APP BRANDING ============
 // Change the name here to rebrand the entire app.
 
-export const APP_NAME = "iFleetPro"
-export const APP_COMPANY = `${APP_NAME} Ltd.`
+export const APP_NAME = "Fleetivo"
+export const APP_PUBLISHER = "Lightworld Technologies Limited"
+export const APP_PRODUCT_BYLINE = `A product of ${APP_PUBLISHER}`
 export const APP_TAGLINE = "Fleet Management System"
 export const APP_TITLE = `${APP_NAME} - ${APP_TAGLINE}`
-export const APP_COPYRIGHT = `© ${new Date().getFullYear()} ${APP_NAME} — ${APP_TAGLINE}`
+export const APP_COPYRIGHT = `© ${new Date().getFullYear()} ${APP_NAME} — ${APP_TAGLINE}. ${APP_PRODUCT_BYLINE}.`
 export const APP_SMS_SENDER = APP_NAME
 
 // ============ NAVIGATION ============

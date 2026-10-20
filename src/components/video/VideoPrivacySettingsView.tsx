@@ -194,7 +194,7 @@ export function VideoPrivacySettingsView() {
             </Card>
 
             <div className="flex justify-end"><Button onClick={() => void save()} disabled={saving} className="gap-2"><Save className="h-4 w-4" />{saving ? 'Saving…' : 'Save privacy policy'}</Button></div>
-            <div className="flex items-start gap-2 rounded-xl border bg-muted/30 p-3 text-xs text-muted-foreground"><Cloud className="mt-0.5 h-4 w-4 shrink-0" /><span>Retention cleanup applies only to iFleetPro-managed cloud/local copies. Provider-owned recordings are never deleted by iFleetPro.</span></div>
+            <div className="flex items-start gap-2 rounded-xl border bg-muted/30 p-3 text-xs text-muted-foreground"><Cloud className="mt-0.5 h-4 w-4 shrink-0" /><span>Retention cleanup applies only to Fleetivo-managed cloud/local copies. Provider-owned recordings are never deleted by Fleetivo.</span></div>
           </div>
         )}
       </div>

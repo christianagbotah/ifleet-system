@@ -324,7 +324,7 @@ function LoginForm({
           </div>
 
           <Button type="submit" className="h-12 w-full rounded-xl bg-amber-500 font-bold text-slate-950 shadow-[0_12px_28px_-14px_rgba(245,158,11,.85)] hover:bg-amber-400" disabled={isLoading}>
-            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…</> : 'Sign in to iFleetPro'}
+            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…</> : 'Sign in to Fleetivo'}
           </Button>
         </form>
 

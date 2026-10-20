@@ -14,7 +14,7 @@ const OFFLINE_FALLBACK_HTML = `<!DOCTYPE html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f59e0b">
-  <title>iFleetPro — Offline</title>
+  <title>Fleetivo — Offline</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e293b;
@@ -48,7 +48,7 @@ const OFFLINE_FALLBACK_HTML = `<!DOCTYPE html>
       </svg>
     </div>
     <h1>You're Offline</h1>
-    <p>iFleetPro is not available right now. Please check your internet connection and try again.</p>
+    <p>Fleetivo is not available right now. Please check your internet connection and try again.</p>
     <a class="btn" href="/">Try Again</a>
   </div>
 </body>

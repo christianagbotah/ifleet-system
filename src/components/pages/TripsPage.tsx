@@ -1522,7 +1522,7 @@ export default function TripsPage() {
             {/* Print Header */}
             <div className="flex items-center justify-between border-b-2 border-gray-900 pb-4 mb-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">iFleetPro</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Fleetivo</h1>
                 <p className="text-sm text-gray-500">Fleet Management System</p>
               </div>
               <div className="text-right">
@@ -1623,7 +1623,7 @@ export default function TripsPage() {
             {/* Print Footer */}
             <div className="border-t border-gray-300 pt-4 mt-8 text-center">
               <p className="text-xs text-gray-400">
-                iFleetPro Fleet Management System · Printed on {format(new Date(), 'EEEE, MMMM d, yyyy')} at {format(new Date(), 'h:mm a')}
+                Fleetivo Fleet Management System · Printed on {format(new Date(), 'EEEE, MMMM d, yyyy')} at {format(new Date(), 'h:mm a')}
               </p>
             </div>
           </div>

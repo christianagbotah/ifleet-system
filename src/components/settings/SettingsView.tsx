@@ -29,7 +29,7 @@ import { toast } from 'sonner'
 import { fetchSettings, saveSettings, type SystemSettings, fetchChannelSettings, updateChannelSettings, testSmsChannel, testEmailChannel, testPaystackChannel, type ChannelSettings, generateReport } from '@/lib/api'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAuthStore } from '@/lib/store/auth'
-import { APP_COMPANY } from '@/lib/constants'
+import { APP_NAME } from '@/lib/constants'
 import { CurrencyConverter } from '@/components/settings/CurrencyConverter'
 import { IntegrationConnections } from '@/components/settings/IntegrationConnections'
 
@@ -54,9 +54,9 @@ const itemVariants = {
 }
 
 const DEFAULT_COMPANY = {
-  name: APP_COMPANY, email: 'info@fleetpro.com.gh', phone: '+233 30 277 8899',
-  address: '37 Ring Road Central', city: 'Accra', country: 'Ghana',
-  website: 'www.fleetpro.com.gh', registrationNumber: '',
+  name: '', email: '', phone: '',
+  address: '', city: 'Accra', country: 'Ghana',
+  website: '', registrationNumber: '',
 }
 const DEFAULT_NOTIFICATIONS = {
   tripStarted: true, tripCompleted: true, maintenanceDue: true,
@@ -709,7 +709,7 @@ export function SettingsView() {
                       <Label htmlFor="arkesel-sender-id">Arkesel Sender ID</Label>
                       <Input
                         id="arkesel-sender-id"
-                        placeholder="e.g., iFleetPro"
+                        placeholder={`e.g., ${APP_NAME}`}
                         value={channels.arkeselSenderId}
                         onChange={e => setChannels(prev => ({ ...prev, arkeselSenderId: e.target.value }))}
                       />
@@ -807,7 +807,7 @@ export function SettingsView() {
                     <Input
                       id="smtp-from"
                       type="email"
-                      placeholder="e.g., noreply@fleetpro.com.gh"
+                      placeholder="e.g., noreply@yourcompany.com"
                       value={channels.smtpFrom}
                       onChange={e => setChannels(prev => ({ ...prev, smtpFrom: e.target.value }))}
                     />
@@ -1189,7 +1189,7 @@ export function SettingsView() {
                         <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px]">Active</Badge>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Driver&apos;s smartphone sends location via the iFleetPro driver app. Requires mobile data.
+                        Driver&apos;s smartphone sends location via the {APP_NAME} driver app. Requires mobile data.
                       </div>
                     </div>
                   </div>
@@ -1211,7 +1211,7 @@ export function SettingsView() {
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30">
                   <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                   <div className="text-xs text-amber-800 dark:text-amber-300">
-                    When both sources are active, iFleetPro uses the most recent data point from either source.
+                    When both sources are active, {APP_NAME} uses the most recent data point from either source.
                     Configure per-truck tracking settings in the <strong>Live Tracking</strong> page.
                   </div>
                 </div>
@@ -1465,7 +1465,7 @@ export function SettingsView() {
                   </div>
                   <div>
                     <CardTitle className="text-base">System Information</CardTitle>
-                    <CardDescription>iFleetPro system details and version info.</CardDescription>
+                    <CardDescription>{APP_NAME} system details and version info.</CardDescription>
                   </div>
                 </div>
               </CardHeader>

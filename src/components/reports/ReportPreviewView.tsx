@@ -211,9 +211,9 @@ export function ReportPreviewView({ reportType, reportName, params, onBack }: Re
 
   useEffect(() => {
     fetchData()
-    document.title = `${reportDisplayName} — iFleetPro`
+    document.title = `${reportDisplayName} — Fleetivo`
     return () => {
-      document.title = 'Reports Hub — iFleetPro'
+      document.title = 'Reports Hub — Fleetivo'
     }
   }, [fetchData, reportDisplayName])
 

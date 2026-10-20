@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { PageLoadingOverlay } from "@/components/layout/PageLoadingOverlay";
+import { APP_NAME, APP_PUBLISHER, APP_TAGLINE } from "@/lib/constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,27 +16,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const productTitle = `${APP_NAME} — ${APP_TAGLINE}`;
+
 export const metadata: Metadata = {
   title: {
-    default: "iFleet Pro — Fleet Management System",
-    template: "%s — iFleet Pro",
+    default: productTitle,
+    template: `%s — ${APP_NAME}`,
   },
   description: "Comprehensive fleet management system for trucking operations — manage trucks, drivers, trips, expenses, maintenance, and more.",
-  keywords: ["fleet management", "trucking", "logistics", "iFleet Pro", "fleet tracking", "trip management"],
-  authors: [{ name: "iFleet Pro" }],
+  keywords: ["fleet management", "trucking", "logistics", APP_NAME, "fleet tracking", "trip management"],
+  authors: [{ name: APP_PUBLISHER }],
   icons: {
     icon: "/favicon.ico",
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "iFleet Pro — Fleet Management System",
+    title: productTitle,
     description: "Comprehensive fleet management system for trucking operations.",
-    siteName: "iFleet Pro",
+    siteName: APP_NAME,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "iFleet Pro — Fleet Management System",
+    title: productTitle,
     description: "Comprehensive fleet management system for trucking operations.",
   },
 };
