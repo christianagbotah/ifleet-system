@@ -11,6 +11,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
+    "qa:bootstrap": "bun scripts/bootstrap-qa-users.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "security:scan": "bun scripts/secret-scan.ts"

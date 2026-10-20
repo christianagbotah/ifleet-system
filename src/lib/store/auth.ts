@@ -15,6 +15,8 @@ export interface AuthUser {
   demoLabel?: string | null
   demoDescription?: string | null
   demoCapability?: string | null
+  isQa?: boolean
+  qaProfile?: string | null
   position?: string | null
   department?: string | null
 }
@@ -27,6 +29,7 @@ interface AuthState {
   token: string | null
   login: (email: string, password: string) => Promise<void>
   demoLogin: (profile: string) => Promise<void>
+  qaLogin: (profile: string) => Promise<void>
   logout: () => void
   setUser: (user: AuthUser | null) => void
   setToken: (token: string | null) => void
@@ -91,6 +94,20 @@ function isJwtExpired(token: string): boolean {
   }
 }
 
+function persistAuthenticatedSession(
+  set: (partial: Partial<AuthState>) => void,
+  data: { user: AuthUser; token?: string | null },
+) {
+  const token = data.token || null
+  writeStorage(data.user, token, true)
+  set({
+    user: data.user,
+    token,
+    isAuthenticated: true,
+    isLoading: false,
+  })
+}
+
 export const useAuthStore = create<AuthState>()((set, get) => ({
   user: null,
   isAuthenticated: false,
@@ -136,14 +153,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       }
 
       const data = await res.json()
-      const token = data.token || null
-      writeStorage(data.user, token, true)
-      set({
-        user: data.user,
-        token,
-        isAuthenticated: true,
-        isLoading: false,
-      })
+      persistAuthenticatedSession(set, data)
     } catch (error) {
       set({ isLoading: false })
       throw error
@@ -165,14 +175,29 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       }
 
       const data = await res.json()
-      const token = data.token || null
-      writeStorage(data.user, token, true)
-      set({
-        user: data.user,
-        token,
-        isAuthenticated: true,
-        isLoading: false,
+      persistAuthenticatedSession(set, data)
+    } catch (error) {
+      set({ isLoading: false })
+      throw error
+    }
+  },
+
+  qaLogin: async (profile: string) => {
+    set({ isLoading: true })
+    try {
+      const res = await fetch('/api/auth/qa-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile }),
       })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Test account login failed' }))
+        throw new Error(err.error || 'Test account login failed')
+      }
+
+      const data = await res.json()
+      persistAuthenticatedSession(set, data)
     } catch (error) {
       set({ isLoading: false })
       throw error
