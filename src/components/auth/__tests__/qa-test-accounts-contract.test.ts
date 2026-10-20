@@ -1,0 +1,78 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { describe, expect, it } from 'vitest'
+
+const root = process.cwd()
+const read = (path: string) => readFileSync(join(root, path), 'utf8')
+
+const panelPath = 'src/components/auth/QATestAccountsPanel.tsx'
+const routePath = 'src/app/api/auth/qa-login/route.ts'
+const configPath = 'src/lib/auth/qa-runtime-config.ts'
+
+describe('QA test-account login contract', () => {
+  it('keeps full-access QA login separate from the read-only public demo flow', () => {
+    const login = read('src/components/auth/LoginView.tsx')
+    expect(login).toContain('QATestAccountsPanel')
+    expect(login).toContain('<DemoLoginPanel')
+    expect(existsSync(join(root, panelPath))).toBe(true)
+  })
+
+  it('fails closed unless QA login is explicitly enabled for the runtime', () => {
+    expect(existsSync(join(root, routePath))).toBe(true)
+    if (!existsSync(join(root, routePath))) return
+    const route = read(routePath)
+    expect(route).toContain('QA_LOGIN_ENABLED')
+    expect(route).toContain('QA_LOGIN_ALLOW_PRODUCTION')
+    expect(route).toContain("process.env.NODE_ENV === 'production'")
+    expect(route).toContain("'Cache-Control': 'no-store'")
+  })
+
+  it('uses explicitly configured real users and never provisions arbitrary accounts from the login endpoint', () => {
+    expect(existsSync(join(root, configPath))).toBe(true)
+    expect(existsSync(join(root, routePath))).toBe(true)
+    if (!existsSync(join(root, configPath)) || !existsSync(join(root, routePath))) return
+
+    const config = read(configPath)
+    const route = read(routePath)
+    expect(config).toContain('QA_PROFILES_JSON')
+    expect(config).toContain('email')
+    expect(route).toContain('db.user.findUnique')
+    expect(route).toContain('profile.email')
+    expect(route).toContain('role:')
+    expect(route).toContain('driver:')
+    expect(route).not.toContain('db.user.create')
+    expect(route).not.toContain('db.user.upsert')
+  })
+
+  it('issues full real-role permissions instead of demo read-only permissions', () => {
+    expect(existsSync(join(root, routePath))).toBe(true)
+    if (!existsSync(join(root, routePath))) return
+    const route = read(routePath)
+    expect(route).toContain('JSON.parse(user.role.permissions')
+    expect(route).toContain('isQa: true')
+    expect(route).not.toContain('readOnlyPermissions')
+    expect(route).not.toContain('isDemo: true')
+  })
+
+  it('supports one-click QA sessions through the auth store without embedding passwords in client code', () => {
+    const auth = read('src/lib/store/auth.ts')
+    expect(auth).toContain('qaLogin: (profile: string) => Promise<void>')
+    expect(auth).toContain("fetch('/api/auth/qa-login'")
+    expect(auth).toContain('body: JSON.stringify({ profile })')
+
+    expect(existsSync(join(root, panelPath))).toBe(true)
+    if (!existsSync(join(root, panelPath))) return
+    const panel = read(panelPath)
+    expect(panel).toContain('Test Accounts')
+    expect(panel).toContain('qaLogin')
+    expect(panel).not.toMatch(/password\s*[:=]/i)
+  })
+
+  it('documents the server-only QA runtime configuration and keeps it disabled by default', () => {
+    const envExample = read('.env.example')
+    expect(envExample).toContain('QA_LOGIN_ENABLED=false')
+    expect(envExample).toContain('QA_LOGIN_ALLOW_PRODUCTION=false')
+    expect(envExample).toContain('QA_PROFILES_JSON=')
+    expect(envExample).not.toMatch(/QA_.*PASSWORD=.*[^=\s]/)
+  })
+})
