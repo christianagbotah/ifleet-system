@@ -70,6 +70,13 @@ describe('QA test-account login contract', () => {
     expect(panel).not.toMatch(/password\s*[:=]/i)
   })
 
+  it('routes a full-access QA Driver session into the dedicated Driver Portal', () => {
+    const panel = read(panelPath)
+    expect(panel).toContain("user?.role === 'Driver'")
+    expect(panel).toContain("window.location.assign('/driver')")
+    expect(panel).not.toContain('useRouter')
+  })
+
   it('provides an explicit bootstrap command for creating the configured real QA users', () => {
     expect(existsSync(join(root, bootstrapPath))).toBe(true)
     if (!existsSync(join(root, bootstrapPath))) return

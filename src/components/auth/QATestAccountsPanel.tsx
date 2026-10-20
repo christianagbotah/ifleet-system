@@ -59,6 +59,8 @@ export function QATestAccountsPanel() {
     setPending(active.key)
     try {
       await qaLogin(active.key)
+      const user = useAuthStore.getState().user
+      if (user?.role === 'Driver') window.location.assign('/driver')
       toast.success(`${active.label} test workspace ready`)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Test account login failed')
