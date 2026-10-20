@@ -33,16 +33,6 @@ function loadProfiles() {
   return parseQaProfilesConfig(process.env.QA_PROFILES_JSON)
 }
 
-function parsePermissions(raw: string): string[] {
-  try {
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    return parsed.filter((permission): permission is string => typeof permission === 'string')
-  } catch {
-    return []
-  }
-}
-
 export async function GET() {
   if (!qaLoginEnabled()) return disabledResponse()
 
@@ -127,7 +117,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const permissions = parsePermissions(user.role.permissions)
+    let permissions: string[] = []
+    try {
+      const parsed = JSON.parse(user.role.permissions || '[]')
+      permissions = Array.isArray(parsed)
+        ? parsed.filter((permission): permission is string => typeof permission === 'string')
+        : []
+    } catch {
+      permissions = []
+    }
 
     await db.user.update({
       where: { id: user.id },
