@@ -14,6 +14,7 @@ function getSecretKey(): Uint8Array {
 const PUBLIC_API_ROUTES = [
   '/api/auth/login',
   '/api/auth/demo-login',
+  '/api/auth/qa-login',
   '/api/auth/register',
   '/api/auth/forgot-password',
   '/api/auth/verify-reset-token',

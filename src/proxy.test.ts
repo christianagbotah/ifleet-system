@@ -89,6 +89,22 @@ describe('API authentication proxy', () => {
     expect(response.headers.get('location')).toContain('auth=demo')
   })
 
+  it('lets the exact QA login discovery and session routes reach their gated handler', async () => {
+    const getResponse = await proxy(request('/api/auth/qa-login', { method: 'GET' }))
+    const postResponse = await proxy(request('/api/auth/qa-login', { method: 'POST' }))
+
+    expect(getResponse.status).toBe(200)
+    expect(getResponse.headers.get('x-middleware-next')).toBe('1')
+    expect(postResponse.status).toBe(200)
+    expect(postResponse.headers.get('x-middleware-next')).toBe('1')
+  })
+
+  it('does not make neighboring QA auth paths public', async () => {
+    const response = await proxy(request('/api/auth/qa-login-extra', { method: 'GET' }))
+
+    expect(response.status).toBe(401)
+  })
+
   it('does not make neighboring demo-auth paths public', async () => {
     const response = await proxy(request('/api/auth/demo-login-extra', { method: 'POST' }))
 
