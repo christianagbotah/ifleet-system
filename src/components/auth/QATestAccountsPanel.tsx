@@ -5,6 +5,7 @@ import { FlaskConical, ShieldCheck, UserRound } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import type { PublicQaProfile } from '@/lib/auth/qa-runtime-config'
 import { useAuthStore } from '@/lib/store/auth'
 
@@ -16,6 +17,7 @@ interface QaProfilesResponse {
 export function QATestAccountsPanel() {
   const [profiles, setProfiles] = React.useState<PublicQaProfile[]>([])
   const [selected, setSelected] = React.useState<string | null>(null)
+  const [accessCode, setAccessCode] = React.useState('')
   const [pending, setPending] = React.useState<string | null>(null)
   const { qaLogin, isLoading } = useAuthStore()
 
@@ -56,9 +58,15 @@ export function QATestAccountsPanel() {
 
   async function continueAsQa() {
     if (!active) return
+    const trimmedAccessCode = accessCode.trim()
+    if (!trimmedAccessCode) {
+      toast.error('Enter the QA access code to continue')
+      return
+    }
+
     setPending(active.key)
     try {
-      await qaLogin(active.key)
+      await qaLogin(active.key, trimmedAccessCode)
       const user = useAuthStore.getState().user
       if (user?.role === 'Driver') window.location.assign('/driver')
       toast.success(`${active.label} test workspace ready`)
@@ -126,10 +134,36 @@ export function QATestAccountsPanel() {
         </p>
       </div>
 
+      <div className="mt-3 space-y-1.5">
+        <label
+          htmlFor="qa-access-code"
+          className="text-xs font-semibold text-slate-700 dark:text-slate-300"
+        >
+          QA access code
+        </label>
+        <Input
+          id="qa-access-code"
+          type="password"
+          value={accessCode}
+          onChange={(event) => setAccessCode(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && accessCode.trim() && pending === null) {
+              void continueAsQa()
+            }
+          }}
+          placeholder="Enter testing access code"
+          autoComplete="off"
+          className="h-11 rounded-xl"
+        />
+        <p className="text-[11px] leading-4 text-slate-400">
+          This code unlocks the full QA roles; it is not an account password.
+        </p>
+      </div>
+
       <Button
         type="button"
         onClick={continueAsQa}
-        disabled={isLoading || pending !== null}
+        disabled={isLoading || pending !== null || !accessCode.trim()}
         className="mt-3 h-11 w-full rounded-xl bg-cyan-700 font-semibold text-white shadow-lg shadow-cyan-950/10 hover:bg-cyan-600 dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400"
       >
         {pending ? 'Opening test workspace…' : `Login as ${active.label}`}

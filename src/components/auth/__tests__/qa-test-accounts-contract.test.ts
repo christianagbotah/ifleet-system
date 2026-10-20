@@ -56,18 +56,23 @@ describe('QA test-account login contract', () => {
     expect(route).not.toContain('isDemo: true')
   })
 
-  it('supports one-click QA sessions through the auth store without embedding credentials in client code', () => {
+  it('requires a tester-supplied access code without embedding QA credentials in client code', () => {
     const auth = read('src/lib/store/auth.ts')
-    expect(auth).toContain('qaLogin: (profile: string) => Promise<void>')
+    expect(auth).toContain('qaLogin: (profile: string, accessCode: string) => Promise<void>')
     expect(auth).toContain("fetch('/api/auth/qa-login'")
-    expect(auth).toContain('body: JSON.stringify({ profile })')
+    expect(auth).toContain('body: JSON.stringify({ profile, accessCode })')
 
     expect(existsSync(join(root, panelPath))).toBe(true)
     if (!existsSync(join(root, panelPath))) return
     const panel = read(panelPath)
     expect(panel).toContain('Test Accounts')
-    expect(panel).toContain('qaLogin')
+    expect(panel).toContain('QA access code')
+    expect(panel).toContain('type="password"')
+    expect(panel).toContain('accessCode')
     expect(panel).not.toMatch(/password\s*[:=]/i)
+
+    const envExample = read('.env.example')
+    expect(envExample).toContain('QA_LOGIN_ACCESS_CODE_HASH=')
   })
 
   it('routes a full-access QA Driver session into the dedicated Driver Portal', () => {

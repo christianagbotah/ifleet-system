@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 
 import { createAuditLog } from '@/lib/audit'
+import { comparePassword } from '@/lib/auth-utils'
 import { db } from '@/lib/db'
 import { JWT_SECRET } from '@/lib/jwt-secret'
 import { getClientIp, rateLimit, RATE_LIMITS } from '@/lib/rate-limit'
@@ -31,6 +32,17 @@ function disabledResponse() {
 
 function loadProfiles() {
   return parseQaProfilesConfig(process.env.QA_PROFILES_JSON)
+}
+
+async function hasValidQaAccessCode(value: unknown): Promise<boolean> {
+  const hash = process.env.QA_LOGIN_ACCESS_CODE_HASH?.trim()
+  if (!hash || typeof value !== 'string' || value.trim() === '') return false
+
+  try {
+    return await comparePassword(value, hash)
+  } catch {
+    return false
+  }
 }
 
 export async function GET() {
@@ -70,7 +82,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const profiles = loadProfiles()
-    const body = await request.json().catch(() => ({})) as { profile?: unknown }
+    const body = await request.json().catch(() => ({})) as {
+      profile?: unknown
+      accessCode?: unknown
+    }
+
+    if (!(await hasValidQaAccessCode(body.accessCode))) {
+      return NextResponse.json(
+        { error: 'Invalid QA access code.' },
+        { status: 403, headers: NO_STORE_HEADERS },
+      )
+    }
+
     const profile = findQaProfile(profiles, body.profile)
 
     if (!profile) {
