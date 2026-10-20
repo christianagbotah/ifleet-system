@@ -29,7 +29,7 @@ interface AuthState {
   token: string | null
   login: (email: string, password: string) => Promise<void>
   demoLogin: (profile: string) => Promise<void>
-  qaLogin: (profile: string) => Promise<void>
+  qaLogin: (profile: string, accessCode: string) => Promise<void>
   logout: () => void
   setUser: (user: AuthUser | null) => void
   setToken: (token: string | null) => void
@@ -182,13 +182,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
   },
 
-  qaLogin: async (profile: string) => {
+  qaLogin: async (profile: string, accessCode: string) => {
     set({ isLoading: true })
     try {
       const res = await fetch('/api/auth/qa-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile }),
+        body: JSON.stringify({ profile, accessCode }),
       })
 
       if (!res.ok) {
