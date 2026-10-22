@@ -60,6 +60,15 @@ describe('production deployment runtime configuration', () => {
     }
   })
 
+  it('resets restrictive caller umasks before generating service-readable artifacts', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const umaskIndex = content.indexOf('umask 022')
+    const buildIndex = content.indexOf('bun run build')
+
+    expect(umaskIndex).toBeGreaterThanOrEqual(0)
+    expect(buildIndex).toBeGreaterThan(umaskIndex)
+  })
+
   it('uses a cross-namespace atomic flock before any deploy work starts', () => {
     const content = read('scripts/webhook-deploy.sh')
     const lockPathIndex = content.indexOf('LOCK_FILE="/run/lock/ifleetpro-deploy.lock"')
@@ -142,6 +151,20 @@ describe('production deployment runtime configuration', () => {
     expect(commitIndex).toBeGreaterThanOrEqual(0)
     expect(exportIndex).toBeGreaterThan(commitIndex)
     expect(buildIndex).toBeGreaterThan(exportIndex)
+  })
+
+  it('verifies build metadata before restarting production and waits for HTTP readiness', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const buildIndex = content.indexOf('bun run build')
+    const metadataIndex = content.indexOf('scripts/verify-build-metadata.sh')
+    const restartIndex = content.indexOf('systemctl restart ifleetpro.service')
+    const readinessIndex = content.indexOf('curl -fsS --max-time 2 http://127.0.0.1:3000/')
+
+    expect(buildIndex).toBeGreaterThanOrEqual(0)
+    expect(metadataIndex).toBeGreaterThan(buildIndex)
+    expect(restartIndex).toBeGreaterThan(metadataIndex)
+    expect(readinessIndex).toBeGreaterThan(restartIndex)
+    expect(content).toContain('DEPLOY FAILED: iFleetPro service did not become ready')
   })
 
   it('checks Prisma generated-source drift in CI after the build generates the client', () => {
