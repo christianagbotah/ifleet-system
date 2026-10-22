@@ -37,7 +37,13 @@ jobs:
       - name: Build
         env:
           NODE_ENV: production
+          NEXT_PUBLIC_BUILD_SHA: ${{ github.sha }}
         run: bun run build
+
+      - name: Build metadata bundle
+        env:
+          NEXT_PUBLIC_BUILD_SHA: ${{ github.sha }}
+        run: bash scripts/verify-build-metadata.sh
 
       - name: Prisma generated-source drift
         run: bash scripts/verify-prisma-generated.sh
