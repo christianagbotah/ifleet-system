@@ -101,6 +101,26 @@ describe('production deployment runtime configuration', () => {
     expect(dbPushIndex).toBeGreaterThan(driftIndex)
   })
 
+  it('defines the public build identifier through Next config so client bundles receive a literal', () => {
+    const content = read('next.config.ts')
+
+    expect(content).toContain('env: {')
+    expect(content).toContain('NEXT_PUBLIC_BUILD_SHA: process.env.NEXT_PUBLIC_BUILD_SHA ||')
+  })
+
+  it('verifies CI actually embeds the build identifier into browser assets', () => {
+    const workflow = read('.github/workflows/ci.yml')
+    const buildIndex = workflow.indexOf('- name: Build')
+    const metadataIndex = workflow.indexOf('- name: Build metadata bundle')
+    const verifier = read('scripts/verify-build-metadata.sh')
+
+    expect(workflow).toContain('NEXT_PUBLIC_BUILD_SHA: ${{ github.sha }}')
+    expect(buildIndex).toBeGreaterThanOrEqual(0)
+    expect(metadataIndex).toBeGreaterThan(buildIndex)
+    expect(verifier).toContain('.next/static')
+    expect(verifier).toContain('NEXT_PUBLIC_BUILD_SHA')
+  })
+
   it('exposes the deployed Git commit as the public build identifier before building', () => {
     const content = read('scripts/webhook-deploy.sh')
     const commitIndex = content.indexOf('COMMIT=$(git rev-parse --short HEAD)')
