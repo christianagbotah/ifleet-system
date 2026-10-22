@@ -13,6 +13,9 @@
 # ══════════════════════════════════════════════════════════════
 
 set -e
+# The stable webhook launcher deliberately starts with umask 077 to protect its
+# temporary script. Reset here so the lightworld service can read build output.
+umask 022
 export NODE_ENV=production
 
 # ── Ensure Bun is in PATH (systemd services have minimal PATH) ──
@@ -138,6 +141,12 @@ log "Building Next.js application..."
 export NEXT_PUBLIC_BUILD_SHA="$COMMIT"
 bun run build
 
+if ! NEXT_PUBLIC_BUILD_SHA="$COMMIT" bash scripts/verify-build-metadata.sh >> "$LOG_FILE" 2>&1; then
+    log "DEPLOY BLOCKED: build metadata is not embedded in browser assets"
+    exit 1
+fi
+log "Build metadata verified in browser assets"
+
 # Copy static assets for standalone mode
 log "Copying static assets..."
 cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
@@ -146,7 +155,22 @@ cp -r public .next/standalone/ 2>/dev/null || true
 # ── Step 5: Restart iFleetPro only ──
 log "Restarting iFleetPro service..."
 systemctl restart ifleetpro.service
-systemctl is-active --quiet ifleetpro.service
+
+SERVICE_READY=0
+for _ in $(seq 1 15); do
+    if systemctl is-active --quiet ifleetpro.service && curl -fsS --max-time 2 http://127.0.0.1:3000/ >/dev/null; then
+        SERVICE_READY=1
+        break
+    fi
+    sleep 1
+done
+
+if [ "$SERVICE_READY" -ne 1 ]; then
+    log "DEPLOY FAILED: iFleetPro service did not become ready"
+    systemctl status ifleetpro.service --no-pager >> "$LOG_FILE" 2>&1 || true
+    exit 1
+fi
+log "iFleetPro service passed local HTTP readiness"
 
 # ── Step 6: Flush nginx proxy cache ──
 # Webuzo's nginx has a 60-minute proxy cache that can serve stale HTML
