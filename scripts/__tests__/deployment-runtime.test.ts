@@ -10,6 +10,7 @@ const runtimeFiles = [
   'start-server.sh',
   'deploy.sh',
   'scripts/webhook-deploy.sh',
+  'scripts/webhook-entrypoint.sh',
   'update.sh',
   'hooks.json.example',
   'ecosystem.config.js',
@@ -28,6 +29,17 @@ describe('production deployment runtime configuration', () => {
         expect(content, `${file} contains stale path ${stalePath}`).not.toContain(stalePath)
       }
     }
+  })
+
+  it('launches webhook deploys through a stable shared entrypoint that snapshots canonical main', () => {
+    const hooksExample = read('hooks.json.example')
+    const entrypoint = read('scripts/webhook-entrypoint.sh')
+
+    expect(hooksExample).toContain('/home/lightworld/shared/ops/ifleetpro-webhook-deploy.sh')
+    expect(entrypoint).toContain('git -C "$APP_DIR" fetch')
+    expect(entrypoint).toContain('git -C "$APP_DIR" show origin/main:scripts/webhook-deploy.sh')
+    expect(entrypoint).toContain('"$SNAPSHOT" "$@"')
+    expect(entrypoint).not.toContain('bun run build')
   })
 
   it('starts the standalone Next.js server rather than a development loop', () => {
@@ -143,7 +155,7 @@ describe('production deployment runtime configuration', () => {
   })
 
   it('keeps deployment shell scripts syntactically valid', () => {
-    for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
+    for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'scripts/webhook-entrypoint.sh', 'update.sh']) {
       expect(() => execFileSync('bash', ['-n', resolve(ROOT, file)])).not.toThrow()
     }
   })
