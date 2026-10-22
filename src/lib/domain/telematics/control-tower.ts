@@ -1,3 +1,5 @@
+import { classifyTelemetryFreshness } from '@/lib/tracking/freshness'
+
 export type ControlTowerSource = 'hardwired' | 'mdvr' | 'phone' | 'manual'
 
 export interface ControlTowerPoint {
@@ -49,10 +51,7 @@ export function selectPreferredLocation(points: ControlTowerPoint[], now: Date):
 }
 
 export function classifyLiveState(point: ControlTowerPoint, now: Date): 'online' | 'stale' | 'offline' {
-  const ageMs = Math.max(0, now.getTime() - point.receivedAt.getTime())
-  if (ageMs <= 2 * 60 * 1000) return 'online'
-  if (ageMs <= 30 * 60 * 1000) return 'stale'
-  return 'offline'
+  return classifyTelemetryFreshness(point.receivedAt, now)
 }
 
 const DRIVER_FINANCIAL_FIELDS = new Set([

@@ -54,6 +54,17 @@ describe('production deployment runtime configuration', () => {
     expect(content).not.toContain('pm2 restart all')
   })
 
+  it('restarts and verifies the tracking service when webhook code is deployed', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const appRestart = content.indexOf('systemctl restart ifleetpro.service')
+    const trackingRestart = content.indexOf('systemctl restart ifleetpro-tracking.service')
+    const trackingVerify = content.indexOf('systemctl is-active --quiet ifleetpro-tracking.service')
+
+    expect(appRestart).toBeGreaterThanOrEqual(0)
+    expect(trackingRestart).toBeGreaterThan(appRestart)
+    expect(trackingVerify).toBeGreaterThan(trackingRestart)
+  })
+
   it('marks production deployment scripts as production before Prisma runs', () => {
     for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
       expect(read(file), file).toContain('NODE_ENV=production')

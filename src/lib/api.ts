@@ -1008,6 +1008,7 @@ export interface TruckLocation {
   accuracy?: number | null
   source: string
   timestamp: string
+  receivedAt?: string
 }
 
 export interface TrackingConfig {

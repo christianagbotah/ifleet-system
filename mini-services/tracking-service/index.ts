@@ -1,12 +1,16 @@
 import http from 'http'
 import { Server, type Socket } from 'socket.io'
 import { canViewFleetTracking, loadTrackingSession, type TrackingSession } from './auth'
+import {
+  activeTruckIdsFromLocations,
+  classifyTelemetryFreshness,
+  STALE_TELEMETRY_MAX_AGE_MS,
+} from '../../src/lib/tracking/freshness'
 
 const PORT = Number(process.env.PORT || 3033)
 const HOST = process.env.HOST || '127.0.0.1'
 const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '')
-const FRESH_LOCATION_MS = 5 * 60 * 1000
-const STALE_LOCATION_MS = 10 * 60 * 1000
+const STALE_LOCATION_MS = STALE_TELEMETRY_MAX_AGE_MS
 
 const allowedOrigins: string[] = process.env.CORS_ORIGIN
   ? (process.env.CORS_ORIGIN.startsWith('[')
@@ -54,6 +58,12 @@ const locationCache = new Map<string, PersistedLocation>()
 const activeSenders = new Map<string, { socketId: string; lastSeen: number }>()
 const viewerSubscriptions = new Map<string, string[]>()
 
+function activeSenderTruckIds(now: Date = new Date()): string[] {
+  return [...activeSenders.entries()]
+    .filter(([, info]) => classifyTelemetryFreshness(info.lastSeen, now) === 'online')
+    .map(([truckId]) => truckId)
+}
+
 const httpServer = http.createServer((req, res) => {
   const url = new URL(req.url || '/', `http://localhost:${PORT}`)
 
@@ -62,7 +72,7 @@ const httpServer = http.createServer((req, res) => {
     res.end(JSON.stringify({
       status: 'ok',
       connectedUsers: io.sockets.sockets.size,
-      activeSenders: activeSenders.size,
+      activeSenders: activeSenderTruckIds().length,
       cachedAssets: locationCache.size,
       sourceOfTruth: 'durable-next-api',
       service: 'tracking',
@@ -325,7 +335,7 @@ io.on('connection', (socket) => {
     if (!token) return emitError(socket, 'Authentication required for live tracking')
     try {
       const locations = await refreshCache(token)
-      socket.emit('active-trucks', locations.map((location) => location.truckId))
+      socket.emit('active-trucks', activeTruckIdsFromLocations(locations, new Date()))
     } catch (error) {
       emitError(socket, error instanceof Error ? error.message : 'Failed to hydrate tracking state')
     }
@@ -333,11 +343,7 @@ io.on('connection', (socket) => {
 
   socket.on('get:active-drivers', () => {
     if (!requireFleetViewer()) return
-    const now = Date.now()
-    const active = [...activeSenders.entries()]
-      .filter(([, info]) => now - info.lastSeen < FRESH_LOCATION_MS)
-      .map(([truckId]) => truckId)
-    socket.emit('active-drivers', active)
+    socket.emit('active-drivers', activeSenderTruckIds())
   })
 
   socket.on('disconnect', () => {

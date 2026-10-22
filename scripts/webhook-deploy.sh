@@ -143,10 +143,12 @@ log "Copying static assets..."
 cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
 cp -r public .next/standalone/ 2>/dev/null || true
 
-# ── Step 5: Restart iFleetPro only ──
-log "Restarting iFleetPro service..."
+# ── Step 5: Restart Fleetivo services only ──
+log "Restarting Fleetivo application and tracking services..."
 systemctl restart ifleetpro.service
 systemctl is-active --quiet ifleetpro.service
+systemctl restart ifleetpro-tracking.service
+systemctl is-active --quiet ifleetpro-tracking.service
 
 # ── Step 6: Flush nginx proxy cache ──
 # Webuzo's nginx has a 60-minute proxy cache that can serve stale HTML
