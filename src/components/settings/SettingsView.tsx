@@ -1179,7 +1179,7 @@ export function SettingsView() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-medium text-sm">Phone GPS</span>
-                        <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px]">Active</Badge>
+                        <Badge variant="outline" className="text-[10px]">Per-truck</Badge>
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Driver&apos;s smartphone sends location via the {APP_NAME} driver app. Requires mobile data.
@@ -1193,7 +1193,7 @@ export function SettingsView() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-medium text-sm">Hardware Tracker</span>
-                        <Badge className="bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 text-[10px]">Available</Badge>
+                        <Badge variant="outline" className="text-[10px]">Device registry</Badge>
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Dedicated GPS device installed in the truck. Reports via REST API endpoint.
@@ -1204,7 +1204,7 @@ export function SettingsView() {
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30">
                   <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                   <div className="text-xs text-amber-800 dark:text-amber-300">
-                    When both sources are active, {APP_NAME} uses the most recent data point from either source.
+                    When multiple enabled sources report telemetry, {APP_NAME} uses the freshest trusted data point.
                     Configure per-truck tracking settings in the <strong>Live Tracking</strong> page.
                   </div>
                 </div>
@@ -1475,10 +1475,6 @@ export function SettingsView() {
                   <div className="flex justify-between py-2 border-b">
                     <span className="text-muted-foreground">Environment</span>
                     <Badge variant="outline" className="text-xs">{APP_ENVIRONMENT}</Badge>
-                  </div>
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">Database</span>
-                    <span className="font-medium">MySQL</span>
                   </div>
                 </div>
               </CardContent>

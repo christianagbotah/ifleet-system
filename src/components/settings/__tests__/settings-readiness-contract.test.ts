@@ -23,4 +23,12 @@ describe('settings production-readiness contract', () => {
     expect(source).not.toMatch(/>\s*Online\s*</)
     expect(source).not.toMatch(/>\s*Connected\s*</)
   })
+
+  it('describes tracking capabilities without inventing source or infrastructure status', () => {
+    expect(source).not.toMatch(/>\s*Active\s*<\/Badge>/)
+    expect(source).not.toMatch(/>\s*Available\s*<\/Badge>/)
+    expect(source).not.toContain('<span className="font-medium">MySQL</span>')
+    expect(source).toContain('Per-truck')
+    expect(source).toContain('Device registry')
+  })
 })

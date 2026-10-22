@@ -8,6 +8,7 @@ const nginxPath = path.join(process.cwd(), 'nginx-ifleetpro.conf')
 const nginx = fs.existsSync(nginxPath) ? fs.readFileSync(nginxPath, 'utf8') : ''
 const liveTracking = fs.readFileSync(path.join(process.cwd(), 'src/components/tracking/LiveTrackingView.tsx'), 'utf8')
 const driverSender = fs.readFileSync(path.join(process.cwd(), 'src/components/tracking/DriverLocationSender.tsx'), 'utf8')
+const trackingService = fs.readFileSync(path.join(process.cwd(), 'mini-services/tracking-service/index.ts'), 'utf8')
 
 describe('tracking runtime deployment contract', () => {
   it('ships a dedicated localhost-only systemd service on port 3033', () => {
@@ -26,5 +27,15 @@ describe('tracking runtime deployment contract', () => {
     expect(nginx).not.toContain('location ^~ /socket.io/')
     expect(liveTracking).toContain('path: trackingSocketPath()')
     expect(driverSender).toContain('path: trackingSocketPath()')
+  })
+
+  it('derives live status from telemetry freshness instead of historical presence', () => {
+    expect(liveTracking).toContain('classifyTelemetryFreshness')
+    expect(liveTracking).toContain('Trucks Stale')
+    expect(liveTracking).not.toContain('setOnlineTrucks')
+    expect(liveTracking).not.toContain('onlineSet.add(loc.truckId)')
+    expect(liveTracking).not.toContain("socket.on('truck-offline'")
+    expect(trackingService).toContain('activeTruckIdsFromLocations(locations')
+    expect(trackingService).not.toContain("locations.map((location) => location.truckId)")
   })
 })

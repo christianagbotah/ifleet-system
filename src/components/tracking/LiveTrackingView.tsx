@@ -37,6 +37,7 @@ import { TrackingSettingsDialog } from './TrackingSettingsDialog'
 import { RouteHistoryDialog } from './RouteHistoryDialog'
 import { useAuthStore } from '@/lib/store/auth'
 import { trackingSocketEndpoint, trackingSocketPath } from '@/lib/tracking/socket-endpoint'
+import { classifyTelemetryFreshness, type TelemetryFreshness } from '@/lib/tracking/freshness'
 
 let L: typeof import('leaflet')['default'] | null = null
 
@@ -144,10 +145,23 @@ async function loadL() {
   return L
 }
 
-function createTruckMarker(isOnline: boolean, isSelected: boolean, isSpeeding: boolean, plateNumber?: string) {
+function freshnessColors(freshness: TelemetryFreshness) {
+  if (freshness === 'online') return { border: '#10b981', background: '#ecfdf5' }
+  if (freshness === 'stale') return { border: '#f59e0b', background: '#fffbeb' }
+  return { border: '#9ca3af', background: '#f9fafb' }
+}
+
+function freshnessDotClass(freshness: TelemetryFreshness): string {
+  if (freshness === 'online') return 'bg-emerald-500'
+  if (freshness === 'stale') return 'bg-amber-500'
+  return 'bg-gray-300'
+}
+
+function createTruckMarker(freshness: TelemetryFreshness, isSelected: boolean, isSpeeding: boolean, plateNumber?: string) {
   if (!L) return null as any
-  let borderColor = isOnline ? '#10b981' : '#9ca3af'
-  let bgColor = isOnline ? '#ecfdf5' : '#f9fafb'
+  const freshnessStyle = freshnessColors(freshness)
+  let borderColor = freshnessStyle.border
+  let bgColor = freshnessStyle.background
   if (isSpeeding) {
     borderColor = '#ef4444'
     bgColor = '#fef2f2'
@@ -204,7 +218,7 @@ export function LiveTrackingView() {
 
   // State
   const [truckLocations, setTruckLocations] = React.useState<Map<string, TruckLocation>>(new Map())
-  const [onlineTrucks, setOnlineTrucks] = React.useState<Set<string>>(new Set())
+  const [freshnessNow, setFreshnessNow] = React.useState(() => Date.now())
   const [geofences, setGeofences] = React.useState<GeofenceZone[]>([])
   const [alerts, setAlerts] = React.useState<TrackingAlert[]>([])
   const [selectedTruckId, setSelectedTruckId] = React.useState<string | null>(null)
@@ -233,14 +247,12 @@ export function LiveTrackingView() {
         ])
 
         const locMap = new Map<string, TruckLocation>()
-        const onlineSet = new Set<string>()
         locations.forEach((loc) => {
           locMap.set(loc.truckId, loc)
-          onlineSet.add(loc.truckId)
         })
 
         setTruckLocations(locMap)
-        setOnlineTrucks(onlineSet)
+        setFreshnessNow(Date.now())
         setGeofences(geofenceData)
         setAlerts(alertData)
       } catch (err) {
@@ -281,7 +293,6 @@ export function LiveTrackingView() {
         console.log('[Tracking] Connected to tracking service')
         setSocketConnected(true)
         socket.emit('join-all-trucks')
-        socket.emit('get-active-trucks')
       })
 
       socket.on('disconnect', () => {
@@ -295,19 +306,7 @@ export function LiveTrackingView() {
           next.set(data.truckId, data)
           return next
         })
-        setOnlineTrucks(prev => {
-          const next = new Set(prev)
-          next.add(data.truckId)
-          return next
-        })
-      })
-
-      socket.on('truck-offline', (data: { truckId: string }) => {
-        setOnlineTrucks(prev => {
-          const next = new Set(prev)
-          next.delete(data.truckId)
-          return next
-        })
+        setFreshnessNow(Date.now())
       })
 
       socket.on('tracking-alert', (data: TrackingAlert) => {
@@ -325,6 +324,12 @@ export function LiveTrackingView() {
       }
     }
   }, [token])
+
+  // Re-evaluate location freshness even when no socket event arrives.
+  React.useEffect(() => {
+    const timer = window.setInterval(() => setFreshnessNow(Date.now()), 15_000)
+    return () => window.clearInterval(timer)
+  }, [])
 
   // Handlers
   const handleSelectTruck = React.useCallback((truckId: string) => {
@@ -354,26 +359,34 @@ export function LiveTrackingView() {
   const selectedLocation = selectedTruckId ? truckLocations.get(selectedTruckId) : null
   const selectedPlate = selectedLocation?.plateNumber
   const selectedDriver = selectedLocation?.driverName
-  const trucksOnlineCount = onlineTrucks.size
-  const trucksTotalCount = truckLocations.size
-  const trucksOfflineCount = trucksTotalCount - trucksOnlineCount
   const unreadAlerts = alerts.filter(a => !a.isRead).length
   const selectedTruckAlerts = selectedTruckId
     ? alerts.filter(a => a.truckId === selectedTruckId).slice(0, 5)
     : []
 
-  // Convert truckLocations map to array for rendering
-  const truckArray = Array.from(truckLocations.values())
+  // Convert truckLocations map to array and derive truth-backed freshness for rendering.
+  const truckArray = React.useMemo(() => Array.from(truckLocations.values()), [truckLocations])
+  const truckFreshness = React.useMemo(() => {
+    const now = new Date(freshnessNow)
+    return new Map<string, TelemetryFreshness>(truckArray.map((loc) => [
+      loc.truckId,
+      classifyTelemetryFreshness(loc.receivedAt ?? loc.timestamp, now),
+    ]))
+  }, [truckArray, freshnessNow])
+  const trucksOnlineCount = truckArray.filter((loc) => truckFreshness.get(loc.truckId) === 'online').length
+  const trucksStaleCount = truckArray.filter((loc) => truckFreshness.get(loc.truckId) === 'stale').length
+  const trucksOfflineCount = truckArray.filter((loc) => truckFreshness.get(loc.truckId) === 'offline').length
+  const selectedFreshness = selectedTruckId ? truckFreshness.get(selectedTruckId) ?? 'offline' : 'offline'
 
   // Memoize truck markers to avoid re-creating icon objects every render
   const truckMarkers = React.useMemo(() => {
     return new Map(truckArray.map(loc => {
-      const isOnline = onlineTrucks.has(loc.truckId)
+      const freshness = truckFreshness.get(loc.truckId) ?? 'offline'
       const isSelected = selectedTruckId === loc.truckId
       const isSpeeding = (loc.speed ?? 0) > SPEEDING_THRESHOLD
-      return [loc.truckId, createTruckMarker(isOnline, isSelected, isSpeeding, loc.plateNumber)]
+      return [loc.truckId, createTruckMarker(freshness, isSelected, isSpeeding, loc.plateNumber)]
     }))
-  }, [truckArray, onlineTrucks, selectedTruckId])
+  }, [truckArray, truckFreshness, selectedTruckId])
 
   return (
     <motion.div
@@ -414,7 +427,7 @@ export function LiveTrackingView() {
       </motion.div>
 
       {/* Stats Bar */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <Card className="overflow-hidden">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -425,6 +438,21 @@ export function LiveTrackingView() {
                 <p className="text-xs text-muted-foreground">Trucks Online</p>
                 <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
                   {loading ? <Skeleton className="h-6 w-8 inline-block" /> : trucksOnlineCount}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="overflow-hidden">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-amber-100 dark:bg-amber-900/30 p-2">
+                <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Trucks Stale</p>
+                <div className="text-xl font-bold text-amber-600 dark:text-amber-400">
+                  {loading ? <Skeleton className="h-6 w-8 inline-block" /> : trucksStaleCount}
                 </div>
               </div>
             </div>
@@ -543,7 +571,7 @@ export function LiveTrackingView() {
                               {(loc.speed ?? 0) > SPEEDING_THRESHOLD && ' ⚠️ Speeding'}
                             </div>
                           )}
-                          <div className="text-gray-400">{timeAgo(loc.timestamp)}</div>
+                          <div className="text-gray-400">{timeAgo(loc.receivedAt ?? loc.timestamp)}</div>
                         </div>
                       </Popup>
                     </Marker>
@@ -587,9 +615,19 @@ export function LiveTrackingView() {
                   </div>
                 ) : (
                   truckArray.map(loc => {
-                    const isOnline = onlineTrucks.has(loc.truckId)
+                    const freshness = truckFreshness.get(loc.truckId) ?? 'offline'
                     const isSelected = selectedTruckId === loc.truckId
                     const isSpeeding = (loc.speed ?? 0) > SPEEDING_THRESHOLD
+                    const iconBackground = freshness === 'online'
+                      ? 'bg-emerald-100 dark:bg-emerald-900/30'
+                      : freshness === 'stale'
+                        ? 'bg-amber-100 dark:bg-amber-900/30'
+                        : 'bg-gray-100 dark:bg-gray-800'
+                    const iconColor = freshness === 'online'
+                      ? 'text-emerald-600 dark:text-emerald-400'
+                      : freshness === 'stale'
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-gray-400'
 
                     return (
                       <button
@@ -597,8 +635,8 @@ export function LiveTrackingView() {
                         onClick={() => handleSelectTruck(loc.truckId)}
                         className={`w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-muted/50 transition-colors ${isSelected ? 'bg-amber-50 dark:bg-amber-950/20 border-l-2 border-l-amber-500' : ''}`}
                       >
-                        <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${isOnline ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-gray-100 dark:bg-gray-800'}`}>
-                          <Truck className={`h-4 w-4 ${isOnline ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400'}`} />
+                        <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${iconBackground}`}>
+                          <Truck className={`h-4 w-4 ${iconColor}`} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
@@ -613,8 +651,11 @@ export function LiveTrackingView() {
                           </p>
                         </div>
                         <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                          <span className={`h-2 w-2 rounded-full ${isOnline ? 'bg-emerald-500' : 'bg-gray-300'}`} />
-                          <span className="text-[10px] text-muted-foreground">{timeAgo(loc.timestamp)}</span>
+                          <span className="flex items-center gap-1 text-[10px] capitalize text-muted-foreground">
+                            <span className={`h-2 w-2 rounded-full ${freshnessDotClass(freshness)}`} />
+                            {freshness}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{timeAgo(loc.receivedAt ?? loc.timestamp)}</span>
                         </div>
                       </button>
                     )
@@ -629,8 +670,9 @@ export function LiveTrackingView() {
                 <div className="px-4 py-3">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <span className={`h-2.5 w-2.5 rounded-full ${onlineTrucks.has(selectedTruckId) ? 'bg-emerald-500' : 'bg-gray-300'}`} />
+                      <span className={`h-2.5 w-2.5 rounded-full ${freshnessDotClass(selectedFreshness)}`} />
                       <span className="font-semibold text-sm">{selectedPlate || 'Unknown'}</span>
+                      <Badge variant="outline" className="text-[10px] capitalize">{selectedFreshness}</Badge>
                     </div>
                     <Button
                       variant="ghost"
@@ -667,7 +709,7 @@ export function LiveTrackingView() {
                       <div className="text-muted-foreground flex items-center gap-1 mb-0.5">
                         <Clock className="h-3 w-3" /> Updated
                       </div>
-                      <div className="font-semibold">{timeAgo(selectedLocation.timestamp)}</div>
+                      <div className="font-semibold">{timeAgo(selectedLocation.receivedAt ?? selectedLocation.timestamp)}</div>
                     </div>
                   </div>
 
