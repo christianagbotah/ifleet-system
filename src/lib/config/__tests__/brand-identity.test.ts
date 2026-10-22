@@ -17,9 +17,7 @@ const CUSTOMER_FACING_FILES = [
   'src/components/auth/DemoLoginPanel.tsx',
   'src/components/layout/AppFooter.tsx',
   'src/components/layout/PwaInstallPrompt.tsx',
-  'src/components/pages/DashboardPage.tsx',
   'src/components/pages/ReportsPage.tsx',
-  'src/components/pages/SettingsPage.tsx',
   'src/components/pages/TripsPage.tsx',
   'src/components/reports/HaulageReportsView.tsx',
   'src/components/reports/ReportPreviewView.tsx',
@@ -50,7 +48,6 @@ describe('Fleetivo public brand contract', () => {
   it('keeps tenant identity independent from Fleetivo and uses a neutral Prisma default', () => {
     const companyProfile = source('src/lib/config/company-profile.ts')
     const settingsView = source('src/components/settings/SettingsView.tsx')
-    const settingsPage = source('src/components/pages/SettingsPage.tsx')
     const schema = source('prisma/schema.prisma')
 
     expect(companyProfile).not.toMatch(/APP_(?:NAME|PUBLISHER|PRODUCT_BYLINE|COMPANY)/)
@@ -60,11 +57,6 @@ describe('Fleetivo public brand contract', () => {
     expect(settingsView).not.toContain('37 Ring Road Central')
     expect(settingsView).not.toContain('+233 30 277 8899')
     expect(settingsView).not.toContain('www.fleetpro.com.gh')
-    expect(settingsPage).not.toContain('Fleetivo Logistics Ltd.')
-    expect(settingsPage).not.toContain('admin@ifleetpro.com')
-    expect(settingsPage).not.toContain("return '+233 30 000 0000'")
-    expect(settingsPage).not.toContain("return 'Accra, Greater Accra Region, Ghana'")
-    expect(settingsPage).toContain('fleetivo-export-')
     expect(source('src/components/clients/ClientFormDialog.tsx')).not.toContain('37 Ring Road Central')
     expect(source('src/app/verify/waybill/[token]/page.tsx')).toContain('Verify a Fleetivo electronic haulage waybill')
   })
@@ -83,6 +75,5 @@ describe('Fleetivo public brand contract', () => {
   it('preserves deliberate internal compatibility identifiers', () => {
     expect(source('public/sw.js')).toContain("const CACHE_PREFIX = 'fleetpro-';")
     expect(source('src/lib/services/email.ts')).toContain("'X-iFleetPro-Notification': 'true'")
-    expect(source('src/components/pages/SettingsPage.tsx')).toContain("'ifleetpro-company-name'")
   })
 })

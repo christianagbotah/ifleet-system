@@ -12,8 +12,8 @@ const legacy = {
 
 describe('legacy Fleetivo tenant-placeholder cleanup', () => {
   it('only clears fields that still exactly match known legacy placeholders', async () => {
-    const profileModule = await import('../company-profile')
-    const cleanup = (profileModule as Record<string, unknown>).buildLegacyCompanyCleanup
+    const cleanupModule = await import('../legacy-company-cleanup')
+    const cleanup = (cleanupModule as Record<string, unknown>).buildLegacyCompanyCleanup
 
     expect(cleanup).toBeTypeOf('function')
     if (typeof cleanup !== 'function') return

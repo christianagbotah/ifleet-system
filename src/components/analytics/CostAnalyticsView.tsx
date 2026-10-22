@@ -174,7 +174,7 @@ function KpiCard({
 }: {
   title: string
   value: string
-  trend: number
+  trend?: number
   icon: React.ComponentType<{ className?: string }>
   colorClass: string
   loading: boolean
@@ -195,7 +195,7 @@ function KpiCard({
               ) : (
                 <p className="text-2xl font-bold tracking-tight">{value}</p>
               )}
-              {!loading && <TrendArrow trend={trend} />}
+              {!loading && trend !== undefined && <TrendArrow trend={trend} />}
             </div>
             <div className={`rounded-lg p-2.5 ${colorClass}`}>
               <Icon className="h-5 w-5 text-white" />
@@ -502,7 +502,6 @@ export function CostAnalyticsView() {
         <KpiCard
           title="Most Efficient Truck"
           value={loading ? '' : mostEfficientTruck}
-          trend={0}
           icon={Award}
           colorClass="bg-teal-500"
           loading={loading}

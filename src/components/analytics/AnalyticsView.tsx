@@ -174,7 +174,12 @@ function formatCurrency(value: number): string {
   return `${CURRENCY_SYMBOL}${value.toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
 }
 
-function TrendArrow({ trend }: { trend: number }) {
+function TrendArrow({ trend }: { trend: number | null | undefined }) {
+  if (trend == null) {
+    return (
+      <span className="text-muted-foreground text-sm font-medium">No baseline</span>
+    )
+  }
   if (trend > 0) {
     return (
       <span className="inline-flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400 text-sm font-medium">
@@ -208,7 +213,7 @@ function KpiCard({
 }: {
   title: string
   value: string
-  trend: number
+  trend?: number | null
   icon: React.ComponentType<{ className?: string }>
   colorClass: string
   loading: boolean
@@ -229,7 +234,7 @@ function KpiCard({
               ) : (
                 <p className="text-2xl font-bold tracking-tight">{value}</p>
               )}
-              {!loading && <TrendArrow trend={trend} />}
+              {!loading && trend !== undefined && <TrendArrow trend={trend} />}
             </div>
             <div className={`rounded-lg p-2.5 ${colorClass}`}>
               <Icon className="h-5 w-5 text-white" />
@@ -322,8 +327,8 @@ export function AnalyticsView() {
       lines.push(`Total Trips,${data.kpis.totalTripsPeriod}`)
       lines.push(`Avg Trip Revenue,${Math.round(data.kpis.avgTripRevenue)}`)
       lines.push(`Fleet Utilization,${data.kpis.fleetUtilizationPercent}%`)
-      lines.push(`Revenue Trend,${data.kpis.revenueTrend}%`)
-      lines.push(`Trips Trend,${data.kpis.tripsTrend}%`)
+      lines.push(`Revenue Trend,${data.kpis.revenueTrend == null ? 'N/A' : `${data.kpis.revenueTrend}%`}`)
+      lines.push(`Trips Trend,${data.kpis.tripsTrend == null ? 'N/A' : `${data.kpis.tripsTrend}%`}`)
       lines.push('')
 
       // Top Routes
@@ -433,7 +438,7 @@ export function AnalyticsView() {
         <KpiCard
           title="Total Revenue"
           value={formatCurrency(data?.kpis?.totalRevenuePeriod ?? 0)}
-          trend={data?.kpis?.revenueTrend ?? 0}
+          trend={data?.kpis?.revenueTrend}
           icon={DollarSign}
           colorClass="bg-amber-500"
           loading={loading}
@@ -441,7 +446,7 @@ export function AnalyticsView() {
         <KpiCard
           title="Total Trips"
           value={String(data?.kpis?.totalTripsPeriod ?? 0)}
-          trend={data?.kpis?.tripsTrend ?? 0}
+          trend={data?.kpis?.tripsTrend}
           icon={Route}
           colorClass="bg-emerald-500"
           loading={loading}
@@ -449,7 +454,7 @@ export function AnalyticsView() {
         <KpiCard
           title="Avg Trip Revenue"
           value={formatCurrency(data?.kpis?.avgTripRevenue ?? 0)}
-          trend={data?.kpis?.avgRevenueTrend ?? 0}
+          trend={data?.kpis?.avgRevenueTrend}
           icon={Activity}
           colorClass="bg-orange-500"
           loading={loading}
@@ -457,7 +462,6 @@ export function AnalyticsView() {
         <KpiCard
           title="Fleet Utilization"
           value={`${data?.kpis?.fleetUtilizationPercent ?? 0}%`}
-          trend={0}
           icon={Truck}
           colorClass="bg-teal-500"
           loading={loading}

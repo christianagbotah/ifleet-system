@@ -101,6 +101,17 @@ describe('production deployment runtime configuration', () => {
     expect(dbPushIndex).toBeGreaterThan(driftIndex)
   })
 
+  it('exposes the deployed Git commit as the public build identifier before building', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const commitIndex = content.indexOf('COMMIT=$(git rev-parse --short HEAD)')
+    const exportIndex = content.indexOf('export NEXT_PUBLIC_BUILD_SHA="$COMMIT"')
+    const buildIndex = content.indexOf('bun run build')
+
+    expect(commitIndex).toBeGreaterThanOrEqual(0)
+    expect(exportIndex).toBeGreaterThan(commitIndex)
+    expect(buildIndex).toBeGreaterThan(exportIndex)
+  })
+
   it('checks Prisma generated-source drift in CI after the build generates the client', () => {
     const content = read('.github/workflows/ci.yml')
     const buildIndex = content.indexOf('- name: Build')
