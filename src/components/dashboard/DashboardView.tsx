@@ -28,6 +28,7 @@ import { MAINTENANCE_TYPES } from '@/lib/constants'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
 import { TripDetailSheet } from '@/components/trips/TripDetailSheet'
 import { useAuthStore } from '@/lib/store/auth'
+import { calculatePercentageTrend, selectLatestMonthlyPeriods } from '@/lib/dashboard/trends'
 
 interface DashboardViewProps {
   onNavigate?: (page: string) => void
@@ -161,26 +162,17 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
   }, [data])
 
   const kpiTrends = React.useMemo(() => {
-    if (!data?.monthlyData || data.monthlyData.length < 2) {
-      return { revenueTrend: 0, expensesTrend: 0, fuelTrend: 0 }
+    const latestPeriods = selectLatestMonthlyPeriods(data?.monthlyData ?? [])
+    if (!latestPeriods) {
+      return { revenueTrend: undefined, expensesTrend: undefined, fuelTrend: undefined }
     }
-    const sorted = [...data.monthlyData].sort((a, b) => b.monthIndex - a.monthIndex)
-    const current = sorted[0]
-    const previous = sorted[1]
 
-    const revenueTrend = previous.revenue > 0
-      ? Math.round(((current.revenue - previous.revenue) / previous.revenue) * 100)
-      : current.revenue > 0 ? 100 : 0
-
-    const expensesTrend = previous.expenses > 0
-      ? Math.round(((current.expenses - previous.expenses) / previous.expenses) * 100)
-      : current.expenses > 0 ? 100 : 0
-
-    const fuelTrend = previous.fuelCost > 0
-      ? Math.round(((current.fuelCost - previous.fuelCost) / previous.fuelCost) * 100)
-      : current.fuelCost > 0 ? 100 : 0
-
-    return { revenueTrend, expensesTrend, fuelTrend }
+    const { current, previous } = latestPeriods
+    return {
+      revenueTrend: calculatePercentageTrend(current.revenue, previous.revenue) ?? undefined,
+      expensesTrend: calculatePercentageTrend(current.expenses, previous.expenses) ?? undefined,
+      fuelTrend: calculatePercentageTrend(current.fuelCost, previous.fuelCost) ?? undefined,
+    }
   }, [data])
 
   if (error) {
@@ -235,16 +227,14 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
               icon={Truck}
               title="Active Trucks"
               value={data?.activeTrucks ?? 0}
-              change={data?.totalTrucks ? Math.round(((data.activeTrucks || 0) / data.totalTrucks) * 100) : 0}
-              changeLabel="active"
+              context={`${data?.activeTrucks ?? 0} of ${data?.totalTrucks ?? 0} fleet active`}
               onClick={() => onNavigate?.('trucks')}
             />
             <StatsCard
               icon={Route}
               title="Active Trips"
               value={data?.activeTrips?.length ?? 0}
-              change={0}
-              changeLabel="in progress"
+              context="in progress"
               onClick={() => onNavigate?.('trips')}
             />
             {isFinancialUser && (
@@ -273,7 +263,8 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
                 title="Fuel Cost"
                 value={`${CURRENCY_SYMBOL}${((data?.monthlyFuelCost || 0) / 1000).toFixed(1)}K`}
                 change={kpiTrends.fuelTrend}
-                changeLabel={`${data?.monthlyFuelEntries || 0} fill-ups`}
+                changeLabel="vs last month"
+                context={`${data?.monthlyFuelEntries || 0} fill-ups`}
                 onClick={() => onNavigate?.('fuel-analytics')}
               />
             )}
@@ -282,8 +273,7 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
                 icon={Gauge}
                 title="Avg Cost/Liter"
                 value={data?.monthlyAvgCostPerLiter ? `${CURRENCY_SYMBOL}${data.monthlyAvgCostPerLiter.toFixed(2)}` : 'N/A'}
-                change={0}
-                changeLabel={`${(data?.monthlyFuelLiters || 0).toLocaleString()} L this month`}
+                context={`${(data?.monthlyFuelLiters || 0).toLocaleString()} L this month`}
                 onClick={() => onNavigate?.('fuel-analytics')}
               />
             )}

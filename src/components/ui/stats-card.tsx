@@ -9,9 +9,10 @@ import { Card, CardContent } from "@/components/ui/card"
 interface StatsCardProps {
   icon: LucideIcon
   title: string
-  value: string
+  value: React.ReactNode
   change?: number
   changeLabel?: string
+  context?: React.ReactNode
   className?: string
 }
 
@@ -21,6 +22,7 @@ export function StatsCard({
   value,
   change,
   changeLabel,
+  context,
   className,
 }: StatsCardProps) {
   const isPositive = change !== undefined && change >= 0
@@ -47,24 +49,29 @@ export function StatsCard({
           <div className="flex flex-col gap-1 mt-auto">
             <span className="text-2xl font-bold tracking-tight">{value}</span>
 
-            {change !== undefined && (
+            {(change !== undefined || context !== undefined) && (
               <div className="flex items-center gap-1.5 text-xs min-h-[20px]">
-                <span
-                  className={cn(
-                    "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-medium",
-                    isPositive && "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-                    isNegative && "bg-red-500/10 text-red-700 dark:text-red-400"
-                  )}
-                >
-                  {isPositive ? (
-                    <ArrowUpIcon className="size-3" />
-                  ) : (
-                    <ArrowDownIcon className="size-3" />
-                  )}
-                  {Math.abs(change).toFixed(1)}%
-                </span>
-                {changeLabel && (
+                {change !== undefined && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-medium",
+                      isPositive && "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+                      isNegative && "bg-red-500/10 text-red-700 dark:text-red-400"
+                    )}
+                  >
+                    {isPositive ? (
+                      <ArrowUpIcon className="size-3" />
+                    ) : (
+                      <ArrowDownIcon className="size-3" />
+                    )}
+                    {Math.abs(change).toFixed(1)}%
+                  </span>
+                )}
+                {changeLabel && change !== undefined && (
                   <span className="text-muted-foreground">{changeLabel}</span>
+                )}
+                {context !== undefined && (
+                  <span className="text-muted-foreground">{context}</span>
                 )}
               </div>
             )}

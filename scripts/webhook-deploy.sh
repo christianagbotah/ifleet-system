@@ -135,6 +135,7 @@ bunx prisma db push
 
 # ── Step 4: Build ──
 log "Building Next.js application..."
+export NEXT_PUBLIC_BUILD_SHA="$COMMIT"
 bun run build
 
 # Copy static assets for standalone mode

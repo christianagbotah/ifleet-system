@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import {
   Building2, Bell, MapPin, Palette, Database, Shield, Globe, Clock,
   Truck, Fuel, DollarSign, Mail, Phone, Navigation, Save, RotateCcw,
-  CheckCircle2, Circle, Info, Download, Trash2, Plus, Pencil, X,
+  CheckCircle2, Info, Download, Trash2, Plus, Pencil, X,
   Wifi, Smartphone, Cpu, Loader2, Star, Eye, EyeOff, Send, Lock, CreditCard
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,6 +30,7 @@ import { fetchSettings, saveSettings, type SystemSettings, fetchChannelSettings,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAuthStore } from '@/lib/store/auth'
 import { APP_NAME } from '@/lib/constants'
+import { APP_VERSION, APP_BUILD, APP_ENVIRONMENT } from '@/lib/build-info'
 import { CurrencyConverter } from '@/components/settings/CurrencyConverter'
 import { IntegrationConnections } from '@/components/settings/IntegrationConnections'
 
@@ -499,14 +500,6 @@ export function SettingsView() {
                     </div>
                   </Button>
                 </div>
-                <Separator />
-                <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 justify-start gap-3 h-auto py-3 w-full">
-                  <Trash2 className="h-4 w-4" />
-                  <div className="text-left">
-                    <div className="font-medium text-sm">Clear All Sample Data</div>
-                    <div className="text-xs text-muted-foreground">Remove demo data, keep company settings</div>
-                  </div>
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -1473,33 +1466,19 @@ export function SettingsView() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div className="flex justify-between py-2 border-b">
                     <span className="text-muted-foreground">Version</span>
-                    <span className="font-medium">2.1.0</span>
+                    <span className="font-medium">{APP_VERSION}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b">
                     <span className="text-muted-foreground">Build</span>
-                    <span className="font-medium">2024.01.15</span>
+                    <span className="font-medium">{APP_BUILD}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b">
                     <span className="text-muted-foreground">Environment</span>
-                    <Badge variant="outline" className="text-xs">Production</Badge>
-                  </div>
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">API Status</span>
-                    <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs gap-1">
-                      <Circle className="h-1.5 w-1.5 fill-emerald-500" />
-                      Online
-                    </Badge>
+                    <Badge variant="outline" className="text-xs">{APP_ENVIRONMENT}</Badge>
                   </div>
                   <div className="flex justify-between py-2 border-b">
                     <span className="text-muted-foreground">Database</span>
                     <span className="font-medium">MySQL</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">Tracking Service</span>
-                    <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs gap-1">
-                      <Circle className="h-1.5 w-1.5 fill-emerald-500" />
-                      Connected
-                    </Badge>
                   </div>
                 </div>
               </CardContent>

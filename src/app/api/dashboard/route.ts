@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireRole, ROLES } from '@/lib/auth-server'
+import { calculatePercentageTrend } from '@/lib/dashboard/trends'
 
 export async function GET(request: NextRequest) {
   try {
@@ -277,7 +278,7 @@ export async function GET(request: NextRequest) {
         departureTime: { gte: rangeStart, lte: rangeEnd },
       },
     })
-    const totalRevenuePeriod = currentRangeRevenue._sum.totalRevenue || 0
+    const totalRevenuePeriod = Number(currentRangeRevenue._sum.totalRevenue || 0)
 
     // Revenue for previous range
     const prevRangeRevenue = await db.trip.aggregate({
@@ -287,7 +288,7 @@ export async function GET(request: NextRequest) {
         departureTime: { gte: prevRangeStart, lte: prevRangeEnd },
       },
     })
-    const prevRevenuePeriod = prevRangeRevenue._sum.totalRevenue || 0
+    const prevRevenuePeriod = Number(prevRangeRevenue._sum.totalRevenue || 0)
 
     // Trip count for current range
     const currentRangeTrips = await db.trip.count({
@@ -342,15 +343,9 @@ export async function GET(request: NextRequest) {
         totalTripsPeriod: currentRangeTrips,
         avgTripRevenue,
         fleetUtilizationPercent: totalTrucks > 0 ? Math.round((activeTrucks / totalTrucks) * 100) : 0,
-        revenueTrend: prevRevenuePeriod > 0
-          ? Math.round(((totalRevenuePeriod - prevRevenuePeriod) / prevRevenuePeriod) * 100)
-          : totalRevenuePeriod > 0 ? 100 : 0,
-        tripsTrend: prevRangeTrips > 0
-          ? Math.round(((currentRangeTrips - prevRangeTrips) / prevRangeTrips) * 100)
-          : currentRangeTrips > 0 ? 100 : 0,
-        avgRevenueTrend: prevAvgTripRevenue > 0
-          ? Math.round(((avgTripRevenue - prevAvgTripRevenue) / prevAvgTripRevenue) * 100)
-          : avgTripRevenue > 0 ? 100 : 0,
+        revenueTrend: calculatePercentageTrend(totalRevenuePeriod, prevRevenuePeriod),
+        tripsTrend: calculatePercentageTrend(currentRangeTrips, prevRangeTrips),
+        avgRevenueTrend: calculatePercentageTrend(avgTripRevenue, prevAvgTripRevenue),
       },
     })
   } catch (error) {

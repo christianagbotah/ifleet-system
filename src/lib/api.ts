@@ -243,9 +243,9 @@ export interface AnalyticsKpis {
   totalTripsPeriod: number
   avgTripRevenue: number
   fleetUtilizationPercent: number
-  revenueTrend: number
-  tripsTrend: number
-  avgRevenueTrend: number
+  revenueTrend: number | null
+  tripsTrend: number | null
+  avgRevenueTrend: number | null
 }
 
 export interface AnalyticsData {

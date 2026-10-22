@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import { buildLegacyCompanyCleanup } from '@/lib/config/company-profile'
+import { buildLegacyCompanyCleanup } from '@/lib/config/legacy-company-cleanup'
 
 async function main() {
   const settings = await db.systemSettings.findFirst({
