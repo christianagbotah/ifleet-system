@@ -65,6 +65,39 @@ describe('production deployment runtime configuration', () => {
     expect(trackingVerify).toBeGreaterThan(trackingRestart)
   })
 
+  it('does not inherit the stable launcher private umask into build artifacts', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const umaskIndex = content.indexOf('umask 022')
+    const buildIndex = content.indexOf('bun run build')
+
+    expect(umaskIndex).toBeGreaterThanOrEqual(0)
+    expect(umaskIndex).toBeLessThan(buildIndex)
+  })
+
+  it('hands standalone artifacts to the service user and validates readability before restart', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const buildIndex = content.indexOf('bun run build')
+    const ownershipIndex = content.indexOf('chown -R lightworld:lightworld .next/standalone')
+    const readabilityIndex = content.indexOf('runuser -u lightworld -- test -r .next/standalone/server.js')
+    const appRestart = content.indexOf('systemctl restart ifleetpro.service')
+
+    expect(ownershipIndex).toBeGreaterThan(buildIndex)
+    expect(readabilityIndex).toBeGreaterThan(ownershipIndex)
+    expect(appRestart).toBeGreaterThan(readabilityIndex)
+  })
+
+  it('requires an actual local HTTP response before treating the app restart as healthy', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const appRestart = content.indexOf('systemctl restart ifleetpro.service')
+    const appProbe = content.indexOf('http://127.0.0.1:3000/')
+    const trackingRestart = content.indexOf('systemctl restart ifleetpro-tracking.service')
+    const cacheFlush = content.indexOf('Flushing nginx proxy cache')
+
+    expect(appProbe).toBeGreaterThan(appRestart)
+    expect(trackingRestart).toBeGreaterThan(appProbe)
+    expect(cacheFlush).toBeGreaterThan(trackingRestart)
+  })
+
   it('marks production deployment scripts as production before Prisma runs', () => {
     for (const file of ['start-server.sh', 'deploy.sh', 'scripts/webhook-deploy.sh', 'update.sh']) {
       expect(read(file), file).toContain('NODE_ENV=production')

@@ -13,6 +13,9 @@
 # ══════════════════════════════════════════════════════════════
 
 set -e
+# The stable webhook launcher uses umask 077 to protect its temporary snapshot.
+# Deployment artifacts must be readable by the dedicated lightworld service user.
+umask 022
 export NODE_ENV=production
 
 # ── Ensure Bun is in PATH (systemd services have minimal PATH) ──
@@ -143,10 +146,37 @@ log "Copying static assets..."
 cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
 cp -r public .next/standalone/ 2>/dev/null || true
 
+# The webhook runs as root, but the application service runs as lightworld.
+# Fail closed unless the emitted standalone runtime can actually be consumed by that user.
+if [ ! -s .next/standalone/server.js ]; then
+    log "DEPLOY BLOCKED: standalone server artifact is missing or empty"
+    exit 1
+fi
+chown -R lightworld:lightworld .next/standalone
+if ! runuser -u lightworld -- test -r .next/standalone/server.js; then
+    log "DEPLOY BLOCKED: standalone runtime is not readable by lightworld"
+    exit 1
+fi
+
 # ── Step 5: Restart Fleetivo services only ──
 log "Restarting Fleetivo application and tracking services..."
 systemctl restart ifleetpro.service
-systemctl is-active --quiet ifleetpro.service
+
+APP_READY=0
+for _ in $(seq 1 20); do
+    if systemctl is-active --quiet ifleetpro.service \
+        && curl -fsS --max-time 2 http://127.0.0.1:3000/ >/dev/null; then
+        APP_READY=1
+        break
+    fi
+    sleep 1
+done
+if [ "$APP_READY" -ne 1 ]; then
+    log "DEPLOY FAILED: Fleetivo application did not become HTTP-ready"
+    systemctl status ifleetpro.service --no-pager -l >> "$LOG_FILE" 2>&1 || true
+    exit 1
+fi
+
 systemctl restart ifleetpro-tracking.service
 systemctl is-active --quiet ifleetpro-tracking.service
 
@@ -164,7 +194,6 @@ else
 fi
 
 # ── Step 7: Verify ──
-sleep 3
 SERVICE_STATUS=$(systemctl is-active ifleetpro.service)
 
 log "════════════════════════════════════════"
