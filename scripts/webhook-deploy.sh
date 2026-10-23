@@ -84,6 +84,7 @@ git fetch origin main
 git checkout main
 git reset --hard origin/main
 
+FULL_COMMIT=$(git rev-parse HEAD)
 COMMIT=$(git rev-parse --short HEAD)
 BRANCH=$(git branch --show-current)
 log "Checked out $COMMIT on $BRANCH"
@@ -138,8 +139,14 @@ bunx prisma db push
 
 # ── Step 4: Build ──
 log "Building Next.js application..."
-export NEXT_PUBLIC_BUILD_SHA="$COMMIT"
+export NEXT_PUBLIC_BUILD_SHA="$FULL_COMMIT"
 bun run build
+
+if ! bash scripts/verify-build-metadata.sh >> "$LOG_FILE" 2>&1; then
+    log "DEPLOY BLOCKED: browser build metadata does not match deployed commit"
+    exit 1
+fi
+log "Browser build metadata matches deployed commit $COMMIT"
 
 # Copy static assets for standalone mode
 log "Copying static assets..."
