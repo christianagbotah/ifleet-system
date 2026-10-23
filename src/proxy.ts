@@ -33,6 +33,10 @@ function isMachineAuthRoute(pathname: string): boolean {
   return /^\/api\/integrations\/load-orders\/[^/]+\/webhook$/.test(pathname)
 }
 
+function isSignatureAuthRoute(pathname: string, method: string): boolean {
+  return method === 'POST' && pathname === '/api/payments/paystack/webhook'
+}
+
 const PUBLIC_GET_ONLY_ROUTES = {
   exact: [
     '/api/settings/public',
@@ -145,6 +149,10 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isMachineAuthRoute(pathname)) {
+    return applySecurityHeaders(NextResponse.next())
+  }
+
+  if (isSignatureAuthRoute(pathname, request.method)) {
     return applySecurityHeaders(NextResponse.next())
   }
 

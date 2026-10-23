@@ -131,6 +131,25 @@ describe('API authentication proxy', () => {
     expect(response.status).toBe(401)
   })
 
+  it('lets the exact Paystack POST webhook reach its signature-authenticated handler', async () => {
+    const response = await proxy(request('/api/payments/paystack/webhook', { method: 'POST' }))
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('x-middleware-next')).toBe('1')
+  })
+
+  it('keeps the Paystack webhook GET behind user authentication', async () => {
+    const response = await proxy(request('/api/payments/paystack/webhook', { method: 'GET' }))
+
+    expect(response.status).toBe(401)
+  })
+
+  it('does not open neighboring Paystack payment routes', async () => {
+    const response = await proxy(request('/api/payments/paystack/verify', { method: 'POST' }))
+
+    expect(response.status).toBe(401)
+  })
+
   it('lets the exact HMAC-authenticated video ingestion route reach its handler', async () => {
     const response = await proxy(request('/api/video/ingest/generic-http'))
 
