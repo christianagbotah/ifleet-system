@@ -30,4 +30,20 @@ describe('Paystack charge integrity contract', () => {
       expect(source, path).not.toContain('async function processSuccessfulPayment')
     }
   })
+
+  it('uses the Paystack secret key for webhook signatures and does not expose a fake webhook-secret setting', () => {
+    const webhook = read('src/app/api/payments/paystack/webhook/route.ts')
+    expect(webhook).toContain('settings?.paystackSecretKey')
+    expect(webhook).not.toContain('paystackWebhookSecret')
+
+    for (const path of [
+      'src/app/api/settings/channels/route.ts',
+      'src/components/settings/SettingsView.tsx',
+      'src/lib/api.ts',
+    ]) {
+      expect(read(path), path).not.toContain('paystackWebhookSecret')
+      expect(read(path), path).not.toContain('hasPaystackWebhookSecret')
+    }
+  })
+
 })

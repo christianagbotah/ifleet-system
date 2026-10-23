@@ -96,8 +96,7 @@ export function SettingsView() {
     smtpPort: 587, smtpUser: '', smtpFrom: '', smtpSecure: true, hasSmtpPass: false, smtpPass: '',
     // Paystack
     paystackEnabled: false, paystackSecretKey: '', paystackPublicKey: '', paystackMode: 'test',
-    mobileMoneyProvider: 'mtn', paystackWebhookSecret: '', hasPaystackSecret: false,
-    hasPaystackWebhookSecret: false,
+    mobileMoneyProvider: 'mtn', hasPaystackSecret: false,
   })
   const [channelsLoaded, setChannelsLoaded] = React.useState(false)
   const [savingChannels, setSavingChannels] = React.useState(false)
@@ -109,7 +108,6 @@ export function SettingsView() {
   const [showArkeselKey, setShowArkeselKey] = React.useState(false)
   const [showSmtpPass, setShowSmtpPass] = React.useState(false)
   const [showPaystackSecret, setShowPaystackSecret] = React.useState(false)
-  const [showPaystackWebhookSecret, setShowPaystackWebhookSecret] = React.useState(false)
 
   // Load settings from database
   React.useEffect(() => {
@@ -962,31 +960,8 @@ export function SettingsView() {
                   )}
                 </div>
 
-                {/* Webhook Secret */}
-                <div className="space-y-2">
-                  <Label htmlFor="paystack-webhook-secret">Webhook Secret</Label>
-                  <div className="relative">
-                    <Input
-                      id="paystack-webhook-secret"
-                      type={showPaystackWebhookSecret ? 'text' : 'password'}
-                      placeholder={channels.hasPaystackWebhookSecret ? '••••••••' : 'Enter webhook secret from Paystack dashboard'}
-                      value={channels.paystackWebhookSecret.includes('••') ? '' : channels.paystackWebhookSecret}
-                      onChange={e => setChannels(prev => ({ ...prev, paystackWebhookSecret: e.target.value }))}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                      onClick={() => setShowPaystackWebhookSecret(!showPaystackWebhookSecret)}
-                      aria-label={showPaystackWebhookSecret ? 'Hide webhook secret' : 'Show webhook secret'}
-                    >
-                      {showPaystackWebhookSecret ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                    </Button>
-                  </div>
-                  {channels.hasPaystackWebhookSecret && (
-                    <p className="text-xs text-muted-foreground">Leave blank to keep the existing webhook secret unchanged.</p>
-                  )}
+                <div className="rounded-md border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+                  Paystack signs webhook events with the configured secret key automatically; no separate webhook secret is required.
                 </div>
 
                 {/* Mobile Money Provider */}

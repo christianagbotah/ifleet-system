@@ -6,16 +6,17 @@ import { processSuccessfulPaystackCharge } from '@/lib/domain/payments/process-p
 async function verifyWebhookSignature(body: string, signature: string | null): Promise<boolean> {
   if (!signature) return false
   const settings = await db.systemSettings.findFirst()
-  const webhookSecret = settings?.paystackWebhookSecret
-  if (!webhookSecret) {
-    console.error('[PAYSTACK WEBHOOK] No webhook secret configured — rejecting request.')
+  const secretKey = settings?.paystackSecretKey
+  if (!secretKey) {
+    console.error('[PAYSTACK WEBHOOK] No Paystack secret key configured — rejecting request.')
     return false
   }
 
   try {
     const crypto = await import('crypto')
-    const hash = crypto.createHmac('sha512', webhookSecret).update(body).digest('hex')
-    return hash === signature
+    const expected = crypto.createHmac('sha512', secretKey).update(body).digest()
+    const received = Buffer.from(signature, 'hex')
+    return received.length === expected.length && crypto.timingSafeEqual(received, expected)
   } catch {
     return false
   }

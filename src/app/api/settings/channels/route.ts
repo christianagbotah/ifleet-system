@@ -43,9 +43,7 @@ export async function GET(request: NextRequest) {
       paystackPublicKey: settings.paystackPublicKey || '',
       paystackMode: settings.paystackMode || 'test',
       mobileMoneyProvider: settings.mobileMoneyProvider || 'mtn',
-      paystackWebhookSecret: settings.paystackWebhookSecret ? maskSecret(settings.paystackWebhookSecret) : '',
       hasPaystackSecret: !!settings.paystackSecretKey,
-      hasPaystackWebhookSecret: !!settings.paystackWebhookSecret,
     })
   } catch (error) {
     console.error('Channel Settings GET error:', error)
@@ -82,7 +80,6 @@ export async function PUT(request: NextRequest) {
       paystackPublicKey,
       paystackMode,
       mobileMoneyProvider,
-      paystackWebhookSecret,
     } = body
 
     // Upsert: find existing or create new
@@ -115,7 +112,6 @@ export async function PUT(request: NextRequest) {
     if (paystackPublicKey !== undefined) updateData.paystackPublicKey = paystackPublicKey
     if (paystackMode !== undefined) updateData.paystackMode = paystackMode
     if (mobileMoneyProvider !== undefined) updateData.mobileMoneyProvider = mobileMoneyProvider
-    if (paystackWebhookSecret !== undefined && paystackWebhookSecret !== '') updateData.paystackWebhookSecret = paystackWebhookSecret
 
     const settings = await db.systemSettings.upsert({
       where: existing ? { id: existing.id } : { id: '__none__' },
@@ -138,7 +134,6 @@ export async function PUT(request: NextRequest) {
         paystackPublicKey: paystackPublicKey ?? '',
         paystackMode: paystackMode ?? 'test',
         mobileMoneyProvider: mobileMoneyProvider ?? 'mtn',
-        paystackWebhookSecret: paystackWebhookSecret ?? '',
       },
       update: updateData,
     })
@@ -175,9 +170,7 @@ export async function PUT(request: NextRequest) {
       paystackPublicKey: settings.paystackPublicKey || '',
       paystackMode: settings.paystackMode || 'test',
       mobileMoneyProvider: settings.mobileMoneyProvider || 'mtn',
-      paystackWebhookSecret: settings.paystackWebhookSecret ? maskSecret(settings.paystackWebhookSecret) : '',
       hasPaystackSecret: !!settings.paystackSecretKey,
-      hasPaystackWebhookSecret: !!settings.paystackWebhookSecret,
     })
   } catch (error) {
     console.error('Channel Settings PUT error:', error)

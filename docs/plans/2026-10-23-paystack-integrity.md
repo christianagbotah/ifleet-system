@@ -8,6 +8,7 @@
 - A unique `(provider, reference)` constraint is the idempotency authority.
 - Successful charge processing is centralized and shared by verify + webhook routes.
 - Provider amount/currency/target mismatches are recorded for review and never mutate invoice balances.
+- Paystack webhook signatures use the configured Paystack secret key; no separate webhook-secret setting is exposed.
 - Applied invoice payments update `paidAmount` and use `partially_paid` / `paid` truthfully.
 - Received customer money is not an Expense and is never assigned to an arbitrary truck.
 - Driver/haulier payouts remain separate from charge collection and are not marked paid by a Paystack charge.

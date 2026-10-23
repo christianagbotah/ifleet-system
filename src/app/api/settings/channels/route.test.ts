@@ -76,6 +76,8 @@ describe('GET /api/settings/channels authorization', () => {
     const body = await response.json()
     expect(body.hubtelApiSecret).not.toBe(settings.hubtelApiSecret)
     expect(body.paystackSecretKey).not.toBe(settings.paystackSecretKey)
+    expect(body).not.toHaveProperty('paystackWebhookSecret')
+    expect(body).not.toHaveProperty('hasPaystackWebhookSecret')
     expect(findFirst).toHaveBeenCalledTimes(1)
   })
 
