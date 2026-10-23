@@ -19,12 +19,16 @@ export type ChannelConfigResult<T> =
   | { enabled: true; config: T }
   | { enabled: false; error: string }
 
-async function loadSettings() {
+type SettingsLoadResult =
+  | { ok: true; settings: Awaited<ReturnType<typeof db.systemSettings.findFirst>> }
+  | { ok: false }
+
+async function loadSettings(): Promise<SettingsLoadResult> {
   try {
-    return await db.systemSettings.findFirst()
+    return { ok: true, settings: await db.systemSettings.findFirst() }
   } catch (error) {
-    console.warn('[Channels] Could not load saved channel settings; falling back to environment configuration.', error)
-    return null
+    console.warn('[Channels] Could not load saved channel settings; external delivery is disabled until settings are readable.', error)
+    return { ok: false }
   }
 }
 
@@ -33,7 +37,12 @@ function envValue(name: string): string {
 }
 
 export async function resolveSmsDeliveryConfig(): Promise<ChannelConfigResult<HubtelDeliveryConfig>> {
-  const settings = await loadSettings()
+  const loaded = await loadSettings()
+  if (!loaded.ok) {
+    return { enabled: false, error: 'Channel settings unavailable' }
+  }
+
+  const settings = loaded.settings
   if (settings && settings.smsEnabled === false) {
     return { enabled: false, error: 'SMS channel is disabled' }
   }
@@ -53,7 +62,12 @@ export async function resolveSmsDeliveryConfig(): Promise<ChannelConfigResult<Hu
 }
 
 export async function resolveEmailDeliveryConfig(): Promise<ChannelConfigResult<SmtpDeliveryConfig>> {
-  const settings = await loadSettings()
+  const loaded = await loadSettings()
+  if (!loaded.ok) {
+    return { enabled: false, error: 'Channel settings unavailable' }
+  }
+
+  const settings = loaded.settings
   if (settings && settings.emailEnabled === false) {
     return { enabled: false, error: 'Email channel is disabled' }
   }

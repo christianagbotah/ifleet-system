@@ -82,6 +82,19 @@ describe('notification channel runtime configuration', () => {
     })
   })
 
+  it('fails closed instead of using environment SMS credentials when saved settings cannot be read', async () => {
+    process.env.HUBTEL_CLIENT_ID = 'env-client'
+    process.env.HUBTEL_API_SECRET = 'env-secret'
+    mocks.settingsFindFirst.mockRejectedValue(new Error('database unavailable'))
+    const provider = vi.fn()
+    vi.stubGlobal('fetch', provider)
+
+    const result = await sendSMS({ to: '+233240000000', message: 'Trip updated' })
+
+    expect(result).toEqual({ success: false, error: 'Channel settings unavailable' })
+    expect(provider).not.toHaveBeenCalled()
+  })
+
   it('fails closed for a saved SMS provider that has no runtime adapter', async () => {
     mocks.settingsFindFirst.mockResolvedValue({
       smsEnabled: true,
@@ -132,6 +145,20 @@ describe('notification channel runtime configuration', () => {
       from: expect.stringContaining('<db-from@example.com>'),
       to: 'driver@example.com',
     }))
+  })
+
+  it('fails closed instead of using environment SMTP credentials when saved settings cannot be read', async () => {
+    process.env.SMTP_HOST = 'env.smtp.example'
+    process.env.SMTP_PORT = '465'
+    process.env.SMTP_USER = 'env-user'
+    process.env.SMTP_PASS = 'env-pass'
+    process.env.SMTP_FROM = 'env-from@example.com'
+    mocks.settingsFindFirst.mockRejectedValue(new Error('database unavailable'))
+
+    const result = await sendEmail({ to: 'driver@example.com', subject: 'Trip update', html: '<p>Trip updated</p>' })
+
+    expect(result).toEqual({ success: false, error: 'Channel settings unavailable' })
+    expect(mocks.createTransport).not.toHaveBeenCalled()
   })
 
   it('falls back to SMTP environment configuration when saved settings are absent', async () => {
