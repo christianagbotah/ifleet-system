@@ -32,6 +32,12 @@ interface Connection {
 
 const EMPTY_FORM = { name: '', provider: '', type: 'webhook', secretRef: '', config: '{}' }
 
+const STATUS_LABELS: Record<string, string> = {
+  active: 'Enabled',
+  inactive: 'Disabled',
+  error: 'Error',
+}
+
 export function IntegrationConnections() {
   const user = useAuthStore((state) => state.user)
   const isAdmin = user?.role === 'Admin'
@@ -147,7 +153,7 @@ export function IntegrationConnections() {
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold">{item.name}</span>
-                <Badge variant={item.status === 'active' ? 'default' : 'outline'}>{item.status}</Badge>
+                <Badge variant={item.status === 'active' ? 'default' : 'outline'}>{STATUS_LABELS[item.status] ?? item.status}</Badge>
                 {item.hasSecretRef && <Badge variant="secondary" className="gap-1"><ShieldCheck className="h-3 w-3" />Secret ref</Badge>}
               </div>
               <div className="mt-1 text-xs text-muted-foreground">{item.provider} · {item.type}{item.lastError ? ` · ${item.lastError}` : ''}</div>
