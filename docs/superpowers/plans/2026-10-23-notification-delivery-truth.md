@@ -90,10 +90,10 @@
 - Consumes: persisted notification delivery fields.
 - Produces: acceptance/status wording that does not claim final recipient delivery.
 
-- [ ] Write a failing UI test proving accepted and failed channels render distinct truthful labels.
-- [ ] Confirm RED.
-- [ ] Implement `Channel status`, accepted/live-sent labels, and generic failed-attempt labels.
-- [ ] Run focused UI tests and confirm GREEN; commit.
+- [x] Write a failing UI test proving accepted and failed channels render distinct truthful labels.
+- [x] Confirm RED.
+- [x] Implement `Channel status`, accepted/live-sent labels, and generic failed-attempt labels.
+- [x] Run focused UI tests and confirm GREEN; commit.
 
 ### Task 5: Release Verification
 

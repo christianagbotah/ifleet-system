@@ -320,6 +320,8 @@ export function NotificationDetailDialog({
   const smsSent = notif?.smsSent === true
   const emailSent = notif?.emailSent === true
   const pushSent = notif?.pushSent === true
+  const smsFailed = !smsSent && typeof notif?.smsError === 'string' && notif.smsError.length > 0
+  const emailFailed = !emailSent && typeof notif?.emailError === 'string' && notif.emailError.length > 0
 
   return (
     <Dialog open={open && !!notification} onOpenChange={onOpenChange}>
@@ -370,32 +372,42 @@ export function NotificationDetailDialog({
 
             <Separator />
 
-            {/* Delivery channel badges */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Delivered via</span>
-              <div className="flex items-center gap-2">
+            {/* Channel status reflects persisted evidence, not final recipient delivery. */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Channel status</span>
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground bg-muted/60 rounded-full px-2 py-0.5">
                   <Bell className="h-2.5 w-2.5" />
-                  App
+                  In-app saved
                 </span>
                 {pushSent && (
                   <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5">
                     <Wifi className="h-2.5 w-2.5" />
-                    Push
+                    Live push sent
                   </span>
                 )}
-                {smsSent && (
+                {smsSent ? (
                   <span className="flex items-center gap-1 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400 rounded-full px-2 py-0.5">
                     <MessageSquare className="h-2.5 w-2.5" />
-                    SMS
+                    SMS accepted
                   </span>
-                )}
-                {emailSent && (
+                ) : smsFailed ? (
+                  <span className="flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5">
+                    <MessageSquare className="h-2.5 w-2.5" />
+                    SMS failed
+                  </span>
+                ) : null}
+                {emailSent ? (
                   <span className="flex items-center gap-1 text-xs font-medium text-violet-600 bg-violet-50 dark:bg-violet-900/20 dark:text-violet-400 rounded-full px-2 py-0.5">
                     <Mail className="h-2.5 w-2.5" />
-                    Email
+                    Email accepted
                   </span>
-                )}
+                ) : emailFailed ? (
+                  <span className="flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5">
+                    <Mail className="h-2.5 w-2.5" />
+                    Email failed
+                  </span>
+                ) : null}
               </div>
             </div>
 
