@@ -120,7 +120,7 @@ export function PredictiveMaintenancePanel({ onNavigate }: PredictiveMaintenance
           </div>
           <div>
             <h2 className="text-lg font-semibold tracking-tight">Predictive Maintenance</h2>
-            <p className="text-xs text-muted-foreground">AI-powered service predictions based on fleet history</p>
+            <p className="text-xs text-muted-foreground">Service forecasts based on recorded maintenance history and interval rules</p>
           </div>
         </div>
         <Button variant="outline" size="sm" onClick={loadData} className="gap-1.5 self-start">
@@ -373,7 +373,7 @@ function PredictionCard({
           {/* Badges Row */}
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className={`text-[10px] ${CONFIDENCE_STYLES[prediction.confidence]}`}>
-              {prediction.confidence} confidence
+              {prediction.confidence} evidence
             </Badge>
             <Badge variant="outline" className="text-[10px]">
               {prediction.totalServices} service{prediction.totalServices !== 1 ? 's' : ''}
