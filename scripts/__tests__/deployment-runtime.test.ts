@@ -177,15 +177,28 @@ describe('production deployment runtime configuration', () => {
     expect(verifier).toContain('NEXT_PUBLIC_BUILD_SHA')
   })
 
-  it('exposes the deployed Git commit as the public build identifier before building', () => {
+  it('embeds the full deployed Git commit while keeping the short commit for human-readable logs', () => {
     const content = read('scripts/webhook-deploy.sh')
-    const commitIndex = content.indexOf('COMMIT=$(git rev-parse --short HEAD)')
-    const exportIndex = content.indexOf('export NEXT_PUBLIC_BUILD_SHA="$COMMIT"')
+    const fullCommitIndex = content.indexOf('FULL_COMMIT=$(git rev-parse HEAD)')
+    const shortCommitIndex = content.indexOf('COMMIT=$(git rev-parse --short HEAD)')
+    const exportIndex = content.indexOf('export NEXT_PUBLIC_BUILD_SHA="$FULL_COMMIT"')
     const buildIndex = content.indexOf('bun run build')
 
-    expect(commitIndex).toBeGreaterThanOrEqual(0)
-    expect(exportIndex).toBeGreaterThan(commitIndex)
+    expect(fullCommitIndex).toBeGreaterThanOrEqual(0)
+    expect(shortCommitIndex).toBeGreaterThanOrEqual(0)
+    expect(exportIndex).toBeGreaterThan(fullCommitIndex)
+    expect(exportIndex).toBeGreaterThan(shortCommitIndex)
     expect(buildIndex).toBeGreaterThan(exportIndex)
+  })
+
+  it('verifies production build metadata before restarting the application', () => {
+    const content = read('scripts/webhook-deploy.sh')
+    const buildIndex = content.indexOf('bun run build')
+    const verifierIndex = content.indexOf('bash scripts/verify-build-metadata.sh')
+    const restartIndex = content.indexOf('systemctl restart ifleetpro.service')
+
+    expect(verifierIndex).toBeGreaterThan(buildIndex)
+    expect(restartIndex).toBeGreaterThan(verifierIndex)
   })
 
   it('checks Prisma generated-source drift in CI after the build generates the client', () => {
