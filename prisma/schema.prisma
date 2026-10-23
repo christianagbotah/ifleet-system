@@ -100,6 +100,14 @@ enum PaymentStatus {
   refunded
 }
 
+enum PaymentTransactionStatus {
+  pending
+  processing
+  applied
+  review_required
+  failed
+}
+
 enum ExpenseStatus {
   approved
   pending
@@ -986,11 +994,43 @@ model Invoice {
   client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   trip          Trip?         @relation(fields: [tripId], references: [id])
   InvoiceItem   InvoiceItem[]
+  PaymentTransaction PaymentTransaction[]
 
   @@index([clientId])
   @@index([dueDate])
   @@index([issueDate])
   @@index([status])
+}
+
+model PaymentTransaction {
+  id                    String                   @id @default(cuid())
+  provider              String
+  reference             String
+  providerTransactionId String?
+  type                  String                   @default("customer_charge")
+  status                PaymentTransactionStatus @default(pending)
+  currency              String                   @default("GHS")
+  requestedAmount       Decimal
+  receivedAmount        Decimal?
+  appliedAmount         Decimal                  @default(0)
+  unappliedAmount       Decimal                  @default(0)
+  invoiceId             String?
+  channel               String?
+  customerEmail         String?
+  initiatedBy           String?
+  source                String?
+  paidAt                DateTime?
+  processedAt           DateTime?
+  gatewayResponse       String?
+  lastError             String?                  @db.Text
+  providerMetadata      String?                  @db.LongText
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  invoice               Invoice?                 @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  @@unique([provider, reference])
+  @@index([invoiceId, createdAt])
+  @@index([status, createdAt])
 }
 
 model InvoiceItem {

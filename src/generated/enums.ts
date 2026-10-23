@@ -122,6 +122,17 @@ export const PaymentStatus = {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
+export const PaymentTransactionStatus = {
+  pending: 'pending',
+  processing: 'processing',
+  applied: 'applied',
+  review_required: 'review_required',
+  failed: 'failed'
+} as const
+
+export type PaymentTransactionStatus = (typeof PaymentTransactionStatus)[keyof typeof PaymentTransactionStatus]
+
+
 export const ExpenseStatus = {
   approved: 'approved',
   pending: 'pending',

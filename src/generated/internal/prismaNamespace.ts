@@ -449,6 +449,7 @@ export const ModelName = {
   Insurance: 'Insurance',
   InsuranceClaim: 'InsuranceClaim',
   Invoice: 'Invoice',
+  PaymentTransaction: 'PaymentTransaction',
   InvoiceItem: 'InvoiceItem',
   Item: 'Item',
   LoadBoard: 'LoadBoard',
@@ -513,7 +514,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aiRecommendation" | "aiPrediction" | "aiReviewCase" | "complianceRuleSet" | "complianceRule" | "proofOfDelivery" | "proofOfDeliveryEvidence" | "deliveryException" | "gateEvent" | "factoryQueueEntry" | "haulierSettlement" | "haulierSettlementLine" | "integrationConnection" | "integrationImportReceipt" | "operationalEvent" | "tripReconciliation" | "reconciliationLine" | "reconciliationAdjustment" | "reconciliationException" | "plannedRoute" | "geofenceAssetState" | "geofenceTransitionEvent" | "routeDeviationEvent" | "telematicsDevice" | "deviceInstallationHistory" | "telematicsEvent" | "rawTelematicsPacket" | "vehicleLiveState" | "telematicsHistorySummary" | "cameraChannel" | "videoRetentionPolicy" | "videoMediaRecord" | "videoPrivacyAcknowledgement" | "videoAlarmEvent" | "videoIncident" | "electronicWaybill" | "electronicWaybillVersion" | "waybillSeal" | "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "organization" | "transporter" | "vehicleOwner" | "transportContract" | "transportRateCard" | "shipperProfile" | "shipperSiteRule" | "loadOrder" | "loadOrderDestination" | "loadOrderLine" | "truck" | "trailer" | "trailerCoupling" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory" | "weighingEvent" | "axleReading"
+    modelProps: "aiRecommendation" | "aiPrediction" | "aiReviewCase" | "complianceRuleSet" | "complianceRule" | "proofOfDelivery" | "proofOfDeliveryEvidence" | "deliveryException" | "gateEvent" | "factoryQueueEntry" | "haulierSettlement" | "haulierSettlementLine" | "integrationConnection" | "integrationImportReceipt" | "operationalEvent" | "tripReconciliation" | "reconciliationLine" | "reconciliationAdjustment" | "reconciliationException" | "plannedRoute" | "geofenceAssetState" | "geofenceTransitionEvent" | "routeDeviationEvent" | "telematicsDevice" | "deviceInstallationHistory" | "telematicsEvent" | "rawTelematicsPacket" | "vehicleLiveState" | "telematicsHistorySummary" | "cameraChannel" | "videoRetentionPolicy" | "videoMediaRecord" | "videoPrivacyAcknowledgement" | "videoAlarmEvent" | "videoIncident" | "electronicWaybill" | "electronicWaybillVersion" | "waybillSeal" | "user" | "auditLog" | "borderCrossing" | "cashAdvance" | "client" | "clientZone" | "currency" | "deliveryStop" | "depotQueue" | "destinationCity" | "destinationZone" | "document" | "driver" | "driverIncentive" | "driverSettlement" | "driverWallet" | "dvlaRegistration" | "expense" | "expenseApproval" | "fuelBudget" | "fuelLog" | "fuelPrice" | "fuelStation" | "geofenceZone" | "insurance" | "insuranceClaim" | "invoice" | "paymentTransaction" | "invoiceItem" | "item" | "loadBoard" | "loadingCity" | "loadingPoint" | "maintenanceRecord" | "notification" | "passwordResetToken" | "payroll" | "performanceBenchmark" | "pricing" | "reportHistory" | "roadConditionReport" | "roadworthyInspection" | "role" | "settlementLine" | "supplier" | "systemSettings" | "tollRecord" | "trackingAlert" | "trackingConfig" | "trip" | "tripComment" | "tripDeliveryDestination" | "tripEvent" | "tripItem" | "organization" | "transporter" | "vehicleOwner" | "transportContract" | "transportRateCard" | "shipperProfile" | "shipperSiteRule" | "loadOrder" | "loadOrderDestination" | "loadOrderLine" | "truck" | "trailer" | "trailerCoupling" | "truckLocation" | "tyre" | "vehicleInspection" | "warehouseItem" | "weightVerification" | "zoneRate" | "dvlaRenewalHistory" | "insuranceRenewalHistory" | "weighingEvent" | "axleReading"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4804,6 +4805,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.InvoiceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.InvoiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    PaymentTransaction: {
+      payload: Prisma.$PaymentTransactionPayload<ExtArgs>
+      fields: Prisma.PaymentTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.PaymentTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>
+        }
+        update: {
+          args: Prisma.PaymentTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.PaymentTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentTransaction>
+        }
+        groupBy: {
+          args: Prisma.PaymentTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentTransactionCountAggregateOutputType> | number
         }
       }
     }
@@ -9452,6 +9519,35 @@ export const InvoiceScalarFieldEnum = {
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
 
 
+export const PaymentTransactionScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  reference: 'reference',
+  providerTransactionId: 'providerTransactionId',
+  type: 'type',
+  status: 'status',
+  currency: 'currency',
+  requestedAmount: 'requestedAmount',
+  receivedAmount: 'receivedAmount',
+  appliedAmount: 'appliedAmount',
+  unappliedAmount: 'unappliedAmount',
+  invoiceId: 'invoiceId',
+  channel: 'channel',
+  customerEmail: 'customerEmail',
+  initiatedBy: 'initiatedBy',
+  source: 'source',
+  paidAt: 'paidAt',
+  processedAt: 'processedAt',
+  gatewayResponse: 'gatewayResponse',
+  lastError: 'lastError',
+  providerMetadata: 'providerMetadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentTransactionScalarFieldEnum = (typeof PaymentTransactionScalarFieldEnum)[keyof typeof PaymentTransactionScalarFieldEnum]
+
+
 export const InvoiceItemScalarFieldEnum = {
   id: 'id',
   invoiceId: 'invoiceId',
@@ -11514,6 +11610,26 @@ export const InvoiceOrderByRelevanceFieldEnum = {
 export type InvoiceOrderByRelevanceFieldEnum = (typeof InvoiceOrderByRelevanceFieldEnum)[keyof typeof InvoiceOrderByRelevanceFieldEnum]
 
 
+export const PaymentTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  reference: 'reference',
+  providerTransactionId: 'providerTransactionId',
+  type: 'type',
+  currency: 'currency',
+  invoiceId: 'invoiceId',
+  channel: 'channel',
+  customerEmail: 'customerEmail',
+  initiatedBy: 'initiatedBy',
+  source: 'source',
+  gatewayResponse: 'gatewayResponse',
+  lastError: 'lastError',
+  providerMetadata: 'providerMetadata'
+} as const
+
+export type PaymentTransactionOrderByRelevanceFieldEnum = (typeof PaymentTransactionOrderByRelevanceFieldEnum)[keyof typeof PaymentTransactionOrderByRelevanceFieldEnum]
+
+
 export const InvoiceItemOrderByRelevanceFieldEnum = {
   id: 'id',
   invoiceId: 'invoiceId',
@@ -12411,6 +12527,13 @@ export type EnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 
 
 /**
+ * Reference to a field of type 'PaymentTransactionStatus'
+ */
+export type EnumPaymentTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentTransactionStatus'>
+    
+
+
+/**
  * Reference to a field of type 'LoadBoardStatus'
  */
 export type EnumLoadBoardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoadBoardStatus'>
@@ -12696,6 +12819,7 @@ export type GlobalOmitConfig = {
   insurance?: Prisma.InsuranceOmit
   insuranceClaim?: Prisma.InsuranceClaimOmit
   invoice?: Prisma.InvoiceOmit
+  paymentTransaction?: Prisma.PaymentTransactionOmit
   invoiceItem?: Prisma.InvoiceItemOmit
   item?: Prisma.ItemOmit
   loadBoard?: Prisma.LoadBoardOmit

@@ -1176,11 +1176,8 @@ export interface ChannelSettings {
   paystackPublicKey: string
   paystackMode: string
   mobileMoneyProvider: string
-  paystackWebhookSecret: string
   hasPaystackSecret: boolean
-  hasPaystackWebhookSecret: boolean
   paystackSecretKeyInput?: string
-  paystackWebhookSecretInput?: string
 }
 
 export async function fetchChannelSettings(): Promise<ChannelSettings> {
