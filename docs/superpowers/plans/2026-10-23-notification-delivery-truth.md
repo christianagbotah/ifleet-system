@@ -58,10 +58,10 @@
 - Consumes: current `SystemSettings` and provider service results.
 - Produces: accurate `smsSent/smsSentAt/smsError`, `emailSent/emailSentAt/emailError`, `pushSent/pushSentAt` values.
 
-- [ ] Write failing tests for disabled channels, SMS/email accepted and failed attempts, and push listener-count semantics.
-- [ ] Confirm RED.
-- [ ] Implement channel gates, persistent evidence, and in-process push delivery.
-- [ ] Run focused tests and confirm GREEN; commit.
+- [x] Write failing tests for disabled channels, SMS/email accepted and failed attempts, and push listener-count semantics.
+- [x] Confirm RED.
+- [x] Implement channel gates, persistent evidence, and in-process push delivery.
+- [x] Run focused tests and confirm GREEN; commit.
 
 ### Task 3: Authenticated SSE Browser Push
 
