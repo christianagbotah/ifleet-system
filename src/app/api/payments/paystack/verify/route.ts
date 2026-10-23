@@ -3,6 +3,7 @@ import { requireAuth, requireWriteAccess } from '@/lib/auth-server'
 import { verifyPayment } from '@/lib/services/paystack'
 import { processSuccessfulPaystackCharge } from '@/lib/domain/payments/process-paystack-charge'
 import { createAuditLog, getClientIp } from '@/lib/audit'
+import { db } from '@/lib/db'
 
 // POST /api/payments/paystack/verify — Verify and apply a registered invoice charge
 export async function POST(request: NextRequest) {
@@ -16,6 +17,17 @@ export async function POST(request: NextRequest) {
     const { reference } = body
     if (!reference || typeof reference !== 'string') {
       return NextResponse.json({ error: 'Payment reference is required.' }, { status: 400 })
+    }
+
+    const paymentRecord = await db.paymentTransaction.findUnique({
+      where: { provider_reference: { provider: 'paystack', reference } },
+      select: { id: true },
+    })
+    if (!paymentRecord) {
+      return NextResponse.json(
+        { error: 'Payment reference was not initialized by Fleetivo.' },
+        { status: 404 },
+      )
     }
 
     const result = await verifyPayment(reference)

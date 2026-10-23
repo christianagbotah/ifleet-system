@@ -46,4 +46,14 @@ describe('Paystack charge integrity contract', () => {
     }
   })
 
+  it('requires a Fleetivo payment record before manual verification queries Paystack', () => {
+    const verify = read('src/app/api/payments/paystack/verify/route.ts')
+    const localLookup = verify.indexOf('db.paymentTransaction.findUnique')
+    const providerLookup = verify.indexOf('verifyPayment(reference)')
+
+    expect(localLookup).toBeGreaterThanOrEqual(0)
+    expect(providerLookup).toBeGreaterThan(localLookup)
+    expect(verify).toContain('Payment reference was not initialized by Fleetivo.')
+  })
+
 })
