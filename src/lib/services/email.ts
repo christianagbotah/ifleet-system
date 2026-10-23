@@ -13,6 +13,7 @@
 import nodemailer from 'nodemailer'
 import { APP_NAME, APP_TAGLINE } from '@/lib/constants'
 import { companyAddressLine, companyContactLine, loadCompanyProfile, type CompanyProfile } from '@/lib/config/company-profile'
+import { resolveEmailDeliveryConfig } from '@/lib/services/channel-config'
 
 interface EmailResult {
   success: boolean
@@ -43,42 +44,6 @@ interface TripEmailParams {
   actionLabel?: string
   actionUrl?: string
   tripId?: string
-}
-
-// ── Lazy-initialized transporter ──
-let transporter: nodemailer.Transporter | null = null
-
-function getTransporter(): nodemailer.Transporter | null {
-  if (transporter) return transporter
-
-  const host = process.env.SMTP_HOST
-  const port = process.env.SMTP_PORT
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
-
-  if (!host || !port || !user || !pass) {
-    console.warn(
-      '[Email] SMTP not fully configured (need SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS). ' +
-      'Email sending is disabled. Set environment variables to enable.'
-    )
-    return null
-  }
-
-  const portNum = parseInt(port, 10)
-  const isSecure = portNum === 465
-
-  transporter = nodemailer.createTransport({
-    host,
-    port: portNum,
-    secure: isSecure,
-    auth: { user, pass },
-    // Connection timeout for slow servers
-    connectionTimeout: 10000,
-    greetingTimeout: 5000,
-    socketTimeout: 15000,
-  })
-
-  return transporter
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -370,15 +335,22 @@ export async function sendEmail(params: {
   html: string
   text?: string
 }): Promise<EmailResult> {
-  const tp = getTransporter()
-  if (!tp) {
-    return { success: false, error: 'SMTP not configured' }
+  const resolved = await resolveEmailDeliveryConfig()
+  if (!resolved.enabled) {
+    return { success: false, error: resolved.error }
   }
 
-  const from = process.env.SMTP_FROM?.trim()
-  if (!from) {
-    return { success: false, error: 'SMTP_FROM not configured' }
-  }
+  const { host, port, user, pass, from, secure, requireTLS } = resolved.config
+  const tp = nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    requireTLS,
+    auth: { user, pass },
+    connectionTimeout: 10000,
+    greetingTimeout: 5000,
+    socketTimeout: 15000,
+  })
 
   try {
     console.log(`[Email] Sending email to ${params.to}: "${params.subject}"`)
@@ -395,7 +367,7 @@ export async function sendEmail(params: {
       },
     })
 
-    console.log(`[Email] Email sent successfully. MessageId: ${info.messageId}`)
+    console.log(`[Email] Email accepted by SMTP provider. MessageId: ${info.messageId}`)
     return { success: true, messageId: info.messageId }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'

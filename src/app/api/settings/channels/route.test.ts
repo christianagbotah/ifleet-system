@@ -100,6 +100,22 @@ describe('GET /api/settings/channels authorization', () => {
   })
 })
 
+describe('PUT /api/settings/channels SMS provider safety', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('rejects enabling an SMS provider without a runtime adapter', async () => {
+    findFirst.mockResolvedValue({ ...settings, smsEnabled: false, smsProvider: 'hubtel', paystackEnabled: false, paystackSecretKey: '' })
+
+    const response = await PUT(putRequest({ smsEnabled: true, smsProvider: 'arkesel' }))
+
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ error: 'Unsupported SMS provider. Fleetivo currently supports Hubtel.' })
+    expect(upsert).not.toHaveBeenCalled()
+  })
+})
+
 describe('PUT /api/settings/channels Paystack mode safety', () => {
   beforeEach(() => {
     vi.clearAllMocks()

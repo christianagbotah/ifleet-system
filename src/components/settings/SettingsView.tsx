@@ -604,7 +604,7 @@ export function SettingsView() {
                     </div>
                     <div>
                       <CardTitle className="text-base">SMS Channel</CardTitle>
-                      <CardDescription>Send SMS notifications via Hubtel or Arkesel.</CardDescription>
+                      <CardDescription>Send SMS notifications through the configured Hubtel channel.</CardDescription>
                     </div>
                   </div>
                   <Switch
@@ -627,7 +627,6 @@ export function SettingsView() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="hubtel">Hubtel</SelectItem>
-                      <SelectItem value="arkesel">Arkesel</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

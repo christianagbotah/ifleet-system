@@ -1,23 +1,10 @@
 // ════════════════════════════════════════════════════════════════════
-// iFleetPro — Push Notification Hook (Socket.IO)
+// Fleetivo — Push Notification Hook (authenticated SSE)
 // ════════════════════════════════════════════════════════════════════
-//
-// usePushNotifications — connects to the notification Socket.IO service
-// on port 3004 and provides real-time notification updates.
-//
-// Features:
-//   - Pre-flight health check before connecting (avoids 502 console spam)
-//   - Auto-connects when user is authenticated
-//   - Auto-reconnects on disconnect (built into socket.io-client)
-//   - Falls back to polling if Socket.IO fails
-//   - Increments unread count on each push event
-//   - Shows browser notification (if permitted)
-// ────────────────────────────────────────────────────────────────────
 
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { io, Socket } from 'socket.io-client'
+import { useEffect, useRef, useState } from 'react'
 import { useAuthStore } from '@/lib/store/auth'
 import { APP_NAME } from '@/lib/constants'
 
@@ -36,202 +23,184 @@ interface UsePushNotificationsReturn {
   pushCount: number
 }
 
-/** Check if the push notification service is reachable (non-throwing). */
-async function isPushServiceAvailable(): Promise<boolean> {
-  try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 3000)
-    const res = await fetch('/socket.io/?XTransformPort=3004&EIO=4&transport=polling', {
-      method: 'GET',
-      signal: controller.signal,
-    })
-    clearTimeout(timer)
-    // Socket.IO handshake returns 200 with a numeric payload
-    return res.ok
-  } catch {
-    return false
+interface ParsedSseEvent {
+  event: string
+  data: string
+}
+
+const RECONNECT_DELAY_MS = 5000
+
+function parseSseBlock(block: string): ParsedSseEvent | null {
+  let event = 'message'
+  const dataLines: string[] = []
+
+  for (const line of block.split(/\r?\n/)) {
+    if (!line || line.startsWith(':')) continue
+    if (line.startsWith('event:')) event = line.slice(6).trim()
+    if (line.startsWith('data:')) dataLines.push(line.slice(5).trimStart())
   }
+
+  if (dataLines.length === 0) return null
+  return { event, data: dataLines.join('\n') }
 }
 
 export function usePushNotifications(
-  onNotification?: (notification: PushNotification) => void
+  onNotification?: (notification: PushNotification) => void,
 ): UsePushNotificationsReturn {
   const [isConnected, setIsConnected] = useState(false)
   const [lastPush, setLastPush] = useState<PushNotification | null>(null)
   const [pushCount, setPushCount] = useState(0)
-  const socketRef = useRef<Socket | null>(null)
   const userId = useAuthStore((state) => state.user?.id || null)
-
-  // Use refs for callbacks to avoid re-connecting on callback change
+  const token = useAuthStore((state) => state.token)
   const onNotificationRef = useRef(onNotification)
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
+
   useEffect(() => {
     onNotificationRef.current = onNotification
   }, [onNotification])
 
-  const connectSocket = useCallback(() => {
-    if (!userId) return
-
-    // Close existing connection
-    if (socketRef.current) {
-      socketRef.current.disconnect()
-      socketRef.current = null
+  useEffect(() => {
+    if (!userId || !token) {
+      setIsConnected(false)
+      return
     }
 
-    // Pre-flight check: only connect if the push service is actually reachable.
-    // This prevents console spam when the service is down.
-    isPushServiceAvailable().then((available) => {
-      if (!available) {
-        console.warn('[Push] Notification service not available — push notifications disabled')
-        setIsConnected(false)
-        return
-      }
+    let disposed = false
+
+    const scheduleReconnect = (connect: () => void) => {
+      if (disposed) return
+      reconnectTimerRef.current = setTimeout(connect, RECONNECT_DELAY_MS)
+    }
+
+    const connect = async () => {
+      if (disposed) return
+
+      abortRef.current?.abort()
+      const controller = new AbortController()
+      abortRef.current = controller
+      setIsConnected(false)
 
       try {
-        // Connect to Socket.IO notification service through Caddy gateway.
-        // query.XTransformPort tells Caddy to route to port 3004.
-        const socket = io({
-          query: { XTransformPort: '3004' },
-          transports: ['polling', 'websocket'],
-          reconnection: true,
-          reconnectionAttempts: 5,
-          reconnectionDelay: 5000,
-          reconnectionDelayMax: 30000,
-          timeout: 10000,
-        })
+        const response = await fetch(
+          `/api/notifications/stream?userId=${encodeURIComponent(userId)}`,
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'text/event-stream',
+              Authorization: `Bearer ${token}`,
+            },
+            cache: 'no-store',
+            signal: controller.signal,
+          },
+        )
 
-        socketRef.current = socket
+        if (!response.ok || !response.body) {
+          throw new Error(`Push stream unavailable (${response.status})`)
+        }
 
-        socket.on('connect', () => {
-          console.log('[Push] Socket.IO connected:', socket.id, 'userId:', userId)
-          setIsConnected(true)
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ''
 
-          // Subscribe to this user's notifications
-          socket.emit('join-user', { userId }, (ack: unknown) => {
-            console.log('[Push] join-user acknowledged:', ack)
-          })
-        })
+        while (!disposed && !controller.signal.aborted) {
+          const { done, value } = await reader.read()
+          if (done) break
 
-        socket.on('notification', (data: {
-          id: string
-          type: string
-          title: string
-          message: string
-          link?: string | null
-          createdAt: string
-          tripId?: string
-        }) => {
-          const pushNotification: PushNotification = {
-            type: data.type,
-            title: data.title,
-            message: data.message,
-            timestamp: data.createdAt,
-            notificationId: data.id,
-            metadata: data.tripId ? { tripId: data.tripId } : undefined,
+          buffer += decoder.decode(value, { stream: true })
+          let boundary = buffer.indexOf('\n\n')
+          while (boundary >= 0) {
+            const block = buffer.slice(0, boundary)
+            buffer = buffer.slice(boundary + 2)
+            const parsed = parseSseBlock(block)
+
+            if (parsed?.event === 'connected') {
+              setIsConnected(true)
+            } else if (parsed?.event === 'notification') {
+              try {
+                const notification = JSON.parse(parsed.data) as PushNotification
+                setLastPush(notification)
+                setPushCount((previous) => previous + 1)
+                onNotificationRef.current?.(notification)
+                showBrowserNotification(notification)
+                playNotificationSound()
+              } catch (error) {
+                console.warn('[Push] Ignoring malformed SSE notification:', error)
+              }
+            }
+
+            boundary = buffer.indexOf('\n\n')
           }
-
-          console.log('[Push] Received:', data.type, data.title)
-
-          setLastPush(pushNotification)
-          setPushCount((prev) => prev + 1)
-
-          // Call the callback
-          if (onNotificationRef.current) {
-            onNotificationRef.current(pushNotification)
-          }
-
-          // Show browser notification (if permitted)
-          showBrowserNotification(pushNotification)
-
-          // Play notification sound
-          playNotificationSound()
-        })
-
-        socket.on('disconnect', (reason) => {
-          console.log('[Push] Socket.IO disconnected:', reason)
+        }
+      } catch (error) {
+        if (!disposed && !controller.signal.aborted) {
+          console.warn('[Push] SSE connection failed:', error)
+        }
+      } finally {
+        if (abortRef.current === controller) abortRef.current = null
+        if (!disposed && !controller.signal.aborted) {
           setIsConnected(false)
-        })
-
-        socket.io.on('reconnect_failed', () => {
-          console.warn('[Push] Notification service unavailable after all retries — push notifications disabled')
-        })
-
-        socket.on('connect_error', () => {
-          setIsConnected(false)
-        })
-      } catch (err) {
-        console.error('[Push] Failed to create Socket.IO connection:', err)
-      }
-    })
-  }, [userId])
-
-  // Connect / reconnect when userId changes
-  useEffect(() => {
-    connectSocket()
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect()
-        socketRef.current = null
-        setIsConnected(false)
+          scheduleReconnect(() => { void connect() })
+        }
       }
     }
-  }, [connectSocket])
+
+    void connect()
+
+    return () => {
+      disposed = true
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current)
+        reconnectTimerRef.current = null
+      }
+      abortRef.current?.abort()
+      abortRef.current = null
+      setIsConnected(false)
+    }
+  }, [token, userId])
 
   return { isConnected, lastPush, pushCount }
 }
 
-// ── Browser Notification Helper ──
-
 function showBrowserNotification(data: PushNotification) {
   if (typeof window === 'undefined' || !('Notification' in window)) return
 
-  // Request permission on first push
   if (Notification.permission === 'default') {
-    Notification.requestPermission().then((perm) => {
-      if (perm === 'granted') {
-        doShowNotification(data)
-      }
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') doShowNotification(data)
     })
     return
   }
 
-  if (Notification.permission === 'granted') {
-    doShowNotification(data)
-  }
+  if (Notification.permission === 'granted') doShowNotification(data)
 }
 
 function doShowNotification(data: PushNotification) {
   const plainMessage = data.message.replace(/<[^>]+>/g, '')
   try {
     new window.Notification(`${APP_NAME}: ${data.title}`, {
-      body: plainMessage.length > 200 ? plainMessage.slice(0, 200) + '...' : plainMessage,
+      body: plainMessage.length > 200 ? `${plainMessage.slice(0, 200)}...` : plainMessage,
       icon: '/icons/icon-192.png',
       tag: data.notificationId || data.type,
       timestamp: new Date(data.timestamp).getTime(),
     })
   } catch {
-    // Browser notification failed silently
+    // Browser notifications are optional.
   }
 }
-
-// ── Notification Sound Helper ──
 
 let audioInstance: HTMLAudioElement | null = null
 
 function playNotificationSound() {
   if (typeof window === 'undefined') return
   try {
-    // Reuse the audio instance if possible
     if (!audioInstance) {
       audioInstance = new Audio('/sounds/notification.wav')
-      audioInstance.volume = 0.3 // Subtle volume
+      audioInstance.volume = 0.3
     }
-    // Reset to beginning and play
     audioInstance.currentTime = 0
-    audioInstance.play().catch(() => {
-      // Autoplay blocked by browser — ignore silently
-    })
+    audioInstance.play().catch(() => {})
   } catch {
-    // Audio not supported — ignore silently
+    // Audio feedback is optional.
   }
 }

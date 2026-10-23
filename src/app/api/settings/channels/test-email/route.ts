@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import nodemailer from 'nodemailer'
 import { requireRole, ROLES } from '@/lib/auth-server'
 import { APP_NAME, APP_PRODUCT_BYLINE } from '@/lib/constants'
+import { sendEmail } from '@/lib/services/email'
 
 // POST /api/settings/channels/test-email — Send a test email
 export async function POST(request: NextRequest) {
@@ -56,21 +56,6 @@ export async function POST(request: NextRequest) {
     const fromEmail = settings.smtpFrom || settings.smtpUser
     const portNum = settings.smtpPort || 587
     const isSecure = settings.smtpSecure || false
-
-    // Create a temporary transporter with the DB settings
-    const transporter = nodemailer.createTransport({
-      host: settings.smtpHost,
-      port: portNum,
-      secure: isSecure,
-      auth: {
-        user: settings.smtpUser,
-        pass: settings.smtpPass,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 5000,
-      socketTimeout: 15000,
-    })
-
     const now = new Date().toLocaleString('en-GB', { timeZone: 'Africa/Accra' })
 
     const htmlEmail = `<!DOCTYPE html>
@@ -123,30 +108,24 @@ export async function POST(request: NextRequest) {
 </body>
 </html>`
 
-    try {
-      const info = await transporter.sendMail({
-        from: `"${APP_NAME}" <${fromEmail}>`,
-        to: toEmail,
-        subject: `${APP_NAME} — Email Channel Test`,
-        html: htmlEmail,
-        text: `${APP_NAME} — Email Channel Test\n\nThis is a test email. If you received this, your SMTP configuration is working.\n\nSMTP Host: ${settings.smtpHost}\nSMTP Port: ${portNum}\nTLS: ${isSecure ? 'Enabled' : 'Disabled'}\nFrom: ${fromEmail}\nSent At: ${now}\n\n— ${APP_PRODUCT_BYLINE}`,
-      })
+    const result = await sendEmail({
+      to: toEmail,
+      subject: `${APP_NAME} — Email Channel Test`,
+      html: htmlEmail,
+      text: `${APP_NAME} — Email Channel Test\n\nThis is a test email. If you received this, your SMTP configuration is working.\n\nSMTP Host: ${settings.smtpHost}\nSMTP Port: ${portNum}\nTLS: ${isSecure ? 'Enabled' : 'Disabled'}\nFrom: ${fromEmail}\nSent At: ${now}\n\n— ${APP_PRODUCT_BYLINE}`,
+    })
 
-      console.log(`[Test Email] Sent successfully. MessageId: ${info.messageId}`)
-
+    if (result.success) {
       return NextResponse.json({
         success: true,
-        message: `Test email sent successfully to ${toEmail}`,
-      })
-    } catch (sendError) {
-      const errorMessage = sendError instanceof Error ? sendError.message : 'Unknown error'
-      console.error(`[Test Email] Failed: ${errorMessage}`)
-
-      return NextResponse.json({
-        success: false,
-        message: `Failed to send test email: ${errorMessage}`,
+        message: `Test email accepted by the SMTP provider for ${toEmail}`,
       })
     }
+
+    return NextResponse.json({
+      success: false,
+      message: `Failed to send test email: ${result.error}`,
+    })
   } catch (error) {
     console.error('Test Email error:', error)
     return NextResponse.json(

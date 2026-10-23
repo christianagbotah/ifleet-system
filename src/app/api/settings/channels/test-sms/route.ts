@@ -47,40 +47,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Override env vars with DB settings for the test
-    const originalClientId = process.env.HUBTEL_CLIENT_ID
-    const originalApiSecret = process.env.HUBTEL_API_SECRET
+    const formattedPhone = formatGhanaPhone(phone)
+    const result = await sendSMS({
+      to: formattedPhone,
+      message: `${APP_NAME} Test SMS — Your SMS channel is working! Sent at ${new Date().toLocaleString('en-GB', { timeZone: 'Africa/Accra' })}`,
+    })
 
-    if (settings.smsProvider === 'hubtel' && settings.hubtelClientId && settings.hubtelApiSecret) {
-      process.env.HUBTEL_CLIENT_ID = settings.hubtelClientId
-      process.env.HUBTEL_API_SECRET = settings.hubtelApiSecret
-    }
-
-    try {
-      const formattedPhone = formatGhanaPhone(phone)
-      const result = await sendSMS({
-        to: formattedPhone,
-        message: `${APP_NAME} Test SMS — Your SMS channel is working! Sent at ${new Date().toLocaleString('en-GB', { timeZone: 'Africa/Accra' })}`,
+    if (result.success) {
+      return NextResponse.json({
+        success: true,
+        message: `Test SMS accepted by Hubtel for ${formattedPhone}`,
       })
-
-      if (result.success) {
-        return NextResponse.json({
-          success: true,
-          message: `Test SMS sent successfully to ${formattedPhone}`,
-        })
-      } else {
-        return NextResponse.json({
-          success: false,
-          message: `Failed to send test SMS: ${result.error}`,
-        })
-      }
-    } finally {
-      // Restore original env vars
-      if (originalClientId !== undefined) process.env.HUBTEL_CLIENT_ID = originalClientId
-      else delete process.env.HUBTEL_CLIENT_ID
-      if (originalApiSecret !== undefined) process.env.HUBTEL_API_SECRET = originalApiSecret
-      else delete process.env.HUBTEL_API_SECRET
     }
+
+    return NextResponse.json({
+      success: false,
+      message: `Failed to send test SMS: ${result.error}`,
+    })
   } catch (error) {
     console.error('Test SMS error:', error)
     return NextResponse.json(

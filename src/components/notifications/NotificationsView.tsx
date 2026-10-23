@@ -336,18 +336,26 @@ export function NotificationsView() {
                           <div className="flex items-center justify-between mt-2">
                             <div className="flex items-center gap-1.5">
                               <span className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                <Bell className="h-2.5 w-2.5" /> App
+                                <Bell className="h-2.5 w-2.5" /> In-app saved
                               </span>
-                              {notification.smsSent && (
+                              {notification.smsSent ? (
                                 <span className="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                  <MessageSquare className="h-2.5 w-2.5" /> SMS
+                                  <MessageSquare className="h-2.5 w-2.5" /> SMS accepted
                                 </span>
-                              )}
-                              {notification.emailSent && (
+                              ) : notification.smsError ? (
+                                <span className="inline-flex items-center gap-0.5 text-[10px] text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
+                                  <MessageSquare className="h-2.5 w-2.5" /> SMS failed
+                                </span>
+                              ) : null}
+                              {notification.emailSent ? (
                                 <span className="inline-flex items-center gap-0.5 text-[10px] text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
-                                  <Mail className="h-2.5 w-2.5" /> Email
+                                  <Mail className="h-2.5 w-2.5" /> Email accepted
                                 </span>
-                              )}
+                              ) : notification.emailError ? (
+                                <span className="inline-flex items-center gap-0.5 text-[10px] text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
+                                  <Mail className="h-2.5 w-2.5" /> Email failed
+                                </span>
+                              ) : null}
                             </div>
                             {!notification.isRead && (
                               <Button

@@ -14,10 +14,10 @@ describe('company profile runtime configuration contract', () => {
     expect(schema).not.toContain('@default("www.fleetpro.com.gh")')
   })
 
-  it('requires email sender and footer identity from runtime configuration/settings', () => {
+  it('requires email footer identity from runtime company settings without tenant fallbacks', () => {
     const email = source('src/lib/services/email.ts')
     expect(email).toContain('loadCompanyProfile')
-    expect(email).toContain('process.env.SMTP_FROM')
+    expect(email).toContain('resolveEmailDeliveryConfig')
     expect(email).not.toContain("process.env.SMTP_FROM || 'noreply@fleetpro.com.gh'")
     expect(email).not.toContain('37 Ring Road Central, Accra, Ghana')
     expect(email).not.toContain('+233 30 277 8899')

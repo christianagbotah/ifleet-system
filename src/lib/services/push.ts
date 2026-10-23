@@ -29,8 +29,13 @@ export interface PushEvent {
 
 type PushCallback = (event: PushEvent) => void
 
-// userId → Set of callback functions
-const listeners = new Map<string, Set<PushCallback>>()
+// userId → Set of callback functions. Keep this process-local registry on
+// globalThis so independently bundled Next.js route modules share the same
+// active SSE listeners inside the single Fleetivo app process.
+const pushGlobal = globalThis as typeof globalThis & {
+  __fleetivoPushListeners?: Map<string, Set<PushCallback>>
+}
+const listeners = pushGlobal.__fleetivoPushListeners ??= new Map<string, Set<PushCallback>>()
 
 /**
  * Register a push listener for a given user.
@@ -60,40 +65,48 @@ export function registerPushListener(userId: string, callback: PushCallback): ()
 /**
  * Emit a push event to all connected clients for a given user.
  */
-export function emitPush(userId: string, event: PushEvent): void {
+export function emitPush(userId: string, event: PushEvent): number {
   const userListeners = listeners.get(userId)
   if (!userListeners || userListeners.size === 0) {
     console.log(`[Push] No active listeners for user ${userId}. Event "${event.type}" not delivered via push.`)
-    return
+    return 0
   }
 
   console.log(`[Push] Emitting "${event.type}" to ${userListeners.size} listener(s) for user ${userId}`)
+  let delivered = 0
 
   for (const callback of userListeners) {
     try {
       callback(event)
+      delivered += 1
     } catch (error) {
       console.error(`[Push] Error in listener callback for user ${userId}:`, error)
     }
   }
+
+  return delivered
 }
 
 /**
  * Emit a push event to ALL connected clients (broadcast).
  * Useful for system-wide notifications.
  */
-export function broadcastPush(event: PushEvent): void {
+export function broadcastPush(event: PushEvent): number {
   console.log(`[Push] Broadcasting "${event.type}" to all ${getTotalListenerCount()} listener(s)`)
+  let delivered = 0
 
   for (const [userId, userListeners] of listeners.entries()) {
     for (const callback of userListeners) {
       try {
         callback(event)
+        delivered += 1
       } catch (error) {
         console.error(`[Push] Error in broadcast callback for user ${userId}:`, error)
       }
     }
   }
+
+  return delivered
 }
 
 /**

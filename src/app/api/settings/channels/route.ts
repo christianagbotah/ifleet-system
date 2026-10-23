@@ -86,6 +86,13 @@ export async function PUT(request: NextRequest) {
     // Upsert: find existing or create new
     const existing = await db.systemSettings.findFirst()
 
+    if (smsProvider !== undefined && smsProvider !== 'hubtel') {
+      return NextResponse.json(
+        { error: 'Unsupported SMS provider. Fleetivo currently supports Hubtel.' },
+        { status: 400 },
+      )
+    }
+
     if (paystackMode !== undefined && paystackMode !== 'test' && paystackMode !== 'live') {
       return NextResponse.json({ error: 'Paystack mode must be test or live.' }, { status: 400 })
     }

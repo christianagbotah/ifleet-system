@@ -6,7 +6,7 @@
 //   - in_app  → Database Notification records (always)
 //   - sms     → Hubtel SMS API
 //   - email   → Nodemailer SMTP
-//   - push    → Socket.IO real-time WebSocket
+//   - push    → Authenticated in-process SSE stream
 //
 // The dispatcher:
 //   1. Respects SystemSettings notification preferences
@@ -20,12 +20,9 @@
 
 import { APP_NAME } from '@/lib/constants'
 import { db } from '@/lib/db'
+import { broadcastPush, createPushEvent, emitPush } from './push'
 import { sendSMS } from './sms'
 import { sendEmail } from './email'
-
-// ── Socket.IO Notification Service Config ──
-const NOTIFICATION_SERVICE_URL = 'http://localhost:3004'
-const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || 'ifleetpro-internal-key-change-me'
 
 export type NotificationChannel = 'in_app' | 'sms' | 'email' | 'push'
 
@@ -76,52 +73,50 @@ const DEFAULT_DRIVER_CHANNEL_PREFERENCES: DriverChannelPreferences = {
   notifyPush: true,
 }
 
+type SystemSettingsRecord = Awaited<ReturnType<typeof db.systemSettings.findFirst>>
+
+async function loadSystemSettings(): Promise<SystemSettingsRecord> {
+  try {
+    return await db.systemSettings.findFirst()
+  } catch (error) {
+    console.warn('[Notification] Could not load SystemSettings; preserving default enabled behavior:', error)
+    return null
+  }
+}
+
 /**
  * Check if a notification type is enabled in SystemSettings.
  * Maps notification types to SystemSettings boolean fields.
  */
-async function isNotificationEnabled(type: string): Promise<boolean> {
-  try {
-    const settings = await db.systemSettings.findFirst()
-    if (!settings) return true // Default to enabled if no settings exist
+function isNotificationEnabled(type: string, settings: SystemSettingsRecord): boolean {
+  if (!settings) return true
 
-    const typeMap: Record<string, keyof typeof settings> = {
-      // All trip lifecycle events → Trip Started toggle
-      trip_assigned: 'notifyTripStarted',
-      trip_loading: 'notifyTripStarted',
-      trip_loaded: 'notifyTripStarted',
-      trip_waiting: 'notifyTripStarted',
-      trip_departed: 'notifyTripStarted',
-      trip_in_transit: 'notifyTripStarted',
-      trip_arrived: 'notifyTripStarted',
-      trip_offloading: 'notifyTripStarted',
-      trip_offloaded: 'notifyTripStarted',
-      trip_return: 'notifyTripStarted',
-      trip_started: 'notifyTripStarted',
-      // Trip completion → Trip Completed toggle
-      trip_completed: 'notifyTripCompleted',
-      // Other types
-      maintenance_due: 'notifyMaintenanceDue',
-      maintenance_scheduled: 'notifyMaintenanceDue',
-      insurance_expiring: 'notifyInsuranceExpiring',
-      insurance_expired: 'notifyInsuranceExpiring',
-      speeding_alert: 'notifySpeedingAlert',
-      geofence_alert: 'notifyGeofenceAlert',
-      driver_offline: 'notifyDriverOffline',
-      daily_report: 'notifyDailyReport',
-    }
-
-    const settingKey = typeMap[type]
-    if (settingKey) {
-      return settings[settingKey] === true
-    }
-
-    // Unknown types are enabled by default
-    return true
-  } catch (error) {
-    console.warn(`[Notification] Could not check SystemSettings for type "${type}":`, error)
-    return true
+  const typeMap: Record<string, string> = {
+    trip_assigned: 'notifyTripStarted',
+    trip_loading: 'notifyTripStarted',
+    trip_loaded: 'notifyTripStarted',
+    trip_waiting: 'notifyTripStarted',
+    trip_departed: 'notifyTripStarted',
+    trip_in_transit: 'notifyTripStarted',
+    trip_arrived: 'notifyTripStarted',
+    trip_offloading: 'notifyTripStarted',
+    trip_offloaded: 'notifyTripStarted',
+    trip_return: 'notifyTripStarted',
+    trip_started: 'notifyTripStarted',
+    trip_completed: 'notifyTripCompleted',
+    maintenance_due: 'notifyMaintenanceDue',
+    maintenance_scheduled: 'notifyMaintenanceDue',
+    insurance_expiring: 'notifyInsuranceExpiring',
+    insurance_expired: 'notifyInsuranceExpiring',
+    speeding_alert: 'notifySpeedingAlert',
+    geofence_alert: 'notifyGeofenceAlert',
+    driver_offline: 'notifyDriverOffline',
+    daily_report: 'notifyDailyReport',
   }
+
+  const settingKey = typeMap[type]
+  if (!settingKey) return true
+  return (settings as unknown as Record<string, unknown>)[settingKey] === true
 }
 
 async function resolveDriverChannelPreferences(driverId?: string): Promise<DriverChannelPreferences> {
@@ -185,7 +180,8 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
   console.log(`[Notification] Dispatching "${type}" for ${userId ? `user ${userId}` : 'unlinked user'}${driverId ? ` / driver ${driverId}` : ''}`)
 
   // System-wide preference is the highest-level gate.
-  const enabled = await isNotificationEnabled(type)
+  const settings = await loadSystemSettings()
+  const enabled = isNotificationEnabled(type, settings)
   if (!enabled) {
     console.log(`[Notification] Type "${type}" is disabled in SystemSettings. Skipping.`)
     // Still save an in-app suppression marker when a real user account exists.
@@ -204,8 +200,17 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
   }
 
   const driverPreferences = await resolveDriverChannelPreferences(driverId)
+  const systemSuppressedChannels: NotificationChannel[] = []
   const driverPreferenceSuppressedChannels: NotificationChannel[] = []
   const effectiveChannels = channels.filter((channel) => {
+    if (channel === 'sms' && settings?.smsEnabled === false) {
+      systemSuppressedChannels.push(channel)
+      return false
+    }
+    if (channel === 'email' && settings?.emailEnabled === false) {
+      systemSuppressedChannels.push(channel)
+      return false
+    }
     if (channel === 'sms' && !driverPreferences.notifySMS) {
       driverPreferenceSuppressedChannels.push(channel)
       return false
@@ -221,6 +226,9 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     return true
   })
 
+  if (systemSuppressedChannels.length > 0) {
+    console.log(`[Notification] System channel switches suppressed: ${systemSuppressedChannels.join(', ')}`)
+  }
   if (driverPreferenceSuppressedChannels.length > 0) {
     console.log(
       `[Notification] Driver preferences suppressed channels: ${driverPreferenceSuppressedChannels.join(', ')}`,
@@ -233,10 +241,11 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
     ...(tripId ? { tripId } : {}),
     dispatchedAt: new Date().toISOString(),
     channels: effectiveChannels,
-    ...(driverPreferenceSuppressedChannels.length > 0
+    ...(systemSuppressedChannels.length > 0 || driverPreferenceSuppressedChannels.length > 0
       ? {
           requestedChannels: channels,
-          driverPreferenceSuppressedChannels,
+          ...(systemSuppressedChannels.length > 0 ? { systemSuppressedChannels } : {}),
+          ...(driverPreferenceSuppressedChannels.length > 0 ? { driverPreferenceSuppressedChannels } : {}),
         }
       : {}),
   }
@@ -269,6 +278,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
         const msg = `No phone number found for user ${userId} / driver ${driverId}`
         console.warn(`[Notification] SMS skipped: ${msg}`)
         result.errors.push(`sms: ${msg}`)
+        await persistDeliveryEvidence(savedNotificationId, { smsSent: false, smsError: msg })
       } else {
         const smsText = smsMessage || message
         const smsResult = await sendSMS({
@@ -277,14 +287,23 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
           tripId,
         })
         result.sms = smsResult.success
-        if (!smsResult.success) {
-          result.errors.push(`sms: ${smsResult.error || 'Failed'}`)
+        if (smsResult.success) {
+          await persistDeliveryEvidence(savedNotificationId, {
+            smsSent: true,
+            smsSentAt: new Date(),
+            smsError: null,
+          })
+        } else {
+          const msg = smsResult.error || 'Failed'
+          result.errors.push(`sms: ${msg}`)
+          await persistDeliveryEvidence(savedNotificationId, { smsSent: false, smsError: msg })
         }
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error'
       console.error(`[Notification] SMS dispatch error: ${errorMsg}`)
       result.errors.push(`sms: ${errorMsg}`)
+      await persistDeliveryEvidence(savedNotificationId, { smsSent: false, smsError: errorMsg })
     }
   }
 
@@ -296,6 +315,7 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
         const msg = `No email found for user ${userId} / driver ${driverId}`
         console.warn(`[Notification] Email skipped: ${msg}`)
         result.errors.push(`email: ${msg}`)
+        await persistDeliveryEvidence(savedNotificationId, { emailSent: false, emailError: msg })
       } else {
         const subject = emailSubject || title
         const html = emailHtml || `<p>${message.replace(/\n/g, '<br/>')}</p>`
@@ -305,54 +325,43 @@ export async function dispatchNotification(params: DispatchParams): Promise<Disp
           html,
         })
         result.email = emailResult.success
-        if (!emailResult.success) {
-          result.errors.push(`email: ${emailResult.error || 'Failed'}`)
+        if (emailResult.success) {
+          await persistDeliveryEvidence(savedNotificationId, {
+            emailSent: true,
+            emailSentAt: new Date(),
+            emailError: null,
+          })
+        } else {
+          const msg = emailResult.error || 'Failed'
+          result.errors.push(`email: ${msg}`)
+          await persistDeliveryEvidence(savedNotificationId, { emailSent: false, emailError: msg })
         }
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error'
       console.error(`[Notification] Email dispatch error: ${errorMsg}`)
       result.errors.push(`email: ${errorMsg}`)
+      await persistDeliveryEvidence(savedNotificationId, { emailSent: false, emailError: errorMsg })
     }
   }
 
-  // ── 4. Push channel (Socket.IO real-time) ──
+  // ── 4. Push channel (SSE real-time) ──
   if (effectiveChannels.includes('push') && userId) {
-    try {
-      const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-internal-api-key': INTERNAL_API_KEY },
-        body: JSON.stringify({
-          userIds: [userId],
-          notification: {
-            id: `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-            type,
-            title,
-            message,
-            link: link || null,
-            createdAt: new Date().toISOString(),
-            ...(tripId ? { tripId } : {}),
-          },
-        }),
-      })
-      const data = await res.json() as { success?: boolean; count?: number; total?: number }
-      const pushOk = data.success === true || (data.count ?? 0) > 0
-      result.push = pushOk
-      console.log(`[Notification] Socket.IO push sent to user ${userId}: ${data.count ?? 0}/${data.total ?? 1} delivered, success=${pushOk}`)
+    const delivered = emitPush(userId, createPushEvent({
+      type,
+      title,
+      message,
+      notificationId: savedNotificationId || undefined,
+      metadata: {
+        ...fullMetadata,
+        ...(link ? { link } : {}),
+      },
+    }))
+    result.push = delivered > 0
+    console.log(`[Notification] SSE push delivered to ${delivered} active listener(s) for user ${userId}`)
 
-      // Update pushSent on the DB notification record for observability
-      if (pushOk && savedNotificationId) {
-        db.notification.update({
-          where: { id: savedNotificationId },
-          data: { pushSent: true, pushSentAt: new Date() },
-        }).catch((err) => {
-          console.warn(`[Notification] Failed to update pushSent: ${err instanceof Error ? err.message : err}`)
-        })
-      }
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error'
-      console.error(`[Notification] Push dispatch error: ${errorMsg}`)
-      result.errors.push(`push: ${errorMsg}`)
+    if (result.push) {
+      await persistDeliveryEvidence(savedNotificationId, { pushSent: true, pushSentAt: new Date() })
     }
   }
 
@@ -394,6 +403,29 @@ async function saveInAppNotification(params: {
     },
   })
   return record.id
+}
+
+type DeliveryEvidence = {
+  smsSent?: boolean
+  smsSentAt?: Date
+  smsError?: string | null
+  emailSent?: boolean
+  emailSentAt?: Date
+  emailError?: string | null
+  pushSent?: boolean
+  pushSentAt?: Date
+}
+
+async function persistDeliveryEvidence(notificationId: string | null, data: DeliveryEvidence): Promise<void> {
+  if (!notificationId) return
+
+  try {
+    await db.notification.update({ where: { id: notificationId }, data })
+  } catch (error) {
+    console.warn(
+      `[Notification] Failed to persist delivery evidence for ${notificationId}: ${error instanceof Error ? error.message : error}`,
+    )
+  }
 }
 
 /**
@@ -450,15 +482,7 @@ async function resolveEmail(userId?: string, driverId?: string): Promise<string 
 // ════════════════════════════════════════════════════════════════════
 
 /**
- * Dispatch a real-time push notification to all users with a specific role
- * via the Socket.IO notification service.
- *
- * This is a lightweight alternative to dispatchNotification() when you only
- * need push delivery (not in_app DB record, SMS, or email).
- * The Socket.IO service queries the DB for users with the given role.
- *
- * Use this for broadcasting to Admin/Manager users without saving
- * individual in_app records for each.
+ * Dispatch a real-time push notification to currently connected users with a specific role.
  */
 export async function dispatchRoleNotification(params: {
   role: string
@@ -470,24 +494,19 @@ export async function dispatchRoleNotification(params: {
   const { role, type, title, message, link } = params
 
   try {
-    const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify-role`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-internal-api-key': INTERNAL_API_KEY },
-      body: JSON.stringify({
-        role,
-        notification: {
-          id: `role-push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          type,
-          title,
-          message,
-          link: link || null,
-          createdAt: new Date().toISOString(),
-        },
-      }),
+    const users = await db.user.findMany({
+      where: { role: { name: role } },
+      select: { id: true },
     })
-    const data = await res.json() as { success?: boolean; count?: number; role?: string }
-    console.log(`[Notification] Role push "${type}" sent to ${data.count ?? 0} user(s) with role "${role}"`)
-    return data.success === true
+    const event = createPushEvent({
+      type,
+      title,
+      message,
+      metadata: link ? { link } : undefined,
+    })
+    const delivered = users.reduce((count, user) => count + emitPush(user.id, event), 0)
+    console.log(`[Notification] Role push "${type}" delivered to ${delivered} active listener(s) with role "${role}"`)
+    return delivered > 0
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
     console.error(`[Notification] Role push dispatch error: ${errorMsg}`)
@@ -496,8 +515,7 @@ export async function dispatchRoleNotification(params: {
 }
 
 /**
- * Broadcast a real-time push notification to ALL connected clients
- * via the Socket.IO notification service.
+ * Broadcast a real-time push notification to all currently connected clients.
  */
 export async function dispatchBroadcastNotification(params: {
   type: string
@@ -508,23 +526,14 @@ export async function dispatchBroadcastNotification(params: {
   const { type, title, message, link } = params
 
   try {
-    const res = await fetch(`${NOTIFICATION_SERVICE_URL}/api/notify-all`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-internal-api-key': INTERNAL_API_KEY },
-      body: JSON.stringify({
-        notification: {
-          id: `broadcast-push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          type,
-          title,
-          message,
-          link: link || null,
-          createdAt: new Date().toISOString(),
-        },
-      }),
-    })
-    const data = await res.json() as { success?: boolean; count?: number }
-    console.log(`[Notification] Broadcast push "${type}" sent to ${data.count ?? 0} client(s)`)
-    return data.success === true
+    const delivered = broadcastPush(createPushEvent({
+      type,
+      title,
+      message,
+      metadata: link ? { link } : undefined,
+    }))
+    console.log(`[Notification] Broadcast push "${type}" delivered to ${delivered} active listener(s)`)
+    return delivered > 0
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
     console.error(`[Notification] Broadcast push dispatch error: ${errorMsg}`)

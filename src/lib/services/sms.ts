@@ -13,6 +13,7 @@
 // ────────────────────────────────────────────────────────────────────
 
 import { APP_SMS_SENDER } from '@/lib/constants'
+import { resolveSmsDeliveryConfig } from '@/lib/services/channel-config'
 
 const HUBTEL_ENDPOINT = 'https://api.hubtel.com/v1/messages/send'
 const SENDER_NAME = APP_SMS_SENDER
@@ -37,34 +38,18 @@ interface TripSMSParams {
  * Accepts formats like: 0245678901, 233245678901, +233245678901, +233 24 567 8901
  */
 export function formatGhanaPhone(phone: string): string {
-  // Remove all whitespace and non-digit characters except leading +
-  let cleaned = phone.trim().replace(/[\s()-]/g, '')
+  const digits = phone.trim().replace(/\D/g, '')
+  let normalized: string
 
-  // If starts with +233, strip the + for normalization
-  if (cleaned.startsWith('+233')) {
-    cleaned = cleaned.slice(1) // Remove +, keep 233...
-  }
-  // If starts with 233 (without +)
-  else if (cleaned.startsWith('233') && cleaned.length >= 12) {
-    // Already in international format without +, keep as is
-  }
-  // If starts with 0 (local Ghana format like 024...)
-  else if (cleaned.startsWith('0')) {
-    cleaned = '233' + cleaned.slice(1) // Replace 0 with 233
+  if (digits.startsWith('233')) normalized = `+${digits}`
+  else if (digits.startsWith('0')) normalized = `+233${digits.slice(1)}`
+  else normalized = `+233${digits}`
+
+  if (!/^\+233\d{9}$/.test(normalized)) {
+    console.warn(`[SMS] Invalid Ghana phone number format: ${phone} → formatted as ${normalized}`)
   }
 
-  // Ensure it starts with +233
-  if (!cleaned.startsWith('+233')) {
-    cleaned = '+233' + cleaned
-  }
-
-  // Validate: should be +233 followed by 9-10 digits
-  const digitCount = cleaned.replace('+', '').length
-  if (digitCount < 12 || digitCount > 13) {
-    console.warn(`[SMS] Invalid Ghana phone number format: ${phone} → formatted as ${cleaned}`)
-  }
-
-  return cleaned
+  return normalized
 }
 
 /**
@@ -76,17 +61,13 @@ export async function sendSMS(params: {
   message: string
   tripId?: string
 }): Promise<SMSResult> {
-  const clientId = process.env.HUBTEL_CLIENT_ID
-  const apiSecret = process.env.HUBTEL_API_SECRET
-
-  if (!clientId || !apiSecret) {
-    console.warn(
-      '[SMS] Hubtel credentials not configured (HUBTEL_CLIENT_ID / HUBTEL_API_SECRET). ' +
-      'SMS sending is disabled. Set environment variables to enable.'
-    )
-    return { success: false, error: 'SMS credentials not configured' }
+  const resolved = await resolveSmsDeliveryConfig()
+  if (!resolved.enabled) {
+    console.warn(`[SMS] ${resolved.error}`)
+    return { success: false, error: resolved.error }
   }
 
+  const { clientId, apiSecret } = resolved.config
   const formattedTo = formatGhanaPhone(params.to)
 
   // Validate message length (SMS limit is 160 chars for standard, 70 for Unicode)
@@ -124,7 +105,7 @@ export async function sendSMS(params: {
 
     // Hubtel returns { status, messageId, ... } on success
     if (result.status === 0 || result.messageId) {
-      console.log(`[SMS] SMS sent successfully. MessageId: ${result.messageId || 'N/A'}`)
+      console.log(`[SMS] SMS accepted by Hubtel. MessageId: ${result.messageId || 'N/A'}`)
       return { success: true, messageId: result.messageId }
     }
 
