@@ -29,8 +29,13 @@ export interface PushEvent {
 
 type PushCallback = (event: PushEvent) => void
 
-// userId → Set of callback functions
-const listeners = new Map<string, Set<PushCallback>>()
+// userId → Set of callback functions. Keep this process-local registry on
+// globalThis so independently bundled Next.js route modules share the same
+// active SSE listeners inside the single Fleetivo app process.
+const pushGlobal = globalThis as typeof globalThis & {
+  __fleetivoPushListeners?: Map<string, Set<PushCallback>>
+}
+const listeners = pushGlobal.__fleetivoPushListeners ??= new Map<string, Set<PushCallback>>()
 
 /**
  * Register a push listener for a given user.

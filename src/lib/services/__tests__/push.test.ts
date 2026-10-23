@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createPushEvent, emitPush, registerPushListener } from '@/lib/services/push'
 
 describe('SSE push delivery evidence', () => {
@@ -31,4 +31,24 @@ describe('SSE push delivery evidence', () => {
       unsubscribeBad()
     }
   })
+})
+
+it('shares active listeners across module reloads in the same app process', async () => {
+  const received: string[] = []
+  const unsubscribe = registerPushListener('shared-user', (event) => received.push(event.type))
+
+  try {
+    vi.resetModules()
+    const freshPushModule = await import('@/lib/services/push')
+    const delivered = freshPushModule.emitPush('shared-user', freshPushModule.createPushEvent({
+      type: 'trip_arrived',
+      title: 'Trip arrived',
+      message: 'Truck arrived',
+    }))
+
+    expect(delivered).toBe(1)
+    expect(received).toEqual(['trip_arrived'])
+  } finally {
+    unsubscribe()
+  }
 })

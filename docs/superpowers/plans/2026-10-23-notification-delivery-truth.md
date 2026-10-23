@@ -74,10 +74,10 @@
 - Consumes: auth-store Bearer token and `/api/notifications/stream?userId=...`.
 - Produces: the existing `{ isConnected, lastPush, pushCount }` hook contract without Socket.IO/port 3004.
 
-- [ ] Write a hook test with a controlled SSE response proving authenticated connection and notification delivery.
-- [ ] Confirm RED against the old Socket.IO hook.
-- [ ] Implement streaming fetch/SSE parsing and cancellation/reconnect behavior.
-- [ ] Run focused hook/stream tests and confirm GREEN; commit.
+- [x] Write a hook test with a controlled SSE response proving authenticated connection and notification delivery.
+- [x] Confirm RED against the old Socket.IO hook.
+- [x] Implement streaming fetch/SSE parsing and cancellation/reconnect behavior.
+- [x] Run focused hook/stream tests and confirm GREEN; commit.
 
 ### Task 4: Truthful Delivery Presentation
 
