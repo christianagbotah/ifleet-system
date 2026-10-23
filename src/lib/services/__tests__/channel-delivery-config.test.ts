@@ -151,5 +151,9 @@ describe('notification channel runtime configuration', () => {
       secure: true,
       auth: { user: 'env-user', pass: 'env-pass' },
     }))
+    expect(mocks.sendMail).toHaveBeenCalledWith(expect.objectContaining({
+      from: expect.stringContaining('<env-from@example.com>'),
+      to: 'driver@example.com',
+    }))
   })
 })
