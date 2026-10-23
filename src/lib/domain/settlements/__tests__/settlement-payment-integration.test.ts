@@ -23,12 +23,14 @@ describe('driver settlement payment integration', () => {
     expect(route).toContain('markDriverSettlementPaid')
   })
 
-  it('uses the central payment service from Paystack verification and webhook processing', () => {
+  it('keeps driver settlement payout accounting out of Paystack customer charge processing', () => {
     const verify = source('src/app/api/payments/paystack/verify/route.ts')
     const webhook = source('src/app/api/payments/paystack/webhook/route.ts')
-    expect(verify).toContain('markDriverSettlementPaid')
-    expect(webhook).toContain('markDriverSettlementPaid')
-    expect(verify).not.toContain("db.driverSettlement.update({\n          where: { id: settlementId }")
-    expect(webhook).not.toContain("db.driverSettlement.update({\n          where: { id: settlementId }")
+    expect(verify).toContain('processSuccessfulPaystackCharge')
+    expect(webhook).toContain('processSuccessfulPaystackCharge')
+    expect(verify).not.toContain('markDriverSettlementPaid')
+    expect(webhook).not.toContain('markDriverSettlementPaid')
+    expect(verify).not.toContain('settlementId')
+    expect(webhook).not.toContain('settlementId')
   })
 })

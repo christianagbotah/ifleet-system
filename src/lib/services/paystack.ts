@@ -36,6 +36,7 @@ export interface PaystackCustomer {
 }
 
 export interface PaymentData {
+  id?: number
   reference: string
   amount: number
   status: string

@@ -343,6 +343,11 @@ export type InsuranceClaim = Prisma.InsuranceClaimModel
  */
 export type Invoice = Prisma.InvoiceModel
 /**
+ * Model PaymentTransaction
+ * 
+ */
+export type PaymentTransaction = Prisma.PaymentTransactionModel
+/**
  * Model InvoiceItem
  * 
  */

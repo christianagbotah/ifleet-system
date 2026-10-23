@@ -561,6 +561,23 @@ export type EnumInvoiceStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumInvoiceStatusFilter<$PrismaModel>
 }
 
+export type EnumPaymentTransactionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaymentTransactionStatus | Prisma.EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PaymentTransactionStatus[]
+  notIn?: $Enums.PaymentTransactionStatus[]
+  not?: Prisma.NestedEnumPaymentTransactionStatusFilter<$PrismaModel> | $Enums.PaymentTransactionStatus
+}
+
+export type EnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaymentTransactionStatus | Prisma.EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PaymentTransactionStatus[]
+  notIn?: $Enums.PaymentTransactionStatus[]
+  not?: Prisma.NestedEnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentTransactionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPaymentTransactionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPaymentTransactionStatusFilter<$PrismaModel>
+}
+
 export type EnumLoadBoardStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.LoadBoardStatus | Prisma.EnumLoadBoardStatusFieldRefInput<$PrismaModel>
   in?: $Enums.LoadBoardStatus[]
@@ -1373,6 +1390,23 @@ export type NestedEnumInvoiceStatusWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumInvoiceStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumInvoiceStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumPaymentTransactionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaymentTransactionStatus | Prisma.EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PaymentTransactionStatus[]
+  notIn?: $Enums.PaymentTransactionStatus[]
+  not?: Prisma.NestedEnumPaymentTransactionStatusFilter<$PrismaModel> | $Enums.PaymentTransactionStatus
+}
+
+export type NestedEnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaymentTransactionStatus | Prisma.EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PaymentTransactionStatus[]
+  notIn?: $Enums.PaymentTransactionStatus[]
+  not?: Prisma.NestedEnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentTransactionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPaymentTransactionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPaymentTransactionStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumLoadBoardStatusFilter<$PrismaModel = never> = {

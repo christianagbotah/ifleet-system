@@ -116,6 +116,7 @@ export const ModelName = {
   Insurance: 'Insurance',
   InsuranceClaim: 'InsuranceClaim',
   Invoice: 'Invoice',
+  PaymentTransaction: 'PaymentTransaction',
   InvoiceItem: 'InvoiceItem',
   Item: 'Item',
   LoadBoard: 'LoadBoard',
@@ -1553,6 +1554,35 @@ export const InvoiceScalarFieldEnum = {
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+export const PaymentTransactionScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  reference: 'reference',
+  providerTransactionId: 'providerTransactionId',
+  type: 'type',
+  status: 'status',
+  currency: 'currency',
+  requestedAmount: 'requestedAmount',
+  receivedAmount: 'receivedAmount',
+  appliedAmount: 'appliedAmount',
+  unappliedAmount: 'unappliedAmount',
+  invoiceId: 'invoiceId',
+  channel: 'channel',
+  customerEmail: 'customerEmail',
+  initiatedBy: 'initiatedBy',
+  source: 'source',
+  paidAt: 'paidAt',
+  processedAt: 'processedAt',
+  gatewayResponse: 'gatewayResponse',
+  lastError: 'lastError',
+  providerMetadata: 'providerMetadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentTransactionScalarFieldEnum = (typeof PaymentTransactionScalarFieldEnum)[keyof typeof PaymentTransactionScalarFieldEnum]
 
 
 export const InvoiceItemScalarFieldEnum = {
@@ -3615,6 +3645,26 @@ export const InvoiceOrderByRelevanceFieldEnum = {
 } as const
 
 export type InvoiceOrderByRelevanceFieldEnum = (typeof InvoiceOrderByRelevanceFieldEnum)[keyof typeof InvoiceOrderByRelevanceFieldEnum]
+
+
+export const PaymentTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  reference: 'reference',
+  providerTransactionId: 'providerTransactionId',
+  type: 'type',
+  currency: 'currency',
+  invoiceId: 'invoiceId',
+  channel: 'channel',
+  customerEmail: 'customerEmail',
+  initiatedBy: 'initiatedBy',
+  source: 'source',
+  gatewayResponse: 'gatewayResponse',
+  lastError: 'lastError',
+  providerMetadata: 'providerMetadata'
+} as const
+
+export type PaymentTransactionOrderByRelevanceFieldEnum = (typeof PaymentTransactionOrderByRelevanceFieldEnum)[keyof typeof PaymentTransactionOrderByRelevanceFieldEnum]
 
 
 export const InvoiceItemOrderByRelevanceFieldEnum = {
