@@ -4,10 +4,25 @@ import { db } from '@/lib/db'
 
 const PAYSTACK_BASE_URL = 'https://api.paystack.co'
 
+export type PaystackMode = 'test' | 'live'
+
 export interface PaystackConfig {
   secretKey: string
   publicKey: string
-  mode: 'test' | 'live'
+  mode: PaystackMode
+}
+
+export function getPaystackSecretKeyMode(secretKey: string): PaystackMode | null {
+  if (secretKey.startsWith('sk_test_')) return 'test'
+  if (secretKey.startsWith('sk_live_')) return 'live'
+  return null
+}
+
+export function validatePaystackSecretKeyForMode(secretKey: string, mode: PaystackMode): string | null {
+  const keyMode = getPaystackSecretKeyMode(secretKey)
+  if (!keyMode) return 'Paystack secret key must start with sk_test_ or sk_live_.'
+  if (keyMode !== mode) return `Paystack ${mode} mode requires an sk_${mode}_ secret key.`
+  return null
 }
 
 export interface InitializePaymentParams {
@@ -61,16 +76,25 @@ export async function getPaystackConfig(): Promise<PaystackConfig | null> {
   if (!settings || !settings.paystackEnabled || !settings.paystackSecretKey) {
     return null
   }
+  const mode: PaystackMode = settings.paystackMode === 'live' ? 'live' : 'test'
+  const validationError = validatePaystackSecretKeyForMode(settings.paystackSecretKey, mode)
+  if (validationError) throw new Error(validationError)
+
   return {
     secretKey: settings.paystackSecretKey,
     publicKey: settings.paystackPublicKey,
-    mode: (settings.paystackMode === 'live' ? 'live' : 'test') as 'test' | 'live',
+    mode,
   }
 }
 
 export async function isPaystackEnabled(): Promise<boolean> {
   const settings = await db.systemSettings.findFirst()
-  return !!settings?.paystackEnabled && !!settings?.paystackSecretKey
+  if (!settings?.paystackEnabled || !settings.paystackSecretKey) return false
+
+  const mode: PaystackMode = settings.paystackMode === 'live' ? 'live' : 'test'
+  const validationError = validatePaystackSecretKeyForMode(settings.paystackSecretKey, mode)
+  if (validationError) throw new Error(validationError)
+  return true
 }
 
 // ============ Reference Generator ============

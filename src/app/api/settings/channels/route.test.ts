@@ -3,14 +3,15 @@ import { join } from 'node:path'
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { findFirst, create } = vi.hoisted(() => ({
+const { findFirst, create, upsert } = vi.hoisted(() => ({
   findFirst: vi.fn(),
   create: vi.fn(),
+  upsert: vi.fn(),
 }))
 
 vi.mock('@/lib/db', () => ({
   db: {
-    systemSettings: { findFirst, create },
+    systemSettings: { findFirst, create, upsert },
   },
 }))
 
@@ -19,7 +20,7 @@ vi.mock('@/lib/audit', () => ({
   getClientIp: vi.fn(() => '127.0.0.1'),
 }))
 
-import { GET } from './route'
+import { GET, PUT } from './route'
 
 const settings = {
   smsEnabled: true,
@@ -50,6 +51,18 @@ function request(role?: string) {
     headers.set('x-auth-user-role', role)
   }
   return new NextRequest('https://ifleetpro.example/api/settings/channels', { headers })
+}
+
+function putRequest(body: Record<string, unknown>) {
+  return new NextRequest('https://ifleetpro.example/api/settings/channels', {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      'x-auth-user-id': 'qa-admin',
+      'x-auth-user-role': 'Admin',
+    },
+    body: JSON.stringify(body),
+  })
 }
 
 describe('GET /api/settings/channels authorization', () => {
@@ -84,5 +97,31 @@ describe('GET /api/settings/channels authorization', () => {
   it('is not listed as a public GET route in the proxy', () => {
     const source = readFileSync(join(process.cwd(), 'src/proxy.ts'), 'utf8')
     expect(source).not.toContain("'/api/settings/channels'")
+  })
+})
+
+describe('PUT /api/settings/channels Paystack mode safety', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('rejects enabling test mode with a live secret key', async () => {
+    findFirst.mockResolvedValue({ ...settings, paystackEnabled: false, paystackSecretKey: 'sk_live_example', paystackMode: 'test' })
+
+    const response = await PUT(putRequest({ paystackEnabled: true }))
+
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ error: 'Paystack test mode requires an sk_test_ secret key.' })
+    expect(upsert).not.toHaveBeenCalled()
+  })
+
+  it('rejects enabling Paystack without an effective secret key', async () => {
+    findFirst.mockResolvedValue({ ...settings, paystackEnabled: false, paystackSecretKey: '', paystackMode: 'test' })
+
+    const response = await PUT(putRequest({ paystackEnabled: true }))
+
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ error: 'Paystack secret key is required when Paystack is enabled.' })
+    expect(upsert).not.toHaveBeenCalled()
   })
 })
