@@ -10,7 +10,7 @@ module.exports = defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     restoreMocks: true,
     clearMocks: true,
-    exclude: ['**/node_modules/**', '**/.next/**', '**/dist/**', '**/build/**', '**/coverage/**'],
+    exclude: ['**/node_modules/**', '**/.worktrees/**', '**/.next/**', '**/dist/**', '**/build/**', '**/coverage/**'],
   },
   resolve: {
     alias: {
