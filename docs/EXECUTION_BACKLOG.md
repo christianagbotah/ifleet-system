@@ -14,6 +14,7 @@ Use GitHub-first review, CI, builds, packaging and versioned releases. Deploy on
 - 2026-11-26: repository identity, public visibility and write permission confirmed. Owner authorized retaining public visibility; no paid plan required by this workflow.
 - Baseline application scope and source plans identified; detailed operational evidence is intentionally excluded from the public roadmap.
 - Next actionable: A02/A04 review existing development changes for safe preservation; A05 reconcile reviewed changes through PRs. A07 completes only once this document is merged. A08/A09 can proceed independently on a reviewed branch; no production promotion before reconciliation and release gates.
+- Recovery PR #65 preserves the reviewed Vitest worktree-exclusion fix and regression test; CI and merge remain pending. Resume by checking PRs #64 and #65, reviewing remaining candidate source changes in dependency order, and verifying existing CI before release packaging.
 - No feature, artifact or production deployment certified by this checkpoint.
 
 ## A — P0 Repository recovery, release engineering and provenance
@@ -128,3 +129,5 @@ Review the existing domain, security, factory loading, telematics, delivery/fina
 Use: UTC | task | result | commit/PR | CI run and tests | release/checksum | sanitized verification | residual work | next task.
 
 2026-11-26 | A01/A03 | Repository identity, public visibility, write permission confirmed; owner public-policy decision recorded | documentation branch | not yet run | not applicable | repository metadata | A07 merge pending | A02/A04/A05 and A08.
+
+2026-11-26 | A02/A04/A05/A08 | First reviewed test-only recovery slice committed | PR #65 | CI pending | not applicable | config and regression test recovered | remaining source review and release gates | check PR #65 and continue recovery.
