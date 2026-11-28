@@ -2,7 +2,7 @@
 
 ## P0 — Runtime-only deployment consolidation
 
-Checkpoint: additional verified redundant worktrees and orphaned temporary trees have been removed; stale worktree registrations pruned after commit recovery verification; basic runtime availability rechecked. Remaining local-only changes and protected configuration still require review; release migration remains open. This public document intentionally omits internal infrastructure details and operational findings.
+Checkpoint: all registered non-runtime worktrees removed after verified recovery; unregistered remnants moved into protected recovery storage; demo configuration detached from development paths. Local-only source publication review, full functional verification and artifact-only release migration remain open. This public document intentionally omits internal infrastructure details and operational findings.
 
 - [ ] Inventory all project-owned runtime, development, release and temporary directories; measure allocated bytes and filesystem usage.
 - [ ] Identify service dependencies, active processes, locks, persistent data, and backup requirements.
@@ -31,6 +31,15 @@ Checkpoint: additional verified redundant worktrees and orphaned temporary trees
 - [x] Rechecked public endpoint and service availability after cleanup.
 - [ ] Review remaining dirty worktrees, detached commits, ignored configuration and local-only source; preserve legitimate changes safely before removing entire redundant directories. Do not publish unreviewed work or credentials.
 - [ ] Finish artifact-only deployment and tested release-retention implementation before declaring consolidation complete.
+
+## Final registered-worktree cleanup checkpoint — 2026-11-28
+
+- [x] Relocated the demo service environment into protected runtime configuration and validated the effective systemd configuration without restarting the service.
+- [x] Removed all remaining registered development worktrees using normal Git removal after archiving and independently verifying the original commits, local modifications and prior stashes in a recovery bundle.
+- [x] Relocated unregistered source remnants and protected root-level recovery records; retained database copies and archived contents for recovery.
+- [x] Rechecked active service states and public website response after registered-worktree cleanup; exact paths and measurements are maintained in restricted operational logs.
+- [ ] Review archived local-only source and publish only vetted non-confidential changes to appropriate GitHub branches; never upload recovery archives, credentials or database copies to the public repository.
+- [ ] Complete off-server protected recovery replication, full authenticated functional verification, artifact-only deployment and verified rollback retention.
 
 ## Execution rules
 
